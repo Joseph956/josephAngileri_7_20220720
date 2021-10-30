@@ -1,7 +1,9 @@
-Voir le derniers posts,
-commenter,
-supprimer un post, un commentaire, un like qui leur appatiennent,
-publier des images et du texte,
-liker /disliker,
+L'utilisateur doit : 
+- Voir le derniers posts écrit,
+- Pouvoir commenter,
+- supprimer un post, un commentaire, un like qui lui appatient,
+- publier des images et du texte,
+- liker /disliker,
 
-Modérateur
+Modérateur doit :
+- 

@@ -1,13 +1,17 @@
+// const mysql = require('mysql2');
 const db = require('../config/db');
 
 class Post {
-    constructor() {
+    constructor(content, createdAt, updatedAt, userId, title) {
+        this.content = content;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.userId = userId;
         this.title = title;
-        this.body = body;
     }
 
-    async save() {
-        let d = new Data();
+    save() {
+        let d = new Date();
         let yyyy = d.getFullYear();
         let mm = d.getMonth() + 1;
         let dd = d.getDate();
@@ -16,25 +20,36 @@ class Post {
 
         let sql = `
         INSERT INTO posts(
+            content,
+            createdAt,
+            updatedAt,
+            userId,
             title,
-            body,
-            created_at
         )
         VALUES(
+            '${this.content}',
+            '${this.createdAt}',
+            '${this.updatedAt}',
+            '${this.userId}',
             '${this.title}',
-            '${this.body}',
             '${createdAtDate}'
         )
         `;
 
-        const [newPost, _] = await db.execute(sql);
-        return newPost;
+        return db.execute(sql);
     }
 
     static findAll() {
+        let sql = "SELECT * FROM posts;";
 
+        return db.execute(sql);
     }
 
+    static finById(id) {
+        let sql = `SELECT * FROM posts WHERE id = ${id};`;
+
+        return db.execute(sql);
+    }
 };
 
 module.exports = Post;
