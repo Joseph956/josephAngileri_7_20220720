@@ -1,13 +1,13 @@
 // const mysql = require('mysql2');
-const db = require('../config/db');
+const dbGroupomania = require('../config/db');
 
 class Post {
-    constructor(content, createdAt, updatedAt, userId, title) {
-        this.content = content;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.userId = userId;
+    constructor(id, attachment, title, content, likes) {
+        this.id = id;
+        this.attachment = attachment;
         this.title = title;
+        this.content = content;
+        this.likes = likes;
     }
 
     save() {
@@ -20,35 +20,36 @@ class Post {
 
         let sql = `
         INSERT INTO posts(
-            content,
-            createdAt,
-            updatedAt,
-            userId,
+            id,
+            attachment,
             title,
+            content,
+            likes,
         )
         VALUES(
-            '${this.content}',
-            '${this.createdAt}',
-            '${this.updatedAt}',
-            '${this.userId}',
+            '${this.id}',
+            '${this.attachment}',
             '${this.title}',
+            '${this.content}',
+            '${this.likes}',
             '${createdAtDate}'
         )
         `;
 
-        return db.execute(sql);
+        return dbGroupomania.execute(sql);
     }
 
     static findAll() {
         let sql = "SELECT * FROM posts;";
+        console.log(posts);
 
-        return db.execute(sql);
+        return dbGroupomania.execute(sql);
     }
 
     static finById(id) {
         let sql = `SELECT * FROM posts WHERE id = ${id};`;
 
-        return db.execute(sql);
+        return dbGroupomania.execute(sql);
     }
 };
 

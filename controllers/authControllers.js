@@ -1,7 +1,10 @@
-const User = require('../models/User');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-const dotenv = require('dotenv');
-dotenv.config();
+//chiffrage de l'email
+const cryptoJs = require('crypto-js');
+
+const User = require('../models/users_table');
 
 exports.signup = (req, res, next) => {
 

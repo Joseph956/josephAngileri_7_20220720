@@ -5,9 +5,9 @@ const router = express.Router();
 // //const authValid = require('../middlware/valid');
 // //const multer = require('../middlware/multer-config');
 // //const authIdentity = require('');
-const ficheControllers = require("../controllers/fichesUsers")
+const ficheControllers = require("../controllers/usersControllers")
 
-router.get("/", ficheControllers.getAllFiches);            //Get - Toutes les fiches utilisateurs
+router.get("/", ficheControllers.getUsersList);            //Get - Toutes les fiches utilisateurs
 router.get("/:id", ficheControllers.getFicheById);         //Get - Une seule fiche utilisateur
 router.post("/NewFiche", ficheControllers.createNewFiche); //Post - Créer un compte utilisateur
 router.put("/:id", ficheControllers.modifyFicheById);      //Put - Modifier une fiche utilisateur

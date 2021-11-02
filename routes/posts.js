@@ -5,10 +5,10 @@ const router = express.Router();
 // //const authValid = require('../middlware/valid');
 // //const multer = require('../middlware/multer-config');
 // //const authIdentity = require('');
-const postControllers = require('../controllers/postsUsers');
+const postControllers = require('../controllers/postsControllers');
 
 // //@route GET && POST - /posts/
-router.get("/", postControllers.getAllPosts);
+router.get("/", postControllers.getPostsList);
 router.get("/:id", postControllers.getPostById);
 router.post("/NewPost", postControllers.createNewPost);
 router.put("/:id", postControllers.modifyPostById);

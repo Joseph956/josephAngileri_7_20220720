@@ -1,7 +1,13 @@
-const modelFiche = require("../models/User");
+const userModel = require('../models/users_table');
 
-exports.getAllFiches = (req, res, next) => {
-
+exports.getUsersList = (req, res, next) => {
+    // userModel.getAllUsers((err, users) => {
+    //     console.log('Nous sommes embauchés');
+    //     if (err)
+    //         res.send(err);
+    //     console.log('users', users);
+    //     res.send(users, 'Vous ne pouvez pas voir les fiches utilisateurs !!!');
+    // })
     res.send('Afficher toutes les fiches utilisateurs !!!');
 };
 

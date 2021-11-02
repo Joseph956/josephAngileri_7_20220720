@@ -18,10 +18,22 @@
   },
   "homepage": "https://github.com/Joseph956/P07_reseau_social#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "fs": "^0.0.1-security",
+    "helmet": "^4.6.0",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
+    "multer": "^1.4.3",
+    "mysql": "^2.18.1",
     "mysql2": "^2.3.2",
-    "nodemon": "^2.0.14"
+    "nodemon": "^2.0.14",
+    "path": "^0.12.7",
+    "sequelize": "^6.8.0",
+    "sequelize-cli": "^6.2.0"
   }
 }

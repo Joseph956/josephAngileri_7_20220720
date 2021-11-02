@@ -1,5 +1,8 @@
 const express = require('express');
-// const mysql = require('mysql2');
+const fs = require('fs');
+const path = require('path');
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
 
 // //Charge les variables d'environnement
@@ -8,9 +11,9 @@ dotenv.config();
 
 const morgan = require('morgan'); //logs http
 
-const usersRoutes = require('./routes/authUsers.js');
-const fichesRoutes = require('./routes/fichesUsers');
-const postsRoutes = require('./routes/postsUsers');
+const authRoutes = require('./routes/auth');
+const usersRoutes = require('./routes/users');
+const postsRoutes = require('./routes/posts');
 
 const app = express();
 
@@ -19,6 +22,7 @@ app.use(morgan('dev'));
 
 app.use(express.json());
 
+//Configuration des cors
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Credentials', true);
@@ -30,9 +34,9 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use("/api/authUsers", usersRoutes);
-app.use("/api/fichesUsers", fichesRoutes);
-app.use("/api/postsUsers", postsRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", usersRoutes);
+app.use("/api/posts", postsRoutes);
 
 app.use((err, req, res, next) => {
     console.log(err.stack);
