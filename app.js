@@ -1,11 +1,11 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const bodyParser = require("body-parser");
-const cors = require("cors");
+// const bodyParser = require("body-parser");
+// const cors = require("cors");
 
 
-// //Charge les variables d'environnement
+//Charge les variables d'environnement.
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -14,13 +14,18 @@ const morgan = require('morgan'); //logs http
 const authRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
 const postsRoutes = require('./routes/posts');
+// const comentsRoutes = require('./routes/coments');
+// const likesRoutes = require('./routes/likes');
 
 const app = express();
 
-// //logger requests/responses
+// //logger requests/responses.
 app.use(morgan('dev'));
 
+//body parser et inclut dans express.json.
 app.use(express.json());
+
+// app.use('cors');
 
 //Configuration des cors
 app.use((req, res, next) => {
@@ -34,9 +39,13 @@ app.use((req, res, next) => {
     next();
 });
 
+// Configuration des routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/posts", postsRoutes);
+// app.use("/api/coments", comentsRoutes);
+// app.use("/api/likes", likesRoutes);
+
 
 app.use((err, req, res, next) => {
     console.log(err.stack);
@@ -47,5 +56,38 @@ app.use((err, req, res, next) => {
         message: "c' pas bon",
     });
 });
+
+
+// config database Sequelize
+const db = require("./models");
+const bcrypt = require("bcrypt");
+const User = db.user;
+const Post = db.posts;     //"Post"est déclaré mais pas pris en compte ?!!
+db.sequelize.sync().then(() => {
+    initial();
+});
+
+// CREATE DEFAULT DATA
+function initial() {
+    // CREATE FIRST USER (ADMIN)
+    User.findOrCreate({
+        where: { username: "admin", },
+        defaults: {
+            username: "admin",
+            email: "admin@gmail.com",
+            password: bcrypt.hashSync("admin", 4),
+        }
+    })
+        // CREATE FIRST POST (BELOGS TO ADMIN)
+        .then((users) => {
+            var Post = Post.create({
+                post: "Ceci est le 1er post créé par défaut",
+                userId: users[0].get('id')
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
 
 module.exports = app;

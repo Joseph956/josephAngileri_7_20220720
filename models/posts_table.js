@@ -1,29 +1,41 @@
 
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-
-  class posts_table extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-      models.posts_table.hasMany(models.posts_table);
-    }
-  };
-  posts_table.init({
-    attachment: DataTypes.STRING,
-    title: DataTypes.STRING,
-    content: DataTypes.STRING,
-    likes: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'posts_table',
+module.exports = (sequelize, Sequelize) => {
+  const Post = sequelize.define("post", {
+    id: {
+      type: Sequelize.UUID,
+      primaryKey: true,
+      defaultValue: Sequelize.UUIDV4,
+      allowNull: false,
+    },
+    post: {
+      type: Sequelize.TEXT("long"),
+    },
+    likes: {
+      type: Sequelize.STRING,
+      get() {
+        return this.getDataValue("likes")
+          ? this.getDataValue("likes").split(";")
+          : [];
+      },
+      set(val) {
+        this.setDataValue("likes", val.join(";"));
+      },
+    },
+    dislikes: {
+      type: Sequelize.STRING,
+      get() {
+        return this.getDataValue("dislikes")
+          ? this.getDataValue("dislikes").split(";")
+          : [];
+      },
+      set(val) {
+        this.setDataValue("dislikes", val.join(";"));
+      },
+    },
+    img: {
+      type: Sequelize.STRING,
+    },
   });
-  return posts_table;
+
+  return Post;
 };

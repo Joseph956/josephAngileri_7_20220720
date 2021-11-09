@@ -19,7 +19,7 @@ http://localhost:3000/api/auth/logout
 
 ## Gestion des Fiches utilisateurs.
 ## Post - Publier une nouvelle fiche.
-http://localhost:3000/api/users/newfiche
+http://localhost:3000/api/users/newuser
 ## Get - Voir toutes les fiches utilisateurs.
 http://localhost:3000/api/users
 ## Get - Voir une fiche utilisateur grâce à son id.
