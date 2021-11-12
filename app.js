@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { sequelize } = require('./models');
 // const bodyParser = require("body-parser");
 // const cors = require("cors");
 
@@ -14,10 +15,14 @@ const morgan = require('morgan'); //logs http
 const authRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
 const postsRoutes = require('./routes/posts');
-// const comentsRoutes = require('./routes/coments');
-// const likesRoutes = require('./routes/likes');
+const comentsRoutes = require('./routes/coments');
+const likesRoutes = require('./routes/likes');
 
 const app = express();
+
+async function main() {
+    await sequelize.sync()
+};
 
 // //logger requests/responses.
 app.use(morgan('dev'));
@@ -43,8 +48,8 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/posts", postsRoutes);
-// app.use("/api/coments", comentsRoutes);
-// app.use("/api/likes", likesRoutes);
+app.use("/api/coments", comentsRoutes);
+app.use("/api/likes", likesRoutes);
 
 
 app.use((err, req, res, next) => {
@@ -62,7 +67,7 @@ app.use((err, req, res, next) => {
 const db = require("./models");
 const bcrypt = require("bcrypt");
 const User = db.user;
-const Post = db.posts;     //"Post"est déclaré mais pas pris en compte ?!!
+const Post = db.posts;
 db.sequelize.sync().then(() => {
     initial();
 });
@@ -77,17 +82,19 @@ function initial() {
             email: "admin@gmail.com",
             password: bcrypt.hashSync("admin", 4),
         }
-    })
-        // CREATE FIRST POST (BELOGS TO ADMIN)
-        .then((users) => {
-            var Post = Post.create({
-                post: "Ceci est le 1er post créé par défaut",
+    }).then((users) => {
+        Post.findOrCreate({
+            where: { content: "1er post" },
+            defaults: {
+                content: "1er post",
                 userId: users[0].get('id')
-            });
+            }
         })
-        .catch((err) => {
-            console.log(err);
-        });
+            .catch((err) => {
+                console.log(err);
+            });
+    })
 };
+
 
 module.exports = app;

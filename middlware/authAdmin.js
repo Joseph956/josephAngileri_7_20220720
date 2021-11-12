@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken'); //module npm token
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-module.exports = (req, res, next) => { // Création du token
+module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
@@ -10,7 +10,7 @@ module.exports = (req, res, next) => { // Création du token
             throw 'User ID non valable !';
         } else {
             req.token = token;
-            req.user = isAdmin; //ajout de l'id utilisateur
+            req.user = isAdmin;
             next();
         }
     } catch (error) {

@@ -3,9 +3,9 @@ const Post = db.posts;
 
 const dbgroupomania = require('../config/config.json');
 const dotenv = require('dotenv');
+dotenv.config();
 // const { post } = require('../app');
 // const { user } = require("../models/users_table");
-dotenv.config();
 
 //Lister tous les posts.
 exports.findAllPublished = async (req, res) => {
@@ -25,11 +25,6 @@ exports.findAllPublished = async (req, res) => {
                 "Une erreur s'est produite lors de la récupération des publications.",
         });
     });
-};
-
-//Lister tous les posts d'un utilisateur.
-exports.findAllById = (req, res) => {
-
 };
 
 //Récupérer un seul post.

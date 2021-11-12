@@ -1,4 +1,4 @@
-const Post = require('../models/posts_table');
+// const Post = require('../models/posts_table');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
         const userId = decodedToken.userId;
         const postId = req.params.id;
         Thing.findOne({ _id: postId })
-            .then(thing => {
+            .then(post => {
                 if (userId === post.userId) {
                     req.token = token;
                     req.user = userId;

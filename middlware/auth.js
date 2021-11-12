@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken'); //module npm token
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 module.exports = (req, res, next) => { // Création du token

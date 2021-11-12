@@ -1,5 +1,7 @@
-const User = require('../models/users_table');
+const db = require('../models');
+const User = db.user; //ne pas modifier
 const { JsonWebTokenError } = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -16,7 +18,7 @@ exports.signUp = async (req, res, next) => {
 
     try {
         const user = await User.create({ username, email, password });
-        res.status(201).json({ user: user._id });
+        res.status(201).json({ user: user.id });
     }
     catch (err) {
         res.status(200).send({ err })
@@ -27,13 +29,17 @@ exports.signUp = async (req, res, next) => {
 exports.signIn = async (req, res, next) => {
 
     console.log(req.body);
-    const { username, email, password } = req.body
+    const { email, password } = req.body
 
     try {
-        const user = await User.login({ username, email, password });
+        const user = await User.login({ email, password });
         const token = createToken(user.id);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge });
-        res.status(200).json({ user: user._id });
+        token.jwt.sign({ userId: user.id },
+            process.env.RANDOM_TOKEN_SECRET, { expiresIn: '24h' })
+        res.status(200).json({
+            user: user.id,
+        });
     }
     catch (err) {
         res.status(200).send({ err });

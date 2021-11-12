@@ -1,25 +1,26 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('posts_table', {
+    await queryInterface.createTable('Likes', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      attachment: {
-        type: Sequelize.STRING
-      },
-      title: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      content: {
-        allowNull: false,
-        type: Sequelize.STRING
+      idposts: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Posts',
+          key: 'id'
+        }
       },
       likes: {
+        allowNull: true,
+        type: Sequelize.INTEGER
+      },
+      dislikes: {
+        allowNull: true,
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -33,6 +34,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('posts_table');
+    await queryInterface.dropTable('Likes');
   }
 };

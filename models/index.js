@@ -43,9 +43,10 @@ sequelize.authenticate().then(() => {
 
 
 //Récupération des modèles.
-db.user = require("../models/users_table")(sequelize, Sequelize);
-db.posts = require("../models/posts_table")(sequelize, Sequelize);
-// db.coments = require("../models/coments_table")(sequelize, Sequelize);
+db.user = require("../models/user")(sequelize, Sequelize);
+db.posts = require("../models/post")(sequelize, Sequelize);
+db.coments = require("../models/coment")(sequelize, Sequelize);
+db.likes = require("../models/like")(sequelize, Sequelize);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
@@ -53,8 +54,8 @@ db.Sequelize = Sequelize;
 
 //define relationships
 db.user.hasOne(db.posts); // Un post n'appartient qu'a un utilisateur.
-// db.user.hasOne(db.coments); // Un coment n'appartient qu'a un utilisateur.
+db.user.hasOne(db.coments); // Un coment n'appartient qu'a un utilisateur.
 db.posts.belongsTo(db.user); // Un utilisateur peut avoir plusieurs posts.
-// db.coments.belongsTo(db.posts); //Un post peut avoir plusieurs commentaires.
+db.coments.belongsTo(db.posts); //Un post peut avoir plusieurs commentaires.
 
 module.exports = db;

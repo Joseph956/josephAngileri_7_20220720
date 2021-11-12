@@ -10,7 +10,7 @@ const postsCtrl = require('../controllers/posts');
 // //@route GET && POST - /posts/
 router.get("/", postsCtrl.findAllPublished);          //Lister tous les posts (admin).
 router.get("/:id", postsCtrl.findOneById);            //Un utilisateur peut consulter sa fiche (admin).
-router.post("/NewPost", postsCtrl.create);            //Tous les utilisateurs.
+router.post("/", postsCtrl.create);            //Tous les utilisateurs.
 router.put("/:id", postsCtrl.modifyPostById);         //Modification réservé au créateur du post.
 router.delete("/:id", postsCtrl.deletePostById);      //Suppression réservé au créateur du post (admin).
 
