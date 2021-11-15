@@ -1,11 +1,8 @@
 const db = require("../models");
 const Post = db.posts;
-
-const dbgroupomania = require('../config/config.json');
 const dotenv = require('dotenv');
 dotenv.config();
-// const { post } = require('../app');
-// const { user } = require("../models/users_table");
+
 
 //Lister tous les posts.
 exports.findAllPublished = async (req, res) => {
@@ -52,10 +49,15 @@ exports.findOneById = (req, res, next) => {
 exports.create = async (req, res, next) => {
     Post.sync({ alter: true }).then(() => {
         return Post.create({
+            include: [
+                {
+                    model: db.user,
+                }
+            ],
             post: req.body.post
         });
-    }).then((post) => {
-        res.status(201).json(post)
+    }).then((result) => {
+        res.status(201).json(result)
     }).catch(error => {
         res.status(400).json({ error, message: "l'utilisateur n'a pas été créé !!!" })
     });

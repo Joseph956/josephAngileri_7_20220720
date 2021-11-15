@@ -1,8 +1,11 @@
+
 const db = require('../models');
 const User = db.user; //ne pas modifier
 const { JsonWebTokenError } = require('jsonwebtoken');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
+const { BOOLEAN } = require('sequelize');
 dotenv.config();
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
@@ -12,41 +15,51 @@ const createToken = (id) => {
     });
 };
 
-exports.signUp = async (req, res, next) => {
-    console.log(req.body);
-    const { username, email, password } = req.body
-
-    try {
-        const user = await User.create({ username, email, password });
-        res.status(201).json({ user: user.id });
-    }
-    catch (err) {
-        res.status(200).send({ err })
-        console.log(err);
-    }
+exports.signUp = (req, res, next) => {
+    bcrypt.hash(req.body.password, 10)
+        .then(hash => {
+            const user = new User({
+                username: req.body.username,
+                email: req.body.email,
+                password: hash
+            });
+            user
+                .save()
+                .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+                .catch(error => res.status(400).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error }));
 };
 
-exports.signIn = async (req, res, next) => {
-
-    console.log(req.body);
-    const { email, password } = req.body
-
-    try {
-        const user = await User.login({ email, password });
-        const token = createToken(user.id);
-        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge });
-        token.jwt.sign({ userId: user.id },
-            process.env.RANDOM_TOKEN_SECRET, { expiresIn: '24h' })
-        res.status(200).json({
-            user: user.id,
-        });
-    }
-    catch (err) {
-        res.status(200).send({ err });
-    };
+exports.signIn = (req, res, next) => {
+    User.findOne()
+        .then((user) => {
+            if (!user) {
+                return res.status(401).json({ error: 'Utilisateur inexistant !' });
+            }
+            bcrypt
+                .compare(password, user.password)
+                .then(valid => {
+                    if (!valid) {
+                        return res.status(403).json({ error: 'Le mot de passe est incorrect !' });
+                    }
+                    const { email, password } = req.body
+                    const user = User.login({ email, password });
+                    const token = createToken(user.id);
+                    res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge });
+                    token.jwt.sign({ userId: user.id },
+                        process.env.RANDOM_TOKEN_SECRET, { expiresIn: '24h' })
+                    res.status(200).json({
+                        userId: user.id,
+                        isAdmin: user.isAdmin
+                    });
+                })
+                .catch(error => res.status(500).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error }));
 };
+
 
 exports.logout = (req, res, next) => {
 
-    res.send('auth logout route');
 };

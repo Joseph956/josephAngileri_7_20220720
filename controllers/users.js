@@ -38,7 +38,7 @@ exports.findOneById = (req, res, next) => {
 };
 
 
-exports.createNewUser = (req, res, next) => {
+exports.create = (req, res, next) => {
 
     res.send('Créer une nouvelle fiche utlisateur !!!');
 };

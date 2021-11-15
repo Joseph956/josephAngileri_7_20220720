@@ -2,18 +2,37 @@ const express = require('express');
 const router = express.Router();
 
 const auth = require('../middlware/auth');
+const authAdmin = require('../middlware/authAdmin');
 // //const authPost = require('../middlware/authPost');
 // const authComments = require('../middlware/authComments');
-// const authAdmin = require('../middlware/authAdmin');
 // //const multer = require('../middlware/multer-config');
 const usersCtrl = require("../controllers/users")
 
 
-router.get("/", usersCtrl.findAllPublished);       //Get - Lister tous les utilisateurs (admin).
-router.get("/:id", usersCtrl.findOneById);         //Get - Afficher Un compte utilisateur (admin).
-router.post("/NewFiche", usersCtrl.createNewUser); //Post - Créer un compte utilisateur
-router.put("/:id", usersCtrl.modifyUserById);      //Put - Modifier/consulter un compte utilisateur
-router.delete("/:id", usersCtrl.deleteUserById);   //Delete - Supprimer un compte utilisateur
+//Lister tous les utilisateurs (admin).
+router.get("/", usersCtrl.findAllPublished);
+
+//Afficher Un compte utilisateur (admin/user créateur).
+router.get("/:id", usersCtrl.findOneById);
+
+//Rechercher un utilisateur.
+router.get('search');
+
+//Créer une nouvelle fiche utilisateur (admin).
+router.post("/", usersCtrl.create);
+
+//Picture : Modifier la photo du profil utilisateur.
+// router.put("/:id", authAdmin.isAdmin, usersCtrl);
+
+//profil : Modifier la description du profil utilisateur (user).
+router.put("/:id", usersCtrl.modifyUserById);
+//authAdmin.isAdmin, 
+//Delete - Supprimer un compte utilisateur
+router.delete("/:id", usersCtrl.deleteUserById);
+
+
+
+
 
 // //Get - Rechercher une fiche utlisateur (admin)
 // //Get - Afficher tous les posts d'un utilisateur (admin).

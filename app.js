@@ -67,7 +67,7 @@ app.use((err, req, res, next) => {
 const db = require("./models");
 const bcrypt = require("bcrypt");
 const User = db.user;
-const Post = db.posts;
+const Post = db.posts;     //"Post"est déclaré mais pas pris en compte ?!!
 db.sequelize.sync().then(() => {
     initial();
 });
@@ -81,12 +81,13 @@ function initial() {
             username: "admin",
             email: "admin@gmail.com",
             password: bcrypt.hashSync("admin", 4),
+            isAdmin: true,
         }
-    }).then((users) => {
+    }).then(users => {
         Post.findOrCreate({
-            where: { content: "1er post" },
+            where: { post: "1er post" },
             defaults: {
-                content: "1er post",
+                post: "1er post",
                 userId: users[0].get('id')
             }
         })

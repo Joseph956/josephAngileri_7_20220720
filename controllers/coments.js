@@ -1,5 +1,7 @@
 const db = require("../models");
 const Coment = db.coments;
+const dotenv = require('dotenv');
+dotenv.config();
 
 //Lister tous les posts.
 exports.findAllPublished = async (req, res) => {
@@ -10,8 +12,8 @@ exports.findAllPublished = async (req, res) => {
             }
         ],
         order: [["createdAt", "DESC"]],
-    }).then(coment => {
-        res.status(200).json(coment);
+    }).then(result => {
+        res.status(200).json(result);
     }).catch((err) => {
         res.status(400).json({
             message:
@@ -25,10 +27,17 @@ exports.findAllPublished = async (req, res) => {
 exports.create = async (req, res, next) => {
     Post.sync({ alter: true }).then(() => {
         return Coment.create({
-            post: req.body.post
+            coment: req.body.coment,
+            include: [
+                {
+                    model: db.user,
+
+                }
+            ],
+
         });
-    }).then(() => {
-        res.status(201).json(Coment)
+    }).then((result) => {
+        res.status(201).json(result)
     }).catch(error => {
         res.status(400).json({ error, message: "l'utilisateur n'a pas été créé !!!" })
     });
