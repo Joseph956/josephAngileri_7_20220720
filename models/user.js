@@ -29,14 +29,14 @@ module.exports = (sequelize, Sequelize) => {
         },
         isAdmin: {
             type: Sequelize.BOOLEAN,
-            isAdmin: false,
+            defaultValue: false,
             required: true,
         },
     },
         {
-            defaultScope: {
-                attributes: { exclude: ['password'] },
-            },
+            // defaultScope: {
+            //     attributes: { exclude: ['password'] },
+            // },
             sequelize,
             modelName: 'user'
         });
@@ -47,3 +47,5 @@ module.exports = (sequelize, Sequelize) => {
 
     return User;
 };
+
+

@@ -6,12 +6,6 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: Sequelize.UUIDV4,
             allowNull: false,
         },
-        // ta pas besoin d'IdUser on va définir la relation ailleur.
-        pseudo: {
-            type: Sequelize.TEXT("long"),
-            allowNull: false
-        },
-        // pareil pour les likes
         content: {
             type: Sequelize.TEXT("long"),
             allowNull: false
@@ -19,7 +13,7 @@ module.exports = (sequelize, Sequelize) => {
         attachment: {
             type: Sequelize.STRING,
             default: "./uploads/post/randon-post.jpg",
-            allowNull: false,
+            allowNull: true,
         },
     });
     return Post;

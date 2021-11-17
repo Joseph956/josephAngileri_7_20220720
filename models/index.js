@@ -1,10 +1,9 @@
 'use strict';
+const Sequelize = require('sequelize');
 const dotenv = require('dotenv');
 dotenv.config();
-const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
-const db = {};
 
 //Connexion à la BDD.
 let sequelize;
@@ -14,12 +13,13 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 };
 
-db.sequelize = sequelize;
+const db = {};
 db.Sequelize = Sequelize;
+db.sequelize = sequelize;
 
 //Récupération des modèles.
 db.user = require("../models/user")(sequelize, Sequelize);
-db.posts = require("./post.js")(sequelize, Sequelize);
+db.posts = require("../models/post")(sequelize, Sequelize);
 db.coments = require("../models/coment")(sequelize, Sequelize);
 db.likes = require("../models/like")(sequelize, Sequelize);
 
@@ -29,16 +29,37 @@ db.likes = require("../models/like")(sequelize, Sequelize);
 db.user.hasMany(db.posts, { onDelete: "CASCADE", foreignKey: 'userId' });
 
 // Un utilisateur peut être l'auteur de plusieurs commentaires.
+db.user.hasMany(db.coments, { foreignKey: 'postId' });
+
 db.user.hasMany(db.coments, { onDelete: "CASCADE", foreignKey: 'postId' });
 
 // Un post peut avoir plusieurs commentaires.
+db.posts.hasMany(db.coments, { foreignKey: 'postId' });
+
 db.posts.hasMany(db.coments, { onDelete: "CASCADE", foreignKey: 'postId' });
 
 // Un utilisateur peut avoir plusieurs posts.
-db.posts.belongsTo(db.user, { onDelete: "CASCADE" });
+db.posts.belongsTo(db.user, {
+  foreinKey: {
+    username: 'userId',
+    allowNull: false
+  },
+  onDelete: 'CASCADE',
+  onUpdate: 'NO ACTION',
+});
 
+//*********************************************//
+//****************Les commentaires*************//
+//********************************************//
 //Un user peut avoir plusieurs commentaires. 
-db.coments.belongsTo(db.user, { onDelete: "CASCADE" });
+db.coments.belongsTo(db.user, {
+  foreinKey: {
+    username: 'userId',
+    allowNull: false
+  },
+  onDelete: 'CASCADE',
+  onUpdate: 'NO ACTION',
+});
 
 //Un post peut avoir plusieurs commentaires.
 db.coments.belongsTo(db.posts, { onDelete: "CASCADE" });

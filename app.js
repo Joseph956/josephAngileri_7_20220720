@@ -1,14 +1,11 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const path = require('path');
 const { sequelize } = require('./models');
-// const bodyParser = require("body-parser");
-// const cors = require("cors");
-
-
-//Charge les variables d'environnement.
 const dotenv = require('dotenv');
 dotenv.config();
+require('./config/config');
 
 const morgan = require('morgan'); //logs http
 
@@ -29,8 +26,9 @@ app.use(morgan('dev'));
 
 //body parser et inclut dans express.json.
 app.use(express.json());
+app.use(cookieParser());
 
-// app.use('cors');
+
 
 //Configuration des cors
 app.use((req, res, next) => {
@@ -85,7 +83,9 @@ function initial() {
         }
     }).then(users => {
         Post.findOrCreate({
-            where: { post: "1er post" },
+            where: {
+                content: "1er post"
+            },
             defaults: {
                 post: "1er post",
                 userId: users[0].get('id')

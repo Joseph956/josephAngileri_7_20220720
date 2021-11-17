@@ -22,7 +22,7 @@ module.exports.isAdmin = (req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
         const userId = decodedToken.userId;
         const isAdmin = req.params.id;
-        User.findOne({ _id: isAdmin })
+        User.findOne({ where: isAdmin })
             .then(user => {
                 if (userId === user.userId) {
                     req.token = token;

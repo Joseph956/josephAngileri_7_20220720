@@ -5,8 +5,8 @@ const auth = require('../middlware/auth');
 const authIsAdmin = require('../middlware/authAdmin');
 const authCtrl = require('../controllers/auth');
 
-//enregistrer un nouveau compte
-router.post('/registrer', authCtrl.signUp);
+//s'enregistrer 
+router.post('/register', authCtrl.signUp);
 
 //Se connecter
 router.post('/login', authCtrl.signIn);

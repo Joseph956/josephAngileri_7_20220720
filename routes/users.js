@@ -10,25 +10,25 @@ const usersCtrl = require("../controllers/users")
 
 
 //Lister tous les utilisateurs (admin).
-router.get("/", usersCtrl.findAllPublished);
+router.get("/", auth, usersCtrl.findAllPublished);
 
-//Afficher Un compte utilisateur (admin/user créateur).
-router.get("/:id", usersCtrl.findOneById);
+//Voir un profil utilisateur (admin/user créateur).
+router.get("/:id", auth, authAdmin.isAdmin, authAdmin.isUser, usersCtrl.findOneById);
 
-//Rechercher un utilisateur.
-router.get('search');
+//Rechercher un utilisateur (user authentifier).
+router.get('/search');
 
 //Créer une nouvelle fiche utilisateur (admin).
-router.post("/", usersCtrl.create);
+router.post("/", auth, authAdmin.isAdmin, usersCtrl.create);
 
 //Picture : Modifier la photo du profil utilisateur.
 // router.put("/:id", authAdmin.isAdmin, usersCtrl);
 
 //profil : Modifier la description du profil utilisateur (user).
-router.put("/:id", usersCtrl.modifyUserById);
-//authAdmin.isAdmin, 
+router.put("/:id", auth, authAdmin.isAdmin, authAdmin.isUser, usersCtrl.modifyUserById);
+
 //Delete - Supprimer un compte utilisateur
-router.delete("/:id", usersCtrl.deleteUserById);
+router.delete("/:id", auth, authAdmin.isAdmin, usersCtrl.deleteUserById);
 
 
 

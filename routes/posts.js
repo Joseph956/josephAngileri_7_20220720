@@ -10,21 +10,22 @@ const postsCtrl = require('../controllers/posts');
 // //@route GET && POST - /posts/
 
 
-//Lister tous les posts (admin).
-router.get("/", postsCtrl.findAllPublished);
+//Lister tous les posts (tous les utilisateurs authentifiés).
+router.get("/", auth, postsCtrl.findAllPublished);
 
-//Lister un seul post.
-router.get("/:id", postsCtrl.findOneById);
+//Rechercher un post (tous les utilisateurs authentifiés).
+router.get("/:id", auth, postsCtrl.findOneById);
 
-//Création des posts (Tous les utilisateurs).
-router.post("/", postsCtrl.create);
+//Création des posts (Tous les utilisateurs authentifiés).
+router.post("/", auth, postsCtrl.create);
+// authAdmin.isAdmin, authAdmin.isUser, 
 
-//Modification réservé au créateur du post.
-router.put("/:id", postsCtrl.modifyPostById);
-
-//Suppression réservé au créateur du post (admin).
-router.delete("/:id", postsCtrl.deletePostById);
-
+//Modification réservé au créateur du post et à l'admin.
+router.put("/:id", auth, postsCtrl.modifyPostById);
+// authAdmin.isAdmin, authAdmin.isUser,
+//Suppression réservé au créateur du post et à l'admin.
+router.delete("/:id", auth, authAdmin.isAdmin, authAdmin.isUser, postsCtrl.deletePostById);
+// authAdmin,
 
 //Suppression réservé au créateur du post (admin).
 // router.delete("/images/:id", postsCtrl.getOneImage);

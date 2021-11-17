@@ -28,45 +28,62 @@ exports.findAllPublished = async (req, res) => {
 exports.findOneById = (req, res, next) => {
     Post.sync({ alter: true }).then(() => {
         return Post.findOne({
-            // attributes: [['id']],
+            where: { id: req.body.postId },
+            attributes: [['id', 'postId']],
             include: [
                 {
                     model: db.user,
                 }
             ],
-            // post: req.params.id
-
+            post: req.params.id
         });
     }).then((result) => {
         res.status(200).json(result);
         console.log(result);
     }).catch(error => {
+        console.log(error);
         res.status(400).json({ error })
     });
 };
+
 
 //Créer un nouveau post.
 exports.create = async (req, res, next) => {
     Post.sync({ alter: true }).then(() => {
         return Post.create({
+
             include: [
                 {
                     model: db.user,
                 }
             ],
-            post: req.body.post
+            content: req.body.content
         });
-    }).then((result) => {
-        res.status(201).json(result)
-    }).catch(error => {
-        res.status(400).json({ error, message: "l'utilisateur n'a pas été créé !!!" })
+    }).then((post) => {
+        res.status(201).json(post)
+    }).catch((error) => {
+        res.status(400).json({ error: "Le post n'a pas été créé !!!" })
     });
 };
 
 //Modifier un post.
 exports.modifyPostById = async (req, res, next) => {
-
-    res.send('Modifier un post utilisateur par son id !!!');
+    Post.sync({ alter: true }).then(() => {
+        return Post.update({
+            where: { id: postId },
+            include: [
+                {
+                    model: db.user,
+                }
+            ],
+            content: req.body.content
+        });
+    }).then((post) => {
+        res.status(201).json(post)
+    }).catch((error) => {
+        res.status(400).json({ error: "Le post n'a pas été modifié !!!" })
+    });
+    // res.send('Modifier un post utilisateur par son id !!!');
 };
 
 // Supprimer un post.
