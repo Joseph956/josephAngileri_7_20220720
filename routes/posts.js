@@ -14,8 +14,8 @@ const postsCtrl = require('../controllers/posts');
 router.get("/", auth, postsCtrl.findAllPublished);
 
 //Rechercher un post (tous les utilisateurs authentifiés).
-router.get("/:id", auth, postsCtrl.findOneById);
-
+router.get("/:id", postsCtrl.getPostById);
+// authAdmin.postUser, authAdmin.isAdmin, auth,
 //Création des posts (Tous les utilisateurs authentifiés).
 router.post("/", auth, postsCtrl.create);
 // authAdmin.isAdmin, authAdmin.isUser, 
@@ -24,7 +24,7 @@ router.post("/", auth, postsCtrl.create);
 router.put("/:id", auth, postsCtrl.modifyPostById);
 // authAdmin.isAdmin, authAdmin.isUser,
 //Suppression réservé au créateur du post et à l'admin.
-router.delete("/:id", auth, authAdmin.isAdmin, authAdmin.isUser, postsCtrl.deletePostById);
+router.delete("/:id", auth, authAdmin.isAdmin, authAdmin.postUser, postsCtrl.deletePostById);
 // authAdmin,
 
 //Suppression réservé au créateur du post (admin).

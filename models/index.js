@@ -1,6 +1,7 @@
 'use strict';
 const Sequelize = require('sequelize');
 const dotenv = require('dotenv');
+const { required } = require('joi');
 dotenv.config();
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
@@ -26,43 +27,83 @@ db.likes = require("../models/like")(sequelize, Sequelize);
 //define relationships
 
 // Un utilisateur peut être l'auteur de plusieurs posts.
-db.user.hasMany(db.posts, { onDelete: "CASCADE", foreignKey: 'userId' });
+db.user.hasMany(db.posts, {
+  foreignKey: {
+    username: 'userId'
+
+  },
+
+  onDelete: "CASCADE",
+});
 
 // Un utilisateur peut être l'auteur de plusieurs commentaires.
-db.user.hasMany(db.coments, { foreignKey: 'postId' });
+// db.user.hasMany(db.coments, { foreignKey: 'postId' });
 
-db.user.hasMany(db.coments, { onDelete: "CASCADE", foreignKey: 'postId' });
+// db.user.hasMany(db.coments, { onDelete: "CASCADE", foreignKey: 'postId' });
 
-// Un post peut avoir plusieurs commentaires.
-db.posts.hasMany(db.coments, { foreignKey: 'postId' });
+// // Un post peut avoir plusieurs commentaires.
+// db.posts.hasMany(db.coments, { foreignKey: 'postId' });
 
-db.posts.hasMany(db.coments, { onDelete: "CASCADE", foreignKey: 'postId' });
+// db.posts.hasMany(db.coments, { onDelete: "CASCADE", foreignKey: 'postId' });
 
-// Un utilisateur peut avoir plusieurs posts.
+// // Un utilisateur peut avoir plusieurs posts.
 db.posts.belongsTo(db.user, {
   foreinKey: {
-    username: 'userId',
-    allowNull: false
+    _id: 'userId',
+    allowNull: false,
+    required: true
   },
   onDelete: 'CASCADE',
   onUpdate: 'NO ACTION',
 });
+
+db.user.belongsTo(db.posts, {
+  foreinKey: {
+    _id: 'postId',
+    allowNull: false,
+    required: true
+  },
+  // onDelete: 'CASCADE',
+  // onUpdate: 'NO ACTION',
+});
+
+db.user.belongsTo(db.coments, {
+  foreinKey: {
+    _id: 'comentId',
+    allowNull: false,
+    required: true
+  },
+  // onDelete: 'CASCADE',
+  // onUpdate: 'NO ACTION',
+});
+
+// db.user.belongsToMany(db.posts, {
+//   // through: models.like,
+//   foreignKey: 'userId',
+//   otherKey: 'postId',
+// });
+
+// db.posts.belongsToMany(db.user, {
+//   // through: models.like,
+//   foreignKey: 'postId',
+//   otherKey: 'userId',
+// });
 
 //*********************************************//
 //****************Les commentaires*************//
 //********************************************//
 //Un user peut avoir plusieurs commentaires. 
-db.coments.belongsTo(db.user, {
-  foreinKey: {
-    username: 'userId',
-    allowNull: false
-  },
-  onDelete: 'CASCADE',
-  onUpdate: 'NO ACTION',
-});
+// db.coments.belongsTo(db.user, {
+//   foreinKey: {
+//     username: 'userId',
+//     allowNull: false
+//   },
+//   onDelete: 'CASCADE',
+//   onUpdate: 'NO ACTION',
+// });
 
-//Un post peut avoir plusieurs commentaires.
-db.coments.belongsTo(db.posts, { onDelete: "CASCADE" });
+// //Un post peut avoir plusieurs commentaires.
+// db.coments.belongsTo(db.posts, { onDelete: "CASCADE" });
 
 
 

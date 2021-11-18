@@ -1,5 +1,11 @@
 const jwt = require('jsonwebtoken');
+const Post = require('../models/post');
+const user = require('../models/user');
 const User = require('../models/user');
+// const db = require("../models");
+// const User = db.user;
+// const Post = db.posts;
+
 require('dotenv').config();
 
 //Validation de l'identité de l'utlisateur.
@@ -16,13 +22,18 @@ require('dotenv').config();
 
 
 //Administrateur  : Vérifier Les droits administrateurs réseaux.
-module.exports.isAdmin = (req, res, next) => {
+exports.isAdmin = (req, res, next) => {
+    console.log("---->ROUTE isAdmin");
+    console.log(req.params.id);
+    console.log({ _id: req.params.id });
+    console.log("---->CONTENU: req.body");
+    console.log(req.body);
     try {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
         const userId = decodedToken.userId;
-        const isAdmin = req.params.id;
-        User.findOne({ where: isAdmin })
+        const connectAdmin = req.params.id;
+        User.findOne({ where: { _id: connectAdmin } })
             .then(user => {
                 if (userId === user.userId) {
                     req.token = token;
@@ -37,45 +48,23 @@ module.exports.isAdmin = (req, res, next) => {
     }
 };
 
-//Modérateur : Vérifier les droits administrateurs du modérateur du site.
-module.exports.isModerateur = (req, res, next) => {
-    try {
-        const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
-        const userId = decodedToken.userId;
-        const isModerateur = req.params.id;
-        User.findOne({ _id: isModerateur })
-            .then(user => {
-                if (userId === user.userId) {
-                    req.token = token;
-                    req.user = userId;
-                    next();
-                } else {
-                    res.status(401).json({ error: error | "Vous n'êtes pas le modérateur des publications !!!" });
-                }
-            });
-    } catch (error) {
-        res.status(500).json({ error });
-    }
-};
-
 
 //Utilisateurs : Vérifier : Les droits administrateurs locaux.
 //A utliser sur les routes put et delete.
-module.exports.isUser = (req, res, next) => {
+exports.postUser = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
         const userId = decodedToken.userId;
-        const isUser = req.params.id;
-        User.findOne({ _id: isUser })
-            .then(user => {
-                if (userId === user.userId) {
+        const postId = req.params.id;
+        Post.findOne({ _id: postId })
+            .then(post => {
+                if (userId === post.userId) {
                     req.token = token;
                     req.user = userId;
                     next();
                 } else {
-                    res.status(401).json({ error: error | "Vous n'êtes pas l'administrateur de votre compte !!!" });
+                    res.status(401).json({ error: error | "Vous n'êtes pas le propriètaire de ce compte !!!" });
                 }
             });
     } catch (error) {

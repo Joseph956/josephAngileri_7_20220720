@@ -1,5 +1,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const fs = require('fs');
 const path = require('path');
 const { sequelize } = require('./models');
@@ -8,6 +9,11 @@ dotenv.config();
 require('./config/config');
 
 const morgan = require('morgan'); //logs http
+const helmet = require('helmet');
+const xssclean = require('xss-clean');
+const noCache = require('nocache');
+const cors = require('cors');
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 const authRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
@@ -16,6 +22,11 @@ const comentsRoutes = require('./routes/coments');
 const likesRoutes = require('./routes/likes');
 
 const app = express();
+// app.use(cors()); Empêche mes appels API d'aboutir !?!.
+app.disable('x-powered-by');
+app.use(xssclean());
+app.use(helmet());
+app.use(noCache());
 
 async function main() {
     await sequelize.sync()
@@ -23,12 +34,14 @@ async function main() {
 
 // //logger requests/responses.
 app.use(morgan('dev'));
+app.use(morgan('combined', { stream: accessLogStream }));
 
-//body parser et inclut dans express.json.
+//Parse le body des requêtes .json
+//Inclut à partir de la version 4.17 express
+//Utilisation de json pour récupération de paramétres.
 app.use(express.json());
-app.use(cookieParser());
-
-
+//Pour encoder le contenu.
+app.use(express.urlencoded({ extended: true }));
 
 //Configuration des cors
 app.use((req, res, next) => {
@@ -41,6 +54,16 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });
+
+// stocke le jeton "JWT" dans la session.
+app.use(session({
+    name: "sessionId",
+    secret: process.env.COOKIE_SESSION,
+    secure: true, //garantie que le navigateur envoie le cookie sur https uniquement.
+    httpOnly: true, //Evite les attaques Cross-site-scripting.
+    cookie: { maxAge: 600000 }//jeton stocké pendant 10 min
+}));
+
 
 // Configuration des routes
 app.use("/api/auth", authRoutes);
