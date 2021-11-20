@@ -2,7 +2,7 @@
   "development": {
     "username": "joseph",
     "password": "user",
-    "database": "dbGroupomania",
+    "database": "db_Groupomania",
     "host": "localhost",
     "dialect": "mysql"
   },

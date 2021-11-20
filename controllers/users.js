@@ -1,11 +1,33 @@
 const db = require("../models");
 const User = db.user;
+const Role = db.role;
 
 //Lister tous les utilisateurs.
 exports.findAllPublished = (req, res, next) => {
+
+    // const userConnected = req.params.id;
+    // console.log("--->CONTENU: userConnected");
+    // console.log(userConnected);
+    // User.sync({ alter: true }).then((userConnected) => {
+    //     // if (userConnected == User) {
+    //     User.findByPk({
+    //         order: [['username', 'ACS']],
+    //         attributes: ['attachment', 'username', 'isAdmin', 'id']
+    //     }).then(data => {
+    //         res.status(200).send(data);
+    //     }).catch(error => {
+    //         res.status(400).send(error);
+    //     });
+
+    //     // };
+    // });
+
+
     User.sync({ alter: true }).then(() => {
+        console.log("--->CONTENU: User");
+        console.log(User);
         return User.findAll({
-            user: req.body.user,
+            user: (req.body.user),
             order: [["createdAt", "DESC"]],
         });
     }).then((user) => {
@@ -21,6 +43,8 @@ exports.findAllPublished = (req, res, next) => {
 
 exports.findOneById = (req, res, next) => {
     User.sync({ alter: true }).then(() => {
+        console.log('---->CONTENU: req.params - findOneById');
+        console.log(req.params);
         return User.findOne({
             user: req.body.user,
             order: [["createdAt", "DESC"]],

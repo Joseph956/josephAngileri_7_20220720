@@ -12,7 +12,7 @@ const morgan = require('morgan'); //logs http
 const helmet = require('helmet');
 const xssclean = require('xss-clean');
 const noCache = require('nocache');
-const cors = require('cors');
+// const cors = require('cors');
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 const authRoutes = require('./routes/auth');
@@ -22,7 +22,7 @@ const comentsRoutes = require('./routes/coments');
 const likesRoutes = require('./routes/likes');
 
 const app = express();
-// app.use(cors()); Empêche mes appels API d'aboutir !?!.
+// app.use(cors()); //Empêche mes appels API d'aboutir !?!.
 app.disable('x-powered-by');
 app.use(xssclean());
 app.use(helmet());
@@ -88,7 +88,7 @@ app.use((err, req, res, next) => {
 const db = require("./models");
 const bcrypt = require("bcrypt");
 const User = db.user;
-const Post = db.posts;     //"Post"est déclaré mais pas pris en compte ?!!
+const Post = db.posts;
 db.sequelize.sync().then(() => {
     initial();
 });

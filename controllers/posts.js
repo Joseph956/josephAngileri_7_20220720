@@ -1,5 +1,6 @@
 const db = require("../models");
 const Post = db.posts;
+const User = db.user;
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -63,15 +64,17 @@ exports.getPostById = async (req, res, next) => {
     console.log({ _id: req.params.id });
     console.log("---->CONTENU: req.body");
     Post.sync({ alter: true }).then(() => {
-        return Post.findOne({
-            where: { id: req.body },
-            attributes: [['id', 'postId']],
+        return Post.find({
+            where: {
+                userId: req.params.id
+            },
             include: [
                 {
                     model: db.user,
+                    attributes: [['id', 'postId']],
                 }
             ],
-            post: req.params.id
+            // post: req.params.id
         });
     }).then((result) => {
         res.status(200).json(result);
@@ -85,19 +88,25 @@ exports.getPostById = async (req, res, next) => {
 
 //Créer un nouveau post.
 exports.create = async (req, res, next) => {
-    console.log("--->CONTENU: req.body.post");
-    console.log(req.body.post);
+    console.log("--->CONTENU: req.body.content - create");
+    console.log(req.body.content);
+    console.log("---->CONTENU: req.params.id - create");
     console.log({ _id: req.params.id });
-    console.log("---->CONTENU: req.body");
     Post.create({
-        id: req.body.post,
+        // where: {
+        //     userId: req.params.id
+        // },
+        // include: [
+        //     {
+        //         model: db.user,
+        userId: req.params.id,
         content: req.body.content,
-        include: [
-            {
-                model: db.user,
-            }
-        ],
+        //         attributes: [['id', 'postId']],
+        //     }
+        // ],
+
     }).then((post) => {
+        console.log(post);
         res.status(201).json(post)
     }).catch((error) => {
         res.status(400).json({ error, message: "Le post n'a pas été créé !!!" })
@@ -108,7 +117,7 @@ exports.create = async (req, res, next) => {
 exports.modifyPostById = async (req, res, next) => {
     console.log("---->ROUTE modifyPostById");
     console.log(req.params.id);
-    console.log({ _id: req.params.id });
+    console.log({ _id: req.params });
     console.log("---->CONTENU: req.body");
     console.log(req.body);
 
@@ -118,6 +127,7 @@ exports.modifyPostById = async (req, res, next) => {
     Post.sync({ alter: true }).then(() => {
         return Post.update({
             where: { _id: id.params.id },
+            userId: users[0].get('id'),
             content: req.body.content,
             include: [
                 {
@@ -128,7 +138,7 @@ exports.modifyPostById = async (req, res, next) => {
     }).then((post) => {
         res.status(201).json(post)
     }).catch((error) => {
-        res.status(400).json({ error: "Le post n'a pas été modifié !!!" })
+        res.status(400).json(error, "Le post n'a pas été modifié !!!");
     });
     res.send('Modifier un post utilisateur par son id !!!');
 };

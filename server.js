@@ -13,11 +13,9 @@ const normalizePort = (val) => {
     return false;
 };
 
-//paramètrage du port d'écoute méthode set d'express
 const port = normalizePort(process.env.PORT);
 app.set('port', port);
 
-//Recherche et gestion des erreurs.
 const errorHandler = (error) => {
     if (error.syscall !== 'listen') {
         throw error;
@@ -38,15 +36,11 @@ const errorHandler = (error) => {
     }
 };
 
-// //createServer prend en argument la fonction
-// //qui sera appelé à chaque requête reçu par le serveur
-// //Les fonctions sont dans app.js
 const server = http.createServer(app);
 
 server.on('error', errorHandler);
 server.on('listening', () => {
     const address = server.address();
-    //(noeud:12828) Avertissement : Accès à la propriété inexistante « splice » des exportations de module à l'intérieur de exports à l'intérieur d'une dépendance circulaire.
     const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
     console.log('Listening on ' + bind);
 });

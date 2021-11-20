@@ -40,11 +40,6 @@ module.exports = (sequelize, Sequelize) => {
             sequelize,
             modelName: 'user'
         });
-
-    User.sync()
-        .then(() => console.log("La table utilisateurs est créé !!!"))
-        .catch(error => console.log(error));
-
     return User;
 };
 

@@ -27,90 +27,24 @@ db.likes = require("../models/like")(sequelize, Sequelize);
 //define relationships
 
 // Un utilisateur peut être l'auteur de plusieurs posts.
-db.user.hasMany(db.posts, {
-  foreignKey: {
-    username: 'userId'
 
-  },
+//relation un à un (La clé étrangère est définie dans le modèle cible).
+// db.user.hasOne(db.posts); // Un post n'a qu'un auteur.
+// db.user.hasOne(db.coments); // Un coment n'a qu'un auteur.
+// db.user.hasOne(db.likes); // Un like n'a qu'un auteur.
 
-  onDelete: "CASCADE",
-});
+// //relation un à un (La clé étrangère est définie dans le modèle source).
+// db.user.belongsTo(db.posts); // Un post n'a qu'un auteur.
+// db.user.belongsTo(db.coments); // Un coment n'a qu'un auteur.
+// db.user.belongsTo(db.likes); // Un like n'a qu'un auteur.
 
-// Un utilisateur peut être l'auteur de plusieurs commentaires.
-// db.user.hasMany(db.coments, { foreignKey: 'postId' });
-
-// db.user.hasMany(db.coments, { onDelete: "CASCADE", foreignKey: 'postId' });
-
-// // Un post peut avoir plusieurs commentaires.
-// db.posts.hasMany(db.coments, { foreignKey: 'postId' });
-
-// db.posts.hasMany(db.coments, { onDelete: "CASCADE", foreignKey: 'postId' });
-
-// // Un utilisateur peut avoir plusieurs posts.
-db.posts.belongsTo(db.user, {
-  foreinKey: {
-    _id: 'userId',
-    allowNull: false,
-    required: true
-  },
-  onDelete: 'CASCADE',
-  onUpdate: 'NO ACTION',
-});
-
-db.user.belongsTo(db.posts, {
-  foreinKey: {
-    _id: 'postId',
-    allowNull: false,
-    required: true
-  },
-  // onDelete: 'CASCADE',
-  // onUpdate: 'NO ACTION',
-});
-
-db.user.belongsTo(db.coments, {
-  foreinKey: {
-    _id: 'comentId',
-    allowNull: false,
-    required: true
-  },
-  // onDelete: 'CASCADE',
-  // onUpdate: 'NO ACTION',
-});
-
-// db.user.belongsToMany(db.posts, {
-//   // through: models.like,
-//   foreignKey: 'userId',
-//   otherKey: 'postId',
-// });
-
-// db.posts.belongsToMany(db.user, {
-//   // through: models.like,
-//   foreignKey: 'postId',
-//   otherKey: 'userId',
-// });
-
-//*********************************************//
-//****************Les commentaires*************//
-//********************************************//
-//Un user peut avoir plusieurs commentaires. 
-// db.coments.belongsTo(db.user, {
-//   foreinKey: {
-//     username: 'userId',
-//     allowNull: false
-//   },
-//   onDelete: 'CASCADE',
-//   onUpdate: 'NO ACTION',
-// });
-
-// //Un post peut avoir plusieurs commentaires.
-// db.coments.belongsTo(db.posts, { onDelete: "CASCADE" });
-
-
+// //relation un à plusieurs (La clé étrangère est définie dans le modèle cible).
+// db.user.hasMany(db.posts); // Un user est l'auteur de plusieurs posts.
+// db.user.hasMany(db.coments); // Un user est l'auteur de plusieurs coments.
+// db.user.hasMany(db.likes); // Un user est l'auteur de plusieurs likes.
 
 // db.coments.hasMany(db.user); // Un utilisateur peut être l'auteur de plusieurs coments.
 // db.likes.hasMany(db.user); // Un utilisateur peut être l'auteur de plusieurs likes.
-// db.user.hasOne(db.posts); // Un post n'a qu'un auteur.
-// db.user.hasOne(db.coments); // Un coment n'a qu'un auteur.
 // db.posts.belongsTo(db.user); // Un post n'appartient qu'à un utilisateur.
 // db.coments.belongsTo(db.user); //Un commentaire n'appartient qu'à un utilisateur.
 // db.likes.belongsTo(db.user); //un like n'appartient qu'a un utilisateur.
