@@ -23,6 +23,21 @@ db.user = require("../models/user")(sequelize, Sequelize);
 db.posts = require("../models/post")(sequelize, Sequelize);
 db.coments = require("../models/coment")(sequelize, Sequelize);
 db.likes = require("../models/like")(sequelize, Sequelize);
+db.role = require("../models/role")(sequelize, Sequelize);
+
+//define relationships
+
+// Un utilisateur peut être l'auteur de plusieurs posts.
+db.user.hasMany(db.posts);
+db.user.hasMany(db.coments);
+db.user.hasMany(db.likes);
+
+db.posts.belongsTo(db.user);
+db.coments.belongsTo(db.user);
+db.likes.belongsTo(db.user);
+
+db.role.hasMany(db.user);
+db.user.belongsTo(db.role);
 
 //define relationships
 

@@ -14,24 +14,26 @@ const usersCtrl = require("../controllers/users")
 router.get("/", authToken.token, usersCtrl.findAllPublished);
 
 //Accés au profil public utilisateur.
-router.get("/:id", authToken.token, usersCtrl.findOneById);
+router.get("/:id", authToken.token, usersCtrl.findOneProfil);
 // authAdmin.postUser,  authAdmin.isAdmin,
 
 //Rechercher un utilisateur (user authentifier).
 router.get('/search', authToken.token);
 
 //Créer une nouvelle fiche utilisateur (admin).
-router.post("/", authToken.token, authAdmin.isAdmin, usersCtrl.create);
+router.post("/create", authToken.token, usersCtrl.createProfil);
+//authAdmin.isAdmin,
 
 //Picture : Modifier la photo du profil utilisateur.
-// router.put("/:id", authAdmin.isAdmin, usersCtrl);
+// router.put("/:id", authAdmin.isAdmin, usersCtrl.update);
 
 //profil : Modifier la description du profil utilisateur (user).
-router.put("/:id", authToken.token, authAdmin.isAdmin, authAdmin.postUser, usersCtrl.modifyUserById);
+router.put("/:id", authToken.token, usersCtrl.updateProfil);
+// authAdmin.postUser, authAdmin.isAdmin,
 
 //Delete - Supprimer un compte utilisateur
-router.delete("/:id", authToken.token, authAdmin.isAdmin, authAdmin.postUser, usersCtrl.deleteUserById);
-
+router.delete("/:id", authToken.token, usersCtrl.deleteProfil);
+// authAdmin.isAdmin, authAdmin.postUser,
 
 
 

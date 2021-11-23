@@ -6,16 +6,16 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: Sequelize.UUIDV4,
             allowNull: false,
         },
-        admin: {
-            type: sequelize.BOOLEAN,
-            allowNull: false,
+        role: {
+            type: Sequelize.STRING,
             required: true,
-        },
+        }
+        /*,
         user: {
             type: sequelize.BOOLEAN,
             allowNull: false,
             required: true,
-        },
+        },*/
     },
         {
             sequelize,

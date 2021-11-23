@@ -19,7 +19,7 @@ router.post('/login', blocageRequete, authCtrl.signIn);
 router.get('/logout', authCtrl.logout);
 
 //accès au profil privé utilisateur (admin/user créateur).
-// router.post('/login', authIsAdmin.isAdmin, authCtrl.signIn);
+router.post('/:id/profil', authIsAdmin.isAdmin, authCtrl.signIn);
 
 //Modifier le mot de passe
 router.put('/:id/password');

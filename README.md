@@ -5,6 +5,8 @@ Inserer les informations de connexion dans les variables d'environnement
 
 # Démarrer le serveur
 Lancer le serveur : `nodemon server`
+# cd front
+Lancer le serveur : `npm run serve`
 
 # Les routes
 

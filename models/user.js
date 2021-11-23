@@ -1,4 +1,3 @@
-
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define('user', {
         id: {
@@ -26,12 +25,13 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
             required: true,
-        },
+        }
+        /*,
         isAdmin: {
             type: Sequelize.BOOLEAN,
             defaultValue: false,
             required: true,
-        },
+        },*/
     },
         {
             // defaultScope: {
@@ -42,5 +42,3 @@ module.exports = (sequelize, Sequelize) => {
         });
     return User;
 };
-
-

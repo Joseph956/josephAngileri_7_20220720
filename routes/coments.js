@@ -12,10 +12,10 @@ const comentsCtrl = require('../controllers/coments');
 router.get("/", comentsCtrl.findAllPublished);
 
 //Créer un nouveau commentaire (Tous les utilisateurs).
-router.post("/", comentsCtrl.create);
+router.post("/", comentsCtrl.createComent);
 
 //Suppression d'un commentaire réservé au créateur du post (credential)&(admin).
-// router.delete("/:id", comentsCtrl.deletePostById);
+router.delete("/:id", comentsCtrl.deleteComent);
 
 
 module.exports = router;
