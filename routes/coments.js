@@ -1,21 +1,22 @@
 const express = require('express');
 const router = express.Router();
+const Joi = require('joi');
 
 const auth = require('../middlware/auth');
-const comentsCtrl = require('../controllers/coments');
+const comentCtrl = require('../controllers/coments');
+// const valid = require('../middlware/controlInputs');
 //contrôle et validation des données transmises(à créer).
-//Contrôle et validation de l'identité de l'utlisateur(à créer).
 
 // //@route GET && POST - /Coments/
 
 //Lister tous les commentaires associés à un post (admin).
-router.get("/", comentsCtrl.findAllPublished);
+router.get("/", auth.token, comentCtrl.findAllPublished);
 
-//Créer un nouveau commentaire (Tous les utilisateurs).
-router.post("/", comentsCtrl.createComent);
-
+//Publier un nouveau commentaire (Tous les utilisateurs).
+router.post("/", auth.token, comentCtrl.createComent);
+//valid.comentContent,
 //Suppression d'un commentaire réservé au créateur du post (credential)&(admin).
-router.delete("/:id", comentsCtrl.deleteComent);
+router.delete("/:id", auth.token, auth.haveRightOnComent, comentCtrl.deleteComent);
 
 
 module.exports = router;

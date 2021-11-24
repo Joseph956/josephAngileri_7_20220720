@@ -2,11 +2,11 @@ const Joi = require('joi');
 
 ////Vérification et Validation des données utilisateur////
 
-//1//Enregistrement d'un nouvel utilisateur (nom, email, password "données invalides"),
+//1//Création d'un nouveau profil : Enregistrement (register) du (nom, email, password).
 const signUpSchema = Joi.object({
     username: Joi.string().trim().required(),
     email: Joi.string().trim().email().required(),
-    password: Joi.string().trim().min(10).required(),
+    password: Joi.string().trim().min(8).required(),
 });
 exports.newUser = (req, res, next) => {
     const { error, value } = signUpSchema.validate(req.body);
@@ -22,23 +22,11 @@ exports.newUser = (req, res, next) => {
 const signInSchema = Joi.object({
     email: Joi.string().trim().email().required(),
     password: Joi.string().trim().min(10).required(),
-
 });
 exports.loginUser = (req, res, next) => {
     const { error, value } = signInSchema.validate(req.body);
     if (error) {
         res.status(401).json({ error: "Informations de connexions invalides !!!" });
-    } else {
-        next();
-    }
-};
-
-//3//Vérifier l'id (id "invalide") pour s'assurer de l'identité de la personne qui fait la requête,
-const idSchema = Joi.string().integer().positive().required();
-exports.idUser = (req, res, next) => {
-    const { error, value } = idSchema.validate(req.params.id);
-    if (error) {
-        res.status(401).json({ error: "id utilisateur invalide !!!" });
     } else {
         next();
     }
@@ -77,10 +65,10 @@ exports.postContent = (req, res, next) => {
 
 //6//Validation de la publication d'un commentaire.
 const comentSchema = Joi.object({
-    postId: Joi.string().integer().positive().required(),
+    comentId: Joi.string().integer().positive().required(),
     content: Joi.string().trim().required(),
 });
-exports.postContent = (req, res, next) => {
+exports.comentContent = (req, res, next) => {
     const { error, value } = comentSchema.validate(req.body.content);
     if (error) {
         res.status(422).json({ error: "Le texte saisie n'est pas valide !!!" });

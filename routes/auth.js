@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const authEmail = require('../middlware/auth');
-const authPasswd = require('../middlware/auth');
+const auth = require('../middlware/auth');
 const authCtrl = require('../controllers/auth');
-const authIsAdmin = require('../middlware/authAdmin');
 
 const rateLimit = require("express-rate-limit");
 const blocageRequete = rateLimit({
@@ -14,12 +12,12 @@ const blocageRequete = rateLimit({
 });
 
 //S'enregistrer //Se connecter// Se déconnecter
-router.post('/register', authEmail.email, authPasswd.passwd, authCtrl.signUp);
+router.post('/register', auth.email, auth.passwd, authCtrl.signUp);
 router.post('/login', blocageRequete, authCtrl.signIn);
 router.get('/logout', authCtrl.logout);
 
 //accès au profil privé utilisateur (admin/user créateur).
-router.post('/:id/profil', authIsAdmin.isAdmin, authCtrl.signIn);
+// router.post('/:id/profil', authCtrl.signIn);
 
 //Modifier le mot de passe
 router.put('/:id/password');

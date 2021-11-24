@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-// const auth = require('../middlware/auth');
-const authToken = require('../middlware/auth');
-const authAdmin = require('../middlware/authAdmin');
+const auth = require('../middlware/auth');
+
+
 // //const authPost = require('../middlware/authPost');
 // const authComments = require('../middlware/authComments');
 // //const multer = require('../middlware/multer-config');
@@ -11,28 +11,28 @@ const usersCtrl = require("../controllers/users")
 
 
 //Lister tous les utilisateurs.
-router.get("/", authToken.token, usersCtrl.findAllPublished);
+router.get("/", auth.token, usersCtrl.findAllPublished);
 
 //Accés au profil public utilisateur.
-router.get("/:id", authToken.token, usersCtrl.findOneProfil);
+router.get("/:id", auth.token, usersCtrl.findOneProfil);
 // authAdmin.postUser,  authAdmin.isAdmin,
 
 //Rechercher un utilisateur (user authentifier).
-router.get('/search', authToken.token);
+router.get('/search', auth.token,);
 
 //Créer une nouvelle fiche utilisateur (admin).
-router.post("/create", authToken.token, usersCtrl.createProfil);
+router.post("/create", auth.token, usersCtrl.createProfil);
 //authAdmin.isAdmin,
 
 //Picture : Modifier la photo du profil utilisateur.
 // router.put("/:id", authAdmin.isAdmin, usersCtrl.update);
 
 //profil : Modifier la description du profil utilisateur (user).
-router.put("/:id", authToken.token, usersCtrl.updateProfil);
+router.put("/:id", auth.token, auth.haveRightOnProfile, usersCtrl.updateProfil);
 // authAdmin.postUser, authAdmin.isAdmin,
 
 //Delete - Supprimer un compte utilisateur
-router.delete("/:id", authToken.token, usersCtrl.deleteProfil);
+router.delete("/:id", auth.token, auth.haveRightOnProfile, auth.haveRightOnPost, usersCtrl.deleteProfil);
 // authAdmin.isAdmin, authAdmin.postUser,
 
 

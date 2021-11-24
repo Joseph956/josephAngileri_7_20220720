@@ -89,35 +89,51 @@ const db = require("./models");
 const bcrypt = require("bcrypt");
 const User = db.user;
 const Post = db.posts;
+const Role = db.role;
 db.sequelize.sync().then(() => {
     initial();
 });
 
 // CREATE DEFAULT DATA
 function initial() {
-    // CREATE FIRST USER (ADMIN)
-    User.findOrCreate({
-        where: { username: "admin", },
+    // CREATE USER ROLE;
+    Role.findOrCreate({
+        where: { role: "user" },
         defaults: {
-            username: "admin",
-            email: "admin@gmail.com",
-            password: bcrypt.hashSync("admin", 4),
-            isAdmin: true,
+            role: "user"
         }
-    }).then(users => {
-        Post.findOrCreate({
-            where: {
-                content: "1er post"
-            },
+    });
+    // CREATE ADMIN ROLE;
+    Role.findOrCreate({
+        where: { role: "admin" },
+        defaults: {
+            role: "admin"
+        }
+    }).then(createdRole => {
+        // CREATE FIRST USER (ADMIN)
+        User.findOrCreate({
+            where: { username: "admin", },
             defaults: {
-                post: "1er post",
-                userId: users[0].get('id')
+                username: "admin",
+                email: "admin@gmail.com",
+                password: bcrypt.hashSync("admin", 4),
+                roleId: createdRole[0].id
             }
+        }).then(users => {
+            Post.findOrCreate({
+                where: {
+                    content: "1er post"
+                },
+                defaults: {
+                    post: "1er post",
+                    userId: users[0].get('id')
+                }
+            })
+                .catch((err) => {
+                    console.log(err);
+                });
         })
-            .catch((err) => {
-                console.log(err);
-            });
-    })
+    });
 };
 
 

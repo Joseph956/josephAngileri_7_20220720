@@ -40,7 +40,7 @@ exports.findOne = (req, res) => {
 exports.createPost = async (req, res, next) => {
     Post.create({
         content: req.body.content,
-        userId: User._id,
+        userId: req.user,
 
     }).then((post) => {
         console.log(post);

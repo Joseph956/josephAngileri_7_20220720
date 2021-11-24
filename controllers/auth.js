@@ -1,5 +1,6 @@
 const db = require('../models');
 const User = db.user;
+const Role = db.role;
 const { JsonWebTokenError } = require('jsonwebtoken');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -36,18 +37,32 @@ exports.signIn = (req, res, next) => {
                     if (!valid) {
                         return res.status(403).json({ error: 'Le mot de passe est incorrect !' });
                     }
-                    res.status(200).json({
-                        userId: user.id,
-                        isAdmin: user.isAdmin,
-                        token: jwt.sign({ userId: user.id },
-                            process.env.RANDOM_TOKEN_SECRET, { expiresIn: '24h' })
-                    });
+                    //GET LOGGED USER ROLE
+                    Role.findOne({
+                        where: { id: user.roleId }
+                    }).then(role => {
+                        console.log('---->CONTENU: role');
+                        console.log('role =', role);
+                        res.status(200).json({
+                            userId: user.id,
+                            role: role.role,
+                            token: jwt.sign({
+                                userId: user.id,
+                                role: role.role,
+                            },
+                                process.env.RANDOM_TOKEN_SECRET, { expiresIn: '24h' })
+                        });
+                    })
                 })
-                .catch((error) => res.status(500).json({ error }));
+                .catch((error) => res.status(400).json({ error }));
         })
         .catch((error) => res.status(500).json({ error }));
 };
 
 exports.logout = (req, res, next) => {
-
+    new Cookies(req, res).set('snToken', "", {
+        httpOnly: true,
+        maxAge: 1  // 1ms (= suppression quasi instantannée)
+    })
+    res.status(200).json({ message: "utilisateur déconnecté" });
 };
