@@ -18,5 +18,4 @@ router.post("/", auth.token, comentCtrl.createComent);
 //Suppression d'un commentaire réservé au créateur du post (credential)&(admin).
 router.delete("/:id", auth.token, auth.haveRightOnComent, comentCtrl.deleteComent);
 
-
 module.exports = router;

@@ -5,7 +5,6 @@ const Coment = db.coments;
 const jwt = require('jsonwebtoken');
 const passwrdValidator = require('password-validator');
 const emailSchema = require('validator');
-const coment = require("../models/coment");
 require('dotenv').config();
 
 //Verification que le token est valide.
@@ -21,7 +20,7 @@ module.exports.token = (req, res, next) => {
                 next();
             } else {
                 return res.status(401).send({
-                    message: "Aucun utilisateur trouvé avec ce jéton !",
+                    message: "Aucun utilisateur trouvé avec ce jeton !",
                 });
             }
         });
@@ -30,7 +29,12 @@ module.exports.token = (req, res, next) => {
     }
 };
 
-//Verification que le token a les droit sur le post
+//Vérifie que le token utlisé pour faire une création ou une modification correspond au token d'authentification de l'utilisteur connecté.
+module.exports.credential = (req, res, next) => {
+
+};
+
+//Verification que le token a les droit sur le post (ok).
 module.exports.haveRightOnPost = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
@@ -38,14 +42,12 @@ module.exports.haveRightOnPost = (req, res, next) => {
         const userId = decodedToken.userId;
         const role = decodedToken.role;
         const post = req.params.id;
-        console.log(req.params);
-        console.log(post);
         User.findByPk(userId).then((user) => {
             if (user) {
                 req.token = token;
+                req.token = role;
                 req.user = userId;
-                // On verifie si l'utilisateur est admin
-                if (role == "admin") {
+                if (role == role.role) {
                     return next();
                 } else {
                     Post.findByPk(post).then((foundedPost) => {
@@ -54,7 +56,7 @@ module.exports.haveRightOnPost = (req, res, next) => {
                             return next();
                         } else {
                             return res.status(403).send({
-                                message: "Vous n'avez pas les droits necessaires pour cette action !",
+                                message: "Vous n'avez pas les droits necessaires pour faire cette action !",
                             });
                         }
                     })
@@ -71,7 +73,7 @@ module.exports.haveRightOnPost = (req, res, next) => {
     }
 };
 
-//Vérification que le token a les droits sur les commentaires.
+//Vérification que le token a les droits sur les commentaires . 
 module.exports.haveRightOnComent = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
@@ -79,18 +81,15 @@ module.exports.haveRightOnComent = (req, res, next) => {
         const userId = decodedToken.userId;
         const role = decodedToken.role;
         const coment = req.params.id;
-        console.log(req.params);
-        console.log(coment);
         User.findByPk(userId).then((user) => {
             if (user) {
                 req.token = token;
                 req.user = userId;
-                // On verifie si l'utilisateur est admin
-                if (role == "admin") {
+                req.token = role;
+                if (role == role.role) {
                     return next();
                 } else {
                     Coment.findByPk(coment).then((foundedComent) => {
-                        console.log(foundedComent);
                         if (foundedComent.userId == userId) {
                             return next();
                         } else {
@@ -124,9 +123,32 @@ module.exports.haveRightOnProfile = (req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
         const userId = decodedToken.userId;
         const role = decodedToken.role;
-        console.log(role);
-        //@TOTO UN VERIF POUR LES PROFILE
-
+        const Password = req.body.password;
+        User.findByPk(userId).then((user) => {
+            if (user) {
+                req.token = token;
+                req.token = role;
+                req.user = userId;
+                if (role == role.role) {
+                    return next();
+                } else {
+                    Password.findByPk(Password).then((foundedPassword) => {
+                        console.log(foundedPassword);
+                        if (foundedPassword.userId == userId) {
+                            return next();
+                        } else {
+                            return res.status(403).send({
+                                message: "Vous n'avez pas les droits necessaires pour cette action !",
+                            });
+                        }
+                    })
+                }
+            } else {
+                return res.status(401).send({
+                    message: "Aucun utilisateur trouvé avec ce jeton !",
+                });
+            }
+        });
     } catch (error) {
         console.log(error);
         res.status(401).json({ error: error | 'Requête non authentifiée !' });

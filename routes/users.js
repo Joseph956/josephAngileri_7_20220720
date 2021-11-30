@@ -1,40 +1,23 @@
 const express = require('express');
 const router = express.Router();
-
+// const upload = multer();
+// const multer = require('../middlware/multer-config');
 const auth = require('../middlware/auth');
+const usersCtrl = require("../controllers/users");
 
-
-// //const authPost = require('../middlware/authPost');
-// const authComments = require('../middlware/authComments');
-// //const multer = require('../middlware/multer-config');
-const usersCtrl = require("../controllers/users")
-
-
-//Lister tous les utilisateurs.
 router.get("/", auth.token, usersCtrl.findAllPublished);
-
-//Accés au profil public utilisateur.
 router.get("/:id", auth.token, usersCtrl.findOneProfil);
-// authAdmin.postUser,  authAdmin.isAdmin,
+router.post("/upload", auth.token, usersCtrl.upload);
+router.put("/:id", auth.token, auth.haveRightOnProfile, usersCtrl.updateProfil);
 
-//Rechercher un utilisateur (user authentifier).
+router.delete("/:id", auth.token, auth.haveRightOnProfile, auth.haveRightOnPost, usersCtrl.deleteProfil);
 router.get('/search', auth.token,);
 
-//Créer une nouvelle fiche utilisateur (admin).
-router.post("/create", auth.token, usersCtrl.createProfil);
-//authAdmin.isAdmin,
+//upload
+// router.post('/upload', upload.single('file'), multer, uploadCtrl.uploadProfil);
 
 //Picture : Modifier la photo du profil utilisateur.
 // router.put("/:id", authAdmin.isAdmin, usersCtrl.update);
-
-//profil : Modifier la description du profil utilisateur (user).
-router.put("/:id", auth.token, auth.haveRightOnProfile, usersCtrl.updateProfil);
-// authAdmin.postUser, authAdmin.isAdmin,
-
-//Delete - Supprimer un compte utilisateur
-router.delete("/:id", auth.token, auth.haveRightOnProfile, auth.haveRightOnPost, usersCtrl.deleteProfil);
-// authAdmin.isAdmin, authAdmin.postUser,
-
 
 
 

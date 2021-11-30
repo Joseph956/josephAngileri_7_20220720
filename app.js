@@ -7,6 +7,7 @@ const { sequelize } = require('./models');
 const dotenv = require('dotenv');
 dotenv.config();
 require('./config/config');
+// const {login} = require('./middlware/auth');
 
 const morgan = require('morgan'); //logs http
 const helmet = require('helmet');
@@ -28,10 +29,6 @@ app.use(xssclean());
 app.use(helmet());
 app.use(noCache());
 
-async function main() {
-    await sequelize.sync()
-};
-
 // //logger requests/responses.
 app.use(morgan('dev'));
 app.use(morgan('combined', { stream: accessLogStream }));
@@ -42,6 +39,7 @@ app.use(morgan('combined', { stream: accessLogStream }));
 app.use(express.json());
 //Pour encoder le contenu.
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 //Configuration des cors
 app.use((req, res, next) => {
@@ -71,6 +69,7 @@ app.use("/api/users", usersRoutes);
 app.use("/api/posts", postsRoutes);
 app.use("/api/coments", comentsRoutes);
 app.use("/api/likes", likesRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
 app.use((err, req, res, next) => {

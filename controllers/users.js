@@ -1,6 +1,6 @@
 const db = require("../models");
+const fs = require('fs');
 const User = db.user;
-const Role = db.role;
 
 //Lister tous les utilisateurs.
 exports.findAllPublished = (req, res, next) => {
@@ -32,53 +32,27 @@ exports.findOneProfil = (req, res) => {
 };
 
 //Créer un nouveau profil utilisateur
-exports.create = (req, res) => {
-    // Validate request
-    if (!req.body.username) {
-        res.status(400).send({
-            message: "Content can not be empty!"
-        });
-        return;
-    }
+exports.upload = (req, res, next) => {
 
-    // Create a user
-    const User = {
-        username: req.body.username,
-        // attachment: req.body.attachment,
-        email: req.body.email ? req.body.email : false
-    };
-
-    // Save user in the database
-    User.create(user)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the user."
-            });
-        });
+    res.send("Modifier l'image de l'utlisateur !!!");
 };
 
-exports.createProfil = (req, res, next) => {
+exports.newPasswd = (req, res, next) => {
     User.sync({ alter: true }).then(() => {
-        if (!req.body.user) {
+        if (!req.user) {
+            const user = {
+                id: user.id,
+                attachment: user.attachment,
+
+                bio: user.bio,
+                // isAdmin: user.isAdmin
+            };
             res.status(400).send({
                 message: "Tous les champs sont requis!"
             });
             return;
         };
-        // const user = {
-        //     // id: user.id,
-        //     // attachment: user.attachment,
-        //     username: user.username,
-        //     email: req.body.email,
-        //     password: req.body.password,
-        //     // bio: user.bio,
-        //     // isAdmin: user.isAdmin
-        // };
-        User.create(user)
+        User.create()
             .then(data => {
                 res.send(data);
             })
@@ -91,37 +65,16 @@ exports.createProfil = (req, res, next) => {
 
 
 
-    res.send('Créer une nouvelle fiche utlisateur !!!');
+    // res.send('Créer une nouvelle fiche utlisateur !!!');
 };
 
 //Modifier un profil utilisateur.
-exports.updateProfil = (req, res) => {
+exports.updateProfil = (req, res, next) => {
 
-    // try {
-    //     const { userId } = req.params;
-    //     const [updated] = await User.update(req.body, {
-    //         where: { id: userId }
-    //     });
-    //     if (updated) {
-    //         const updatedUser = await User.findOne({ where: { id: userId } });
-    //         return res.status(200).json({ user: updatedUser });
-    //     }
-    //     throw new Error('User not found');
-    // } catch (error) {
-    //     return res.status(500).send(error.message);
-    // }
-
-
-    const { userId } = req.params;
-
-    User.update({
-        where: { id: userId }
-
-    }).then(() => res.status(200).json({
-        message: 'Profil utilisateur mis a jour!'
-    }))
-        .catch(error => res.status(400).json({ error }))
 };
+
+
+
 
 
 //Supprimer un profil (ok)

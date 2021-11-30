@@ -1,15 +1,30 @@
 const db = require("../models");
-const Coment = db.coments;
 const User = db.user;
+const Posts = db.posts;
+const Coment = db.coments;
 const dotenv = require('dotenv');
 dotenv.config();
 
 //Lister tous les coments(ok).
 exports.findAllPublished = async (req, res) => {
     Coment.findAll({
+
         include: [
             {
                 model: db.user,
+                attributes: ['username']
+            },
+            {
+                model: db.posts,
+                postId: req.params.postId,
+                attributes: ['id', 'content'],
+                order: [["createdAt", "DESC"]],
+                include: [
+                    {
+                        model: db.user,
+                        attributes: ['username']
+                    }
+                ],
             }
         ],
         order: [["createdAt", "DESC"]],
@@ -27,40 +42,23 @@ exports.findAllPublished = async (req, res) => {
 //Créer un nouveau commentaire (ok).
 exports.createComent = async (req, res, next) => {
     Coment.create({
+        userId: req.user,
+        comentId: req.coment,
         coment: req.body.coment,
-        userId: User._id,
-    }).then((post) => {
-        console.log(post);
-        res.status(201).json(post)
+    }).then((coment) => {
+        console.log(coment);
+        res.status(201).json(coment)
     }).catch((error) => {
         res.status(400).json({ error, message: "Le coment n'a pas été créé !!!" })
     });
 };
 
-//Supprimer un commentaire(ok).
+//Supprimer un commentaire.
 exports.deleteComent = (req, res) => {
     const id = req.params.id;
-    console.log('--->CONTENU: id');
-    console.log(id);
-
     Coment.destroy({
         where: { id: id }
-    })
-        .then(num => {
-            if (num == 1) {
-                res.send({
-                    message: "Le commentaire a été supprimé avec succés!"
-                });
-            } else {
-                res.status(400).send({
-                    message: `Impossible de supprimer le commentaire id=${id}!`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                err,
-                message: "Impossible de supprimer le post avec cet id=" + id
-            });
-        });
+    }).then(() => res.status(200).json({
+        message: 'Coment supprimé!'
+    })).catch(error => res.status(400).json({ error }))
 };

@@ -8,6 +8,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         role: {
             type: Sequelize.STRING,
+            allowNull: false,
             required: true,
         }
         /*,

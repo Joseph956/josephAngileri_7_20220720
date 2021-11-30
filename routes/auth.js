@@ -3,6 +3,7 @@ const router = express.Router();
 
 const auth = require('../middlware/auth');
 const authCtrl = require('../controllers/auth');
+const validate = require('../middlware/validate');
 
 const rateLimit = require("express-rate-limit");
 const blocageRequete = rateLimit({
@@ -16,17 +17,7 @@ router.post('/register', auth.email, auth.passwd, authCtrl.signUp);
 router.post('/login', blocageRequete, authCtrl.signIn);
 router.get('/logout', authCtrl.logout);
 
-//accès au profil privé utilisateur (admin/user créateur).
-// router.post('/:id/profil', authCtrl.signIn);
-
 //Modifier le mot de passe
-router.put('/:id/password');
-
-// Donner/enlever les droits admin.
-router.put('/:id/admin');
-
-//Confirmer l'authentification
-router.get('/');
-
+router.put('/:id', auth.token, auth.haveRightOnProfile, validate.modifyToPasswd, authCtrl.newPasswd);
 
 module.exports = router;

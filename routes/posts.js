@@ -1,27 +1,21 @@
 const express = require('express');
 const router = express.Router();
 
-const auth = require('../middlware/auth');
 // const validate = require('../middlware/validate');
 // const authValid = require('../middlware/valid');
 // const multer = require('../middlware/multer-config');
+const auth = require('../middlware/auth');
 const postsCtrl = require('../controllers/posts');
 
 // //@route GET && POST - /posts/
 
-//Lister tous les posts (tous les utilisateurs authentifiés).
 router.get("/", auth.token, postsCtrl.findAllPublished);
-
-//Rechercher un post (tous les utilisateurs authentifiés).
 router.get("/:id", auth.token, postsCtrl.findOne);
-// authAdmin.postUser, authAdmin.isAdmin, 
-
-//Création des posts (Tous les utilisateurs authentifiés).
 router.post("/", auth.token, postsCtrl.createPost);
-// authAdmin.isAdmin, authAdmin.isUser, 
-
-//Suppression réservé au créateur du post et à l'admin.
+router.put("/:id", auth.token, auth.haveRightOnPost, postsCtrl.updatePost);
 router.delete("/:id", auth.token, auth.haveRightOnPost, postsCtrl.deletePost);
+router.patch("/likePost/:id", postsCtrl.likePost);
+router.patch("/unlikePost/:id", postsCtrl.unLikePost);
 
 // authAdmin.isAdmin, authAdmin.postUser, 
 

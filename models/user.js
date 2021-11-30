@@ -26,12 +26,6 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             required: true,
         }
-        /*,
-        isAdmin: {
-            type: Sequelize.BOOLEAN,
-            defaultValue: false,
-            required: true,
-        },*/
     },
         {
             // defaultScope: {
