@@ -43,7 +43,7 @@ exports.findAllPublished = async (req, res) => {
 exports.createComent = async (req, res, next) => {
     Coment.create({
         userId: req.user,
-        comentId: req.coment,
+        postId: req.body.post,
         coment: req.body.coment,
     }).then((coment) => {
         console.log(coment);

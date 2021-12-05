@@ -1,10 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
     const Coment = sequelize.define("coment", {
         id: {
-            allowNull: false,
-            autoIncrement: true,
+            type: Sequelize.UUID,
             primaryKey: true,
-            type: Sequelize.INTEGER
+            defaultValue: Sequelize.UUIDV4,
+            allowNull: false,
         },
         coment: {
             type: Sequelize.TEXT("long"),

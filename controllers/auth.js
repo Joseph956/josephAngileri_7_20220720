@@ -5,7 +5,7 @@ const { JsonWebTokenError } = require('jsonwebtoken');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
-// const { BOOLEAN } = require('sequelize');
+const { BOOLEAN } = require('sequelize');
 const { validate } = require('uuid');
 dotenv.config();
 
@@ -75,29 +75,49 @@ exports.logout = (req, res, next) => {
 };
 
 exports.newPasswd = (req, res, next) => {
-    // if (!req.password) {
-    //     res.status(400).send({
-    //         message: "Content can not be empty!",
-    //     });
-    // }
     try {
-        const newPasswd = req.body.newPasswd;
-        User.update({
-            password: user.password
-        });
-        bcrypt.compare(newPasswd, user.password, (errPasswd) => {
-            if (errPasswd) {
-                res.status(406).json({ error: 'Le mot de passe doit être différent' })
-            } else {
-                bcrypt.hash(newPasswd, 10, function (err, bcryptNewPasswd) {
-                    User.update(
-                        { password: bcryptNewPasswd },
-                        { where: { id: user.id } }
-                    )
-                }).then(() => res.status(201).json({ confirm: 'Mot de passe modifié avec succès' }
-                )).catch(err => res.status(500).json(err))
+        const id = req.params.id;
+        const oldPasswd = req.body.oldPassword;
+        const newPasswd = req.body.newPassword;
+        const newPasswdConfirm = req.body.newPasswdConfirm;
+        User.findOne({
+            where: {
+                id: id
             }
-        });
+        }).then(user => {
+            const passwdIsValid = bcrypt.compareSync(
+                oldPasswd,
+                user.password,
+            );
+            if (!passwdIsValid) {
+                return res.status(401).json({ message: 'Requête non authentifiée !' });
+            } else {
+                if (newPasswdConfirm === newPasswd) {
+                    User.update({ password: bcrypt.hashSync(newPasswd, 4) }, {
+                        where: { id: id },
+                    }).then((num) => {
+                        if (num == 1) {
+                            res.send({
+                                message: "L'utilisateur a été mis a jour avec succès.",
+                            });
+                        } else {
+                            res.send({
+                                message: `Impossible de mettre à jour l' utilisateur avec id=${id}.L'utilisateur n'a pas été trouvé !`,
+                            });
+                        }
+                    }).catch((err) => {
+                        res.status(500).send({
+                            message: " Erreur lors de la mise à jour de l'utilisateur avec id=" + id,
+                        });
+                    });
+                } else {
+                    res.status(500).send({
+                        message: " Le mot de passe saisi et la confirmation ne sont pas les mêmes"
+                    });
+                }
+            }
+        })
+
     } catch (error) {
         res.status(401).json({ error: error | 'Requête non authentifiée !' });
     }

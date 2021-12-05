@@ -1,8 +1,8 @@
 const db = require("../models");
-const fs = require('fs');
 const User = db.user;
+const fs = require('fs');
 
-//Lister tous les utilisateurs.
+//Lister tous les utilisateurs (ok).
 exports.findAllPublished = (req, res, next) => {
     User.sync({ alter: true }).then(() => {
         return User.findAll({
@@ -21,64 +21,39 @@ exports.findAllPublished = (req, res, next) => {
 };
 
 //Appeler un profil utilisateur par son id (ok).
-exports.findOneProfil = (req, res) => {
-    User.findAll({
+exports.findOneProfil = (req, res, next) => {
+    User.findOne({
         where: {
             id: req.params.id
         }
-    })
-        .then(user => res.status(200).json(user))
+    }).then(user =>
+        res.status(200).json(user)
+    )
         .catch(error => res.status(400).json({ error }));
 };
 
-//Créer un nouveau profil utilisateur
+//Créer un nouveau profil utilisateur 
 exports.upload = (req, res, next) => {
-
-    res.send("Modifier l'image de l'utlisateur !!!");
+    // const
+    //     res.send("Modifier l'image de l'utlisateur !!!");
 };
 
-exports.newPasswd = (req, res, next) => {
-    User.sync({ alter: true }).then(() => {
-        if (!req.user) {
-            const user = {
-                id: user.id,
-                attachment: user.attachment,
-
-                bio: user.bio,
-                // isAdmin: user.isAdmin
-            };
-            res.status(400).send({
-                message: "Tous les champs sont requis!"
-            });
-            return;
-        };
-        User.create()
-            .then(data => {
-                res.send(data);
-            })
-            .catch(err => {
-                res.status(500).send({
-                    message: err.message || "Une erreur s'est lors de la création du profil utilisateur!"
-                })
-            });
-    });
-
-
-
-    // res.send('Créer une nouvelle fiche utlisateur !!!');
-};
-
-//Modifier un profil utilisateur.
+// Modifier un profil utilisateur. (ok) (a voir pour les images !!?).
 exports.updateProfil = (req, res, next) => {
-
+    const userProfil = req.file ? {
+        ...req.body.userId,
+        attachment: `${req.protocol}://${req.get("host")}/images/profil${req.file.filename}`
+    } : { ...req.body }
+    User.update({
+        ...userProfil, id: req.params.id
+    }, {
+        where: { id: req.params.id }
+    }).then(() => res.status(200).json({ message: "Le profil utilisateur a été modifié !" }
+    )).catch(err => res.status(400).json({ err }))
 };
-
-
-
-
 
 //Supprimer un profil (ok)
-exports.deleteProfil = (req, res) => {
+exports.deleteProfil = (req, res, next) => {
     const id = req.params.id;
 
     User.destroy({

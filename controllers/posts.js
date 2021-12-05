@@ -1,7 +1,8 @@
 const db = require("../models");
 const Post = db.posts;
+const fs = require('fs');
 const dotenv = require('dotenv');
-const user = require("../models/user");
+
 dotenv.config();
 
 
@@ -15,8 +16,15 @@ exports.findAllPublished = async (req, res) => {
             },
             {
                 model: db.coments,
+                coments: req.params.comentId,
                 attributes: ['id', 'coment'],
-                order: [["createdAt", "DESC"]]
+                order: [["createdAt", "DESC"]],
+                include: [
+                    {
+                        model: db.user,
+                        attributes: ['username']
+                    }
+                ],
 
             }
         ],
@@ -60,28 +68,29 @@ exports.createPost = async (req, res, next) => {
 
 //Mettre à jour le post
 exports.updatePost = (req, res, next) => {
-    console.log("---->CONTENU: updatePost");
-    console.log(updatePost);
-    // res.send("Modifier l'image de l'utlisateur !!!");
-    const postModifier = req.body.content;
-    // const attachment = req.body.attachment;
-    if (req.body.content) {
-        Post.some({
-            attributes: ['id', 'content'],
-            where: { id: userId }
-        }).then(post => {
-            post.update({
-                content: (postModifier ? postModifier : user.content),
-                // attachment: (attachment ? attachment : user.attachment),
-            }).then(() => res.status(201).json({
-                message: "Le post a été modifié !"
-            })).catch(() => res.status(400).json({
-                message: "Le post n'a pas été modifié !"
-            }))
-        }).catch(error => res.status(500).json({ error }));
-    } else {
-        next();
-    }
+    const postModifier = req.file ? {
+        ...req.body.post,
+        attachment: `${req.protocol}://${req.get("host")}/images/post${req.file.filename}`
+    } : { ...req.body }
+
+    Post.findOne({
+        where: { id: req.params.id },
+        attributes: ['id', 'content'],
+    }).then(post => {
+        console.log("---->CONTENU: postModifier");
+        console.log(postModifier);
+        post.update({
+            where: { id: req.params.id }
+        }, {
+            ...postModifier, id: req.params.id
+        }
+        ).then(() => res.status(200).json({
+            message: "Le post a été modifié !"
+        })).catch(() => res.status(400).json({
+            message: "Le post n'a pas été modifié !"
+        }))
+    }).catch(error => res.status(500).json({ error: "erreur server" }));
+    res.send("Modifier l'image de l'utlisateur !!!");
 };
 
 

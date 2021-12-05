@@ -1,10 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
     const Like = sequelize.define("like", {
         id: {
-            allowNull: false,
-            autoIncrement: true,
+            type: Sequelize.UUID,
             primaryKey: true,
-            type: Sequelize.INTEGER
+            defaultValue: Sequelize.UUIDV4,
+            allowNull: false,
         },
         // je ne comprends pas ce que tu veux sauvegarder dans ces champs la, on en parlera la prochaine fois.
         likes: {

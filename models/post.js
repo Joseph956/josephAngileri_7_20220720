@@ -12,7 +12,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         attachment: {
             type: Sequelize.STRING,
-            default: "./uploads/post/randon-post.jpg",
+            default: "./images/post/randon-post.jpg",
             allowNull: true,
         },
     });

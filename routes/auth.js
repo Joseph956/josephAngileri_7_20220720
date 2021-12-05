@@ -3,7 +3,6 @@ const router = express.Router();
 
 const auth = require('../middlware/auth');
 const authCtrl = require('../controllers/auth');
-const validate = require('../middlware/validate');
 
 const rateLimit = require("express-rate-limit");
 const blocageRequete = rateLimit({
@@ -18,6 +17,6 @@ router.post('/login', blocageRequete, authCtrl.signIn);
 router.get('/logout', authCtrl.logout);
 
 //Modifier le mot de passe
-router.put('/:id', auth.token, auth.haveRightOnProfile, validate.modifyToPasswd, authCtrl.newPasswd);
-
+router.put('/:id', auth.token, auth.haveRightOnProfile, authCtrl.newPasswd);
+//
 module.exports = router;
