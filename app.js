@@ -7,7 +7,6 @@ const { sequelize } = require('./models');
 const dotenv = require('dotenv');
 dotenv.config();
 require('./config/config');
-// const {login} = require('./middlware/auth');
 
 const morgan = require('morgan'); //logs http
 const helmet = require('helmet');
@@ -70,6 +69,7 @@ app.use("/api/posts", postsRoutes);
 app.use("/api/coments", comentsRoutes);
 app.use("/api/likes", likesRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
+// app.use('/images/post', express.static(path.join(__dirname, 'images')));
 
 
 app.use((err, req, res, next) => {

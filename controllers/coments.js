@@ -1,6 +1,4 @@
 const db = require("../models");
-const User = db.user;
-const Posts = db.posts;
 const Coment = db.coments;
 const dotenv = require('dotenv');
 dotenv.config();
@@ -25,6 +23,12 @@ exports.findAllPublished = async (req, res) => {
                         attributes: ['username']
                     }
                 ],
+            },
+            {
+                model: db.likes,
+                likes: req.params.likeId,
+                attributes: ['likes', 'dislikes'],
+                order: [["created", "DESC"]]
             }
         ],
         order: [["createdAt", "DESC"]],
@@ -51,6 +55,23 @@ exports.createComent = async (req, res, next) => {
     }).catch((error) => {
         res.status(400).json({ error, message: "Le coment n'a pas été créé !!!" })
     });
+};
+
+exports.updateComent = async (req, res, next) => {
+    const comentModify = req.file ? {
+        ...req.body.comentId,
+        attachment: `${req.protocol}://${req.get("host")}/images${req.file.filename}`
+    } : { ...req.body }
+    Coment.update({
+        ...comentModify, id: req.params.id
+    }, {
+        where: { id: req.params.id },
+        attributes: ['coment', 'likes', 'dislikes']
+    }).then(() => res.status(200).json({
+        message: "Le commentaire a été modifié !"
+    })).catch(() => res.status(400).json({
+        message: "Le comnentaire n'a pas été modifié !"
+    }))
 };
 
 //Supprimer un commentaire.

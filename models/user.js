@@ -8,7 +8,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         attachment: {
             type: Sequelize.STRING,
-            default: "./uploads/profil/randon-user.jpg",
+            default: "./images/profil/randon-user.jpg",
         },
         username: {
             type: Sequelize.STRING,

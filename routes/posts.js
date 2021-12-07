@@ -1,21 +1,17 @@
 const express = require('express');
 const router = express.Router();
 
-// const validate = require('../middlware/validate');
-// const authValid = require('../middlware/valid');
-// const multer = require('../middlware/multer-config');
 const auth = require('../middlware/auth');
 const postsCtrl = require('../controllers/posts');
-
-// //@route GET && POST - /posts/
+// const multer = require('../middlware/multer-config');
 
 router.get("/", auth.token, postsCtrl.findAllPublished);
 router.get("/:id", auth.token, postsCtrl.findOne);
 router.post("/", auth.token, postsCtrl.createPost);
 router.put("/:id", auth.token, auth.haveRightOnPost, postsCtrl.updatePost);
 router.delete("/:id", auth.token, auth.haveRightOnPost, postsCtrl.deletePost);
-router.patch("/likePost/:id", postsCtrl.likePost);
-router.patch("/unlikePost/:id", postsCtrl.unLikePost);
+router.put("/:id/like", auth.token, postsCtrl.likePost);
+router.put("/:id/unlike", auth.token, postsCtrl.unLikePost);
 
 // authAdmin.isAdmin, authAdmin.postUser, 
 

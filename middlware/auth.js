@@ -53,13 +53,11 @@ module.exports.haveRightOnPost = (req, res, next) => {
                 } else {
                     Post.findByPk(post).then(
                         (foundedPost) => {
-                            console.log("----->CONTENU: foundedPost");
-                            console.log(foundedPost);
                             if (foundedPost.userId == userId) {
                                 return next();
                             } else {
                                 return res.status(403).send({
-                                    message: "Vous n'avez pas les droits necessaires pour faire cette action !",
+                                    message: "Sécurité : Vous n'avez pas les droits nécessaires pour modifier ce post !",
                                 });
                             }
                         })
@@ -98,7 +96,7 @@ module.exports.haveRightOnComent = (req, res, next) => {
                             return next();
                         } else {
                             return res.status(403).send({
-                                message: "Vous n'avez pas les droits necessaires pour faire cette action !",
+                                message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ce commentaire !",
                             });
                         }
                     })
@@ -137,7 +135,7 @@ module.exports.haveRightOnLike = (req, res, next) => {
                             return next();
                         } else {
                             return res.status(403).send({
-                                message: "Vous n'avez pas les droits necessaires pour faire cette action !",
+                                message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ce like !",
                             });
                         }
                     })
@@ -171,7 +169,7 @@ module.exports.haveRightOnProfile = (req, res, next) => {
                     return next();
                 } else {
                     return res.status(403).send({
-                        message: "Vous n'avez pas les droits necessaires pour faire cette action !",
+                        message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ce compte utilisateur !",
                     });
                 }
             } else {

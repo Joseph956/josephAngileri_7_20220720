@@ -1,8 +1,8 @@
 const db = require("../models");
 const Post = db.posts;
+const Like = db.likes;
 const fs = require('fs');
 const dotenv = require('dotenv');
-
 dotenv.config();
 
 
@@ -25,7 +25,12 @@ exports.findAllPublished = async (req, res) => {
                         attributes: ['username']
                     }
                 ],
-
+            },
+            {
+                model: db.likes,
+                likes: req.params.likeId,
+                attributes: ['likes', 'dislikes'],
+                order: [["created", "DESC"]]
             }
         ],
         order: [["createdAt", "DESC"]],
@@ -66,33 +71,23 @@ exports.createPost = async (req, res, next) => {
     });
 };
 
-//Mettre à jour le post
+//Mettre à jour le post (ok).
 exports.updatePost = (req, res, next) => {
-    const postModifier = req.file ? {
-        ...req.body.post,
-        attachment: `${req.protocol}://${req.get("host")}/images/post${req.file.filename}`
+    const postModify = req.file ? {
+        ...req.body.postId,
+        attachment: `${req.protocol}://${req.get("host")}/images${req.file.filename}`
     } : { ...req.body }
-
-    Post.findOne({
+    Post.update({
+        ...postModify, id: req.params.id
+    }, {
         where: { id: req.params.id },
         attributes: ['id', 'content'],
-    }).then(post => {
-        console.log("---->CONTENU: postModifier");
-        console.log(postModifier);
-        post.update({
-            where: { id: req.params.id }
-        }, {
-            ...postModifier, id: req.params.id
-        }
-        ).then(() => res.status(200).json({
-            message: "Le post a été modifié !"
-        })).catch(() => res.status(400).json({
-            message: "Le post n'a pas été modifié !"
-        }))
-    }).catch(error => res.status(500).json({ error: "erreur server" }));
-    res.send("Modifier l'image de l'utlisateur !!!");
+    }).then((post) => res.status(200).json({
+        message: "Le post a été modifié !"
+    })).catch(() => res.status(400).json({
+        message: "Le post n'a pas été modifié !"
+    }))
 };
-
 
 //Supprimer un post (ok).
 exports.deletePost = (req, res) => {
@@ -105,7 +100,8 @@ exports.deletePost = (req, res) => {
 };
 
 exports.likePost = async (req, res) => {
-
+    console.log(req.params.id);
+    console.log(req.user);
 };
 
 exports.unLikePost = async (req, res) => {

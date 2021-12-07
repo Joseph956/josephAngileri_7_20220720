@@ -14,9 +14,9 @@ const blocageRequete = rateLimit({
 //S'enregistrer //Se connecter// Se déconnecter
 router.post('/register', auth.email, auth.passwd, authCtrl.signUp);
 router.post('/login', blocageRequete, authCtrl.signIn);
-router.get('/logout', authCtrl.logout);
+router.put('/logout', auth.token, authCtrl.logout);
 
 //Modifier le mot de passe
 router.put('/:id', auth.token, auth.haveRightOnProfile, authCtrl.newPasswd);
-//
+
 module.exports = router;

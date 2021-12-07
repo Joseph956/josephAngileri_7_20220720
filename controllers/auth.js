@@ -121,5 +121,4 @@ exports.newPasswd = (req, res, next) => {
     } catch (error) {
         res.status(401).json({ error: error | 'Requête non authentifiée !' });
     }
-    // res.send('Créer un nouveau mot de passe utlisateur !!!');
 };

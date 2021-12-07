@@ -7,6 +7,7 @@ exports.findAllPublished = (req, res, next) => {
     User.sync({ alter: true }).then(() => {
         return User.findAll({
             user: (req.body.user),
+            attributes: ['id', 'attachment', 'username', 'email', 'roleId'],
             order: [["createdAt", "DESC"]],
         });
     }).then((user) => {
@@ -23,26 +24,20 @@ exports.findAllPublished = (req, res, next) => {
 //Appeler un profil utilisateur par son id (ok).
 exports.findOneProfil = (req, res, next) => {
     User.findOne({
-        where: {
-            id: req.params.id
-        }
-    }).then(user =>
+        user: (req.body.user),
+        attributes: ['id', 'attachment', 'username', 'email', 'roleId'],
+        order: [["createdAt", "DESC"]],
+    }).then(user => {
         res.status(200).json(user)
-    )
-        .catch(error => res.status(400).json({ error }));
-};
-
-//Créer un nouveau profil utilisateur 
-exports.upload = (req, res, next) => {
-    // const
-    //     res.send("Modifier l'image de l'utlisateur !!!");
+    }).catch(error => res.status(400).json({ error }));
 };
 
 // Modifier un profil utilisateur. (ok) (a voir pour les images !!?).
+//Faire la vérification de l'existence du compte avant de faire le traitement.
 exports.updateProfil = (req, res, next) => {
     const userProfil = req.file ? {
         ...req.body.userId,
-        attachment: `${req.protocol}://${req.get("host")}/images/profil${req.file.filename}`
+        attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
     } : { ...req.body }
     User.update({
         ...userProfil, id: req.params.id

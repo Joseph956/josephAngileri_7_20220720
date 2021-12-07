@@ -11,16 +11,9 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             required: true,
         }
-        /*,
-        user: {
-            type: sequelize.BOOLEAN,
-            allowNull: false,
-            required: true,
-        },*/
-    },
-        {
-            sequelize,
-            modelName: 'role'
-        });
+    }, {
+        sequelize,
+        modelName: 'role'
+    });
     return Role;
 };
