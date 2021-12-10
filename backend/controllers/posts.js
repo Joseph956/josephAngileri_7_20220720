@@ -16,7 +16,7 @@ exports.findAllPublished = async (req, res) => {
             },
             {
                 model: db.coments,
-                coments: req.params.comentId,
+                coment: req.params.comentId,
                 attributes: ['id', 'coment'],
                 order: [["createdAt", "DESC"]],
                 include: [

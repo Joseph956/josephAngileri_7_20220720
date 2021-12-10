@@ -41,5 +41,27 @@ http://localhost:3000/api/posts
 http://localhost:3000/api/posts/:id
 ## Put - Modifier
 http://localhost:3000/api/posts/:id
-## Delete - Supprimer
+## Put - Liker / Disliker un post.
+http://localhost:3000/api/posts/:id/like
+
+http://localhost:3000/api/posts/:id/unlike
+## Delete - Supprimer un post.
 http://localhost:3000/api/posts/:id
+
+
+
+## Gestion des coments utlisateurs.
+## Post - Publier un nouveau coment.
+http://localhost:3000/api/coments
+## Get - Voir tous les coments.
+http://localhost:3000/api/coments
+## Get - Voir un coment grâce à son id.
+http://localhost:3000/api/posts/:id
+## Put - Modifier un coment.
+http://localhost:3000/api/coments/:id
+## Put - liker / disliker un coment.
+http://localhost:3000/api/coments/:id/like
+
+http://localhost:3000/api/coments/:id/unlike
+## Delete - Supprimer un coment.
+http://localhost:3000/api/coments/:id
