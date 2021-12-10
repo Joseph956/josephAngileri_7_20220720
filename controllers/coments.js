@@ -1,5 +1,6 @@
 const db = require("../models");
 const Coment = db.coments;
+const Like = db.likes;
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -27,7 +28,7 @@ exports.findAllPublished = async (req, res) => {
             {
                 model: db.likes,
                 likes: req.params.likeId,
-                attributes: ['likes', 'dislikes'],
+                attributes: ['likes'],
                 order: [["created", "DESC"]]
             }
         ],
@@ -47,7 +48,7 @@ exports.findAllPublished = async (req, res) => {
 exports.createComent = async (req, res, next) => {
     Coment.create({
         userId: req.user,
-        postId: req.body.post,
+        postId: req.post,
         coment: req.body.coment,
     }).then((coment) => {
         console.log(coment);
@@ -66,7 +67,7 @@ exports.updateComent = async (req, res, next) => {
         ...comentModify, id: req.params.id
     }, {
         where: { id: req.params.id },
-        attributes: ['coment', 'likes', 'dislikes']
+        attributes: ['coment', 'likes']
     }).then(() => res.status(200).json({
         message: "Le commentaire a été modifié !"
     })).catch(() => res.status(400).json({

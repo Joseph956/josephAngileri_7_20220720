@@ -29,11 +29,7 @@ db.role = require("../models/role")(sequelize, Sequelize);
 //belongsTo (relation plusieurs à un).
 
 db.user.hasMany(db.posts); // Un utilisateur peut être l'auteur de plusieurs posts.
-db.posts.belongsToMany(db.user, {
-  through: db.likes,
-  foreignKey: 'userId',
-  otherKey: 'postId',
-}); //Plusieurs posts peuvent appartenir à un seul utilisateur.
+db.posts.belongsTo(db.user); //Plusieurs posts peuvent appartenir à un seul utilisateur.
 
 db.posts.hasMany(db.coments); //Un post peut avoir plusieurs commentaires.
 db.coments.belongsTo(db.posts); //Plusieurs coments peuvent appartenir à un seul post.
@@ -42,16 +38,10 @@ db.user.hasMany(db.coments); // Un utilisateur peut être l'auteur de plusieurs 
 db.coments.belongsTo(db.user);  //Plusieurs coments peuvent appartenir à un seul utilisateur.
 
 db.user.hasMany(db.likes);  // Un utilisateur peut être l'auteur de plusieurs likes.
-db.likes.belongsTo(db.user, {
-  foreignKey: 'userId',
-  as: 'user',
-}); //plusieurs likes peuvent appartenir à un seul utlisateur.
+db.likes.belongsTo(db.user); //plusieurs likes peuvent appartenir à un seul utlisateur.
 
 db.posts.hasMany(db.likes);   //Un post peut avoir plusieurs likes.
-db.likes.belongsTo(db.posts, {
-  foreignKey: 'postId',
-  as: 'post'
-}); //Plusieurs likes peuvent appartenir à un seul post.
+db.likes.belongsTo(db.posts); //Plusieurs likes peuvent appartenir à un seul post.
 
 db.coments.hasMany(db.likes);   //Un coment peut avoir plusieurs likes.
 db.likes.belongsTo(db.coments); //Plusieurs likes peuvent appartenir à un seul coment.

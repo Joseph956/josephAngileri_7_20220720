@@ -19,7 +19,7 @@ const authRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
 const postsRoutes = require('./routes/posts');
 const comentsRoutes = require('./routes/coments');
-const likesRoutes = require('./routes/likes');
+// const likesRoutes = require('./routes/likes');
 
 const app = express();
 // app.use(cors()); //Empêche mes appels API d'aboutir !?!.
@@ -67,7 +67,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/posts", postsRoutes);
 app.use("/api/coments", comentsRoutes);
-app.use("/api/likes", likesRoutes);
+// app.use("/api/likes", likesRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 // app.use('/images/post', express.static(path.join(__dirname, 'images')));
 

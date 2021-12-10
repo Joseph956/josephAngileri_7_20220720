@@ -29,7 +29,7 @@ exports.findAllPublished = async (req, res) => {
             {
                 model: db.likes,
                 likes: req.params.likeId,
-                attributes: ['likes', 'dislikes'],
+                attributes: ['likes'],
                 order: [["created", "DESC"]]
             }
         ],
@@ -47,7 +47,7 @@ exports.findAllPublished = async (req, res) => {
 };
 
 //Récupérer un seul post (ok).
-exports.findOne = (req, res) => {
+exports.findOne = async (req, res) => {
     Post.findAll({
         where: {
             id: req.params.id
@@ -72,7 +72,7 @@ exports.createPost = async (req, res, next) => {
 };
 
 //Mettre à jour le post (ok).
-exports.updatePost = (req, res, next) => {
+exports.updatePost = async (req, res, next) => {
     const postModify = req.file ? {
         ...req.body.postId,
         attachment: `${req.protocol}://${req.get("host")}/images${req.file.filename}`
@@ -100,10 +100,64 @@ exports.deletePost = (req, res) => {
 };
 
 exports.likePost = async (req, res) => {
-    console.log(req.params.id);
-    console.log(req.user);
+    const postId = req.params.id;
+    const userId = req.user;
+    Like.findOne({
+        where: {
+            userId: userId,
+            postId: postId
+        }
+    }
+    ).then(likeFound => {
+        if (likeFound) {
+            Like.update({
+                likes: 1
+            }, {
+                where: { id: likeFound.id },
+            }).then(() => res.status(200).json({
+                message: 'Like modifié avec succés!'
+            }))
+        } else {
+            Like.create({
+                userId: userId,
+                postId: postId,
+                likes: 1
+            }).then(() => res.status(200).json({
+                message: 'Like créé avec succés!'
+            }))
+        }
+    })
+        .catch(error => res.status(400).json({ error }));
+
 };
 
 exports.unLikePost = async (req, res) => {
-
+    const postId = req.params.id;
+    const userId = req.user;
+    Like.findOne({
+        where: {
+            userId: userId,
+            postId: postId
+        }
+    }
+    ).then(likeFound => {
+        if (likeFound) {
+            Like.update({
+                likes: -1
+            }, {
+                where: { id: likeFound.id },
+            }).then(() => res.status(200).json({
+                message: 'Like modifié avec succés!'
+            }))
+        } else {
+            Like.create({
+                userId: userId,
+                postId: postId,
+                likes: -1
+            }).then(() => res.status(200).json({
+                message: 'Like créé avec succés!'
+            }))
+        }
+    })
+        .catch(error => res.status(400).json({ error }));
 };

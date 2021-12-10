@@ -7,11 +7,10 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         likes: {
-            type: Sequelize.STRING,
-        },
-        dislikes: {
-            type: Sequelize.STRING,
-        },
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            //is: /^1|-1$/i          // @TODO find a solution for this constraint
+        }
     });
 
     return Like;
