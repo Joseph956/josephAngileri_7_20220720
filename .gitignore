@@ -1,4 +1,5 @@
-node_modules/
+/frontend/node_modules
+/backend/nodes_modules
 .env
-.vscode
 access.log
+.vscode
