@@ -1,5 +1,3 @@
 /frontend/node_modules
 /backend/nodes_modules
-.env
-access.log
 .vscode
