@@ -31,6 +31,7 @@ exports.findAllPublished = (req, res, next) => {
 exports.findOneProfil = (req, res, next) => {
     User.findOne({
         user: (req.body.user),
+        attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
         attributes: ['id', 'attachment', 'username', 'email', 'roleId'],
         order: [["createdAt", "DESC"]],
     }).then((user) => {
@@ -49,7 +50,7 @@ exports.findOneProfil = (req, res, next) => {
 exports.updateProfil = (req, res, next) => {
     const userProfil = req.file ? {
         ...req.body.userId,
-        attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+        attachment: `${req.protocol}://${req.get("host")}/images/profil${req.file.filename}`
     } : { ...req.body }
     User.update({
         ...userProfil, id: req.params.id

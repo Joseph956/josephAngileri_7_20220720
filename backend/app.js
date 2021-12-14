@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const fs = require('fs');
@@ -12,7 +13,7 @@ const morgan = require('morgan'); //logs http
 const helmet = require('helmet');
 const xssclean = require('xss-clean');
 const noCache = require('nocache');
-// const cors = require('cors');
+const cors = require('cors');
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 const authRoutes = require('./routes/auth');
@@ -22,7 +23,7 @@ const comentsRoutes = require('./routes/coments');
 // const likesRoutes = require('./routes/likes');
 
 const app = express();
-// app.use(cors()); //Empêche mes appels API d'aboutir !?!.
+app.use(cors()); //Empêche mes appels API d'aboutir !?!.
 app.disable('x-powered-by');
 app.use(xssclean());
 app.use(helmet());
@@ -39,6 +40,7 @@ app.use(express.json());
 //Pour encoder le contenu.
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(bodyParser.json());
 
 //Configuration des cors
 app.use((req, res, next) => {
@@ -67,9 +69,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/posts", postsRoutes);
 app.use("/api/coments", comentsRoutes);
-// app.use("/api/likes", likesRoutes);
-app.use('/images', express.static(path.join(__dirname, 'images')));
-// app.use('/images/post', express.static(path.join(__dirname, 'images')));
+// app.use('/images/profil', express.static(path.join(__dirname, 'images')));
+app.use('/images/', express.static(path.join(__dirname, 'images')));
 
 
 app.use((err, req, res, next) => {

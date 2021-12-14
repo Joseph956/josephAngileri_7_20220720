@@ -1,6 +1,7 @@
 const db = require("../models");
 const Coment = db.coments;
 const Like = db.likes;
+const fs = require('fs');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -16,7 +17,7 @@ exports.findAllPublished = async (req, res) => {
             {
                 model: db.posts,
                 postId: req.params.postId,
-                attributes: ['id', 'content'],
+                attributes: ['id', 'content', 'attachment'],
                 order: [["createdAt", "DESC"]],
                 include: [
                     {
@@ -44,11 +45,26 @@ exports.findAllPublished = async (req, res) => {
     });
 };
 
+exports.findOne = async (req, res, next) => {
+    Coment.findAll({
+        where: {
+            id: req.params.id
+        }
+    })
+        .then(user => res.status(200).json(user))
+        .catch(error => res.status(400).json({ error }));
+};
+
 //Créer un nouveau commentaire (ok).
 exports.createComent = async (req, res, next) => {
+    const comentPost = req.file ? {
+        ...req.body.postId,
+        attachment: `${req.protocol}://${req.get("host")}/images${req.file.filename}`
+    } : { ...req.body }
     Coment.create({
+        ...comentPost, id: req.params.id,
         userId: req.user,
-        postId: req.post,
+        postId: req.body.postId,
         coment: req.body.coment,
     }).then((coment) => {
         console.log(coment);
@@ -83,4 +99,66 @@ exports.deleteComent = (req, res) => {
     }).then(() => res.status(200).json({
         message: 'Coment supprimé!'
     })).catch(error => res.status(400).json({ error }))
+};
+
+exports.likeComent = async (req, res, next) => {
+    const comentId = req.params.id;
+    const userId = req.user;
+    Like.findOne({
+        where: {
+            userId: userId,
+            postId: postId
+        }
+    }
+    ).then(likeFound => {
+        if (likeFound) {
+            Like.update({
+                likes: 1
+            }, {
+                where: { id: likeFound.id },
+            }).then(() => res.status(200).json({
+                message: 'Like modifié avec succés!'
+            }))
+        } else {
+            Like.create({
+                userId: userId,
+                comentId: comentId,
+                likes: 1
+            }).then(() => res.status(200).json({
+                message: 'Like créé avec succés!'
+            }))
+        }
+    })
+        .catch(error => res.status(400).json({ error }));
+};
+
+exports.unLikeComent = async (req, res, next) => {
+    const comentId = req.params.id;
+    const userId = req.user;
+    Like.findOne({
+        where: {
+            userId: userId,
+            comentId: comentId
+        }
+    }
+    ).then(likeFound => {
+        if (likeFound) {
+            Like.update({
+                likes: -1
+            }, {
+                where: { id: likeFound.id },
+            }).then(() => res.status(200).json({
+                message: 'Like modifié avec succés!'
+            }))
+        } else {
+            Like.create({
+                userId: userId,
+                comentId: comentId,
+                likes: -1
+            }).then(() => res.status(200).json({
+                message: 'Like créé avec succés!'
+            }))
+        }
+    })
+        .catch(error => res.status(400).json({ error }));
 };

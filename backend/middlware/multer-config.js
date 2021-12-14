@@ -1,5 +1,6 @@
 //gestion des fichiers entrant dans une requête http.
 const multer = require('multer');
+const uuid4 = require("uuid").v4;
 
 //dictionnaire d'extension.
 const MIME_TYPES = {
@@ -19,8 +20,8 @@ const storage = multer.diskStorage({
         //Multer utilise le nom d'origine, remplace les espaces et ajoute un timetamp.
         const name = file.originalname.split(' ').join('_');
         const extension = MIME_TYPES[file.mimetype];
-        // callback(null, name + "_" + Date.now() + '.' + extension);
-        callback(null, `${name}_${Date.now()}.${extention}`);
+        callback(null, name + Date.now() + '.' + extension);
+        // callback(null, `${name}_${Date.now()}.${extention}`);
     }
 });
 

@@ -2,7 +2,6 @@ const db = require("../models");
 const User = db.user;
 const Post = db.posts;
 const Coment = db.coments;
-const Like = db.likes;
 const jwt = require('jsonwebtoken');
 const passwrdValidator = require('password-validator');
 const emailSchema = require('validator');
@@ -28,12 +27,6 @@ module.exports.token = (req, res, next) => {
     } catch (error) {
         res.status(401).json({ error: error | 'Requête non authentifiée !' });
     }
-};
-
-//Justificatif d'identité : 
-// Vérifie que le token utlisé pour faire une création ou une modification correspond au token d'authentification de l'utilisateur connecté.
-module.exports.credential = (req, res, next) => {
-
 };
 
 //Verification que le token a les droit sur le post (ok).
@@ -113,45 +106,6 @@ module.exports.haveRightOnComent = (req, res, next) => {
     }
 };
 
-//Vérification que le token a les droits sur les likes (a vérifier avec le controller).
-module.exports.haveRightOnLike = (req, res, next) => {
-    try {
-        const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
-        const userId = decodedToken.userId;
-        const role = decodedToken.role;
-        const like = req.params.id;
-        User.findByPk(userId).then((user) => {
-            if (user) {
-                req.user = userId;
-                console.log("   role: " + role.role);
-                if (role.role == "admin") {
-                    return next();
-                } else {
-                    Like.findByPk(like).then((foundedLike) => {
-                        console.log("----->CONTENU: foundedLike");
-                        console.log(foundedLike);
-                        if (foundedLike.userId == userId) {
-                            return next();
-                        } else {
-                            return res.status(403).send({
-                                message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ce like !",
-                            });
-                        }
-                    })
-                }
-            } else {
-                return res.status(401).send({
-                    message: "Aucun utilisateur trouvé avec ce jeton !",
-                });
-            }
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(401).json({ error: error | 'Requête non authentifiée !' });
-    }
-};
-
 //Verification que le token a les droits sur le profil (ok).
 module.exports.haveRightOnProfile = (req, res, next) => {
     try {
@@ -211,4 +165,11 @@ module.exports.passwd = (req, res, next) => {
                 passwdSchema.validate(req.body.password, { list: true })
         })
     }
+};
+
+
+//Justificatif d'identité : 
+// Vérifie que le token utlisé pour faire une création ou une modification correspond au token d'authentification de l'utilisateur connecté.
+module.exports.credential = (req, res, next) => {
+
 };

@@ -27,12 +27,12 @@ exports.signUp = (req, res, next) => {
                     user
                         .save()
                         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-                        .catch(error => res.status(400).json({ error }));
+                        .catch(error => res.status(400).json({ error, message: "Ce compte utilisateur existe déjà !!! " }));
                 } else {
-                    res.status(500).json("No user rôle found");
+                    res.status(400).json("Le rôle utilisateur n'a pas été trouvé !!! ");
                 }
             });
-        }).catch(error => res.status(500).json({ error }));
+        }).catch(error => res.status(500).json({ error, message: "erreur serveur !!! " }));
 };
 
 exports.signIn = (req, res, next) => {
@@ -42,7 +42,7 @@ exports.signIn = (req, res, next) => {
         }
     }).then((user) => {
         if (!user) {
-            return res.status(401).json({ error: 'Profil utilisateur inexistant !' });
+            return res.status(401).json({ error: "Ce profil utilisateur n'existe pas !!!" });
         }
         bcrypt.compare(req.body.password, user.password)
             .then((valid) => {
@@ -98,25 +98,25 @@ exports.newPasswd = (req, res, next) => {
                     }).then((num) => {
                         if (num == 1) {
                             res.send({
-                                message: "L'utilisateur a été mis a jour avec succès.",
+                                message: "Le mot de passe a été modifié avec succès.",
                             });
                         } else {
                             res.send({
-                                message: `Impossible de mettre à jour l' utilisateur avec id=${id}.L'utilisateur n'a pas été trouvé !`,
+                                message: `Impossible de mettre à jour le mot de passe avec id=${id}.L'utilisateur n'a pas été trouvé !`,
                             });
                         }
                     }).catch((err) => {
                         res.status(500).send({
-                            message: " Erreur lors de la mise à jour de l'utilisateur avec id=" + id,
+                            message: " Erreur lors de la mise à jour du mot de passe avec id=" + id,
                         });
                     });
                 } else {
                     res.status(500).send({
-                        message: " Le mot de passe saisi et la confirmation ne sont pas les mêmes"
+                        message: " Le mot de passe saisi et la confirmation ne sont pas identiques !!!"
                     });
                 }
             }
-        })
+        }).catch((err) => { res.status(428).json({ err, message: "Le mot de passe enregistré, et le mot de passe saisi ne corresponde pas !!!" }) })
 
     } catch (error) {
         res.status(401).json({ error: error | 'Requête non authentifiée !' });

@@ -3,11 +3,12 @@ const Post = db.posts;
 const Like = db.likes;
 const fs = require('fs');
 const dotenv = require('dotenv');
+const post = require("../models/post");
 dotenv.config();
 
 
 //Lister tous les posts (ok).
-exports.findAllPublished = async (req, res) => {
+exports.findAllPublished = async (req, res, next) => {
     Post.findAll({
         include: [
             {
@@ -47,7 +48,7 @@ exports.findAllPublished = async (req, res) => {
 };
 
 //Récupérer un seul post (ok).
-exports.findOne = async (req, res) => {
+exports.findOne = async (req, res, next) => {
     Post.findAll({
         where: {
             id: req.params.id
@@ -59,12 +60,17 @@ exports.findOne = async (req, res) => {
 
 //Créer un nouveau post (ok).
 exports.createPost = async (req, res, next) => {
+    const imgPost = req.file ? {
+        ...req.body.postId,
+        attachment: `${req.protocol}://${req.get("host")}/images/post/${req.file.filename}`
+    } : { ...req.body }
     Post.create({
+        ...imgPost, id: req.params.id,
         userId: req.user,
         postId: req.post,
+        attachment: req.body.attachment,
         content: req.body.content,
     }).then((post) => {
-        console.log(post);
         res.status(201).json(post)
     }).catch((error) => {
         res.status(400).json({ error, message: "Le post n'a pas été créé !!!" })
@@ -75,13 +81,13 @@ exports.createPost = async (req, res, next) => {
 exports.updatePost = async (req, res, next) => {
     const postModify = req.file ? {
         ...req.body.postId,
-        attachment: `${req.protocol}://${req.get("host")}/images${req.file.filename}`
+        attachment: `${req.protocol}://${req.get("host")}/images/post${req.file.filename}`
     } : { ...req.body }
     Post.update({
         ...postModify, id: req.params.id
     }, {
         where: { id: req.params.id },
-        attributes: ['id', 'content'],
+        attributes: ['id', 'username', 'content', 'attachment'],
     }).then((post) => res.status(200).json({
         message: "Le post a été modifié !"
     })).catch(() => res.status(400).json({
@@ -90,7 +96,7 @@ exports.updatePost = async (req, res, next) => {
 };
 
 //Supprimer un post (ok).
-exports.deletePost = (req, res) => {
+exports.deletePost = (req, res, next) => {
     const id = req.params.id;
     Post.destroy({
         where: { id: id }
@@ -99,16 +105,21 @@ exports.deletePost = (req, res) => {
     })).catch(error => res.status(400).json({ error }))
 };
 
-exports.likePost = async (req, res) => {
+exports.likePost = async (req, res, next) => {
     const postId = req.params.id;
     const userId = req.user;
     Like.findOne({
         where: {
             userId: userId,
             postId: postId
-        }
-    }
-    ).then(likeFound => {
+        },
+        include: [
+            {
+                model: db.user,
+                attributes: ['username']
+            },
+        ],
+    }).then(likeFound => {
         if (likeFound) {
             Like.update({
                 likes: 1
@@ -116,7 +127,7 @@ exports.likePost = async (req, res) => {
                 where: { id: likeFound.id },
             }).then(() => res.status(200).json({
                 message: 'Like modifié avec succés!'
-            }))
+            })).catch(error => res.status(400).json({ error, message: "Le like n'a pas été modifié !!!" }));
         } else {
             Like.create({
                 userId: userId,
@@ -124,14 +135,13 @@ exports.likePost = async (req, res) => {
                 likes: 1
             }).then(() => res.status(200).json({
                 message: 'Like créé avec succés!'
-            }))
+            })).catch(error => res.status(400).json({ error, message: "Le like n'a pas été créé !!!" }));
         }
-    })
-        .catch(error => res.status(400).json({ error }));
+    }).catch(error => res.status(500).json({ error }));
 
 };
 
-exports.unLikePost = async (req, res) => {
+exports.unLikePost = async (req, res, next) => {
     const postId = req.params.id;
     const userId = req.user;
     Like.findOne({

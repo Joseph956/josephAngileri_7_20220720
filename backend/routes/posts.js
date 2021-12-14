@@ -2,18 +2,18 @@ const express = require('express');
 const router = express.Router();
 
 const auth = require('../middlware/auth');
+const multer = require('../middlware/multer-config');
 const postsCtrl = require('../controllers/posts');
-// const multer = require('../middlware/multer-config');
 
 router.get("/", auth.token, postsCtrl.findAllPublished);
 router.get("/:id", auth.token, postsCtrl.findOne);
-router.post("/", auth.token, postsCtrl.createPost);
-router.put("/:id", auth.token, auth.haveRightOnPost, postsCtrl.updatePost);
-router.delete("/:id", auth.token, auth.haveRightOnPost, postsCtrl.deletePost);
+router.post("/", auth.token, multer, postsCtrl.createPost);
+router.put("/:id", auth.token, multer, auth.haveRightOnPost, postsCtrl.updatePost);
 router.put("/:id/like", auth.token, postsCtrl.likePost);
 router.put("/:id/unlike", auth.token, postsCtrl.unLikePost);
+router.delete("/:id", auth.token, auth.haveRightOnPost, postsCtrl.deletePost);
 
-// authAdmin.isAdmin, authAdmin.postUser, 
+
 
 //Suppression image réservé au créateur du post (admin).
 // router.delete("/images/:id", postsCtrl.getOneImage);
