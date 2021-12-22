@@ -58,8 +58,8 @@ exports.findOne = async (req, res, next) => {
 //Créer un nouveau commentaire (ok).
 exports.createComent = async (req, res, next) => {
     const comentPost = req.file ? {
-        ...req.body.postId,
-        attachment: `${req.protocol}://${req.get("host")}/images${req.file.filename}`
+        ...req.body.id,
+        // attachment: `${req.protocol}://${req.get("host")}/images${req.file.filename}`
     } : { ...req.body }
     Coment.create({
         ...comentPost, id: req.params.id,

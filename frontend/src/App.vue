@@ -1,9 +1,20 @@
 <template>
   <div id="nav">
-    <router-link to="/">Accueil</router-link> |
-    <router-link to="/signup">SignUp</router-link> |
-    <router-link to="/login">LogIn</router-link> |
-    <router-link to="/">Home</router-link> |
+    <a href=""
+      ><router-link to="/accueil">
+        <img
+          class="homeLinkBig"
+          id="nav_groupomania"
+          src="../images/icon-left-font-monochrome-black.svg"
+          alt="lien acceuil"
+        />
+      </router-link>
+    </a>
+    |
+
+    <router-link to="/signup">Sign Up</router-link> |
+    <router-link to="/login">Log In</router-link> |
+    <router-link to="/profil"></router-link> |
     <router-link to="/about">About</router-link>
     <router-view />
   </div>

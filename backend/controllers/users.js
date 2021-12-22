@@ -45,6 +45,19 @@ exports.findOneProfil = (req, res, next) => {
     }).catch(error => res.status(500).json({ error }));
 };
 
+exports.createAttachment = (req, res, next) => {
+    const attachmentObject = JSON.parse(req.body.attachment);
+    delete attachmentObject._id;
+    const user = new User({
+        ...attachmentObject,
+        attachment: `${req.protocol}://${req.get("host")}/images/profil${req.file.filename}`
+    });
+    user.save()
+        .then(() => res.status(201).json({ message: 'Profil enregistré !' }))
+        .catch(error => res.status(400).json({ error })
+        );
+};
+
 // Modifier un profil utilisateur. (ok) (a voir pour les images !!?).
 //Faire la vérification de l'existence du compte avant de faire le traitement.
 exports.updateProfil = (req, res, next) => {
