@@ -1,7 +1,9 @@
+// import Accueil from '../components/Accueil.vue'
+// import Login from '../components/Login.vue';
 import { createRouter, createWebHashHistory } from 'vue-router'
 // import Home from '../views/Home.vue'
-// import Accueil from '../views/Accueil.vue'
-// import SignUp from '../views/SignUp.vue'
+// import Signup from '../views/Signup.vue'
+// const SignUp = () => import('../views/SignUp.vue');
 
 
 const routes = [
@@ -11,43 +13,41 @@ const routes = [
   //   component: Home
   // },
   // {
+  //   name: 'Accueil',
+  //   components: Accueil,
+  //   path: '/'
+  // },
+  // {
+  //   path: '/about',
+  //   name: 'About',
+  //   // route level code-splitting
+  //   // this generates a separate chunk (about.[hash].js) for this route
+  //   // which is lazy-loaded when the route is visited.
+  //   component: () =>
+  //     import(/* webpackChunkName: "about" */ '../views/About.vue')
+  // },
+  // {
   //   path: '/',
   //   name: 'Accueil',
-  //   component: Accueil
+  //   component: () =>
+  //     import(/* webpackChunkName: "about" */ '../components/Accueil.vue')
   // },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-  {
-    path: '/',
-    name: 'Accueil',
-    component: () =>
-      import(/* webpackChunkName: "about" */ '../views/Accueil.vue')
-  },
-  {
-    path: '/signup',
-    name: 'SignUp',
-    component: () =>
-      import(/* webpackChunkName: "about" */ '../views/SignUp.vue')
-  },
-  {
-    path: '/login',
-    name: 'LogIn',
-    component: () =>
-      import(/* webpackChunkName: "about" */ '../views/LogIn.vue')
-  },
-  {
-    path: '/profil',
-    name: 'Profil',
-    component: () =>
-      import(/* webpackChunkName: "about" */ '../views/Profil.vue')
-  }
+  // {
+  //   path: '/signup',
+  //   name: 'Signup',
+  //   component: Signup,
+  // },
+  // {
+  //   path: '/login',
+  //   name: 'Login',
+  //   component: Login
+  // },
+  // {
+  //   path: '/profil',
+  //   name: 'Profil',
+  //   component: () =>
+  //     import(/* webpackChunkName: "about" */ '../views/Profil.vue')
+  // }
 ]
 
 const router = createRouter({

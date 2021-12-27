@@ -1,6 +1,7 @@
 const db = require("../models");
 const User = db.user;
 const fs = require('fs');
+const user = require("../models/user");
 
 //Lister tous les utilisateurs (ok).
 exports.findAllPublished = (req, res, next) => {
@@ -46,10 +47,10 @@ exports.findOneProfil = (req, res, next) => {
 };
 
 exports.createAttachment = (req, res, next) => {
-    const attachmentObject = JSON.parse(req.body.attachment);
-    delete attachmentObject._id;
+    const userProfil = JSON.parse(req.body.user);
+    delete userProfil._id;
     const user = new User({
-        ...attachmentObject,
+        ...userProfil,
         attachment: `${req.protocol}://${req.get("host")}/images/profil${req.file.filename}`
     });
     user.save()
@@ -59,25 +60,35 @@ exports.createAttachment = (req, res, next) => {
 };
 
 // Modifier un profil utilisateur. (ok) (a voir pour les images !!?).
-//Faire la vérification de l'existence du compte avant de faire le traitement.
 exports.updateProfil = (req, res, next) => {
-    const userProfil = req.file ? {
-        ...req.body.userId,
-        attachment: `${req.protocol}://${req.get("host")}/images/profil${req.file.filename}`
-    } : { ...req.body }
-    User.update({
-        ...userProfil, id: req.params.id
-    }, {
-        where: { id: req.params.id }
-    }).then((data) => {
-        if (data[0] === 0) {
-            return res.status(404).json({
-                message: "Le profil utilisateur n'a pas été trouvé !",
-            });
-        } else {
-            res.status(200).json({ message: "Le profil utilisateur a été modifié !" });
-        }
-    }).catch(err => res.status(500).json({ err }))
+    if (req.file) {
+        User.findOne({
+            where: { id: req.params.id }
+        }).then(user => {
+            const filename = user.attachment.split("/images/profil")[1];
+            fs.unlink(`images/profil/${filename}`, (error) => {
+                if (error) throw error;
+            })
+        }).catch(err => res.status(500).json({ err }));
+    } else {
+        const userProfil = req.file ? {
+            ...JSON.parse(req.body.user),
+            attachment: `${req.protocol}://${req.get("host")}/images/profil${req.file.filename}`
+        } : { ...req.body }
+        User.update({
+            ...userProfil, id: req.params.id
+        }, {
+            where: { id: req.params.id }
+        }).then((data) => {
+            if (data[0] === 0) {
+                return res.status(404).json({
+                    message: "Le profil utilisateur n'a pas été trouvé !",
+                });
+            } else {
+                res.status(200).json({ message: "Le profil utilisateur a été modifié !" });
+            }
+        }).catch(err => res.status(500).json({ err }))
+    }
 };
 
 //Supprimer un profil (ok)
