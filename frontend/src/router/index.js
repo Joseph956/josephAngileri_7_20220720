@@ -1,58 +1,48 @@
-// import Accueil from '../components/Accueil.vue'
-// import Login from '../components/Login.vue';
-import { createRouter, createWebHashHistory } from 'vue-router'
-// import Home from '../views/Home.vue'
-// import Signup from '../views/Signup.vue'
-// const SignUp = () => import('../views/SignUp.vue');
+import { createRouter, createWebHistory } from 'vue-router'
+import Accueil from '@/views/Accueil.vue';
+import Login from '@/components/Login.vue';
+// import SignUp from '@/components/SignUp.vue';
+import NavSignUp from '@/components/NavSignUp.vue';
 
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Home',
-  //   component: Home
-  // },
-  // {
-  //   name: 'Accueil',
-  //   components: Accueil,
-  //   path: '/'
-  // },
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // },
-  // {
-  //   path: '/',
-  //   name: 'Accueil',
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ '../components/Accueil.vue')
-  // },
+  {
+    path: '/',
+    name: 'Accueil',
+    components: Accueil,
+    // meta: {
+    //   requireAuth: true
+    // }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
   // {
   //   path: '/signup',
-  //   name: 'Signup',
-  //   component: Signup,
+  //   name: 'SignUp',
+  //   component: SignUp
   // },
-  // {
-  //   path: '/login',
-  //   name: 'Login',
-  //   component: Login
-  // },
-  // {
-  //   path: '/profil',
-  //   name: 'Profil',
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ '../views/Profil.vue')
-  // }
-]
+  {
+    path: '/navsignup',
+    name: 'NavSignUp',
+    component: NavSignUp
+  },
+];
 
-const router = createRouter({
-  history: createWebHashHistory(),
+// const router = new VueRouter({
+//   mode: 'history',
+//   base: process.env.PORT,
+//   routes,
+// });
+
+
+const router = new createRouter({
+  history: createWebHistory(),
   routes,
+  linkActiveClass: 'active'
 });
 
+// Vue.createApp(App).use(router).mount('#app');
 export default router;
