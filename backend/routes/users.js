@@ -8,7 +8,7 @@ router.get("/", auth.token, usersCtrl.findAllPublished);
 router.get("/:id", auth.token, usersCtrl.findOneProfil);
 router.put("/imageProfil", auth.token, multer, usersCtrl.createAttachment);
 router.put("/:id", auth.token, multer, auth.haveRightOnProfile, usersCtrl.updateProfil);
-router.delete("/:id", auth.token, auth.haveRightOnProfile, usersCtrl.deleteProfil);
+router.delete("/:id", auth.token, multer, auth.haveRightOnProfile, usersCtrl.deleteProfil);
 // router.get('/search', auth.token,);
 
 // // Modérateur: Modérer les interactions entre salariés.

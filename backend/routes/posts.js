@@ -11,7 +11,7 @@ router.post("/", auth.token, multer, postsCtrl.createPost);
 router.put("/:id", auth.token, multer, auth.haveRightOnPost, postsCtrl.updatePost);
 router.put("/:id/like", auth.token, postsCtrl.likePost);
 router.put("/:id/unlike", auth.token, postsCtrl.unLikePost);
-router.delete("/:id", auth.token, auth.haveRightOnPost, postsCtrl.deletePost);
+router.delete("/:id", auth.token, multer, auth.haveRightOnPost, postsCtrl.deletePost);
 
 
 

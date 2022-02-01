@@ -1,35 +1,32 @@
 <template>
   <div class="accueil">
     <div class="container">
-      <form>
+      <!-- empêche le rafraîchissement de la page  (@submit.prevent="submit") -->
+      <form @submit.prevent="submit">
         <h1 class="nav-link-title" v-if="mode == 'login'">Login</h1>
         <h1 class="nav-link-title" v-else>Sign Up</h1>
         <p class="nav-link-subtitle" v-if="mode == 'login'">
           Vous n'avez pas encore de compte ?<br />
-          <!-- <a href="#" -->
-          <router-link to="/register">
-            <span
-              class="nav-link-action"
-              v-on:click.native="switchToCreateAccount()"
+          <button>
+            <span class="nav-link-action" @click="switchToCreateAccount()"
               >Créer un compte
             </span>
-          </router-link>
-          <!-- </a> -->
+          </button>
         </p>
         <p class="nav-link-subtitle" v-else>
           Vous avez déjà un compte ?<br />
-          <router-link to="/Login">
-            <span class="nav-link-action" v-on:click.native="switchToLogin()"
+          <button>
+            <span class="nav-link-action" @click="switchToLogin()"
               >Se connecter
             </span>
-          </router-link>
+          </button>
         </p>
 
         <div class="form-group" v-if="mode == 'create'">
           <label>Username</label>
           <input
             v-model="username"
-            class="form-control"
+            class="form-control_input"
             type="text"
             placeholder="Username"
           />
@@ -39,7 +36,7 @@
           <label>Email</label>
           <input
             v-model="email"
-            class="form-control"
+            class="form-control_input"
             type="text"
             placeholder="Email"
           />
@@ -49,51 +46,92 @@
           <label>Mot de passe</label>
           <input
             v-model="password"
-            class="form-control"
+            class="form-control_input"
             type="password"
             placeholder="Mot de passe"
           />
         </div>
 
-        <button class="btn btn-primary btn--disable" v-if="mode == 'login'">
-          Connexion
-        </button>
-        <button
-          @click="register()"
-          class="btn btn-primary"
-          :class="{ 'btn--disable': !validatedFields }"
-          v-else
+        <div class="form-group" v-if="mode == 'create'">
+          <label>Confirmer le mot de passe</label>
+          <input
+            v-model="confirmPassword"
+            class="form-control_input"
+            type="password"
+            placeholder="Confirmer le mot de passe"
+          />
+        </div>
+
+        <div
+          class="form-group"
+          v-if="mode == 'login' && status == 'error_login'"
         >
-          Créer mon compte
-        </button>
+          Adresse mail et/ou mot de passe invalide !
+        </div>
+
+        <div
+          class="form-group"
+          v-if="mode == 'create' && status == 'error_create'"
+        >
+          Adresse email déjà utilisée !
+        </div>
+
+        <div class="form-group">
+          <button
+            @click="login()"
+            class="btn btn-primary"
+            :class="{ 'btn--disabled': !validatedFields }"
+            v-if="mode == 'login'"
+          >
+            <span v-if="status == 'loading'">Connexion en cours....</span>
+            <span v-else>Connexion</span>
+          </button>
+          <button
+            class="btn btn-primary"
+            @click="createAccount()"
+            :class="{ 'btn--disabled': !validatedFields }"
+            v-else
+          >
+            <span v-if="status == 'loading'">Création en cours....</span>
+            <span v-else>Créer mon compte</span>
+          </button>
+        </div>
       </form>
     </div>
-    <router-view></router-view>
-    <NavSignUp />
   </div>
 </template>
 
 <script>
-import NavSignUp from "@/components/NavSignUp.vue";
-// import Login from "@/components/Login.vue";
+import { mapState } from "vuex";
+
 export default {
   name: "Accueil",
-  components: {
-    NavSignUp,
-    // Login,
-  },
+
   data: function () {
     return {
       mode: "login",
       email: "",
       username: "",
       password: "",
+      confirmPassword: "",
     };
   },
+  mounted: function () {
+    if (this.$store.state.user.userId != -1) {
+      this.$router.push("/profile");
+      return;
+    }
+  },
+
   computed: {
     validatedFields: function () {
       if (this.mode == "create") {
-        if (this.email != "" && this.username != "" && this.password != "") {
+        if (
+          this.email != "" &&
+          this.username != "" &&
+          this.password != "" &&
+          this.confirmPassword != ""
+        ) {
           return true;
         } else {
           return false;
@@ -106,6 +144,7 @@ export default {
         }
       }
     },
+    ...mapState(["status"]),
   },
   methods: {
     switchToCreateAccount: function () {
@@ -114,17 +153,65 @@ export default {
     switchToLogin: function () {
       this.mode = "login";
     },
-    register: function () {
-      console.log(this.username, this.email, this.password);
-      this.store.dispatch("register", {
-        username: this.username,
-        email: this.email,
-        password: this.password,
-      });
+    login: function () {
+      const self = this;
+      this.$store
+        .dispatch("login", {
+          email: this.email,
+          password: this.password,
+        })
+        .then(
+          function () {
+            self.$router.push("/profile");
+          },
+          function (error) {
+            console.log(error);
+          }
+        );
+    },
+    createAccount: function () {
+      const self = this;
+      this.$store
+        .dispatch("createAccount", {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+          confirmPassword: this.confirmPassword,
+        })
+        .then(
+          function () {
+            self.login();
+            console.log(response);
+          },
+          function (error) {
+            console.log(error);
+          }
+        );
     },
   },
 };
 </script>
 
-<style lang="css">
+<style>
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin: 16px 0px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.form-control_input {
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #f2f2f2;
+  font-weight: 500;
+  font-size: 16px;
+  flex: 1;
+  min-width: 100px;
+  color: black;
+}
+.form-control_input::placeholder {
+  color: #a3a2a2;
+}
 </style>

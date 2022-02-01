@@ -25,7 +25,7 @@ module.exports.token = (req, res, next) => {
             }
         });
     } catch (error) {
-        res.status(401).json({ error: error | 'Requête non authentifiée !' });
+        res.status(400).json({ error: error | 'Requête non authentifiée !' });
     }
 };
 

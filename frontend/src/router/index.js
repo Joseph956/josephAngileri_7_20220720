@@ -1,42 +1,34 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 import Accueil from '@/views/Accueil.vue';
-import Login from '@/components/Login.vue';
-// import SignUp from '@/components/SignUp.vue';
+import Profile from '@/views/Profile.vue';
+import Posts from '@/views/Posts.vue';
 import NavSignUp from '@/components/NavSignUp.vue';
-
 
 const routes = [
   {
-    path: '/',
     name: 'Accueil',
-    components: Accueil,
-    // meta: {
-    //   requireAuth: true
-    // }
+    path: '/',
+    component: Accueil,
+    meta: {
+      requireAuth: true
+    }
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
+    name: 'posts',
+    path: '/posts',
+    component: Posts,
   },
-  // {
-  //   path: '/signup',
-  //   name: 'SignUp',
-  //   component: SignUp
-  // },
   {
-    path: '/navsignup',
+    name: 'profile',
+    path: '/profile',
+    component: Profile,
+  },
+  {
     name: 'NavSignUp',
+    path: '/navsignup',
     component: NavSignUp
   },
 ];
-
-// const router = new VueRouter({
-//   mode: 'history',
-//   base: process.env.PORT,
-//   routes,
-// });
-
 
 const router = new createRouter({
   history: createWebHistory(),
@@ -44,5 +36,4 @@ const router = new createRouter({
   linkActiveClass: 'active'
 });
 
-// Vue.createApp(App).use(router).mount('#app');
 export default router;

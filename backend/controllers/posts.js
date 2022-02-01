@@ -49,12 +49,13 @@ exports.findAllPublished = async (req, res, next) => {
 
 //Récupérer un seul post (ok).
 exports.findOne = async (req, res, next) => {
+    const id = req.params.id;
     Post.findAll({
         where: {
-            id: req.params.id
+            id: id
         }
     })
-        .then(user => res.status(200).json(user))
+        .then(post => res.status(200).json(post))
         .catch(error => res.status(400).json({ error }));
 };
 
@@ -79,17 +80,19 @@ exports.createPost = async (req, res, next) => {
 
 //Mettre à jour le post (ok).
 exports.updatePost = async (req, res, next) => {
+    console.log("----->ROUTE PUT : updatePost");
     const postModify = req.file ? {
         ...req.body.postId,
         attachment: `${req.protocol}://${req.get("host")}/images/post${req.file.filename}`
     } : { ...req.body }
+    //Post.update({ userId: req.params.postId}, { where: { ...postModify, userId: req.params.postId}}) Atester
     Post.update({
         ...postModify, id: req.params.id
     }, {
         where: { id: req.params.id },
         attributes: ['id', 'username', 'content', 'attachment'],
     }).then((post) => res.status(200).json({
-        message: "Le post a été modifié !"
+        post, message: "Le post a été modifié !"
     })).catch(() => res.status(400).json({
         message: "Le post n'a pas été modifié !"
     }))

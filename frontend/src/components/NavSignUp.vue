@@ -1,37 +1,37 @@
 <template>
-  <div>
-    <div class="accueil">
-      <div class="container">
-        <!-- <router-link to="/accueil"> -->
-        <nav class="navbar navbar-expand navbar-light fixed-top">
-          <div class="container">
-            <a href="#" class="navbar-brand">Accueil</a>
-            <div class="collapse navbar-collapse">
-              <ul class="navbar-nav ml-auto">
-                <li class="nav-link"></li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-        <!-- </router-link> -->
+  <nav class="navbar navbar-expand navbar-light fixed-top">
+    <div class="container">
+      <router-link :to="{ name: 'Accueil' }" class="navbar-brand"
+        >Accueil</router-link
+      >
+      <div class="collapse navbar-collapse">
+        <ul v-show="!mobile" class="navbar-nav ml-auto">
+          <router-link class="link" to="#">Login</router-link>
+          <router-link class="link" to="#">Sign Up</router-link>
+        </ul>
       </div>
     </div>
-  </div>
+  </nav>
 </template>
 
 <script>
-import Login from "@/components/Login.vue";
-import SignUp from "@/components/SignUp.vue";
+import menuIcon from "../assets/Icons/bars-regular.svg";
 export default {
   name: "NavSignUp",
   components: {
-    Login,
-    SignUp,
+    menuIcon,
+  },
+  data() {
+    return {
+      mobile: null,
+      mobileNav: null,
+      windownWidth: null,
+    };
   },
 };
 </script>
 
-<style lang="css">
+<style>
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800");
 
 * {
@@ -55,7 +55,7 @@ body {
   margin: auto;
   min-height: 100vh;
   display: flex;
-
+  justify-content: center;
   font-weight: 400;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
@@ -83,7 +83,10 @@ html,
 }
 .navbar-light {
   background-color: #ffffff;
-  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.6);
+  /* box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), */
+  /* 0 2px 4px -1px rgba(0, 0, 0, 0.06); */
+  /* z-index: 99; */
 }
 .navbar-expand,
 .navbar-collapse {
