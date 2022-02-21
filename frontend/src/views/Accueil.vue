@@ -181,7 +181,7 @@ export default {
         .then(
           function () {
             self.login();
-            console.log(response);
+            console.log(response.data);
           },
           function (error) {
             console.log(error);

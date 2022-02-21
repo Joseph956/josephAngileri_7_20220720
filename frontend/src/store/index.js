@@ -40,8 +40,6 @@ export default createStore({
       username: '',
       email: '',
     },
-
-    status: '',
     post: post,
     postInfos: {
       postId: '',
@@ -109,35 +107,27 @@ export default createStore({
     },
 
     //Informations d'un utilisateur
-    getUserInfos: ({ commit }, data) => {
-      instance.post('/users/',
+    getUserInfos: ({ commit, state }, data) => {
+      instance.get('/users/' + state.user.userId,
         {
           headers: {
-            "Authorization": "BEARER " + token
+            "Authorization": "BEARER " + state.user.token
           }
-          // })
-          // {
-
-          //   headers: {
-          //     Authorization: "Bearer " + localStorage.getItem("token")
-          //   }
         }).then(response => {
-          commit('data', response.data);
-          console.log(response);
-        }).catch(function () {
-        });
+          commit('userInfos', response.data);
+        }).catch(function () { });
     },
 
     //Lister tous les posts
-    getPostInfos: ({ commit }) => {
+    getPostInfos: ({ commit, state }) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
         commit;
-        instance.get('/posts')
+        instance.post('/posts')
           .then(response => {
             commit('setStatus', 'publier');
-            resolve(response);
-            console.log(response);
+            resolve(response.data);
+            console.log(response.data);
           })
           .catch(function () {
             reject(error);

@@ -2,16 +2,22 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Accueil from '@/views/Accueil.vue';
 import Profile from '@/views/Profile.vue';
 import Posts from '@/views/Posts.vue';
+import Blog from '@/views/Blog.vue';
 import NavSignUp from '@/components/NavSignUp.vue';
 
 const routes = [
   {
-    name: 'Accueil',
     path: '/',
+    name: 'Accueil',
     component: Accueil,
     meta: {
       requireAuth: true
     }
+  },
+  {
+    name: 'blog',
+    path: '/blog',
+    component: Blog,
   },
   {
     name: 'posts',

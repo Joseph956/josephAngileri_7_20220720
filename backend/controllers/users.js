@@ -1,7 +1,7 @@
 const db = require("../models");
 const User = db.user;
 const fs = require('fs');
-const user = require("../models/user");
+// const user = require("../models/user");
 
 //Lister tous les utilisateurs (ok).
 exports.findAllPublished = (req, res, next) => {
@@ -37,7 +37,7 @@ exports.findOneProfil = (req, res, next) => {
         order: [["createdAt", "DESC"]],
     }).then((user) => {
         if (!user) {
-            return res.status(404).json({
+            return res.status(403).json({
                 message: "Le profil utilisateur n'a pas été trouvé !",
             });
         } else {
@@ -59,23 +59,23 @@ exports.createAttachment = (req, res, next) => {
         );
 };
 
-// exports.updateProfil = async (req, res, next) => {
-//     const id = req.params.id;
-//     let user = await User.findOne({ where: { id: id } });
-//     if (userId === user.id) {
-//         if (req.file && user.attachment) {
-//             newAttachment = `${req.protocol}: //${req.get("host")}/api/upload/$ {
-//                 req.file.filename
-//             }`;
-//             const filename = user.attachment.split("/images/profil")[1];
-//             fs.unlink(`images/profil/${filename}`, (error) => {
-//                 if (error) throw error;
-//             });
+exports.publierProfil = async (req, res, next) => {
+    User.findOne({
+        user: (req.body.user),
+        // attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+        attributes: ['id', 'attachment', 'username', 'email', 'roleId'],
+        order: [["createdAt", "DESC"]],
+    }).then((user) => {
+        if (!user) {
+            return res.status(403).json({
+                message: "Le profil utilisateur n'a pas été trouvé !",
+            });
+        } else {
+            res.status(200).json(user)
+        }
+    }).catch(error => res.status(500).json({ error }));
+};
 
-//         } else {
-
-//         }
-//     } else {
 
 // Modifier un profil utilisateur. (ok) (a voir pour les images !!?).
 exports.updateProfil = async (req, res, next) => {

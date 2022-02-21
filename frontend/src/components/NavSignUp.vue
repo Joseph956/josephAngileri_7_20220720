@@ -1,25 +1,41 @@
 <template>
-  <nav class="navbar navbar-expand navbar-light fixed-top">
-    <div class="container">
-      <router-link :to="{ name: 'Accueil' }" class="navbar-brand"
-        >Accueil</router-link
-      >
-      <div class="collapse navbar-collapse">
-        <ul v-show="!mobile" class="navbar-nav ml-auto">
-          <router-link class="link" to="#">Login</router-link>
-          <router-link class="link" to="#">Sign Up</router-link>
-        </ul>
+  <div>
+    <nav class="navbar navbar-expand navbar-light fixed-top">
+      <div class="container">
+        <router-link :to="{ name: 'Accueil' }" class="navbar-brand">
+          <img
+            src="../assets/Icons/icon-left-font-monochrome-white.svg"
+            alt=""
+          />
+        </router-link>
+        <div class="collapse navbar-collapse">
+          <ul v-show="!mobile" class="navbar-nav ml-auto">
+            <router-link class="link" to="Accueil">Accueil</router-link>
+            <router-link class="link" to="Profile">Profile</router-link>
+            <router-link class="link" to="Blog">Blogs</router-link>
+            <router-link class="link" to="Posts">Posts</router-link>
+          </ul>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+    <!-- <menuIcon /> -->
+    <!-- <transition name="mobile-nav">
+    <ul class="mobile-nav">
+            <router-link class="link" to="#">Accueil</router-link>
+            <router-link class="link" to="#">Profile</router-link>
+            <router-link class="link" to="#">Blogs</router-link>
+            <router-link class="link" to="#">Posts</router-link>
+          </ul>
+    <transition/> -->
+  </div>
 </template>
 
 <script>
-import menuIcon from "../assets/Icons/bars-regular.svg";
+// import menuIcon from "../assets/Icons/bars-regular.svg";
 export default {
   name: "NavSignUp",
   components: {
-    menuIcon,
+    // menuIcon,
   },
   data() {
     return {
@@ -47,9 +63,11 @@ export default {
   list-style: none;
   box-sizing: border-box;
 }
+html {
+  scroll-behavior: smooth;
+}
 body {
-  background-image: url("../assets/icon.png");
-  background-repeat: no-repeat;
+  background: url("../assets/icon.png") no-repeat 50% 50%;
   background-position: center;
   background-size: cover;
   margin: auto;
@@ -66,9 +84,23 @@ h4,
 h5,
 h6,
 label,
-span {
+span,
+.nav-item,
+#transition,
+footer {
+  text-align: center;
+  text-shadow: -3px 3px 2px #f7d1d0;
   font-weight: 500;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+img {
+  /* width: 33%; */
+  height: 2vw;
+  object-fit: cover;
+  display: flex;
+  flex-wrap: inherit;
+  align-items: center;
+  justify-content: center;
 }
 body,
 html,
@@ -80,6 +112,17 @@ html,
 }
 #app {
   text-align: center;
+}
+.container {
+  width: 100%;
+}
+.navbar-container {
+  display: none;
+}
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .navbar-light {
   background-color: #ffffff;

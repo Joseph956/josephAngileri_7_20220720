@@ -21,8 +21,7 @@ export default {
   },
 
   mounted: function () {
-    console.log(this.$store.state.user);
-    if (this.$store.state.userId == -1) {
+    if (this.$store.state.userId === -1) {
       this.$router.push("/");
       return;
     }

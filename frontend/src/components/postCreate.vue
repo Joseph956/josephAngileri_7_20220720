@@ -87,8 +87,8 @@ export default {
     };
   },
   mounted: function () {
-    if (this.$store.state.post.postId != -1) {
-      this.$router.push("/posts");
+    if (this.$store.state.postId === -1) {
+      this.$router.push("/");
       return;
     }
   },
@@ -108,7 +108,9 @@ export default {
         }
       }
     },
-    ...mapState(["status"]),
+    ...mapState({
+      post: "postInfos",
+    }),
   },
 
   methods: {

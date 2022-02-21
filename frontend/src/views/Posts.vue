@@ -34,7 +34,7 @@ export default {
     };
   },
   mounted: function () {
-    console.log(this.$store.state.post);
+    console.log(this.$store.state.postId);
     if (this.$store.state.UUID == -1) {
       this.$router.push("/posts");
       return;
@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     ...mapState({
-      user: "PostInfos",
+      post: "PostInfos",
     }),
   },
   methods: {
