@@ -103,10 +103,8 @@
 
 <script>
 import { mapState } from "vuex";
-
 export default {
   name: "Accueil",
-
   data: function () {
     return {
       mode: "login",
@@ -122,7 +120,12 @@ export default {
       return;
     }
   },
-
+  mounted: function () {
+    if (this.$store.state.user.postId != -1) {
+      this.$router.push("/posts");
+      return;
+    }
+  },
   computed: {
     validatedFields: function () {
       if (this.mode == "create") {

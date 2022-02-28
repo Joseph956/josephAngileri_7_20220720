@@ -15,23 +15,23 @@ const routes = [
     }
   },
   {
-    name: 'blog',
     path: '/blog',
+    name: 'Blog',
     component: Blog,
   },
   {
-    name: 'posts',
     path: '/posts',
+    name: 'Posts',
     component: Posts,
   },
   {
-    name: 'profile',
     path: '/profile',
+    name: 'Profile',
     component: Profile,
   },
   {
-    name: 'NavSignUp',
     path: '/navsignup',
+    name: 'NavSignUp',
     component: NavSignUp
   },
 ];

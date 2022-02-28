@@ -16,9 +16,6 @@ import { mapState } from "vuex";
 
 export default {
   name: "Profile",
-  components: {
-    // Posts,
-  },
 
   mounted: function () {
     if (this.$store.state.userId === -1) {

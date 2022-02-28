@@ -123,21 +123,20 @@ export default createStore({
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
         commit;
-        instance.post('/posts')
-          .then(response => {
-            commit('setStatus', 'publier');
-            resolve(response.data);
-            console.log(response.data);
-          })
-          .catch(function () {
-            reject(error);
-            console.log(error);
-          });
+        instance.get('/posts', {
+          headers: {
+            "Authorization": "BEARER " + state.user.token
+          }
+        }).then(response => {
+          commit('setStatus', 'publier');
+          resolve(response.data);
+          console.log(response.data);
+        }).catch(function () {
+          reject(error);
+          console.log(error);
+        });
       });
     },
-
-
-
   },
 
   modules: {

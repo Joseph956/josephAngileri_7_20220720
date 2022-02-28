@@ -1,8 +1,10 @@
 <template>
   <div>
     <form @submit.prevent="submit">
-      <h1 class="nav-link-title" v-if="mode == 'publier'">Publication</h1>
-      <h1 class="nav-link-title" v-else>Suppression</h1>
+      <h1 class="nav-link-title" v-if="mode == 'publier'">
+        Publier votre post
+      </h1>
+      <h1 class="nav-link-title" v-else>Supprimer un post</h1>
       <p class="nav-link-subtitle" v-if="mode == 'supprimer'">
         <br />
         <button>
@@ -33,7 +35,8 @@
 
       <div class="formGroup">
         <label for="content"></label>
-        <textarea v-model="content" id="content"> </textarea>
+        <textarea v-model="content" id="content" placeholder="content">
+        </textarea>
       </div>
 
       <div class="formGroup">
@@ -91,6 +94,7 @@ export default {
       this.$router.push("/");
       return;
     }
+    this.$store.dispatch("getPostInfos");
   },
   computed: {
     validatedFields: function () {
@@ -158,4 +162,18 @@ export default {
 </script>
 
 <style>
+.img-xs,
+.img-fluid {
+  height: 4vw;
+  object-fit: cover;
+  display: flex;
+  flex-wrap: inherit;
+  align-items: center;
+  justify-content: center;
+}
+#content {
+  width: 100%;
+  height: 50px;
+  background-color: #f2f2f2;
+}
 </style>
