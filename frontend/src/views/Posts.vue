@@ -1,8 +1,9 @@
 <template>
-  <div class="formGroup">
+  <div class="postForm">
+    <Profile />
     <div class="form-control_input">
       <div>
-        <postCreate />
+        <PostCreate :post="welcomeScreen" />
         <div class="col-md-8 col-xl-6 middle-wrapper">
           <div class="row">
             <div class="col-md-12 grid-margin">
@@ -17,10 +18,7 @@
                         src="https://bootdey.com/img/Content/avatar/avatar6.png"
                         alt=""
                       />
-                      <div class="ml-2">
-                        <p>Mike Popescu</p>
-                        <p class="tx-11 text-muted">1 min ago</p>
-                      </div>
+                      <div class="ml-2"></div>
                     </div>
                     <div class="dropdown">
                       <button
@@ -165,6 +163,11 @@
                   </div>
                 </div>
                 <div class="card-body">
+                  <PostListe
+                    :post="post"
+                    v-for="(post, index) in postInfos"
+                    :key="index"
+                  />
                   <p class="mb-3 tx-14">
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                     Accusamus minima delectus nemo unde quae recusandae
@@ -252,40 +255,59 @@
             </div>
           </div>
         </div>
-        <postListe />
-        <postModify />
       </div>
+      <PostModify />
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import PostApiRoutage from "@/apiroutage/posts";
-import postCreate from "@/components/postCreate";
-import postListe from "@/components/postListe";
-import postModify from "@/components/postModify";
+import PostCreate from "../components/postCreate.vue";
+import PostListe from "../components/postListe.vue";
+import PostModify from "../components/postModify.vue";
+import PostApiRoutage from "../apiroutage/posts";
+import Profile from "../views/Profile.vue";
 
 export default {
   name: "Posts",
+  // props: {
+  //   postId: Number,
+  // },
   components: {
     PostApiRoutage,
-    postCreate,
-    postListe,
-    postModify,
+    PostCreate,
+    PostListe,
+    PostModify,
+    Profile,
   },
   data() {
     return {
-      post: {
-        id: "",
-        content: "",
-        attachment: "",
+      welcomeScreen: {
+        title: "Welcome!",
+        PostCreate:
+          "What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        welcomeScreen: true,
+        photo: "coding",
       },
-      allPosts: [],
+      postInfos: [
+        {
+          id: "",
+          content: "",
+          attachment: "",
+        },
+      ],
     };
+    // return {
+    //   post: {
+    //     id: "",
+    //     content: "",
+    //     attachment: "",
+    //   },
+    //   allPosts: [],
+    // };
   },
   mounted: function () {
-    console.log(this.$store.state.postId);
     if (this.$store.state.UUID === -1) {
       this.$router.push("/posts");
       return;
@@ -293,8 +315,12 @@ export default {
     this.$store.dispatch("getPostInfos");
   },
   computed: {
+    postInfos() {
+      return this.$store.state.postInfos;
+    },
+
     ...mapState({
-      post: "PostInfos",
+      post: "postInfos",
     }),
   },
   methods: {
@@ -310,7 +336,7 @@ export default {
   width: auto;
   display: flex;
 }
-.form-group {
+.postForm {
   display: flex;
   flex-direction: column;
   margin: 16px 0px;

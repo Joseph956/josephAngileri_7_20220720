@@ -12,7 +12,6 @@
 
 <script>
 import { mapState } from "vuex";
-// import Posts from "@/views/Posts";
 
 export default {
   name: "Profile",
@@ -38,5 +37,5 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 </style>

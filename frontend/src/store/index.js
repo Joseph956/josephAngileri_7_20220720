@@ -1,6 +1,6 @@
 import { createStore } from 'vuex';
-import post from '../../../backend/models/post';
-// import postApiRoutage from '@/apiroutage';
+// import post from '../../../backend/models/post';
+import apiPosts from '@/apiroutage/posts';
 
 import axios from "axios";
 
@@ -40,8 +40,8 @@ export default createStore({
       username: '',
       email: '',
     },
-    post: post,
-    postInfos: {
+    status: '',
+    apiPosts: {
       postId: '',
       content: '',
       attachment: '',
@@ -105,10 +105,8 @@ export default createStore({
           });
       });
     },
-
-    //Informations d'un utilisateur
     getUserInfos: ({ commit, state }, data) => {
-      instance.get('/users/' + state.user.userId,
+      instance.get('/users/' + state.user.userId, data,
         {
           headers: {
             "Authorization": "BEARER " + state.user.token
@@ -128,7 +126,7 @@ export default createStore({
             "Authorization": "BEARER " + state.user.token
           }
         }).then(response => {
-          commit('setStatus', 'publier');
+          commit('setStatus', 'postId');
           resolve(response.data);
           console.log(response.data);
         }).catch(function () {
@@ -137,7 +135,25 @@ export default createStore({
         });
       });
     },
+    // getPostInfos: ({ commit, state }) => {
+    //   commit;
+    //   instance.get('/posts' + state.post.postId, {
+    //     headers: {
+    //       "Authorization": "BEARER " + state.user.token
+    //     }
+    //   }).then(response => {
+    //     commit('postInfos', response.data);
+    //     console.log(response.data);
+    //   }).catch(function () { });
+    // },
+    // async listerAllPosts() {
+    //   const res = await postServices.getAllPosts(state.token);
+    //   if (res.status === 200) {
+    //     commit('setStatus', res.data.posts);
+    //   }
+    // }
   },
+
 
   modules: {
   }

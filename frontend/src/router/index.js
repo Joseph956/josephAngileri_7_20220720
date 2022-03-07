@@ -3,7 +3,6 @@ import Accueil from '@/views/Accueil.vue';
 import Profile from '@/views/Profile.vue';
 import Posts from '@/views/Posts.vue';
 import Blog from '@/views/Blog.vue';
-import NavSignUp from '@/components/NavSignUp.vue';
 
 const routes = [
   {
@@ -28,11 +27,6 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: Profile,
-  },
-  {
-    path: '/navsignup',
-    name: 'NavSignUp',
-    component: NavSignUp
   },
 ];
 

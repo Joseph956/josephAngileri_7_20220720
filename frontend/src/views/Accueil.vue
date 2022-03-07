@@ -105,6 +105,7 @@
 import { mapState } from "vuex";
 export default {
   name: "Accueil",
+  components: {},
   data: function () {
     return {
       mode: "login",
@@ -116,13 +117,7 @@ export default {
   },
   mounted: function () {
     if (this.$store.state.user.userId != -1) {
-      this.$router.push("/profile");
-      return;
-    }
-  },
-  mounted: function () {
-    if (this.$store.state.user.postId != -1) {
-      this.$router.push("/posts");
+      this.$router.push("/");
       return;
     }
   },
@@ -165,7 +160,7 @@ export default {
         })
         .then(
           function () {
-            self.$router.push("/profile");
+            self.$router.push("/posts");
           },
           function (error) {
             console.log(error);
