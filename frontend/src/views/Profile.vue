@@ -17,7 +17,7 @@ export default {
   name: "Profile",
 
   mounted: function () {
-    if (this.$store.state.userId === -1) {
+    if (this.$store.state.UUID === -1) {
       this.$router.push("/");
       return;
     }

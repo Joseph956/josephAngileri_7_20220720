@@ -8,11 +8,11 @@ const apiPosts = axios.create({
     }
 });
 
-function findAllPublished(token) {
+function findAllPublished() {
     return apiPosts.get('/posts', {
         headers: {
-            "Authorization": "BEARER" + token
-        }
+            "Authorization": "BEARER" + this.$store.state.user.token,
+        },
     });
 }
 

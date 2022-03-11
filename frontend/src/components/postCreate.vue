@@ -77,6 +77,7 @@
 
 <script>
 import { mapState } from "vuex";
+import axios from "axios";
 
 export default {
   name: "postCreate",
@@ -162,9 +163,11 @@ export default {
 </script>
 
 <style>
+img,
 .img-xs,
 .img-fluid {
-  height: 4vw;
+  height: 13vw;
+  width: -webkit-fill-available;
   object-fit: cover;
   display: flex;
   flex-wrap: inherit;

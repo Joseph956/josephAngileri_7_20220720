@@ -1,24 +1,26 @@
 <template>
   <div class="postForm">
-    <Profile />
+    <!-- <Profile /> -->
     <div class="form-control_input">
       <div>
         <PostCreate :post="welcomeScreen" />
         <div class="col-md-8 col-xl-6 middle-wrapper">
           <div class="row">
-            <div class="col-md-12 grid-margin">
+            <div
+              v-for="post in posts"
+              :key="post.id"
+              class="col-md-12 grid-margin"
+            >
               <div class="card rounded">
                 <div class="card-header">
                   <div
                     class="d-flex align-items-center justify-content-between"
                   >
                     <div class="d-flex align-items-center">
-                      <img
-                        class="img-xs rounded-circle"
-                        src="https://bootdey.com/img/Content/avatar/avatar6.png"
-                        alt=""
-                      />
-                      <div class="ml-2"></div>
+                      <div class="ml-2">
+                        <img :src="post.attachment" alt="" />
+                        <p>{{ post.user.username }}</p>
+                      </div>
                     </div>
                     <div class="dropdown">
                       <button
@@ -163,21 +165,11 @@
                   </div>
                 </div>
                 <div class="card-body">
-                  <PostListe
-                    :post="post"
-                    v-for="(post, index) in postInfos"
-                    :key="index"
-                  />
                   <p class="mb-3 tx-14">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Accusamus minima delectus nemo unde quae recusandae
-                    assumenda.
+                    {{ post.content }} <br />{{ post.createdAt }}
                   </p>
-                  <img
-                    class="img-fluid"
-                    src="https://bootdey.com/img/Content/avatar/avatar6.png"
-                    alt=""
-                  />
+                  <p>{{ post.coments.coment }}</p>
+                  <img :src="post.attachment" alt="" />
                 </div>
                 <div class="card-footer">
                   <div class="d-flex post-actions">
@@ -201,7 +193,9 @@
                           d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
                         ></path>
                       </svg>
-                      <p class="d-none d-md-block ml-2">Like</p>
+                      <p class="d-none d-md-block ml-2">
+                        {{ post.likes.length }}
+                      </p>
                     </a>
                     <a
                       href="javascript:;"
@@ -223,7 +217,9 @@
                           d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
                         ></path>
                       </svg>
-                      <p class="d-none d-md-block ml-2">Comment</p>
+                      <p class="d-none d-md-block ml-2">
+                        {{ post.coments.length }} <br />
+                      </p>
                     </a>
                     <a
                       href="javascript:;"
@@ -256,56 +252,34 @@
           </div>
         </div>
       </div>
-      <PostModify />
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import PostCreate from "../components/postCreate.vue";
-import PostListe from "../components/postListe.vue";
-import PostModify from "../components/postModify.vue";
-import PostApiRoutage from "../apiroutage/posts";
-import Profile from "../views/Profile.vue";
+import axios from "axios";
+import PostCreate from "@/components/postCreate.vue";
+import comentsPost from "@/views/Coments.vue";
 
 export default {
   name: "Posts",
-  // props: {
-  //   postId: Number,
-  // },
   components: {
-    PostApiRoutage,
     PostCreate,
-    PostListe,
-    PostModify,
-    Profile,
+    comentsPost,
   },
   data() {
     return {
-      welcomeScreen: {
-        title: "Welcome!",
-        PostCreate:
-          "What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        welcomeScreen: true,
-        photo: "coding",
-      },
-      postInfos: [
-        {
-          id: "",
-          content: "",
-          attachment: "",
+      apiPosts: axios.create({
+        baseURL: "http://localhost:3000/api/posts",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "BEARER " + this.$store.state.user.token,
         },
-      ],
+      }),
+      posts: [],
+      likes: [],
     };
-    // return {
-    //   post: {
-    //     id: "",
-    //     content: "",
-    //     attachment: "",
-    //   },
-    //   allPosts: [],
-    // };
   },
   mounted: function () {
     if (this.$store.state.UUID === -1) {
@@ -314,24 +288,28 @@ export default {
     }
     this.$store.dispatch("getPostInfos");
   },
-  computed: {
-    postInfos() {
-      return this.$store.state.postInfos;
-    },
-
-    ...mapState({
-      post: "postInfos",
-    }),
+  beforeMount() {
+    //Je récupère la liste des post
+    this.getPostList();
   },
   methods: {
-    setInfos(payload) {
-      this.post = payload.post;
+    getPostList() {
+      this.apiPosts
+        .get("")
+        .then((response) => {
+          this.posts = response.data;
+        })
+        .catch(function () {});
     },
   },
 };
 </script>
 
 <style>
+img,
+.ml-2 {
+  display: flex;
+}
 .col-md-8 {
   width: auto;
   display: flex;

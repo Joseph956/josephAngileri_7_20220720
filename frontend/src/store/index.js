@@ -12,6 +12,13 @@ const instance = axios.create({
   }
 });
 
+let state = {
+  posts: [],
+  user: {},
+  token: '',
+
+}
+
 let user = localStorage.getItem('user');
 if (!user) {
   user = {
@@ -29,6 +36,40 @@ if (!user) {
     };
   }
 };
+let post = localStorage.getItem('post');
+if (!post) {
+  post = {
+    postId: -1,
+    token: '',
+  };
+} else {
+  try {
+    post = JSON.parse(post);
+    instance.defaults.headers.common['Authorization'] = user.token;
+  } catch (ex) {
+    post = {
+      postId: -1,
+      token: '',
+    };
+  }
+};
+let coment = localStorage.getItem('coment');
+if (!coment) {
+  post = {
+    comentId: -1,
+    token: '',
+  };
+} else {
+  try {
+    coment = JSON.parse(coment);
+    instance.defaults.headers.common['Authorization'] = user.token;
+  } catch (ex) {
+    coment = {
+      comentId: -1,
+      token: '',
+    };
+  }
+};
 
 //Create a new store instance
 export default createStore({
@@ -40,11 +81,16 @@ export default createStore({
       username: '',
       email: '',
     },
-    status: '',
+    post: post,
     apiPosts: {
+      attachment: '',
       postId: '',
       content: '',
-      attachment: '',
+    },
+    coment: coment,
+    apiComents: {
+      comentId: '',
+      coment: '',
     },
   },
   mutations: {
@@ -59,9 +105,9 @@ export default createStore({
     userInfos: function (state, userInfos) {
       state.userInfos = userInfos;
     },
-    postInfos: function (state, postInfos) {
-      state.postInfos = postInfos;
-    },
+    // postInfos: function (state, postInfos) {
+    //   state.postInfos = postInfos;
+    // },
     logout: function (state) {
       state.user = {
         userId: -1,
@@ -115,8 +161,6 @@ export default createStore({
           commit('userInfos', response.data);
         }).catch(function () { });
     },
-
-    //Lister tous les posts
     getPostInfos: ({ commit, state }) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
@@ -135,26 +179,25 @@ export default createStore({
         });
       });
     },
-    // getPostInfos: ({ commit, state }) => {
-    //   commit;
-    //   instance.get('/posts' + state.post.postId, {
-    //     headers: {
-    //       "Authorization": "BEARER " + state.user.token
-    //     }
-    //   }).then(response => {
-    //     commit('postInfos', response.data);
-    //     console.log(response.data);
-    //   }).catch(function () { });
-    // },
-    // async listerAllPosts() {
-    //   const res = await postServices.getAllPosts(state.token);
-    //   if (res.status === 200) {
-    //     commit('setStatus', res.data.posts);
-    //   }
-    // }
+    getComentInfos: ({ commit, state }) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        commit;
+        instance.get('/coments', {
+          headers: {
+            "Authorization": "BEARER " + state.user.token
+          }
+        }).then(response => {
+          commit('setStatus', 'comentId');
+          resolve(response.data);
+          console.log(response.data);
+        }).catch(function () {
+          reject(error);
+          console.log(error);
+        });
+      });
+    },
   },
-
-
   modules: {
   }
 });

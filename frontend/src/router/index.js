@@ -3,6 +3,7 @@ import Accueil from '@/views/Accueil.vue';
 import Profile from '@/views/Profile.vue';
 import Posts from '@/views/Posts.vue';
 import Blog from '@/views/Blog.vue';
+import Coments from '@/components/Coments.vue';
 
 const routes = [
   {
@@ -22,6 +23,11 @@ const routes = [
     path: '/posts',
     name: 'Posts',
     component: Posts,
+  },
+  {
+    path: '/coments',
+    name: 'Coments',
+    component: Coments,
   },
   {
     path: '/profile',
