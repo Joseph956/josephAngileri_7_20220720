@@ -106,10 +106,13 @@ html,
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 99;
 }
-.navbar-expand,
+.navbar-expand {
+  margin: auto;
+}
 .navbar-collapse {
   justify-content: flex-end;
   font-weight: 400;
+  margin: auto;
 }
 .auth-wrapper {
   display: flex;
@@ -118,6 +121,7 @@ html,
 }
 .auth-inner {
   width: 700px;
+  /* margin: 7rem auto auto auto; */
   margin: auto;
   background: #ffffff;
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
