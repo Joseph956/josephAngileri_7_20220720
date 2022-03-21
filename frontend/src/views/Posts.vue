@@ -1,9 +1,52 @@
 <template>
   <div class="postForm">
-    <!-- <Profile /> -->
     <div class="form-control_input">
       <div>
-        <PostCreate :post="welcomeScreen" />
+        <div>
+          <!-- TEMPLATE CREATION D'UN POST-->
+          <form>
+            <div>
+              <button type="button" class="btn btn-warning" @click="PostCreate">
+                <span v-if="status == 'loading'">Publication en cours....</span>
+                <span v-else>Nouvelle publication</span>
+              </button>
+            </div>
+            <div class="form-group">
+              <label for="title"></label>
+              <input
+                v-model="title"
+                type="text"
+                id="title"
+                class="form-control"
+                placeholder="Title"
+              />
+            </div>
+            <div class="form-group">
+              <label for="content"></label>
+              <textarea
+                v-model="content"
+                type="text"
+                id="content"
+                class="form-control"
+                placeholder="Content"
+              />
+            </div>
+            <div class="formGroup">
+              <label class="labelFile">Ajouter une image à votre post</label
+              ><br />
+              <input
+                ref="postImage"
+                type="file"
+                name="postImage"
+                id="imageInput"
+                accept="image/*"
+                @change="onFileSelected"
+              />
+            </div>
+          </form>
+        </div>
+
+        <!-- LIST DES POSTS-->
         <div class="col-md-8 col-xl-6 middle-wrapper">
           <div class="row">
             <div
@@ -17,9 +60,24 @@
                     class="d-flex align-items-center justify-content-between"
                   >
                     <div class="d-flex align-items-center">
-                      <div class="ml-2">
-                        <img :src="post.attachment" alt="" />
-                        <p>{{ post.user.username }}</p>
+                      <div class="ml-2 justify-content">
+                        <div class="avatar">
+                          <input type="text" />
+                          <img
+                            class="imgUser"
+                            alt=""
+                            :src="post.attachment"
+                            loading="lazy"
+                          />
+                        </div>
+                        <div>
+                          <div class="userPost">
+                            <p>{{ post.user.username }}</p>
+                            <p>{{ post.createdAt }}</p>
+                          </div>
+                          <br />
+                          <div class="datePost"></div>
+                        </div>
                       </div>
                     </div>
                     <div class="dropdown">
@@ -165,11 +223,19 @@
                   </div>
                 </div>
                 <div class="card-body">
-                  <p class="mb-3 tx-14">
-                    {{ post.content }} <br />{{ post.createdAt }}
+                  <p class="mb-3 tx-14">{{ post.title }}</p>
+                  <p class="mb-3 tx-14">{{ post.content }}</p>
+                  <img class="imgPost" :src="post.attachment" alt="" />
+                  <button @click="comentCreate" class="btn btn-warning">
+                    Commenter le post
+                  </button>
+                  <p
+                    v-for="coment in post.coments"
+                    :key="coment"
+                    class="comentPost"
+                  >
+                    {{ coment.coment }}
                   </p>
-                  <p>{{ post.coments.coment }}</p>
-                  <img :src="post.attachment" alt="" />
                 </div>
                 <div class="card-footer">
                   <div class="d-flex post-actions">
@@ -243,7 +309,7 @@
                         <polyline points="16 6 12 2 8 6"></polyline>
                         <line x1="12" y1="2" x2="12" y2="15"></line>
                       </svg>
-                      <p class="d-none d-md-block ml-2">Share</p>
+                      <p class="d-none d-md-block ml-2">Supprimer</p>
                     </a>
                   </div>
                 </div>
@@ -258,15 +324,10 @@
 
 <script>
 import axios from "axios";
-import PostCreate from "@/components/postCreate.vue";
-import comentsPost from "@/views/Coments.vue";
 
 export default {
   name: "Posts",
-  components: {
-    PostCreate,
-    comentsPost,
-  },
+
   data() {
     return {
       apiPosts: axios.create({
@@ -277,7 +338,22 @@ export default {
           Authorization: "BEARER " + this.$store.state.user.token,
         },
       }),
+      apiComents: axios.create({
+        baseURL: "http://localhost:3000/api/coments",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "BEARER " + this.$store.state.user.token,
+        },
+      }),
+      formData: {
+        id: "",
+        title: "",
+        content: "",
+        attachment: "",
+      },
       posts: [],
+      // coments: [],
       likes: [],
     };
   },
@@ -292,7 +368,13 @@ export default {
     //Je récupère la liste des post
     this.getPostList();
   },
+  // mounted() {
+  //   axios.post("http://localhost:3000/api/posts").then((response) => {
+  //     console.log(response);
+  //   });
+  // },
   methods: {
+    //Lister tous les posts
     getPostList() {
       this.apiPosts
         .get("")
@@ -301,28 +383,91 @@ export default {
         })
         .catch(function () {});
     },
+    //Créer un nouveau post
+    PostCreate() {
+      axios
+        .post("http://localhost:3000/api/posts", {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "BEARER " + this.$store.state.user.token,
+          },
+          data: {
+            title: this.title,
+            content: this.content,
+            attachment: this.attachment,
+          },
+        })
+        .then((response) => {
+          this.post = response.data;
+        })
+        .catch(function () {});
+    },
+    //Créer un nouveau commentaire
+    comentCreate() {
+      this.apiComents
+        .post("")
+        .then((response) => {
+          this.post = response.data;
+        })
+        .catch(function () {});
+    },
   },
 };
 </script>
 
 <style>
-img,
+.btn-warning {
+  margin: 0 5px;
+}
+.card-header {
+  padding: 0;
+}
 .ml-2 {
   display: flex;
 }
 .col-md-8 {
   width: auto;
   display: flex;
+  margin: 5px;
+}
+.justify-content-between {
+  justify-content: space-around;
+}
+.justify-content {
+  justify-content: space-around;
+  margin: auto;
+}
+.imgUser {
+  width: 10vw;
+  height: 10vw;
+}
+.imgPost {
+  width: 100%;
+  height: 30vw;
+}
+img {
+  margin: 5px 5px;
+  border-radius: 5rem;
+}
+.userPost {
+  margin: 1rem 0 0 1rem;
+}
+.datePost {
+  margin: 0 0 0 1rem;
+}
+.comentPost {
+  margin: 1rem;
 }
 .postForm {
   display: flex;
   flex-direction: column;
-  margin: 16px 0px;
+  margin: 2rem 0px;
   gap: 16px;
   flex-wrap: wrap;
 }
 .form-control_input {
-  padding: 8px;
+  padding: 2 rem;
   border: none;
   border-radius: 8px;
   background: #f2f2f2;

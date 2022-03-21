@@ -9,7 +9,7 @@
             alt=""
           />
         </router-link>
-        <!-- <div class="collapse navbar-collapse">
+        <div class="collapse navbar-collapse">
           <ul v-show="!mobile" class="navbar-nav ml-auto">
             <li class="link btn-primary btn-nav">
               <router-link to="Profile">Profile</router-link>
@@ -21,7 +21,7 @@
               <button @click="logout()" class="btn">Log-Out</button>
             </li>
           </ul>
-        </div> -->
+        </div>
       </div>
     </nav>
     <!-- <menuIcon @click="toggleMobileNav" class="menu-icon" v-show="mobile" /> -->
@@ -76,20 +76,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 header {
   background-color: #fff;
   padding: 0 25px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 99;
-}
-img,
-.imgAccueil {
-  display: flex;
-  align-items: center;
-  width: 20vw;
-  height: 3vw;
 }
 .link {
   font-weight: 500;

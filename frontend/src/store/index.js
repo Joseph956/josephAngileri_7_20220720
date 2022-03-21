@@ -1,7 +1,4 @@
 import { createStore } from 'vuex';
-// import post from '../../../backend/models/post';
-import apiPosts from '@/apiroutage/posts';
-
 import axios from "axios";
 
 const instance = axios.create({

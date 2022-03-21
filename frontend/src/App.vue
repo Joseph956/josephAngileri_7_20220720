@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <NavSignUp />
+    <!-- <NavPosts /> -->
     <div class="auth-wrapper">
       <div class="auth-inner">
         <router-view />
@@ -11,11 +12,13 @@
 
 <script>
 import NavSignUp from "@/components/NavSignUp.vue";
+import NavPosts from "@/components/NavPosts.vue";
 
 export default {
   name: "App",
   components: {
     NavSignUp,
+    NavPosts,
   },
 };
 </script>
@@ -68,7 +71,7 @@ footer {
 }
 .imgAccueil {
   height: 3vw;
-  object-fit: cover;
+  object-fit: contain;
   display: flex;
   flex-wrap: inherit;
   align-items: center;
@@ -81,6 +84,7 @@ html,
 .auth-wrapper {
   width: 100%;
   height: 100%;
+  margin: auto;
 }
 #app {
   display: flex;
@@ -106,13 +110,10 @@ html,
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 99;
 }
-.navbar-expand {
-  margin: auto;
-}
+.navbar-expand,
 .navbar-collapse {
   justify-content: flex-end;
   font-weight: 400;
-  margin: auto;
 }
 .auth-wrapper {
   display: flex;
@@ -121,11 +122,10 @@ html,
 }
 .auth-inner {
   width: 700px;
-  /* margin: 7rem auto auto auto; */
   margin: auto;
   background: #ffffff;
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
-  padding: 40px 55px 45px 55px;
+  padding: 3rem 55px 45px 55px;
   border-radius: 15px;
   transition: all 0.3s;
 }

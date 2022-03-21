@@ -69,8 +69,9 @@ exports.createPost = async (req, res, next) => {
         ...imgPost, id: req.params.id,
         userId: req.user,
         postId: req.post,
-        attachment: req.body.attachment,
+        title: req.body.title,
         content: req.body.content,
+        attachment: req.body.attachment,
     }).then((post) => {
         res.status(201).json(post)
     }).catch((error) => {

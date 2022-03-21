@@ -6,9 +6,13 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: Sequelize.UUIDV4,
             allowNull: false,
         },
+        title: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
         content: {
             type: Sequelize.TEXT("long"),
-            allowNull: false
+            allowNull: false,
         },
         attachment: {
             type: Sequelize.STRING,

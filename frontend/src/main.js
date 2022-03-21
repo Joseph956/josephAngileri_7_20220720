@@ -8,9 +8,4 @@ const app = createApp(App).use(router)
 
 app.use(router)
 app.use(store)
-// app.component('my-heading', {
-//     props: ['text'],
-//     template: '<h1>{{ text }}</h1'
-// })
-
 app.mount('#app')

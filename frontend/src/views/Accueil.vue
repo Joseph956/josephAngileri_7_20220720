@@ -7,7 +7,7 @@
         <h1 class="nav-link-title" v-else>Sign Up</h1>
         <p class="nav-link-subtitle" v-if="mode == 'login'">
           Vous n'avez pas encore de compte ?<br />
-          <button>
+          <button type="button" class="btn btn-warning">
             <span class="nav-link-action" @click="switchToCreateAccount()"
               >Créer un compte
             </span>
@@ -15,7 +15,7 @@
         </p>
         <p class="nav-link-subtitle" v-else>
           Vous avez déjà un compte ?<br />
-          <button>
+          <button type="button" class="btn btn-warning">
             <span class="nav-link-action" @click="switchToLogin()"
               >Se connecter
             </span>
@@ -49,6 +49,7 @@
             class="form-control_input"
             type="password"
             placeholder="Mot de passe"
+            required="Veuillez créer votre mot de passe '8 caractères , une majuscule, minimum'"
           />
         </div>
 
@@ -57,8 +58,9 @@
           <input
             v-model="confirmPassword"
             class="form-control_input"
-            type="password"
+            type="confirmPassword"
             placeholder="Confirmer le mot de passe"
+            required="Veuillez confirmer votre mot de passe !..."
           />
         </div>
 
@@ -74,6 +76,13 @@
           v-if="mode == 'create' && status == 'error_create'"
         >
           Adresse email déjà utilisée !
+        </div>
+
+        <div
+          class="form-group"
+          v-if="mode == 'confirmPassword' && status == 'error_confirmPassword'"
+        >
+          Confirmer votre mot de passe !
         </div>
 
         <div class="form-group">
@@ -103,6 +112,7 @@
 
 <script>
 import { mapState } from "vuex";
+
 export default {
   name: "Accueil",
   components: {},
@@ -128,7 +138,7 @@ export default {
           this.email != "" &&
           this.username != "" &&
           this.password != "" &&
-          this.confirmPassword != ""
+          this.confirmPassword !== ""
         ) {
           return true;
         } else {

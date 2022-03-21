@@ -18,7 +18,7 @@ export default {
 
   mounted: function () {
     if (this.$store.state.UUID === -1) {
-      this.$router.push("/");
+      this.$router.push("/profile");
       return;
     }
     this.$store.dispatch("getUserInfos");
