@@ -69,12 +69,10 @@ exports.createPost = async (req, res, next) => {
     });
 
     Post.create({
-        ...newPost, id: req.params.id,
-        userId: req.user,
-        postId: req.post,
+        userId: req.body.userId,
         title: req.body.title,
         content: req.body.content,
-        attachment: req.body.attachment,
+        attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
     }).then((post) => {
         res.status(201).json(post)
     }).catch((error) => {
