@@ -69,8 +69,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/posts", postsRoutes);
 app.use("/api/coments", comentsRoutes);
-// app.use('/images/profil', express.static(path.join(__dirname, 'images')));
-app.use('/images/', express.static(path.join(__dirname, 'images')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 
 
 app.use((err, req, res, next) => {
@@ -122,6 +122,7 @@ function initial() {
         }).then(users => {
             Post.findOrCreate({
                 where: {
+                    title: "1er post title",
                     content: "1er post"
                 },
                 defaults: {

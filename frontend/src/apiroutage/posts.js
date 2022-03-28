@@ -8,7 +8,7 @@ const apiPosts = axios.create({
     }
 });
 
-function findAllPublished() {
+function getPostList() {
     return apiPosts.get('/posts', {
         headers: {
             "Authorization": "BEARER" + this.$store.state.user.token,
@@ -17,5 +17,5 @@ function findAllPublished() {
 }
 
 export default {
-    findAllPublished
+    getPostList
 }

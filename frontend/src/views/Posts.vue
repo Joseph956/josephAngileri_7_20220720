@@ -6,7 +6,11 @@
           <!-- TEMPLATE CREATION D'UN POST-->
           <form>
             <div>
-              <button type="button" class="btn btn-warning" @click="PostCreate">
+              <button
+                type="button"
+                class="btn btn-warning"
+                @click="PostCreate()"
+              >
                 <span v-if="status == 'loading'">Publication en cours....</span>
                 <span v-else>Nouvelle publication</span>
               </button>
@@ -39,7 +43,7 @@
                 type="file"
                 name="postImage"
                 id="imageInput"
-                accept="image/*"
+                accept="attachment/*"
                 @change="onFileSelected"
               />
             </div>
@@ -226,6 +230,17 @@
                   <p class="mb-3 tx-14">{{ post.title }}</p>
                   <p class="mb-3 tx-14">{{ post.content }}</p>
                   <img class="imgPost" :src="post.attachment" alt="" />
+                  <!-- Créer un commentaire -->
+                  <div class="form-group">
+                    <label for="coment"></label>
+                    <textarea
+                      v-model="coment"
+                      type="text"
+                      id="coment"
+                      class="form-control"
+                      placeholder="Coment"
+                    />
+                  </div>
                   <button @click="comentCreate" class="btn btn-warning">
                     Commenter le post
                   </button>
@@ -330,6 +345,7 @@ export default {
 
   data() {
     return {
+      //Lister tous les posts
       apiPosts: axios.create({
         baseURL: "http://localhost:3000/api/posts",
         headers: {
@@ -338,23 +354,7 @@ export default {
           Authorization: "BEARER " + this.$store.state.user.token,
         },
       }),
-      apiComents: axios.create({
-        baseURL: "http://localhost:3000/api/coments",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "BEARER " + this.$store.state.user.token,
-        },
-      }),
-      formData: {
-        id: "",
-        title: "",
-        content: "",
-        attachment: "",
-      },
-      posts: [],
-      // coments: [],
-      likes: [],
+      posts: [], //Permet l'affichage des posts sur le front.
     };
   },
   mounted: function () {
@@ -362,17 +362,11 @@ export default {
       this.$router.push("/posts");
       return;
     }
-    this.$store.dispatch("getPostInfos");
   },
   beforeMount() {
     //Je récupère la liste des post
     this.getPostList();
   },
-  // mounted() {
-  //   axios.post("http://localhost:3000/api/posts").then((response) => {
-  //     console.log(response);
-  //   });
-  // },
   methods: {
     //Lister tous les posts
     getPostList() {
@@ -385,30 +379,32 @@ export default {
     },
     //Créer un nouveau post
     PostCreate() {
-      axios
+      this.apiPosts
         .post("http://localhost:3000/api/posts", {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "BEARER " + this.$store.state.user.token,
-          },
-          data: {
-            title: this.title,
-            content: this.content,
-            attachment: this.attachment,
-          },
+          title: this.title,
+          content: this.content,
+          attachment: this.attachment,
+          username: this.username,
         })
         .then((response) => {
-          this.post = response.data;
+          this.posts = response.data;
+          console.log(response.data);
+          console.log("------> response.data");
         })
         .catch(function () {});
     },
+
     //Créer un nouveau commentaire
     comentCreate() {
       this.apiComents
-        .post("")
+        .post("http://localhost:3000/api/coments", {
+          id: this.id,
+          userId: this.userId,
+          postId: this.postId,
+          coment: this.coment,
+        })
         .then((response) => {
-          this.post = response.data;
+          this.coment = response.data;
         })
         .catch(function () {});
     },
@@ -428,7 +424,7 @@ export default {
 }
 .col-md-8 {
   width: auto;
-  display: flex;
+  /* display: flex; */
   margin: 5px;
 }
 .justify-content-between {
@@ -447,7 +443,7 @@ export default {
   height: 30vw;
 }
 img {
-  margin: 5px 5px;
+  margin: auto;
   border-radius: 5rem;
 }
 .userPost {

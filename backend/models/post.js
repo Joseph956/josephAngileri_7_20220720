@@ -16,7 +16,6 @@ module.exports = (sequelize, Sequelize) => {
         },
         attachment: {
             type: Sequelize.STRING,
-            default: "../images/post",
             allowNull: true,
         },
     });

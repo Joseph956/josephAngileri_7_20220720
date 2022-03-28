@@ -50,7 +50,7 @@ exports.findAllPublished = async (req, res, next) => {
 //Récupérer un seul post (ok).
 exports.findOne = async (req, res, next) => {
     const id = req.params.id;
-    Post.findAll({
+    Post.findOne({
         where: {
             id: id
         }
@@ -61,12 +61,15 @@ exports.findOne = async (req, res, next) => {
 
 //Créer un nouveau post (ok).
 exports.createPost = async (req, res, next) => {
-    const imgPost = req.file ? {
-        ...req.body.postId,
-        attachment: `${req.protocol}://${req.get("host")}/images/post/${req.file.filename}`
-    } : { ...req.body }
+
+    const postObject = JSON.parse(req.body.newPost);
+    const newPost = new NewPost({
+        ...postObject,
+        attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+    });
+
     Post.create({
-        ...imgPost, id: req.params.id,
+        ...newPost, id: req.params.id,
         userId: req.user,
         postId: req.post,
         title: req.body.title,
