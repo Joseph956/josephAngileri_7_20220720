@@ -61,18 +61,17 @@ exports.findOne = async (req, res, next) => {
 
 //Créer un nouveau post (ok).
 exports.createPost = async (req, res, next) => {
-
-    const postObject = JSON.parse(req.body.newPost);
-    const newPost = new NewPost({
-        ...postObject,
-        attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
-    });
-
+    // if (!req.body.userId) {
+    //     res.status(403).send({
+    //         message: "Vous n'êtes pas autorisé à créer un post sur ce compte utlisateur !"
+    //     });
+    //     return
+    // }
     Post.create({
         userId: req.body.userId,
         title: req.body.title,
         content: req.body.content,
-        attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+        attachment: `${req.protocol}://${req.get("host")}/images/${req.file.image}`,
     }).then((post) => {
         res.status(201).json(post)
     }).catch((error) => {

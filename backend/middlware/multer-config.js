@@ -25,5 +25,6 @@ const storage = multer.diskStorage({
     }
 });
 
-//export multer en passant la cste "storage" en précisant le type de fichier qui sont gérés.
+//export multer en passant la cste "storage" 
+//en précisant le type de fichier qui sont gérés.
 module.exports = multer({ storage: storage }).single('image');

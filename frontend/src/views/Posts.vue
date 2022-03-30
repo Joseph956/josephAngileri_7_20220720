@@ -66,7 +66,7 @@
                     <div class="d-flex align-items-center">
                       <div class="ml-2 justify-content">
                         <div class="avatar">
-                          <input type="text" />
+                          <input type="image" />
                           <img
                             class="imgUser"
                             alt=""
@@ -345,6 +345,10 @@ export default {
 
   data() {
     return {
+      title: null,
+      content: null,
+      file: null,
+      username: null,
       //Lister tous les posts
       apiPosts: axios.create({
         baseURL: "http://localhost:3000/api/posts",
@@ -368,6 +372,10 @@ export default {
     this.getPostList();
   },
   methods: {
+    //methode définition image
+    onFileSelected() {
+      this.file = this.$refs.postImage.files[0];
+    },
     //Lister tous les posts
     getPostList() {
       this.apiPosts
@@ -383,8 +391,8 @@ export default {
         .post("http://localhost:3000/api/posts", {
           title: this.title,
           content: this.content,
-          attachment: this.attachment,
-          username: this.username,
+          image: this.file,
+          userId: localStorage.getItem("userId"), //@todo récupérer le userId à partir de localstorage
         })
         .then((response) => {
           this.posts = response.data;
