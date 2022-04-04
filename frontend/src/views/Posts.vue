@@ -5,16 +5,6 @@
         <div>
           <!-- TEMPLATE CREATION D'UN POST-->
           <form>
-            <div>
-              <button
-                type="button"
-                class="btn btn-warning"
-                @click="PostCreate()"
-              >
-                <span v-if="status == 'loading'">Publication en cours....</span>
-                <span v-else>Nouvelle publication</span>
-              </button>
-            </div>
             <div class="form-group">
               <label for="title"></label>
               <input
@@ -47,6 +37,16 @@
                 @change="onFileSelected"
               />
             </div>
+            <div>
+              <button
+                type="button"
+                class="btn btn-warning"
+                @click="PostCreate()"
+              >
+                <span v-if="status == 'loading'">Publication en cours....</span>
+                <span v-else>Nouvelle publication</span>
+              </button>
+            </div>
           </form>
         </div>
 
@@ -66,7 +66,7 @@
                     <div class="d-flex align-items-center">
                       <div class="ml-2 justify-content">
                         <div class="avatar">
-                          <input type="image" />
+                          <input type="text" />
                           <img
                             class="imgUser"
                             alt=""
@@ -343,12 +343,11 @@ import axios from "axios";
 export default {
   name: "Posts",
 
-  data() {
+  data: function () {
     return {
-      title: null,
       content: null,
+      title: null,
       file: null,
-      username: null,
       //Lister tous les posts
       apiPosts: axios.create({
         baseURL: "http://localhost:3000/api/posts",
@@ -387,15 +386,21 @@ export default {
     },
     //Créer un nouveau post
     PostCreate() {
+      // let userId = JSON.parse(window.localStorage.getItem("userId"));
       this.apiPosts
         .post("http://localhost:3000/api/posts", {
+          // id: this.id,
+          // id: this.userId,
           title: this.title,
           content: this.content,
-          image: this.file,
-          userId: localStorage.getItem("userId"), //@todo récupérer le userId à partir de localstorage
+          // file: this.attachment,
+          // file: this.filename,
+          userId: localStorage.getItem("userId"),
+          //@todo récupérer le userId à partir de localstorage
         })
         .then((response) => {
           this.posts = response.data;
+          // localStorage.setItem("user", JSON.stringify(userId));
           console.log(response.data);
           console.log("------> response.data");
         })

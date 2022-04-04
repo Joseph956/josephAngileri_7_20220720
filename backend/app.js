@@ -16,13 +16,17 @@ const noCache = require('nocache');
 const cors = require('cors');
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
+//Import des routes
 const authRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
 const postsRoutes = require('./routes/posts');
 const comentsRoutes = require('./routes/coments');
 // const likesRoutes = require('./routes/likes');
 
+//lancement du framework d'application Web
 const app = express();
+
+
 app.use(cors()); //Empêche mes appels API d'aboutir !?!.
 app.disable('x-powered-by');
 app.use(xssclean());
@@ -64,22 +68,25 @@ app.use(session({
 }));
 
 
-// Configuration des routes
+// Configuration et enregistrement des routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/posts", postsRoutes);
 app.use("/api/coments", comentsRoutes);
+
+//Middleware permettant l'accès statique des images
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
 
+//Gestion des erreurs serveur (dev)
 app.use((err, req, res, next) => {
     console.log(err.stack);
     console.log(err.name);
     console.log(err.code);
 
     res.status(500).json({
-        message: "c' pas bon",
+        message: "erreur serveur",
     });
 });
 

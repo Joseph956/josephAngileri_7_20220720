@@ -13,17 +13,17 @@ exports.findAllPublished = async (req, res, next) => {
         include: [
             {
                 model: db.user,
-                attributes: ['username']
+                attributes: ['username', 'attachment']
             },
             {
                 model: db.coments,
                 coment: req.params.comentId,
-                attributes: ['id', 'coment'],
+                attributes: ['id', 'coment', 'userId'],
                 order: [["createdAt", "DESC"]],
                 include: [
                     {
                         model: db.user,
-                        attributes: ['username']
+                        attributes: ['username', 'attachment']
                     }
                 ],
             },
@@ -35,6 +35,9 @@ exports.findAllPublished = async (req, res, next) => {
             }
         ],
         order: [["createdAt", "DESC"]],
+        attributes: {
+            exclude: ['updateAt']
+        }
     }).then(posts => {
         console.log(posts);
         res.status(200).json(posts);
@@ -49,31 +52,32 @@ exports.findAllPublished = async (req, res, next) => {
 
 //Récupérer un seul post (ok).
 exports.findOne = async (req, res, next) => {
-    const id = req.params.id;
+    const userId = req.params.id;
     Post.findOne({
         where: {
-            id: id
+            id: userId
         }
-    })
-        .then(post => res.status(200).json(post))
-        .catch(error => res.status(400).json({ error }));
+    }).then(post => {
+        console.log(post);
+        res.status(200).json(post);
+    }).catch(error => {
+        res.status(400).json({ error })
+    });
 };
 
 //Créer un nouveau post (ok).
 exports.createPost = async (req, res, next) => {
-    // if (!req.body.userId) {
-    //     res.status(403).send({
-    //         message: "Vous n'êtes pas autorisé à créer un post sur ce compte utlisateur !"
-    //     });
-    //     return
-    // }
+    const userId = req.params.id;
     Post.create({
+
         userId: req.body.userId,
         title: req.body.title,
         content: req.body.content,
-        attachment: `${req.protocol}://${req.get("host")}/images/${req.file.image}`,
+        filename: req.body.file,
+        attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
     }).then((post) => {
         res.status(201).json(post)
+        console.log(post);
     }).catch((error) => {
         res.status(400).json({ error, message: "Le post n'a pas été créé !!!" })
     });
