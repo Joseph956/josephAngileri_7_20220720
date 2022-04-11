@@ -4,10 +4,12 @@
       <div>
         <div>
           <!-- TEMPLATE CREATION D'UN POST-->
-          <form>
+          <!-- class="uploadImg" action="/posts" method="POST" -->
+          <form enctype="multipart/form-data">
             <div class="form-group">
               <label for="title"></label>
               <input
+                ref="firstfield"
                 v-model="title"
                 type="text"
                 id="title"
@@ -26,22 +28,26 @@
               />
             </div>
             <div class="formGroup">
-              <label class="labelFile">Ajouter une image à votre post</label
-              ><br />
+              <img :src="image" class="w-50 rounded" />
+            </div>
+            <div class="formGroup">
+              <label for="file">Choisir votre image</label><br />
               <input
-                ref="postImage"
+                class="fileFormCtrl"
+                id="file"
+                ref="file"
                 type="file"
-                name="postImage"
-                id="imageInput"
-                accept="attachment/*"
-                @change="onFileSelected"
+                name="image"
+                accept="image/*"
+                @change="onFileSelected()"
               />
             </div>
-            <div>
+            <div class="formGroup">
               <button
                 type="button"
-                class="btn btn-warning"
+                class="btn btn-primary"
                 @click="PostCreate()"
+                :class="{ 'btn--disabled': !validatedFields }"
               >
                 <span v-if="status == 'loading'">Publication en cours....</span>
                 <span v-else>Nouvelle publication</span>
@@ -339,15 +345,18 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
+// import {apiroutage} from '../apiroutage/posts';
 
 export default {
   name: "Posts",
 
   data: function () {
     return {
-      content: null,
       title: null,
-      file: null,
+      content: null,
+      attachment: null,
+
       //Lister tous les posts
       apiPosts: axios.create({
         baseURL: "http://localhost:3000/api/posts",
@@ -361,7 +370,7 @@ export default {
     };
   },
   mounted: function () {
-    if (this.$store.state.UUID === -1) {
+    if (this.$store.state.user.userId === -1) {
       this.$router.push("/posts");
       return;
     }
@@ -370,10 +379,29 @@ export default {
     //Je récupère la liste des post
     this.getPostList();
   },
+  computed: {
+    validatedFields: function () {
+      if (this.mode == "publication") {
+        if (this.title != "" && this.content != "" && this.attachment != "") {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        if (this.title != "" && this.content != "") {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
+    ...mapState(["status"]),
+  },
   methods: {
     //methode définition image
     onFileSelected() {
-      this.file = this.$refs.postImage.files[0];
+      this.file = this.$refs.file.files[0];
+      this.image = URL.createObjectURL(this.file);
     },
     //Lister tous les posts
     getPostList() {
@@ -385,21 +413,15 @@ export default {
         .catch(function () {});
     },
     //Créer un nouveau post
-    PostCreate() {
-      // let userId = JSON.parse(window.localStorage.getItem("userId"));
+    PostCreate: function () {
+      const dataPost = new FormData();
+      dataPost.append("title", this.title);
+      dataPost.append("content", this.content);
+      dataPost.append("image", this.file);
       this.apiPosts
-        .post("http://localhost:3000/api/posts", {
-          // id: this.id,
-          // id: this.userId,
-          title: this.title,
-          content: this.content,
-          // file: this.attachment,
-          // file: this.filename,
-          userId: localStorage.getItem("userId"),
-          //@todo récupérer le userId à partir de localstorage
-        })
-        .then((response) => {
-          this.posts = response.data;
+        .post("http://localhost:3000/api/posts", dataPost)
+        .then((formDataPost) => {
+          this.posts = formDataPost.data;
           // localStorage.setItem("user", JSON.stringify(userId));
           console.log(response.data);
           console.log("------> response.data");

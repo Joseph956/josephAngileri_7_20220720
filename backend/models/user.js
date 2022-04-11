@@ -4,11 +4,11 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.UUID,
             primaryKey: true,
             defaultValue: Sequelize.UUIDV4,
-            allowNull: false,
+
         },
         attachment: {
             type: Sequelize.STRING,
-            default: "./images/profil",
+            allowNull: true,
         },
         username: {
             type: Sequelize.STRING,

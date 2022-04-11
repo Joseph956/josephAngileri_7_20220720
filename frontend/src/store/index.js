@@ -81,6 +81,7 @@ export default createStore({
     post: post,
     apiPosts: {
       attachment: '',
+      userId: '',
       postId: '',
       content: '',
     },
@@ -102,9 +103,9 @@ export default createStore({
     userInfos: function (state, userInfos) {
       state.userInfos = userInfos;
     },
-    // postInfos: function (state, postInfos) {
-    //   state.postInfos = postInfos;
-    // },
+    postInfos: function (state, postInfos) {
+      state.postInfos = postInfos;
+    },
     logout: function (state) {
       state.user = {
         userId: -1,

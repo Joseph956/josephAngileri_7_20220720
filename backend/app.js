@@ -75,9 +75,7 @@ app.use("/api/posts", postsRoutes);
 app.use("/api/coments", comentsRoutes);
 
 //Middleware permettant l'accès statique des images
-app.use('/images', express.static(path.join(__dirname, 'images')));
-
-
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 //Gestion des erreurs serveur (dev)
 app.use((err, req, res, next) => {
@@ -94,6 +92,7 @@ app.use((err, req, res, next) => {
 // config database Sequelize
 const db = require("./models");
 const bcrypt = require("bcrypt");
+const { log } = require('console');
 const User = db.user;
 const Post = db.posts;
 const Role = db.role;

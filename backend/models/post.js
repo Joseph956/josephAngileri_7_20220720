@@ -8,15 +8,12 @@ module.exports = (sequelize, Sequelize) => {
         },
         title: {
             type: Sequelize.STRING,
-            allowNull: false,
         },
         content: {
             type: Sequelize.TEXT("long"),
-            allowNull: false,
         },
         attachment: {
             type: Sequelize.STRING,
-            allowNull: true,
         },
     });
     return Post;

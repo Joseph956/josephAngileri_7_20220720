@@ -1,6 +1,6 @@
 //gestion des fichiers entrant dans une requête http.
 const multer = require('multer');
-// const uuid4 = require("uuid").v4;
+const uuid4 = require("uuid").v4;
 
 //dictionnaire d'extension.
 const MIME_TYPES = {

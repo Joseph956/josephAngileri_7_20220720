@@ -56,7 +56,30 @@ exports.findOne = async (req, res, next) => {
     Post.findOne({
         where: {
             id: userId
+        },
+        include: [{
+            model: db.user,
+            attributes: ['username', 'attachment']
+        },
+        {
+            model: db.coments,
+            coment: req.params.comentId,
+            attributes: ['id', 'coment', 'userId'],
+            order: [["createdAt", "DESC"]],
+            include: [
+                {
+                    model: db.user,
+                    attributes: ['username', 'attachment']
+                }
+            ],
+        },
+        {
+            model: db.likes,
+            likes: req.params.likeId,
+            attributes: ['likes'],
+            order: [["created", "DESC"]]
         }
+        ]
     }).then(post => {
         console.log(post);
         res.status(200).json(post);
@@ -65,19 +88,30 @@ exports.findOne = async (req, res, next) => {
     });
 };
 
-//Créer un nouveau post (ok).
+// Créer un nouveau post(ok).
 exports.createPost = async (req, res, next) => {
-    const userId = req.params.id;
-    Post.create({
-
-        userId: req.body.userId,
-        title: req.body.title,
-        content: req.body.content,
-        filename: req.body.file,
-        attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-    }).then((post) => {
-        res.status(201).json(post)
+    console.log("----->CONTENU req.body.post - ctrl createPost");
+    console.log(req.body.post);
+    console.log("----->CONTENU req.file - ctrl createPost");
+    console.log(req.file);
+    const postObject = JSON.parse(req.body.post);
+    delete postObject._id;
+    const Post = new post({
+        ...postObject,
+        imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+    });
+    Post.save(
+        // {
+        // title: req.body.title,
+        // content: req.body.content,
+        // attachment: req.body.attachment,
+        // userId: req.body.userId,
+        // }
+    ).then(() => {
+        res.status(201).json({ message: 'Objet enregistré !' })
         console.log(post);
+        console.log("---->CONTENU filename - ctrl postCreate");
+        console.log(filename);
     }).catch((error) => {
         res.status(400).json({ error, message: "Le post n'a pas été créé !!!" })
     });
