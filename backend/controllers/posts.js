@@ -3,7 +3,6 @@ const Post = db.posts;
 const Like = db.likes;
 const fs = require('fs');
 const dotenv = require('dotenv');
-const post = require("../models/post");
 dotenv.config();
 
 
@@ -51,7 +50,7 @@ exports.findAllPublished = async (req, res, next) => {
 };
 
 //Récupérer un seul post (ok).
-exports.findOne = async (req, res, next) => {
+exports.findOnePublished = async (req, res, next) => {
     const userId = req.params.id;
     Post.findOne({
         where: {
@@ -90,28 +89,12 @@ exports.findOne = async (req, res, next) => {
 
 // Créer un nouveau post(ok).
 exports.createPost = async (req, res, next) => {
-    console.log("----->CONTENU req.body.post - ctrl createPost");
-    console.log(req.body.post);
-    console.log("----->CONTENU req.file - ctrl createPost");
-    console.log(req.file);
-    const postObject = JSON.parse(req.body.post);
-    delete postObject._id;
-    const Post = new post({
-        ...postObject,
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+    const post = new Post({
+        ...req.body,
+        attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
     });
-    Post.save(
-        // {
-        // title: req.body.title,
-        // content: req.body.content,
-        // attachment: req.body.attachment,
-        // userId: req.body.userId,
-        // }
-    ).then(() => {
+    post.save().then(() => {
         res.status(201).json({ message: 'Objet enregistré !' })
-        console.log(post);
-        console.log("---->CONTENU filename - ctrl postCreate");
-        console.log(filename);
     }).catch((error) => {
         res.status(400).json({ error, message: "Le post n'a pas été créé !!!" })
     });
@@ -119,29 +102,30 @@ exports.createPost = async (req, res, next) => {
 
 //Mettre à jour le post (ok).
 exports.updatePost = async (req, res, next) => {
-    console.log("----->ROUTE PUT : updatePost");
-    const postModify = req.file ? {
-        ...req.body.postId,
-        attachment: `${req.protocol}://${req.get("host")}/images/post${req.file.filename}`
+    const id = req.params.id;
+    const Post = req.file ? {
+        ...req.body,
+        attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
     } : { ...req.body }
-    //Post.update({ userId: req.params.postId}, { where: { ...postModify, userId: req.params.postId}}) Atester
     Post.update({
-        ...postModify, id: req.params.id
+        ...post, id: req.params.id
     }, {
-        where: { id: req.params.id },
+        where: { id: id },
         attributes: ['id', 'username', 'content', 'attachment'],
     }).then((post) => res.status(200).json({
         post, message: "Le post a été modifié !"
     })).catch(() => res.status(400).json({
         message: "Le post n'a pas été modifié !"
-    }))
+    }));
+
 };
 
 //Supprimer un post (ok).
 exports.deletePost = (req, res, next) => {
     const id = req.params.id;
     Post.destroy({
-        where: { id: id }
+        where: { id: id },
+        attributes: ['id', 'username', 'content', 'attachment'],
     }).then(() => res.status(200).json({
         message: 'Post supprimé!'
     })).catch(error => res.status(400).json({ error }))

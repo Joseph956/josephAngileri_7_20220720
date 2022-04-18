@@ -30,8 +30,11 @@ exports.findAllPublished = (req, res, next) => {
 
 //Appeler un profil utilisateur par son id (ok).
 exports.findOneProfil = (req, res, next) => {
+    const userId = req.params.id;
     User.findOne({
-        user: (req.body.user),
+        where: {
+            id: userId
+        },
         // attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
         attributes: ['id', 'attachment', 'username', 'email', 'roleId'],
         order: [["createdAt", "DESC"]],

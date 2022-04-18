@@ -5,7 +5,7 @@ const multer = require('../middlware/multer-config');
 const comentCtrl = require('../controllers/coments');
 
 router.get("/", auth.token, comentCtrl.findAllPublished);
-router.get("/", auth.token, comentCtrl.findOne);
+router.get("/", auth.token, comentCtrl.findOnePublished);
 router.post("/", auth.token, comentCtrl.createComent);
 router.put("/:id", auth.token, auth.haveRightOnComent, comentCtrl.updateComent);
 router.put("/:id/like", auth.token, comentCtrl.likeComent);

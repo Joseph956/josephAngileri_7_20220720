@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <NavSignUp />
-    <!-- <NavPosts /> -->
     <div class="auth-wrapper">
       <div class="auth-inner">
         <router-view />
@@ -12,13 +11,10 @@
 
 <script>
 import NavSignUp from "@/components/NavSignUp.vue";
-import NavPosts from "@/components/NavPosts.vue";
-
 export default {
   name: "App",
   components: {
     NavSignUp,
-    NavPosts,
   },
 };
 </script>
@@ -117,15 +113,16 @@ html,
 }
 .auth-wrapper {
   display: flex;
+  margin: 7rem auto;
   justify-content: center;
   text-align: left;
 }
 .auth-inner {
-  width: 700px;
+  width: 900px;
   margin: auto;
   background: #ffffff;
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
-  padding: 3rem 55px 45px 55px;
+  padding: 2.5rem 55px 45px 55px;
   border-radius: 15px;
   transition: all 0.3s;
 }

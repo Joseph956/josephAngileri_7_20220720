@@ -89,7 +89,7 @@ img,
   display: flex;
   align-items: center;
   width: 20vw;
-  height: 3vw;
+  /* height: 3vw; */
 }
 .link {
   font-weight: 500;

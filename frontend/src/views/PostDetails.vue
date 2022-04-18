@@ -5,7 +5,11 @@
 </template>
 
 <script>
-export default {};
+import axios from "axios";
+import { mapState } from "vuex";
+export default {
+  name: "PostDetails",
+};
 </script>
 
 <style>

@@ -58,7 +58,7 @@
           <input
             v-model="confirmPassword"
             class="form-control_input"
-            type="confirmPassword"
+            type="Password"
             placeholder="Confirmer le mot de passe"
             required="Veuillez confirmer votre mot de passe !..."
           />
@@ -80,7 +80,7 @@
 
         <div
           class="form-group"
-          v-if="mode == 'confirmPassword' && status == 'error_confirmPassword'"
+          v-if="mode == 'Password' && status == 'error_confirmPassword'"
         >
           Confirmer votre mot de passe !
         </div>

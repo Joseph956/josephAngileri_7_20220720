@@ -12,11 +12,11 @@
         <div class="collapse navbar-collapse">
           <ul v-show="!mobile" class="navbar-nav ml-auto">
             <li class="link btn-primary btn-nav">
-              <router-link to="Profile">Profile</router-link>
+              <router-link to="Profile">Compte</router-link>
             </li>
-            <li class="link btn-primary btn-nav">
-              <router-link to="Blog">Blogs</router-link>
-            </li>
+            <!-- <li class="link btn-primary btn-nav">
+              <router-link to="/posts">Publier un post</router-link>
+            </li> -->
             <li class="formRow">
               <button @click="logout()" class="btn">Log-Out</button>
             </li>
@@ -39,7 +39,7 @@
 import menuIcon from "../assets/Icons/bars-regular.svg";
 
 export default {
-  name: "NavSignUp",
+  name: "NavPosts",
   components: {
     menuIcon,
   },

@@ -1,11 +1,13 @@
 <template>
   <div class="postForm">
+    <navPosts />
     <div class="form-control_input">
       <div>
         <div>
           <!-- TEMPLATE CREATION D'UN POST-->
-          <!-- class="uploadImg" action="/posts" method="POST" -->
+          <h1>Publier un post</h1>
           <form enctype="multipart/form-data">
+            <!-- Titre du post -->
             <div class="form-group">
               <label for="title"></label>
               <input
@@ -17,6 +19,7 @@
                 placeholder="Title"
               />
             </div>
+            <!-- Contenu du post -->
             <div class="form-group">
               <label for="content"></label>
               <textarea
@@ -27,11 +30,13 @@
                 placeholder="Content"
               />
             </div>
+            <!-- Affichage de l'image du post avant publication-->
             <div class="formGroup">
               <img :src="image" class="w-50 rounded" />
             </div>
+            <!-- Choix de l'image du post -->
             <div class="formGroup">
-              <label for="file">Choisir votre image</label><br />
+              <label for="file"></label><br />
               <input
                 class="fileFormCtrl"
                 id="file"
@@ -42,11 +47,12 @@
                 @change="onFileSelected()"
               />
             </div>
+            <!-- Publier un post -->
             <div class="formGroup">
               <button
                 type="button"
                 class="btn btn-primary"
-                @click="PostCreate()"
+                @click="postCreate()"
                 :class="{ 'btn--disabled': !validatedFields }"
               >
                 <span v-if="status == 'loading'">Publication en cours....</span>
@@ -65,6 +71,7 @@
               class="col-md-12 grid-margin"
             >
               <div class="card rounded">
+                <!-- Infos créateur du post -->
                 <div class="card-header">
                   <div
                     class="d-flex align-items-center justify-content-between"
@@ -76,17 +83,15 @@
                           <img
                             class="imgUser"
                             alt=""
-                            :src="post.attachment"
+                            :src="post.user.attachment"
                             loading="lazy"
                           />
                         </div>
                         <div>
                           <div class="userPost">
                             <p>{{ post.user.username }}</p>
-                            <p>{{ post.createdAt }}</p>
                           </div>
                           <br />
-                          <div class="datePost"></div>
                         </div>
                       </div>
                     </div>
@@ -232,32 +237,17 @@
                     </div>
                   </div>
                 </div>
+                <!-- Affichage du post -->
                 <div class="card-body">
                   <p class="mb-3 tx-14">{{ post.title }}</p>
                   <p class="mb-3 tx-14">{{ post.content }}</p>
                   <img class="imgPost" :src="post.attachment" alt="" />
-                  <!-- Créer un commentaire -->
-                  <div class="form-group">
-                    <label for="coment"></label>
-                    <textarea
-                      v-model="coment"
-                      type="text"
-                      id="coment"
-                      class="form-control"
-                      placeholder="Coment"
-                    />
+                  <div class="datePost">
+                    <p>{{ post.createdAt }}</p>
                   </div>
-                  <button @click="comentCreate" class="btn btn-warning">
-                    Commenter le post
-                  </button>
-                  <p
-                    v-for="coment in post.coments"
-                    :key="coment"
-                    class="comentPost"
-                  >
-                    {{ coment.coment }}
-                  </p>
+                  <comentsCreate />
                 </div>
+                <!-- Gestion du post -->
                 <div class="card-footer">
                   <div class="d-flex post-actions">
                     <a
@@ -330,7 +320,44 @@
                         <polyline points="16 6 12 2 8 6"></polyline>
                         <line x1="12" y1="2" x2="12" y2="15"></line>
                       </svg>
-                      <p class="d-none d-md-block ml-2">Supprimer</p>
+                      <!-- Supprimer un post -->
+                      <div class="btnFooter">
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          @click="postDeleted(post.id)"
+                          :class="{ 'btn--disabled': !validatedFields }"
+                        >
+                          <span v-if="status == 'loading'"
+                            >Suppression en cours....</span
+                          >
+                          <span v-else>Supprimer</span>
+                        </button>
+                      </div>
+                      <!-- Modifier un post -->
+                      <div class="btnFooter">
+                        <router-link to="PostsUpdate">
+                          <button
+                            type="button"
+                            class="btn btn-primary"
+                            @click="postModify(post.id)"
+                            :class="{ 'btn--disabled': !validatedFields }"
+                          >
+                            <span v-if="status == 'loading'"
+                              >Modification en cours....</span
+                            >
+                            <span v-else>Modifier</span>
+                          </button>
+                        </router-link>
+                      </div>
+                      <!-- <p class="d-none d-md-block ml-2">Supprimer</p> -->
+                      <div class="btnFooter">
+                        <router-link to="PostDetails">
+                          <button type="button" class="btn btn-primary">
+                            Détails du post
+                          </button>
+                        </router-link>
+                      </div>
                     </a>
                   </div>
                 </div>
@@ -346,16 +373,25 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
-// import {apiroutage} from '../apiroutage/posts';
+import navPosts from "@/components/NavPosts.vue";
+import postDetails from "@/views/PostDetails.vue";
+import comentsCreate from "@/components/ComentsCreate.vue";
 
 export default {
   name: "Posts",
+  components: {
+    comentsCreate,
+    navPosts,
+    postDetails,
+  },
 
   data: function () {
     return {
-      title: null,
-      content: null,
-      attachment: null,
+      post: {
+        title: null,
+        content: null,
+        attachment: null,
+      },
 
       //Lister tous les posts
       apiPosts: axios.create({
@@ -376,7 +412,7 @@ export default {
     }
   },
   beforeMount() {
-    //Je récupère la liste des post
+    //Je récupère la liste des posts
     this.getPostList();
   },
   computed: {
@@ -403,7 +439,7 @@ export default {
       this.file = this.$refs.file.files[0];
       this.image = URL.createObjectURL(this.file);
     },
-    //Lister tous les posts
+    //Lister tous les posts (Methode "get"(data){})
     getPostList() {
       this.apiPosts
         .get("")
@@ -412,34 +448,50 @@ export default {
         })
         .catch(function () {});
     },
-    //Créer un nouveau post
-    PostCreate: function () {
+    //Afficher un post (Methode "get"(show id){})
+    getPostOne() {
+      this.apiPosts
+        .get("/:id")
+        .then((response) => {
+          this.posts = response.data;
+        })
+        .catch(function () {});
+    },
+    //Créer un nouveau post (Methode "create"(data){}
+    postCreate: function () {
       const dataPost = new FormData();
       dataPost.append("title", this.title);
       dataPost.append("content", this.content);
       dataPost.append("image", this.file);
+      dataPost.append("userId", this.$store.state.user.userId);
       this.apiPosts
         .post("http://localhost:3000/api/posts", dataPost)
-        .then((formDataPost) => {
-          this.posts = formDataPost.data;
-          // localStorage.setItem("user", JSON.stringify(userId));
-          console.log(response.data);
-          console.log("------> response.data");
+        .then(() => {
+          this.getPostList();
         })
         .catch(function () {});
     },
-
-    //Créer un nouveau commentaire
-    comentCreate() {
-      this.apiComents
-        .post("http://localhost:3000/api/coments", {
-          id: this.id,
-          userId: this.userId,
-          postId: this.postId,
-          coment: this.coment,
+    //Modifier un post (Methode "update"(id, data){})
+    postModify: function (id) {
+      const dataPost = new FormData();
+      dataPost.append("title", this.title);
+      dataPost.append("content", this.content);
+      dataPost.append("image", this.file);
+      dataPost.append("userId", this.$store.state.user.userId);
+      this.apiPosts
+        .put("http://localhost:3000/api/posts/" + id, dataPost)
+        .then(() => {
+          this.getPostList();
         })
-        .then((response) => {
-          this.coment = response.data;
+        .catch(function () {});
+    },
+    //Supprimer un post (Methode "delete"(id){})
+    postDeleted: function (id) {
+      this.apiPosts
+        .delete("http://localhost:3000/api/posts/" + id)
+        .then(() => {
+          this.getPostList();
+          this.$router.push("/posts");
         })
         .catch(function () {});
     },
@@ -459,7 +511,6 @@ export default {
 }
 .col-md-8 {
   width: auto;
-  /* display: flex; */
   margin: 5px;
 }
 .justify-content-between {
@@ -472,14 +523,13 @@ export default {
 .imgUser {
   width: 10vw;
   height: 10vw;
+  border-radius: 5rem;
 }
 .imgPost {
-  width: 100%;
-  height: 30vw;
+  width: 40%;
 }
 img {
   margin: auto;
-  border-radius: 5rem;
 }
 .userPost {
   margin: 1rem 0 0 1rem;
@@ -493,7 +543,7 @@ img {
 .postForm {
   display: flex;
   flex-direction: column;
-  margin: 2rem 0px;
+  margin: auto;
   gap: 16px;
   flex-wrap: wrap;
 }

@@ -45,11 +45,12 @@ exports.findAllPublished = async (req, res) => {
     });
 };
 
-exports.findOne = async (req, res, next) => {
-    Coment.findAll({
+exports.findOnePublished = async (req, res, next) => {
+    const userId = req.params.id;
+    Coment.findByPk({
         where: {
-            id: req.params.id
-        }
+            id: userId
+        },
     })
         .then(user => res.status(200).json(user))
         .catch(error => res.status(400).json({ error }));
@@ -57,18 +58,12 @@ exports.findOne = async (req, res, next) => {
 
 //Créer un nouveau commentaire (ok).
 exports.createComent = async (req, res, next) => {
-    const comentPost = req.file ? {
-        ...req.body.id,
-        // attachment: `${req.protocol}://${req.get("host")}/images${req.file.filename}`
-    } : { ...req.body }
-    Coment.create({
-        ...comentPost, id: req.params.id,
-        userId: req.user,
-        postId: req.body.postId,
-        coment: req.body.coment,
-    }).then((coment) => {
+    const coment = new Coment({
+        ...req.body,
+    })
+    coment.save().then(() => {
         console.log(coment);
-        res.status(201).json(coment)
+        res.status(201).json({ message: 'Objet enregistré !' })
     }).catch((error) => {
         res.status(400).json({ error, message: "Le coment n'a pas été créé !!!" })
     });
@@ -77,7 +72,6 @@ exports.createComent = async (req, res, next) => {
 exports.updateComent = async (req, res, next) => {
     const comentModify = req.file ? {
         ...req.body.comentId,
-        attachment: `${req.protocol}://${req.get("host")}/images${req.file.filename}`
     } : { ...req.body }
     Coment.update({
         ...comentModify, id: req.params.id
