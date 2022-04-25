@@ -7,6 +7,7 @@ dotenv.config();
 
 //Lister tous les coments(ok).
 exports.findAllPublished = async (req, res) => {
+
     Coment.findAll({
 
         include: [
@@ -16,7 +17,7 @@ exports.findAllPublished = async (req, res) => {
             },
             {
                 model: db.posts,
-                postId: req.params.postId,
+                postId: req.params.id,
                 attributes: ['id', 'content', 'attachment'],
                 order: [["createdAt", "DESC"]],
                 include: [
@@ -47,10 +48,11 @@ exports.findAllPublished = async (req, res) => {
 
 exports.findOnePublished = async (req, res, next) => {
     const userId = req.params.id;
-    Coment.findByPk({
+    Coment.findOne({
         where: {
             id: userId
         },
+
     })
         .then(user => res.status(200).json(user))
         .catch(error => res.status(400).json({ error }));
@@ -65,7 +67,7 @@ exports.createComent = async (req, res, next) => {
         console.log(coment);
         res.status(201).json({ message: 'Objet enregistré !' })
     }).catch((error) => {
-        res.status(400).json({ error, message: "Le coment n'a pas été créé !!!" })
+        res.status(400).json({ error, message: "Le commentaire n'a pas été créé !!!" })
     });
 };
 

@@ -2,6 +2,19 @@
   <div class="postForm">
     <navPosts />
     <div class="form-control_input">
+      <div class="post-card-wrap">
+        <div class="container">
+          <h1>Publication récentes</h1>
+          <div class="post-cards">
+            <h1>joseph</h1>
+            <PostCardRecent
+              :post="post"
+              v-for="(post, index) in postCardRecent"
+              :key="index"
+            />
+          </div>
+        </div>
+      </div>
       <div>
         <div>
           <!-- TEMPLATE CREATION D'UN POST-->
@@ -16,7 +29,7 @@
                 type="text"
                 id="title"
                 class="form-control"
-                placeholder="Title"
+                placeholder="Titre de votre message"
               />
             </div>
             <!-- Contenu du post -->
@@ -27,7 +40,7 @@
                 type="text"
                 id="content"
                 class="form-control"
-                placeholder="Content"
+                placeholder="Contenu de votre message"
               />
             </div>
             <!-- Affichage de l'image du post avant publication-->
@@ -243,9 +256,9 @@
                   <p class="mb-3 tx-14">{{ post.content }}</p>
                   <img class="imgPost" :src="post.attachment" alt="" />
                   <div class="datePost">
-                    <p>{{ post.createdAt }}</p>
+                    <p>Posté le : {{ post.createdAt }}</p>
                   </div>
-                  <comentsCreate />
+                  <comentsCreate :postId="post.id" />
                 </div>
                 <!-- Gestion du post -->
                 <div class="card-footer">
@@ -272,6 +285,7 @@
                       </svg>
                       <p class="d-none d-md-block ml-2">
                         {{ post.likes.length }}
+                        J'aime
                       </p>
                     </a>
                     <a
@@ -295,7 +309,7 @@
                         ></path>
                       </svg>
                       <p class="d-none d-md-block ml-2">
-                        {{ post.coments.length }} <br />
+                        {{ post.coments.length }} Commentaire <br />
                       </p>
                     </a>
                     <a
@@ -374,15 +388,19 @@
 import axios from "axios";
 import { mapState } from "vuex";
 import navPosts from "@/components/NavPosts.vue";
+import postCardRecent from "@/components/PostCardRecent.vue";
+import postsUpdate from "@/components/PostsUpdate.vue";
 import postDetails from "@/views/PostDetails.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
 
 export default {
   name: "Posts",
   components: {
-    comentsCreate,
     navPosts,
+    postCardRecent,
     postDetails,
+    postsUpdate,
+    comentsCreate,
   },
 
   data: function () {
@@ -416,6 +434,9 @@ export default {
     this.getPostList();
   },
   computed: {
+    postCardRecent() {
+      return this.$store.state.postCardRecent;
+    },
     validatedFields: function () {
       if (this.mode == "publication") {
         if (this.title != "" && this.content != "" && this.attachment != "") {
@@ -448,15 +469,6 @@ export default {
         })
         .catch(function () {});
     },
-    //Afficher un post (Methode "get"(show id){})
-    getPostOne() {
-      this.apiPosts
-        .get("/:id")
-        .then((response) => {
-          this.posts = response.data;
-        })
-        .catch(function () {});
-    },
     //Créer un nouveau post (Methode "create"(data){}
     postCreate: function () {
       const dataPost = new FormData();
@@ -471,22 +483,10 @@ export default {
         })
         .catch(function () {});
     },
-    //Modifier un post (Methode "update"(id, data){})
-    postModify: function (id) {
-      const dataPost = new FormData();
-      dataPost.append("title", this.title);
-      dataPost.append("content", this.content);
-      dataPost.append("image", this.file);
-      dataPost.append("userId", this.$store.state.user.userId);
-      this.apiPosts
-        .put("http://localhost:3000/api/posts/" + id, dataPost)
-        .then(() => {
-          this.getPostList();
-        })
-        .catch(function () {});
-    },
     //Supprimer un post (Methode "delete"(id){})
     postDeleted: function (id) {
+      console.log("----->supp par son id");
+      console.log(id);
       this.apiPosts
         .delete("http://localhost:3000/api/posts/" + id)
         .then(() => {
@@ -500,6 +500,54 @@ export default {
 </script>
 
 <style>
+/************************ 
+Voir les posts récents 
+************************/
+.blog-card-wrap,
+h1 {
+  font-weight: 300;
+  font-size: 28px;
+  margin-bottom: 32px;
+}
+
+.updates,
+.container {
+  padding: 0px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.container {
+  @media (min-width: 800px) padding: 125px 25px;
+  display: block;
+  flex-direction: row;
+}
+
+.router-button {
+  display: flex;
+  font-size: 14px;
+  text-decoration: none;
+  @media (min-width: 800px) {
+    margin-left: auto;
+  }
+}
+
+h2 {
+  font-weight: 300;
+  font-size: 32px;
+  max-width: 425px;
+  width: 100%;
+  text-align: center;
+  text-transform: uppercase;
+  @media (min-width: 800px) {
+    text-align: initial;
+    font-size: 40px;
+  }
+}
+/***************************
+fin Voir les posts recents 
+***************************/
+
 .btn-warning {
   margin: 0 5px;
 }

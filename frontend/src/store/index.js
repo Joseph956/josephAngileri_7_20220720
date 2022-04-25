@@ -90,6 +90,12 @@ export default createStore({
       comentId: '',
       coment: '',
     },
+    postCardRecent: {
+      attachment: '',
+      userId: '',
+      postId: '',
+      content: '',
+    },
   },
   mutations: {
     setStatus: function (state, status) {
@@ -105,6 +111,13 @@ export default createStore({
     },
     postInfos: function (state, postInfos) {
       state.postInfos = postInfos;
+    },
+    comentInfos: function (state, comentInfos) {
+      state.comentInfos = comentInfos;
+    },
+    toggleEditPost(state, payload) {
+      state.editPost = payload;
+      console.log(state.editPost);
     },
     logout: function (state) {
       state.user = {
@@ -168,7 +181,7 @@ export default createStore({
             "Authorization": "BEARER " + state.user.token
           }
         }).then(response => {
-          commit('setStatus', 'postId');
+          commit('setStatus', 'postId', 'postInfos');
           resolve(response.data);
           console.log(response.data);
         }).catch(function () {

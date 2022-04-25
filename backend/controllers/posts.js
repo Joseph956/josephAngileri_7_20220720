@@ -125,7 +125,7 @@ exports.deletePost = (req, res, next) => {
     const id = req.params.id;
     Post.destroy({
         where: { id: id },
-        attributes: ['id', 'username', 'content', 'attachment'],
+        // attributes: ['id', 'username', 'content', 'attachment'],
     }).then(() => res.status(200).json({
         message: 'Post supprimé!'
     })).catch(error => res.status(400).json({ error }))

@@ -33,10 +33,13 @@ exports.findOneProfil = (req, res, next) => {
     const userId = req.params.id;
     User.findOne({
         where: {
-            id: userId
+            id: userId,
         },
-        // attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
         attributes: ['id', 'attachment', 'username', 'email', 'roleId'],
+        include: [{
+            model: db.posts,
+            attributes: ['id', 'title', 'content', 'attachment']
+        }],
         order: [["createdAt", "DESC"]],
     }).then((user) => {
         if (!user) {
