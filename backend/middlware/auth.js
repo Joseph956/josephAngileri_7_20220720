@@ -56,14 +56,14 @@ module.exports.haveRightOnPost = (req, res, next) => {
                         })
                 }
             } else {
-                return res.status(401).send({
-                    message: "Aucun utilisateur trouvé avec ce jeton !",
+                return res.status(407).send({
+                    message: "Requête non authentifiée !",
                 });
             }
         });
     } catch (error) {
         console.log(error);
-        res.status(401).json({ error: error | 'Requête non authentifiée !' });
+        res.status(401).json({ error: error | 'Requête non autorisé !' });
     }
 };
 
@@ -78,13 +78,10 @@ module.exports.haveRightOnComent = (req, res, next) => {
         User.findByPk(userId).then((user) => {
             if (user) {
                 req.user = userId;
-                console.log("   role: " + role.role);
                 if (role.role == "admin") {
                     return next();
                 } else {
                     Coment.findByPk(coment).then((foundedComent) => {
-                        console.log("----->CONTENU: foundedComent");
-                        console.log(foundedComent);
                         if (foundedComent.userId == userId) {
                             return next();
                         } else {
@@ -95,14 +92,13 @@ module.exports.haveRightOnComent = (req, res, next) => {
                     })
                 }
             } else {
-                return res.status(401).send({
-                    message: "Aucun utilisateur trouvé avec ce jeton !",
+                return res.status(407).send({
+                    message: "Requête non authentifiée !",
                 });
             }
         });
     } catch (error) {
-        console.log(error);
-        res.status(401).json({ error: error | 'Requête non authentifiée !' });
+        res.status(401).json({ error: error | 'Requête non autorisé !' });
     }
 };
 

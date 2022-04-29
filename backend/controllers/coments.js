@@ -16,18 +16,6 @@ exports.findAllPublished = async (req, res) => {
                 attributes: ['username']
             },
             {
-                model: db.posts,
-                postId: req.params.id,
-                attributes: ['id', 'content', 'attachment'],
-                order: [["createdAt", "DESC"]],
-                include: [
-                    {
-                        model: db.user,
-                        attributes: ['username']
-                    }
-                ],
-            },
-            {
                 model: db.likes,
                 likes: req.params.likeId,
                 attributes: ['likes'],
@@ -47,11 +35,34 @@ exports.findAllPublished = async (req, res) => {
 };
 
 exports.findOnePublished = async (req, res, next) => {
-    const userId = req.params.id;
+    const comentId = req.params.id;
     Coment.findOne({
         where: {
-            id: userId
+            id: comentId
         },
+        include: [
+            {
+                model: db.user,
+                attributes: ['username', 'attachment']
+            },
+        ]
+    })
+        .then(user => res.status(200).json(user))
+        .catch(error => res.status(400).json({ error }));
+};
+
+exports.findCommentsByPostId = async (req, res, next) => {
+    const postId = req.params.id;
+    Coment.findAll({
+        where: {
+            postId: postId
+        },
+        include: [
+            {
+                model: db.user,
+                attributes: ['username', 'attachment']
+            },
+        ]
 
     })
         .then(user => res.status(200).json(user))

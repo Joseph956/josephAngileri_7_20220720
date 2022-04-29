@@ -6,6 +6,7 @@ const comentCtrl = require('../controllers/coments');
 
 router.get("/", auth.token, comentCtrl.findAllPublished);
 router.get("/:id", auth.token, comentCtrl.findOnePublished);
+router.get("/postId/:id", auth.token, comentCtrl.findCommentsByPostId);
 router.post("/", auth.token, comentCtrl.createComent);
 router.put("/:id", auth.token, auth.haveRightOnComent, comentCtrl.updateComent);
 router.put("/:id/like", auth.token, comentCtrl.likeComent);

@@ -40,6 +40,7 @@
               <div class="comentPost">
                 <p>{{ coment.coment }}</p>
                 <p>{{ coment.user.username }}</p>
+                <img class="imgComent" :src="coment.attachment" alt="" />
                 <span class="dateComent"
                   >Posté le : {{ coment.createdAt }}
                 </span>
@@ -77,11 +78,6 @@ export default {
   },
   data: function () {
     return {
-      coment: {
-        userId: null,
-        postId: null,
-        coment: null,
-      },
       //Lister tous les coments
       apiComents: axios.create({
         baseURL: "http://localhost:3000/api/",
@@ -92,21 +88,12 @@ export default {
         },
       }),
       coments: [],
-      coment: [],
     };
   },
-  mounted: function () {
-    console.log(this.postId);
-    if (this.$store.state.user.userId === -1) {
-      this.$router.push(`/coments/${id}`);
-      return;
-    }
-  },
+  mounted: function () {},
   beforeMount() {
     //Je récupère la liste des coments
     this.getComentList();
-    //Je récupère un commentaire
-    this.getComentsOne();
   },
   computed: {
     validatedFields: function () {
@@ -125,24 +112,15 @@ export default {
       }
     },
     ...mapState(["status"]),
-    // coment: "comentInfos",
   },
   methods: {
     //Lister les commentaires pour chaque post.
     getComentList() {
       this.apiComents
-        .get("/coments")
+        .get("/coments/postId/" + this.postId)
         .then((response) => {
           this.coments = response.data;
-        })
-        .catch(function () {});
-    },
-    // Relier un coments à son post
-    getComentsOne() {
-      this.apiComents
-        .get("/coments", { postId: this.postId })
-        .then((response) => {
-          this.coments = response.data;
+          console.log(this.coments);
         })
         .catch(function () {});
     },
@@ -155,8 +133,9 @@ export default {
           coment: this.coment,
         })
         .then(() => {
-          this.getComentsOne();
+          window.location.reload();
           this.$router.push("/posts");
+          this.getComentsOne();
         })
         .catch(function () {});
     },
@@ -166,8 +145,8 @@ export default {
         .delete("http://localhost:3000/api/coments/" + id)
         .then(() => {
           window.location.reload();
-          this.getComentList();
           this.$router.push("/posts");
+          this.getComentList();
         })
         .catch(function () {});
     },

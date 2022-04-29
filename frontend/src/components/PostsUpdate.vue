@@ -64,7 +64,7 @@
       <div class="datePost">
         <p>Posté le :{{ post.createdAt }}</p>
       </div>
-      <comentsCreate :postId="post.id" />
+      <!-- <comentsCreate :postId="post.id" /> -->
     </div>
   </div>
 </template>
@@ -80,6 +80,13 @@ export default {
   },
   data: function () {
     return {
+      post: {
+        title: this.title,
+        content: this.content,
+        attachment: this.attachment,
+        postId: this.postId,
+        userId: this.userId,
+      },
       //Afficher le post à modifier
       apiPosts: axios.create({
         baseURL: "http://localhost:3000/api/posts",
@@ -100,7 +107,7 @@ export default {
   },
   beforeMount() {
     //Je récupère la liste des posts
-    this.getPostOne();
+    this.getPostList();
   },
   computed: {
     validatedFields: function () {
@@ -127,7 +134,7 @@ export default {
       this.image = URL.createObjectURL(this.file);
     },
     //Afficher un post (Methode "get"(show id){})
-    getPostOne() {
+    getPostList() {
       this.apiPosts
         .get("")
         .then((response) => {

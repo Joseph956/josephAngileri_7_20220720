@@ -259,6 +259,7 @@
                     <p>Posté le : {{ post.createdAt }}</p>
                   </div>
                   <comentsCreate :postId="post.id" />
+                  <!-- :comentId="comentId" -->
                 </div>
                 <!-- Gestion du post -->
                 <div class="card-footer">
@@ -479,6 +480,8 @@ export default {
       this.apiPosts
         .post("http://localhost:3000/api/posts", dataPost)
         .then(() => {
+          window.location.reload();
+          this.$router.push("/posts");
           this.getPostList();
         })
         .catch(function () {});
@@ -490,8 +493,9 @@ export default {
       this.apiPosts
         .delete("http://localhost:3000/api/posts/" + id)
         .then(() => {
-          this.getPostList();
+          window.location.reload();
           this.$router.push("/posts");
+          this.getPostList();
         })
         .catch(function () {});
     },
