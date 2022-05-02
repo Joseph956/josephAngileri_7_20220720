@@ -1,5 +1,6 @@
 <template>
   <div>
+    <navProfil />
     <!-- TEMPLATE MODIFICATION D'UN POST-->
     <h1>Modifier un post</h1>
     <form enctype="multipart/form-data">
@@ -52,19 +53,31 @@
           :class="{ 'btn--disabled': !validatedFields }"
         >
           <span v-if="status == 'loading'">Publication en cours....</span>
-          <span v-else>Nouvelle publication</span>
+          <span v-else>Modifier la publication</span>
         </button>
       </div>
     </form>
     <!-- Affichage du post -->
-    <div class="card-body">
-      <p class="mb-3 tx-14">{{ post.title }}</p>
-      <p class="mb-3 tx-14">{{ post.content }}</p>
-      <img class="imgPost" :src="post.attachment" alt="" />
-      <div class="datePost">
-        <p>Posté le :{{ post.createdAt }}</p>
+    <div class="col-md-8 col-xl-6 middle-wrapper">
+      <div class="row">
+        <div
+          v-show="posts.length > 0"
+          v-for="post in posts"
+          :key="post.id"
+          class="col-md-12 grid-margin"
+        >
+          <div class="card rounded">
+            <div class="card-body">
+              <p class="mb-3 tx-14">{{ post.title }}</p>
+              <p class="mb-3 tx-14">{{ post.content }}</p>
+              <img class="imgPost" :src="post.attachment" alt="" />
+              <div class="datePost">
+                <p>Posté le :{{ post.createdAt }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <!-- <comentsCreate :postId="post.id" /> -->
     </div>
   </div>
 </template>
@@ -72,11 +85,17 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
+import navProfil from "@/components/NavProfil.vue";
 
 export default {
   name: "PostsUpdate",
+  components: { navProfil },
   props: {
-    postId: String,
+    title: String,
+    content: String,
+    attachment: String,
+    postId: Number,
+    userId: Number,
   },
   data: function () {
     return {
@@ -101,13 +120,13 @@ export default {
   },
   mounted: function () {
     if (this.$store.state.user.userId === -1) {
-      this.$router.push("/posts");
+      this.$router.push(`/posts/${id}`);
       return;
     }
   },
   beforeMount() {
     //Je récupère la liste des posts
-    this.getPostList();
+    this.getPostOne();
   },
   computed: {
     validatedFields: function () {
@@ -134,7 +153,7 @@ export default {
       this.image = URL.createObjectURL(this.file);
     },
     //Afficher un post (Methode "get"(show id){})
-    getPostList() {
+    getPostOne() {
       this.apiPosts
         .get("")
         .then((response) => {
@@ -149,9 +168,12 @@ export default {
       dataPost.append("content", this.content);
       dataPost.append("image", this.file);
       dataPost.append("userId", this.$store.state.user.userId);
+      dataPost.append("postId", this.$store.state.user.postId);
       this.apiPosts
-        .put(`http://localhost:3000/api/posts/${id}`, dataPost)
+        .put("http://localhost:3000/api/posts/" + id, dataPost)
         .then(() => {
+          window.location.reload();
+          this.$router.push("/posts");
           this.getPostOne();
         })
         .catch(function () {});

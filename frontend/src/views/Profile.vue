@@ -5,9 +5,6 @@
       <h1 class="cardTitle">Profil utilisateur</h1>
       <h2 class="cardSubtitle">Informations personnelles</h2>
       <div class="form-group">
-        <label for="">
-          <h2>Nom d'utilisateur</h2>
-        </label>
         <img v-bind:src="user.attachment" />
         <h3>{{ user.username }}</h3>
       </div>

@@ -28,7 +28,7 @@ import Edit from "@/assets/Icons/edit-regular.svg";
 import Delete from "@/assets/Icons/trash-regular.svg";
 export default {
   name: "PostCardRecent",
-  props: ["post"],
+  props: ["posts"],
   components: {
     Arrow,
     Edit,

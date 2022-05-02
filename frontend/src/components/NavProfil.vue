@@ -12,14 +12,14 @@
         <div class="collapse navbar-collapse">
           <ul v-show="!mobile" class="navbar-nav ml-auto">
             <li class="link btn-primary btn-nav">
-              <router-link to="profile">Modifier photo de profil</router-link>
+              <router-link to="profile">Modifier le profil</router-link>
             </li>
             <li class="link btn-primary btn-nav">
               <router-link to="posts">Voir les Publication</router-link>
             </li>
-            <li class="link btn-primary btn-nav">
+            <!-- <li class="link btn-primary btn-nav">
               <router-link to="PostDetails">Détails du post</router-link>
-            </li>
+            </li> -->
             <li class="formRow">
               <button @click="logout()" class="btn">Log-Out</button>
             </li>

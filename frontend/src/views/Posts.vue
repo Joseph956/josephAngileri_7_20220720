@@ -8,7 +8,7 @@
           <div class="post-cards">
             <h1>joseph</h1>
             <PostCardRecent
-              :post="post"
+              :postId="postId"
               v-for="(post, index) in postCardRecent"
               :key="index"
             />
@@ -79,6 +79,7 @@
         <div class="col-md-8 col-xl-6 middle-wrapper">
           <div class="row">
             <div
+              v-show="posts.length > 0"
               v-for="post in posts"
               :key="post.id"
               class="col-md-12 grid-margin"
@@ -289,6 +290,7 @@
                         J'aime
                       </p>
                     </a>
+
                     <a
                       href="javascript:;"
                       class="d-flex align-items-center text-muted mr-4"
@@ -355,7 +357,8 @@
                           <button
                             type="button"
                             class="btn btn-primary"
-                            @click="postModify(post.id)"
+                            @click="postModify()"
+                            :postId="post.id"
                             :class="{ 'btn--disabled': !validatedFields }"
                           >
                             <span v-if="status == 'loading'"
@@ -393,6 +396,7 @@ import postCardRecent from "@/components/PostCardRecent.vue";
 import postsUpdate from "@/components/PostsUpdate.vue";
 import postDetails from "@/views/PostDetails.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
+import modalComent from "@/components/ModalComent.vue";
 
 export default {
   name: "Posts",
@@ -402,6 +406,7 @@ export default {
     postDetails,
     postsUpdate,
     comentsCreate,
+    modalComent,
   },
 
   data: function () {
@@ -539,7 +544,7 @@ h1 {
 h2 {
   font-weight: 300;
   font-size: 32px;
-  max-width: 425px;
+  /* max-width: 425px; */
   width: 100%;
   text-align: center;
   text-transform: uppercase;

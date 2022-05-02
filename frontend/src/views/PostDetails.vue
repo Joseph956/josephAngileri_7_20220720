@@ -2,15 +2,16 @@
   <div>
     <div class="post-card-wrap">
       <navProfil />
+
       <div class="posts-cards container">
         <h1>joseph</h1>
         <div class="toggle-edit">
           <span>Toggle Editing Post</span>
           <input type="checbox" v-model="editPost" />
           <PostCardRecent
-            :post="post.id"
-            v-for="post in postCardRecent"
+            v-for="post in posts"
             :key="post.id"
+            :postId="post.id"
           />
         </div>
       </div>

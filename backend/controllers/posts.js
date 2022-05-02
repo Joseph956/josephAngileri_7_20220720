@@ -1,11 +1,10 @@
 const db = require("../models");
 const Post = db.posts;
-const User = db.user;
 const Like = db.likes;
 const fs = require('fs');
 const dotenv = require('dotenv');
+const { posts } = require("../models");
 dotenv.config();
-
 
 //Lister tous les posts (ok).
 exports.findAllPublished = async (req, res, next) => {
@@ -49,7 +48,6 @@ exports.findAllPublished = async (req, res, next) => {
         });
     });
 };
-
 //Récupérer un seul post (ok).
 exports.findOnePublished = async (req, res, next) => {
     const userId = req.params.id;
@@ -87,7 +85,6 @@ exports.findOnePublished = async (req, res, next) => {
         res.status(400).json({ error })
     });
 };
-
 // Créer un nouveau post(ok).
 exports.createPost = async (req, res, next) => {
     const post = new Post({
@@ -100,91 +97,88 @@ exports.createPost = async (req, res, next) => {
         res.status(400).json({ error, message: "Le post n'a pas été créé !!!" })
     });
 };
-
-//Mettre à jour le post (à faire).
+//Mettre à jour le post (image ok), maj données du post (à faire).
 exports.updatePost = async (req, res, next) => {
-    const postObject = req.file;
-    if (postObject) {
+    const id = req.params.id;
+    if (req.file) {
         Post.findOne({
-            where: { id: req.body.postId },
-            where: { id: req.params.id },
-        }).then(postObject => {
-            const filename = postObject.attachment.split("/images/")[1];
-            fs.unlink(`images/${filename}`, () => {
-                const postObject = req.file ?
-                    {
-                        // ...JSON.parse(req.body),
-                        ...req.body,
-                        attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-                    } : {
-                        ...req.body
-                    }
-
-                Post.update({ where: { id: req.params.id } }, { ...postObject, where: { id: req.params.id } })
-                    .then(() => res.status(200).json({ message: 'Objet modifié  fs_link !' }))
-                    .catch((error) => res.status(400).json({ error }));
+            where: { id: id }
+        }).then((post) => {
+            const filename = post.attachment.split("/images/")[1];
+            fs.unlink(`images/${filename}`, (error) => {
+                if (error) console.log(error);
             });
-        }).catch(() => res.status(500).json({ Message: 'erreur serveur JOSEPH' }));
+            Post.update({
+                attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+                id: req.params.id
+            }, {
+                where: { id: id },
+                ...req.body.post,
+                attributes: ['id', 'username', 'content', 'attachment'],
+            }).then((post) => res.status(200).json({
+                post, message: "Le post a été modifié !"
+            })).catch(() => res.status(400).json({
+                message: "Le post n'a pas été modifié !"
+            }));
+        }).catch((error) => res.status(404).json({ error }))
     } else {
-        //l'objet qui doit être mis à jour dans la base de données
-
-        //Mettre à jour la base de données
-        Post.update({ where: { id: req.body.post } }, { ...postObject, where: { id: req.body.post } })
-            .then(() => res.status(200).json({
-                message: 'La BDD a été mis à jour !',
-                contenu: req.body
-            }))
-            .catch((error) => res.status(400).json({ error }));
+        Post.update({
+            // ...JSON.parse(req.body.post),
+            id: req.params.id,
+            title: this.title,
+        }, {
+            where: { id: id },
+            ...req.body,
+            attributes: ['id', 'username', 'content', 'attachment'],
+        }).then((post) => res.status(200).json({
+            post, message: "Le post a été modifié !"
+        })).catch(() => res.status(400).json({
+            message: "Le post n'a pas été modifié !"
+        }));
     }
 };
 
-//Supprimer un post (ok).
-// exports.deletePost = (req, res, next) => {
+//Mettre à jour le post (ok).
+// exports.updatePost = async (req, res, next) => {
 //     const id = req.params.id;
-//     Post.findOne({
-//         where: {
-//             id: userId, id: id
-//         },
-//         include: [{
-//             model: db.user,
-//             attributes: ['username', 'attachment']
-//         },
-//         ],
-//         // where: { id: id },
-//         // where: { id: req.body.postId },
-//     }).then((post) => {
-//         if (post.attachment) {
-//             const filename = post.attachment.split("/images/")[1];
-//             fs.unlink(`images/${filename}`, () => {
-//                 Post.destroy({
-//                     where: { id: post.id }
-//                 }).then(() => res.status(200).json({
-//                     message: 'Post supprimé!'
-//                 })).catch(() => res.status(400).json({
-//                     message: "Le post n'a pas été supprimé"
-//                 }));
-//             })
-//         } else {
-//             Post.destroy({
-//                 where: { id: id }
-//             }).then(() => res.status(200).json({
-//                 message: 'Post supprimé!'
-//             })).catch(() => res.status(400).json({
-//                 message: "Le post n'a pas été supprimé"
-//             }));
-//         }
-//     }).catch(() => res.status(500).json({ message: "Erreur serveur" }))
+//     const Post = req.file ? {
+//         ...req.body,
+//         attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+//     } : { ...req.body }
+//     Post.update({
+//         ...post, id: req.params.id
+//     }, {
+//         where: { id: id },
+//         attributes: ['id', 'username', 'content', 'attachment'],
+//     }).then((post) => res.status(200).json({
+//         post, message: "Le post a été modifié !"
+//     })).catch(() => res.status(400).json({
+//         message: "Le post n'a pas été modifié !"
+//     }));
+
 // };
+
+//Supprimer un post (ok).
 exports.deletePost = (req, res, next) => {
     const id = req.params.id;
-    Post.destroy({
+    Post.findOne({
         where: { id: id },
-        // attributes: ['id', 'username', 'content', 'attachment'],
-    }).then(() => res.status(200).json({
-        message: 'Post supprimé!'
-    })).catch(error => res.status(400).json({ error }))
+    }).then((post) => {
+        if (post.attachment) {
+            const filename = post.attachment.split("/images/")[1];
+            fs.unlink(`images/${filename}`, (error) => {
+                if (error) console.log(error);
+            });
+        }
+        Post.destroy({
+            where: { id: id }
+        }).then(() => res.status(200).json({
+            message: 'Post supprimé!'
+        })).catch(() => res.status(400).json({
+            message: "Le post n'a pas été supprimé"
+        }));
+    }).catch(() => res.status(500).json({ message: "Erreur serveur" }))
 };
-
 
 exports.likePost = async (req, res, next) => {
     const postId = req.params.id;
