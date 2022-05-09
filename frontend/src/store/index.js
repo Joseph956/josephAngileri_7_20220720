@@ -78,6 +78,12 @@ export default createStore({
       username: '',
       email: '',
     },
+    user: user,
+    apiPasswd: {
+      oldPassword: '',
+      newPassword: '',
+      newPasswdConfirm: '',
+    },
     post: post,
     apiPosts: {
       attachment: '',
@@ -128,6 +134,7 @@ export default createStore({
     }
   },
   actions: {
+    //Creation du compte utlisateur
     login: ({ commit }, data) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
@@ -162,6 +169,46 @@ export default createStore({
           });
       });
     },
+    //Fin Creation de compte
+
+    //Modification ou confirmation du mot de passe
+    confirmPassword: ({ commit }, data) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        instance.put('auth/newpasswd/:id', data)
+          .then(response => {
+            commit('setStatus', '');
+            commit('logUser', response.data);
+            resolve(response);
+            console.log(response);
+          })
+          .catch(error => {
+            commit('setStatus', 'error_login');
+            reject(error);
+            console.log(error);
+          });
+      });
+    },
+    createPassword: ({ commit }, data) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        commit;
+        instance.put('auth/newpasswd/:id', data)
+          .then(response => {
+            commit('setStatus', 'created');
+            resolve(response);
+            console.log(response);
+          })
+          .catch(error => {
+            commit('setStatus', 'error_create');
+            reject(error);
+            console.log(error);
+          });
+      });
+    },
+    //Fin modification du mot de passe
+
+    //Affichage des informations
     getUserInfos: ({ commit, state }, data) => {
       instance.get('/users/' + state.user.userId, data,
         {

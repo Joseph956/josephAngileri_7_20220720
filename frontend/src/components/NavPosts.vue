@@ -12,7 +12,7 @@
         <div class="collapse navbar-collapse">
           <ul v-show="!mobile" class="navbar-nav ml-auto">
             <li class="link btn-primary btn-nav">
-              <router-link to="Profile">Compte</router-link>
+              <router-link to="/Profile/">Profil</router-link>
             </li>
             <!-- <li class="link btn-primary btn-nav">
               <router-link to="/posts">Publier un post</router-link>

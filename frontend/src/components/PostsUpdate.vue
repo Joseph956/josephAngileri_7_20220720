@@ -6,30 +6,30 @@
     <form enctype="multipart/form-data">
       <!-- Titre du post -->
       <div class="form-group">
-        <label for="title">Modifier le titre</label>
+        <label for="title">Modifier le titre de votre message</label>
         <input
           ref="firstfield"
-          v-model="title"
+          v-model="posts.title"
           type="text"
           id="title"
           class="form-control"
-          placeholder="Titre de votre message"
+          placeholder="Modifier le titre de votre message"
         />
       </div>
       <!-- Contenu du post -->
       <div class="form-group">
-        <label for="content"></label>
+        <label for="content">Modifier le contenu du message</label>
         <textarea
-          v-model="content"
+          v-model="posts.content"
           type="text"
           id="content"
           class="form-control"
-          placeholder="Contenu de votre message"
+          placeholder="Modifier le contenu du message"
         />
       </div>
       <!-- Affichage de l'image du post avant publication-->
       <div class="formGroup">
-        <img :src="image" class="w-50 rounded" />
+        <img :src="posts.attachment" class="w-50 rounded" />
       </div>
       <!-- Choix de l'image du post -->
       <div class="formGroup">
@@ -57,28 +57,6 @@
         </button>
       </div>
     </form>
-    <!-- Affichage du post -->
-    <div class="col-md-8 col-xl-6 middle-wrapper">
-      <div class="row">
-        <div
-          v-show="posts.length > 0"
-          v-for="post in posts"
-          :key="post.id"
-          class="col-md-12 grid-margin"
-        >
-          <div class="card rounded">
-            <div class="card-body">
-              <p class="mb-3 tx-14">{{ post.title }}</p>
-              <p class="mb-3 tx-14">{{ post.content }}</p>
-              <img class="imgPost" :src="post.attachment" alt="" />
-              <div class="datePost">
-                <p>Posté le :{{ post.createdAt }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -90,39 +68,23 @@ import navProfil from "@/components/NavProfil.vue";
 export default {
   name: "PostsUpdate",
   components: { navProfil },
-  props: {
-    title: String,
-    content: String,
-    attachment: String,
-    postId: Number,
-    userId: Number,
-  },
   data: function () {
     return {
-      post: {
-        title: this.title,
-        content: this.content,
-        attachment: this.attachment,
-        postId: this.postId,
-        userId: this.userId,
-      },
-      //Afficher le post à modifier
+      //Afficher les infos du post à modifier
       apiPosts: axios.create({
-        baseURL: "http://localhost:3000/api/posts",
+        baseURL: "http://localhost:3000/api/posts/" + this.$route.params.id,
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
           Authorization: "BEARER " + this.$store.state.user.token,
         },
       }),
-      posts: [],
+      posts: {
+        title: null,
+        attachment: null,
+        content: null,
+      },
     };
-  },
-  mounted: function () {
-    if (this.$store.state.user.userId === -1) {
-      this.$router.push(`/posts/${id}`);
-      return;
-    }
   },
   beforeMount() {
     //Je récupère la liste des posts
@@ -150,7 +112,7 @@ export default {
     //methode définition image
     onFileSelected() {
       this.file = this.$refs.file.files[0];
-      this.image = URL.createObjectURL(this.file);
+      this.posts.attachment = URL.createObjectURL(this.file);
     },
     //Afficher un post (Methode "get"(show id){})
     getPostOne() {
@@ -164,16 +126,17 @@ export default {
     //Modifier un post (Methode "update"(id, data){})
     postUpdate: function () {
       const dataPost = new FormData();
-      dataPost.append("title", this.title);
-      dataPost.append("content", this.content);
+      dataPost.append("title", this.posts.title);
+      dataPost.append("content", this.posts.content);
       dataPost.append("image", this.file);
-      dataPost.append("userId", this.$store.state.user.userId);
-      dataPost.append("postId", this.$store.state.user.postId);
       this.apiPosts
-        .put("http://localhost:3000/api/posts/" + id, dataPost)
+        .put(
+          "http://localhost:3000/api/posts/" + this.$route.params.id,
+          dataPost
+        )
         .then(() => {
           window.location.reload();
-          this.$router.push("/posts");
+          this.$router.push("/posts/");
           this.getPostOne();
         })
         .catch(function () {});

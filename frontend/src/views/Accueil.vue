@@ -43,25 +43,29 @@
         </div>
 
         <div class="form-group">
-          <label>Mot de passe</label>
+          <label for="password">Mot de passe</label>
           <input
+            type="password"
+            id="password"
+            placeholder="Mot de passe"
             v-model="password"
             class="form-control_input"
-            type="password"
-            placeholder="Mot de passe"
             required="Veuillez créer votre mot de passe '8 caractères , une majuscule, minimum'"
           />
         </div>
 
         <div class="form-group" v-if="mode == 'create'">
-          <label>Confirmer le mot de passe</label>
+          <label for="confirmPasswd">Confirmer le mot de passe</label>
           <input
-            v-model="confirmPassword"
-            class="form-control_input"
             type="Password"
+            id="confirmPasswd"
             placeholder="Confirmer le mot de passe"
+            v-model="confirmPasswd"
+            class="form-control_input"
             required="Veuillez confirmer votre mot de passe !..."
           />
+          <p id="message"></p>
+          <input type="button" @click="checkPasswd()" value="SUBMIT" />
         </div>
 
         <div
@@ -119,8 +123,8 @@ export default {
   data: function () {
     return {
       mode: "login",
-      email: "",
       username: "",
+      email: "",
       password: "",
       confirmPassword: "",
     };
@@ -179,23 +183,66 @@ export default {
     },
     createAccount: function () {
       const self = this;
-      this.$store
-        .dispatch("createAccount", {
-          username: this.username,
-          email: this.email,
-          password: this.password,
-          confirmPassword: this.confirmPassword,
-        })
-        .then(
-          function () {
-            self.login();
-            console.log(response.data);
-          },
-          function (error) {
-            console.log(error);
-          }
-        );
+      if (password.length != 0) {
+        let password = document.getElementById("password").value;
+        let confirmPasswd = document.getElementById("password").value;
+        if (password == confirmPasswd) {
+          this.$store
+            .dispatch("createAccount", {
+              username: this.username,
+              email: this.email,
+              password: this.password,
+              confirmPasswd: this.confirmPasswd,
+            })
+            .then(
+              function () {
+                self.login();
+                console.log(response.data);
+              },
+              function (error) {
+                console.log(error);
+              }
+            )
+            .catch({});
+        } else {
+          message.textContent = "Passwords don't match";
+        }
+      }
     },
+    checkPasswd: function () {
+      let password = document.getElementById("password").value;
+      let confirmPasswd = document.getElementById("password").value;
+      console.log("----->CONTENU : password");
+      console.log(password);
+      console.log("----->CONTENU : confirmPasswd");
+      console.log(confirmPasswd);
+      if (password.length != 0) {
+        if (password == confirmPasswd) {
+          message.textContent = "Passwords match";
+        } else {
+          message.textContent = "Passwords don't match";
+        }
+      }
+    },
+    // createAccount: function () {
+    //   const self = this;
+    //   this.$store
+    //     .dispatch("createAccount", {
+    //       username: this.username,
+    //       email: this.email,
+    //       password: this.password,
+    //       confirmPassword: this.confirmPassword,
+    //     })
+    //     .then(
+    //       function () {
+    //         self.login();
+    //         console.log(response.data);
+    //       },
+    //       function (error) {
+    //         console.log(error);
+    //       }
+    //     );
+    // },
   },
 };
 </script>

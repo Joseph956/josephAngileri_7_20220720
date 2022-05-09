@@ -85,7 +85,7 @@ app.use((err, req, res, next) => {
     console.log(err.code);
 
     res.status(500).json({
-        message: "erreur serveur",
+        message: "erreur serveur jo",
     });
 });
 

@@ -1,11 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
 window.axios = require('axios');
+
 import Accueil from '@/views/Accueil.vue';
 import Profile from '@/views/Profile.vue';
 import Posts from '@/views/Posts.vue';
 import PostDetails from '@/views/PostDetails.vue';
+import PostsCards from '@/views/PostsCards.vue';
+
 import PostsUpdate from '@/components/PostsUpdate.vue';
 import PostCardRecent from '@/components/PostCardRecent.vue';
+import ProfilUpdate from '@/components/ProfilUpdate.vue';
+import PasswdUpdate from '@/components/PasswdUpdate.vue';
 
 const routes = [
   {
@@ -15,36 +20,63 @@ const routes = [
     name: 'Accueil',
     component: Accueil,
   },
+  //Routage gestion des posts
+  //Route parent (posts)
   {
     path: '/posts',
     name: 'Posts',
     component: Posts,
+  },
+  //Enfants PostsUpdate, PostsDetails, ComentCreate.
+  {
+    path: '/postsupdate/:id',
+    name: 'PostsUpdate',
+    component: PostsUpdate,
+  },
+  {
+    path: '/postdetails/:id',
+    name: 'PostDetails',
+    component: PostDetails,
   },
   {
     path: '/comentscreate',
     name: 'ComentsCreate',
     component: () => import('@/components/ComentsCreate.vue')
   },
+  //Fin routage gestion des posts
+
+  //Routage des posts récents
+  //Parents
+  {
+    path: '/postscards',
+    name: 'PostsCards',
+    component: PostsCards,
+  },
+  // //Enfant postCardRecent
   {
     path: '/postcardrecent',
     name: 'PostCardRecent',
     component: PostCardRecent,
   },
-  {
-    path: '/postsupdate',
-    name: 'PostsUpdate',
-    component: PostsUpdate,
-  },
-  {
-    path: '/postdetails',
-    name: 'PostDetails',
-    component: PostDetails,
-  },
+  //Fin posts récents
+
+  //Routage du profile utilisateur
   {
     path: '/profile',
     name: 'Profile',
     component: Profile,
   },
+  {
+    path: '/profilupdate/:id',
+    name: 'ProfilUpdate',
+    component: ProfilUpdate,
+  },
+  {
+    path: '/passwdupdate/:id',
+    name: 'PasswdUpdate',
+    component: PasswdUpdate,
+  },
+  //Fin routage profil utilisateur
 ];
 
 const router = new createRouter({

@@ -3,7 +3,6 @@ const Post = db.posts;
 const Like = db.likes;
 const fs = require('fs');
 const dotenv = require('dotenv');
-const { posts } = require("../models");
 dotenv.config();
 
 //Lister tous les posts (ok).
@@ -97,67 +96,47 @@ exports.createPost = async (req, res, next) => {
         res.status(400).json({ error, message: "Le post n'a pas été créé !!!" })
     });
 };
-//Mettre à jour le post (image ok), maj données du post (à faire).
+//Mettre à jour le post (image ok).
 exports.updatePost = async (req, res, next) => {
-    const id = req.params.id;
     if (req.file) {
+        console.log("--------->METHODE PUT POST : req.file");
+        console.log(req.file);
         Post.findOne({
-            where: { id: id }
-        }).then((post) => {
-            const filename = post.attachment.split("/images/")[1];
-            fs.unlink(`images/${filename}`, (error) => {
-                if (error) console.log(error);
+            where: { id: req.params.id },
+        }).then(postObject => {
+            const filename = postObject.attachment.split("/images/")[1];
+            fs.unlink(`images/${filename}`, () => {
+                console.log(req.file);
+                const postObject = req.file ?
+                    {
+                        ...req.body,
+                        attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                    } : {
+                        ...req.body
+                    }
+                console.log(postObject);
+                Post.update({ ...postObject, id: req.params.id }, {
+                    where: { id: req.params.id }
+                }).then(() => res.status(200).json({
+                    message: "Le post (avec image) a été modifié !"
+                })).catch(() => res.status(400).json({
+                    message: "Le post (avec image) n'a pas été modifié !"
+                }));
             });
-            Post.update({
-                attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-                id: req.params.id
-            }, {
-                where: { id: id },
-                ...req.body.post,
-                attributes: ['id', 'username', 'content', 'attachment'],
-            }).then((post) => res.status(200).json({
-                post, message: "Le post a été modifié !"
-            })).catch(() => res.status(400).json({
-                message: "Le post n'a pas été modifié !"
-            }));
-        }).catch((error) => res.status(404).json({ error }))
+        }).catch(() => res.status(404).json({
+            Message: 'Aucun post n\'est trouvé avec cet identifiant'
+        }));
     } else {
-        Post.update({
-            // ...JSON.parse(req.body.post),
-            id: req.params.id,
-            title: this.title,
-        }, {
-            where: { id: id },
-            ...req.body,
-            attributes: ['id', 'username', 'content', 'attachment'],
-        }).then((post) => res.status(200).json({
-            post, message: "Le post a été modifié !"
+        const postObject = { ...req.body };
+        Post.update({ ...postObject, id: req.params.id }, {
+            where: { id: req.params.id }
+        }).then(() => res.status(200).json({
+            message: "Le post a été modifié !"
         })).catch(() => res.status(400).json({
             message: "Le post n'a pas été modifié !"
         }));
     }
 };
-
-//Mettre à jour le post (ok).
-// exports.updatePost = async (req, res, next) => {
-//     const id = req.params.id;
-//     const Post = req.file ? {
-//         ...req.body,
-//         attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-//     } : { ...req.body }
-//     Post.update({
-//         ...post, id: req.params.id
-//     }, {
-//         where: { id: id },
-//         attributes: ['id', 'username', 'content', 'attachment'],
-//     }).then((post) => res.status(200).json({
-//         post, message: "Le post a été modifié !"
-//     })).catch(() => res.status(400).json({
-//         message: "Le post n'a pas été modifié !"
-//     }));
-
-// };
-
 //Supprimer un post (ok).
 exports.deletePost = (req, res, next) => {
     const id = req.params.id;
@@ -179,7 +158,6 @@ exports.deletePost = (req, res, next) => {
         }));
     }).catch(() => res.status(500).json({ message: "Erreur serveur" }))
 };
-
 exports.likePost = async (req, res, next) => {
     const postId = req.params.id;
     const userId = req.user;
@@ -215,7 +193,6 @@ exports.likePost = async (req, res, next) => {
     }).catch(error => res.status(500).json({ error }));
 
 };
-
 exports.unLikePost = async (req, res, next) => {
     const postId = req.params.id;
     const userId = req.user;

@@ -78,8 +78,8 @@
         <!-- LIST DES POSTS-->
         <div class="col-md-8 col-xl-6 middle-wrapper">
           <div class="row">
+            <!-- v-show="posts.length > 0" -->
             <div
-              v-show="posts.length > 0"
               v-for="post in posts"
               :key="post.id"
               class="col-md-12 grid-margin"
@@ -92,13 +92,19 @@
                   >
                     <div class="d-flex align-items-center">
                       <div class="ml-2 justify-content">
-                        <div class="avatar">
-                          <input type="text" />
+                        <div class="avatar" v-if="post.user.attachment">
                           <img
                             class="imgUser"
-                            alt=""
-                            :src="post.user.attachment"
+                            alt="Image du profil"
+                            v-bind:src="post.user.attachment"
                             loading="lazy"
+                          />
+                        </div>
+                        <div v-else>
+                          <img
+                            class="avatarProfil"
+                            src="../assets/Icons/user-alt-light.svg"
+                            alt="avatar"
                           />
                         </div>
                         <div>
@@ -255,12 +261,15 @@
                 <div class="card-body">
                   <p class="mb-3 tx-14">{{ post.title }}</p>
                   <p class="mb-3 tx-14">{{ post.content }}</p>
-                  <img class="imgPost" :src="post.attachment" alt="" />
+                  <img
+                    class="imgPost"
+                    :src="post.attachment"
+                    alt="Image du post"
+                  />
                   <div class="datePost">
                     <p>Posté le : {{ post.createdAt }}</p>
                   </div>
                   <comentsCreate :postId="post.id" />
-                  <!-- :comentId="comentId" -->
                 </div>
                 <!-- Gestion du post -->
                 <div class="card-footer">
@@ -353,7 +362,7 @@
                       </div>
                       <!-- Modifier un post -->
                       <div class="btnFooter">
-                        <router-link to="PostsUpdate">
+                        <router-link v-bind:to="'/PostsUpdate/' + post.id">
                           <button
                             type="button"
                             class="btn btn-primary"
@@ -370,9 +379,18 @@
                       </div>
                       <!-- <p class="d-none d-md-block ml-2">Supprimer</p> -->
                       <div class="btnFooter">
-                        <router-link to="PostDetails">
-                          <button type="button" class="btn btn-primary">
-                            Détails du post
+                        <router-link v-bind:to="'/PostDetails/' + post.id">
+                          <button
+                            type="button"
+                            class="btn btn-primary"
+                            @click="postDetails()"
+                            :postId="post.id"
+                            :class="{ 'btn--disabled': !validatedFields }"
+                          >
+                            <span v-if="status == 'loading'"
+                              >Ouverture du formulaire en cours....</span
+                            >
+                            <span v-else>Details du post</span>
                           </button>
                         </router-link>
                       </div>
@@ -391,10 +409,14 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
+//Barre de navigation
 import navPosts from "@/components/NavPosts.vue";
-import postCardRecent from "@/components/PostCardRecent.vue";
-import postsUpdate from "@/components/PostsUpdate.vue";
+//Les views
 import postDetails from "@/views/PostDetails.vue";
+// import postsCards from "@/views/Postscards.vue";
+//Les components
+import postsUpdate from "@/components/PostsUpdate.vue";
+import postCardRecent from "@/components/PostCardRecent.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
 import modalComent from "@/components/ModalComent.vue";
 
@@ -402,9 +424,10 @@ export default {
   name: "Posts",
   components: {
     navPosts,
+    postsUpdate,
+    // postsCards,
     postCardRecent,
     postDetails,
-    postsUpdate,
     comentsCreate,
     modalComent,
   },
@@ -419,7 +442,7 @@ export default {
 
       //Lister tous les posts
       apiPosts: axios.create({
-        baseURL: "http://localhost:3000/api/posts",
+        baseURL: "http://localhost:3000/api/posts/",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -475,6 +498,16 @@ export default {
         })
         .catch(function () {});
     },
+    //Afficher un post (Methode "get"(show id){})
+    getPostOne() {
+      console.log("tst");
+      this.apiPosts
+        .get("")
+        .then((response) => {
+          this.posts = response.data;
+        })
+        .catch(function () {});
+    },
     //Créer un nouveau post (Methode "create"(data){}
     postCreate: function () {
       const dataPost = new FormData();
@@ -493,8 +526,6 @@ export default {
     },
     //Supprimer un post (Methode "delete"(id){})
     postDeleted: function (id) {
-      console.log("----->supp par son id");
-      console.log(id);
       this.apiPosts
         .delete("http://localhost:3000/api/posts/" + id)
         .then(() => {
@@ -576,6 +607,11 @@ fin Voir les posts recents
 .justify-content {
   justify-content: space-around;
   margin: auto;
+}
+.avatarProfil {
+  width: 17vw;
+  height: 10vw;
+  border-radius: 5rem;
 }
 .imgUser {
   width: 10vw;

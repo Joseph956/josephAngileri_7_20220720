@@ -1,7 +1,7 @@
 const db = require("../models");
 const User = db.user;
 const fs = require('fs');
-// const user = require("../models/user");
+const user = require("../models/user");
 
 //Lister tous les utilisateurs (ok).
 exports.findAllPublished = (req, res, next) => {
@@ -87,39 +87,46 @@ exports.publierProfil = async (req, res, next) => {
 exports.updateProfil = async (req, res, next) => {
     const id = req.params.id;
     if (req.file) {
+        console.log("--------->METHODE PUT PROFIL : req.file");
+        console.log(req.file);
         User.findOne({
             where: { id: id }
-        }).then(user => {
-            const filename = user.attachment.split("/images/")[1];
-            fs.unlink(`images/${filename}`, (error) => {
-                if (error) console.log(error);
+        }).then(userObject => {
+            const filename = userObject.attachment.split("/images/")[1];
+            console.log("----->CONTENU : filename profil");
+            fs.unlink(`images/${filename}`, () => {
+                console.log(req.file);
+                const userObject = req.file ?
+                    {
+                        ...req.body,
+                        attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                    } : {
+                        ...req.body
+                    }
+                console.log(userObject);
+                User.update({ ...userObject, id: req.params.id }, {
+                    where: { id: id }
+                }).then(() => res.status(200).json({
+                    message: "Le profil a été modifié !"
+                })).catch(() => res.status(400).json({
+                    message: "Le profil (avec image) n'a pas été modifié !"
+                }));
             });
-            User.update({
-                attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-                id: req.params.id
-            }, {
-                where: { id: id },
-                ...req.body,
-                attributes: ['id', 'username', 'content', 'attachment'],
-            }).then((user) => res.status(200).json({
-                user, message: "Le profil a été modifié !"
-            })).catch(() => res.status(400).json({
-                message: "Le profil (avec image) n'a pas été modifié !"
-            }));
-        }).catch(err => res.status(404).json({ err }));
+
+        }).catch(() => res.status(404).json({ Message: 'Aucun profil n\'est trouvé avec cet identifiant' }));
+
     } else {
+        const userObject = { ...req.body };
         User.update({
-            id: req.params.id,
+            ...userObject, id: req.params.id
         }, {
-            where: { id: id },
-            ...req.body,
-            attributes: ['id', 'username', 'content', 'attachment'],
-        }).then((user) => res.status(200).json({
-            user, message: "Le profil (pas d'image) utilisateur a été modifié !"
+            where: { id: id }
+        }).then(() => res.status(200).json({
+            message: "Le profil utilisateur a été modifié !"
         })).catch(() => res.status(400).json({
             message: "Le profil utilisateur n'a pas été modifié !",
         }));
-    };
+    }
 };
 
 
