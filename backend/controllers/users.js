@@ -86,16 +86,34 @@ exports.publierProfil = async (req, res, next) => {
 // Modifier un profil utilisateur. (ok) (a voir pour les images !!?).
 exports.updateProfil = async (req, res, next) => {
     const id = req.params.id;
+    console.log("/" + id + "/");
     if (req.file) {
         console.log("--------->METHODE PUT PROFIL : req.file");
         console.log(req.file);
         User.findOne({
             where: { id: id }
         }).then(userObject => {
-            const filename = userObject.attachment.split("/images/")[1];
-            console.log("----->CONTENU : filename profil");
-            fs.unlink(`images/${filename}`, () => {
-                console.log(req.file);
+            if (userObject.attachment != null) {
+                const filename = userObject.attachment.split("/images/")[1];
+                fs.unlink(`images/${filename}`, () => {
+                    console.log(req.file);
+                    const userObject = req.file ?
+                        {
+                            ...req.body,
+                            attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                        } : {
+                            ...req.body
+                        }
+                    console.log(userObject);
+                    User.update({ ...userObject, id: req.params.id }, {
+                        where: { id: id }
+                    }).then(() => res.status(200).json({
+                        message: "Le profil a été modifié !"
+                    })).catch(() => res.status(400).json({
+                        message: "Le profil (avec image) n'a pas été modifié !"
+                    }));
+                });
+            } else {
                 const userObject = req.file ?
                     {
                         ...req.body,
@@ -111,9 +129,11 @@ exports.updateProfil = async (req, res, next) => {
                 })).catch(() => res.status(400).json({
                     message: "Le profil (avec image) n'a pas été modifié !"
                 }));
-            });
+            }
+            console.log("----->CONTENU : filename profil");
 
-        }).catch(() => res.status(404).json({ Message: 'Aucun profil n\'est trouvé avec cet identifiant' }));
+
+        }).catch((e) => res.status(404).json({ Message: 'Aucun profil n\'est trouvé avec cet identifiant' + e }));
 
     } else {
         const userObject = { ...req.body };

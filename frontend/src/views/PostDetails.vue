@@ -14,7 +14,7 @@
                   <div class="avatar" v-if="post.user.attachment">
                     <img
                       class="imgUser"
-                      alt="Image du profil"
+                      alt="Image du profil utilisateur"
                       v-bind:src="post.user.attachment"
                       loading="lazy"
                     />
@@ -158,7 +158,7 @@
           <div class="card-body">
             <p class="mb-3 tx-14">{{ post.title }}</p>
             <p class="mb-3 tx-14">{{ post.content }}</p>
-            <!-- <img class="imgPost" :src="Posts.attachment" alt="" /> -->
+            <img class="imgPost" :src="post.attachment" alt="" />
             <div class="datePost">
               <p>Posté le : {{ post.createdAt }}</p>
             </div>
@@ -186,75 +186,35 @@ export default {
         title: null,
         content: null,
         attachment: null,
+        user: null,
+        admin: null,
       },
 
       //Lister tous les posts
       apiPosts: axios.create({
-        baseURL: "http://localhost:3000/api/posts/",
+        baseURL: "http://localhost:3000/api/posts/" + this.$route.params.id,
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
           Authorization: "BEARER " + this.$store.state.user.token,
         },
       }),
-      posts: [], //Permet l'affichage des posts sur le front.
     };
-  },
-  mounted: function () {
-    if (this.$store.state.user.userId === -1) {
-      this.$router.push("/posts");
-      return;
-    }
   },
   beforeMount() {
     //Je récupère la liste des posts
     this.getPostOne();
   },
-  computed: {
-    validatedFields: function () {
-      if (this.mode == "publication") {
-        if (this.title != "" && this.content != "" && this.attachment != "") {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        if (this.title != "" && this.content != "") {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    },
-    ...mapState(["status"]),
-  },
+  computed: {},
   methods: {
-    //methode définition image
-    onFileSelected() {
-      this.file = this.$refs.file.files[0];
-      this.postDetails.attachment = URL.createObjectURL(this.file);
-    },
     //Afficher un post (Methode "get"(show id){})
     getPostOne() {
       console.log("tst");
       this.apiPosts
         .get("")
         .then((response) => {
-          this.posts = response.data;
-        })
-        .catch(function () {});
-    },
-    postDetails: function () {
-      const dataPostDetails = new FormData();
-      dataPostDetails.append("title", this.title);
-      dataPostDetails.append("content", this.content);
-      dataPostDetails.append("image", this.file);
-      this.apiPosts
-        .post("http://localhost:3000/api/posts", dataPostDetails)
-        .then(() => {
-          window.location.reload();
-          this.$router.push("/posts");
-          this.getPostList();
+          this.post = response.data;
+          console.log(this.post);
         })
         .catch(function () {});
     },
