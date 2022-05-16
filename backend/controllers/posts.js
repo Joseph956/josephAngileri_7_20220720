@@ -104,25 +104,37 @@ exports.updatePost = async (req, res, next) => {
         Post.findOne({
             where: { id: req.params.id },
         }).then(postObject => {
-            const filename = postObject.attachment.split("/images/")[1];
-            fs.unlink(`images/${filename}`, () => {
-                console.log(req.file);
-                const postObject = req.file ?
-                    {
-                        ...req.body,
-                        attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-                    } : {
-                        ...req.body
-                    }
-                console.log(postObject);
+            if (postObject.attachment != null) {
+
+                const filename = postObject.attachment.split("/images/")[1];
+                fs.unlink(`images/${filename}`, () => {
+                    console.log(req.file);
+                    const postObject = req.file ?
+                        {
+                            ...req.body,
+                            attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                        } : {
+                            ...req.body
+                        }
+                    console.log(postObject);
+                    Post.update({ ...postObject, id: req.params.id }, {
+                        where: { id: req.params.id }
+                    }).then(() => res.status(200).json({
+                        message: "Le post (avec image) a été modifié !"
+                    })).catch(() => res.status(400).json({
+                        message: "Le post (avec image) n'a pas été modifié !"
+                    }));
+                });
+            } else {
+                const postObject = { ...req.body };
                 Post.update({ ...postObject, id: req.params.id }, {
                     where: { id: req.params.id }
                 }).then(() => res.status(200).json({
-                    message: "Le post (avec image) a été modifié !"
+                    message: "Le post a été modifié !"
                 })).catch(() => res.status(400).json({
-                    message: "Le post (avec image) n'a pas été modifié !"
+                    message: "Le post n'a pas été modifié !"
                 }));
-            });
+            }
         }).catch(() => res.status(404).json({
             Message: 'Aucun post n\'est trouvé avec cet identifiant'
         }));

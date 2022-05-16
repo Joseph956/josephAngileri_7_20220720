@@ -42,13 +42,26 @@
       <!-- Affichage de l'image du profil utilisateur avant publication-->
       <div class="formGroup" v-if="user.attachment">
         <img
+          style="height: 10rem; width: 10rem"
+          x="0"
+          y="0"
+          height="100%"
+          width="100%"
           v-bind:src="user.attachment"
           alt="Photo de profil utilisateur"
           class="w-40 rounded"
         />
       </div>
       <div v-else>
-        <img src="../assets/Icons/user-alt-light.svg" alt="avatar" />
+        <img
+          style="height: 10rem; width: 10rem"
+          x="0"
+          y="0"
+          height="100%"
+          width="100%"
+          src="../assets/Icons/user-alt-light.svg"
+          alt="avatar"
+        />
       </div>
       <!-- Choix de l'image du post -->
       <div class="formGroup">
@@ -72,7 +85,7 @@
           :class="{ 'btn--disabled': !validatedFields }"
         >
           <span v-if="status == 'loading'">Publication en cours....</span>
-          <span v-else>Modifier le profil</span>
+          <span v-else>Publier les modifications</span>
         </button>
       </div>
     </form>

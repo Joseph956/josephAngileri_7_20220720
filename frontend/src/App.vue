@@ -39,7 +39,7 @@ html {
   scroll-behavior: smooth;
 }
 body {
-  background: url("./assets/icon.png") no-repeat 50% 50%;
+  background: url("./assets/icon.png") no-repeat center fixed;
   background-position: center;
   background-size: cover;
   margin: auto;
@@ -66,7 +66,7 @@ footer {
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 .imgAccueil {
-  height: 3vw;
+  height: 2vw;
   object-fit: contain;
   display: flex;
   flex-wrap: inherit;

@@ -4,7 +4,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.UUID,
             primaryKey: true,
             defaultValue: Sequelize.UUIDV4,
-            allowNull: false,
         },
         coment: {
             type: Sequelize.TEXT("long"),

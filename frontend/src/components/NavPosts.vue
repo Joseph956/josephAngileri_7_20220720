@@ -9,10 +9,86 @@
             alt=""
           />
         </router-link>
+
         <div class="collapse navbar-collapse">
           <ul v-show="!mobile" class="navbar-nav ml-auto">
-            <li class="link btn-primary btn-nav">
-              <router-link to="/Profile/">Profil</router-link>
+            <li class="dropdownProfil">
+              <button
+                @click="toggleActions"
+                class="
+                  btnProfile
+                  justify-content-center justify-content-lg-between
+                  align-items-center
+                "
+                aria-label="Menu du profil"
+              >
+                <div class="containerProfil">
+                  <div class="menuProfile" v-if="user.attachment">
+                    <div class="containerImgnav">
+                      <img
+                        style="height: 28px; width: 28px"
+                        x="0"
+                        y="0"
+                        height="100%"
+                        width="100%"
+                        class="imgNavProfil"
+                        v-bind:src="user.attachment"
+                        alt="Photo de profil utilisateur"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="nameProfil">
+                      <h6>{{ user.username }}</h6>
+                    </div>
+                  </div>
+                  <div class="menuProfile" v-else>
+                    <div class="containerImgnav">
+                      <img
+                        style="height: 28px; width: 28px"
+                        x="0"
+                        y="0"
+                        height="100%"
+                        width="100%"
+                        class="imgNavProfil"
+                        src="../assets/Icons/user-alt-light.svg"
+                        alt="avatar"
+                      />
+                    </div>
+                    <div class="nameProfil">
+                      <h6>{{ user.username }}</h6>
+                    </div>
+                  </div>
+                </div>
+              </button>
+
+              <div
+                id="dropdownMenuProfil"
+                v-bind:class="`collapsed mt-2 position-fixed ${
+                  actionsVisible && 'visible'
+                }`"
+              >
+                <div class="btnOne" @click="toggleActions">
+                  <p class="textCard">
+                    <button
+                      class="btnCollapsed btn-block text-left"
+                      @click="showOrReloadPage('Profile')"
+                      :userId="user.id"
+                      aria-label="Voir mon profil utilisateur"
+                    >
+                      Voir mon profil
+                    </button>
+                  </p>
+                  <p class="textCard">
+                    <button
+                      class="btnCollapsed btn-block text-left"
+                      @click="showOrReloadPage('Posts')"
+                      aria-label="Voir la page publication"
+                    >
+                      Voir les publications
+                    </button>
+                  </p>
+                </div>
+              </div>
             </li>
             <!-- <li class="link btn-primary btn-nav">
               <router-link to="/posts">Publier un post</router-link>
@@ -48,13 +124,42 @@ export default {
       mobile: null,
       mobileNav: null,
       windownWidth: null,
+      user: {
+        usermame: this.username,
+      },
+      //Lister tous les users
+      apiUser: axios.create({
+        baseURL:
+          "http://localhost:3000/api/users/" + this.$store.state.user.userId,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "BEARER " + this.$store.state.user.token,
+        },
+      }),
+      actionsVisible: false,
     };
+  },
+  mounted: function () {
+    this.apiUser
+      .get("")
+      .then((response) => {
+        this.user = response.data;
+      })
+      .catch(function () {});
   },
   created() {
     window.addEventListener("resize", this.checkScreen);
     this.checkScreen();
   },
   methods: {
+    toggleActions() {
+      this.actionsVisible = !this.actionsVisible;
+    },
+    showOrReloadPage(name) {
+      if (name === this.$route.name) return window.location.reload();
+      this.$router.push({ name });
+    },
     checkScreen() {
       this.windounWidth = window.innerWidth;
       if (this.windownWidth == 750) {
@@ -83,6 +188,9 @@ header {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 99;
+}
+h5 {
+  margin-bottom: 0;
 }
 .link {
   font-weight: 500;
@@ -134,4 +242,82 @@ header {
 .mobile-nav-leave-to {
   transform: translateX(-250px);
 }
+
+/*******************************
+******Menu déroulant profil*****
+*******************************/
+.dropdownProfil.active > .btnCollapsed,
+.btnProfile:hover {
+  color: black;
+  /* opacity: 1; */
+}
+.dropdownProfil {
+  position: relative;
+}
+.dropdownMenuProfil {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 0.25rem);
+  background-color: white;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+}
+.dropdownProfil > .btnCollapsed + .dropdownMenuProfil {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.btnProfile {
+  font-weight: 500;
+  border: none;
+  color: #000;
+  top: 20px;
+  right: 45px;
+  height: 45px;
+  padding: 5px 5px 5px 16px;
+  box-shadow: 0px 1px 1px 1px rgba(204, 204, 204, 0.2);
+  background-color: rgba(108, 117, 125, 0.1);
+  border-radius: 40px;
+  z-index: 2;
+}
+/* .btnProfile:hover {
+  background-color: rgba(108, 117, 125, 0.2) !important;
+} */
+/* .btnProfile:focus {
+  outline: none;
+} */
+/* .btnProfile:visited {
+  background-color: rgba(108, 117, 125, 0.2) !important;
+} */
+/* .dropdown {
+} */
+/* #btnCollapseProfil {
+  top: 62px;
+  right: 44px;
+  z-index: 1;
+}
+#btnCollapsed {
+  font-weight: 500;
+  color: #000;
+  background-color: white;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+}
+#btnCollapsed:hover {
+  background-color: rgba(108, 117, 125, 0.1);
+  outline: none;
+}
+#btnCollapsed:focus {
+  background-color: rgba(108, 117, 125, 0.1);
+  outline: none;
+}
+#btnCollapsed:active {
+  background-color: rgba(108, 117, 125, 0.1);
+  outline: none;
+} */
 </style>

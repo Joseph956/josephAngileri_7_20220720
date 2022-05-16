@@ -5,6 +5,9 @@
         <!-- Template créer un commentaire -->
         <form>
           <!-- Contenu du commentaire -->
+          <div>
+            <p></p>
+          </div>
           <div class="form-group">
             <label for="coment"></label>
             <textarea
@@ -38,12 +41,42 @@
               :coment="coment"
             >
               <div class="comentPost">
-                <p>{{ coment.coment }}</p>
-                <p>{{ coment.user.username }}</p>
-                <img class="imgComent" :src="coment.attachment" alt="" />
-                <span class="dateComent"
-                  >Posté le : {{ coment.createdAt }}
-                </span>
+                <div>
+                  <p>{{ coment.coment }}</p>
+                </div>
+                <div class="infosUser">
+                  <div class="avatarComent" v-if="coment.user.attachment">
+                    <img
+                      style="height: 35px; width: 35px"
+                      x="0"
+                      y="0"
+                      height="100%"
+                      width="100%"
+                      class="imgComent"
+                      :src="coment.user.attachment"
+                      alt=""
+                    />
+                  </div>
+                  <div class="avatarComent" v-else>
+                    <img
+                      style="height: 35px; width: 35px"
+                      x="0"
+                      y="0"
+                      height="100%"
+                      width="100%"
+                      class="avatarProfil"
+                      src="../assets/Icons/user-alt-light.svg"
+                      alt="avatar"
+                    />
+                  </div>
+
+                  <div class="userComent">
+                    <p class="textUserComent">{{ coment.user.username }}</p>
+                    <div class="dateComent">
+                      Posté le : {{ coment.createdAt }}
+                    </div>
+                  </div>
+                </div>
               </div>
               <!-- Supprimer un commentaire -->
               <div class="btnFooter">
@@ -78,6 +111,11 @@ export default {
   },
   data: function () {
     return {
+      // coment: {
+      //   coment: null,
+      //   postId: null,
+      //   userId: null,
+      // },
       //Lister tous les coments
       apiComents: axios.create({
         baseURL: "http://localhost:3000/api/",
@@ -98,13 +136,13 @@ export default {
   computed: {
     validatedFields: function () {
       if (this.mode == "publication") {
-        if (this.title != "" && this.content != "" && this.attachment != "") {
+        if (this.coment != "") {
           return true;
         } else {
           return false;
         }
       } else {
-        if (this.title != "" && this.content != "") {
+        if (this.coment != "") {
           return true;
         } else {
           return false;
@@ -155,4 +193,31 @@ export default {
 </script>
 
 <style>
+.infosUser {
+  display: flex;
+}
+.imgComent {
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+.userComent {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  align-items: flex-start;
+  margin: 0rem 0 0 1rem;
+}
+.textUserComent {
+  font-size: small;
+  margin: 0;
+}
+.dateComent {
+  font-size: small;
+}
+.imgComent {
+  width: 6vw;
+  height: 7vw;
+  border-radius: 5rem;
+}
 </style>

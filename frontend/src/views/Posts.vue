@@ -1,23 +1,19 @@
 <template>
   <div class="postForm">
     <navPosts />
-    <div class="form-control_input">
+    <div class="form-control-input">
       <div class="post-card-wrap">
-        <div class="container">
+        <div class="containerRecent">
           <h1>Publication récentes</h1>
           <div class="post-cards">
             <h1>joseph</h1>
-            <PostCardRecent
-              :postId="postId"
-              v-for="(post, index) in postCardRecent"
-              :key="index"
-            />
+            <PostCards v-for="post in posts" :key="post.id" :postId="post.id" />
           </div>
         </div>
       </div>
       <div>
-        <div>
-          <!-- TEMPLATE CREATION D'UN POST-->
+        <div class="publierForm">
+          <!-- Formulaire de création d'un post-->
           <h1>Publier un post</h1>
           <form enctype="multipart/form-data">
             <!-- Titre du post -->
@@ -51,7 +47,7 @@
             <div class="formGroup">
               <label for="file"></label><br />
               <input
-                class="fileFormCtrl"
+                class="formFilePublich"
                 id="file"
                 ref="file"
                 type="file"
@@ -64,7 +60,7 @@
             <div class="formGroup">
               <button
                 type="button"
-                class="btn btn-primary"
+                class="btn btn-primary btnPublication"
                 @click="postCreate()"
                 :class="{ 'btn--disabled': !validatedFields }"
               >
@@ -75,11 +71,11 @@
           </form>
         </div>
 
-        <!-- LIST DES POSTS-->
+        <!-- Afficher la liste des posts-->
         <div class="col-md-8 col-xl-6 middle-wrapper">
           <div class="row">
-            <!-- v-show="posts.length > 0" -->
             <div
+              v-show="posts.length > 0"
               v-for="post in posts"
               :key="post.id"
               class="col-md-12 grid-margin"
@@ -94,14 +90,24 @@
                       <div class="ml-2 justify-content">
                         <div class="avatar" v-if="post.user.attachment">
                           <img
+                            style="height: 55px; width: 55px"
+                            x="0"
+                            y="0"
+                            height="100%"
+                            width="100%"
                             class="imgUser"
                             alt="Image du profil"
                             v-bind:src="post.user.attachment"
                             loading="lazy"
                           />
                         </div>
-                        <div v-else>
+                        <div class="avatar" v-else>
                           <img
+                            style="height: 55px; width: 55px"
+                            x="0"
+                            y="0"
+                            height="100%"
+                            width="100%"
                             class="avatarProfil"
                             src="../assets/Icons/user-alt-light.svg"
                             alt="avatar"
@@ -109,9 +115,12 @@
                         </div>
                         <div>
                           <div class="userPost">
-                            <p>{{ post.user.username }}</p>
+                            <p class="textUser">{{ post.user.username }}</p>
                           </div>
-                          <br />
+                          <!-- <br /> -->
+                          <div class="datePost">
+                            <p>Posté le : {{ post.createdAt }}</p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -266,10 +275,6 @@
                     :src="post.attachment"
                     alt="Image du post"
                   />
-                  <div class="datePost">
-                    <p>Posté le : {{ post.createdAt }}</p>
-                  </div>
-                  <comentsCreate :postId="post.id" />
                 </div>
                 <!-- Gestion du post -->
                 <div class="card-footer">
@@ -378,6 +383,7 @@
                         </router-link>
                       </div>
                       <!-- <p class="d-none d-md-block ml-2">Supprimer</p> -->
+                      <!-- Details d'un post -->
                       <div class="btnFooter">
                         <router-link v-bind:to="'/PostDetails/' + post.id">
                           <button
@@ -396,6 +402,7 @@
                       </div>
                     </a>
                   </div>
+                  <comentsCreate :postId="post.id" />
                 </div>
               </div>
             </div>
@@ -413,7 +420,7 @@ import { mapState } from "vuex";
 import navPosts from "@/components/NavPosts.vue";
 //Les views
 import postDetails from "@/views/PostDetails.vue";
-// import postsCards from "@/views/Postscards.vue";
+import postsCards from "@/views/PostsCards.vue";
 //Les components
 import postsUpdate from "@/components/PostsUpdate.vue";
 import postCardRecent from "@/components/PostCardRecent.vue";
@@ -425,7 +432,7 @@ export default {
   components: {
     navPosts,
     postsUpdate,
-    // postsCards,
+    postsCards,
     postCardRecent,
     postDetails,
     comentsCreate,
@@ -438,6 +445,8 @@ export default {
         title: null,
         content: null,
         attachment: null,
+        user: null,
+        admin: null,
       },
 
       //Lister tous les posts
@@ -451,12 +460,6 @@ export default {
       }),
       posts: [], //Permet l'affichage des posts sur le front.
     };
-  },
-  mounted: function () {
-    if (this.$store.state.user.userId === -1) {
-      this.$router.push("/posts");
-      return;
-    }
   },
   beforeMount() {
     //Je récupère la liste des posts
@@ -591,15 +594,68 @@ fin Voir les posts recents
 .btn-warning {
   margin: 0 5px;
 }
-.card-header {
-  padding: 0;
+.containerRecent {
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
+  border-radius: 1rem;
 }
-.ml-2 {
+
+/***********************************
+Formulaire de publication des posts
+***********************************/
+.publierForm {
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
+  margin-bottom: 2.2rem;
+  border-radius: 1rem;
+}
+.formGroup {
   display: flex;
+  flex-direction: column-reverse;
+  width: auto;
 }
+.form-control {
+  display: flex;
+  width: auto;
+  margin: 0 1rem 0 1rem;
+}
+.formFilePublich {
+  display: flex;
+  width: 100%;
+}
+.btnPublication {
+  border: none;
+  color: #141313;
+  background: white;
+  border-radius: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  font-weight: 700;
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
+}
+
+/**********************************
+Affichage de la liste des posts
+**********************************/
 .col-md-8 {
   width: auto;
   margin: 5px;
+}
+.row {
+  padding-left: 0;
+  padding-right: 0;
+}
+img {
+  margin: auto;
+}
+/********************************
+***********Card header***********
+*********************************/
+.card-header {
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
+  /* padding: 0px 0px 5px 5px; */
+  border-radius: calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0;
 }
 .justify-content-between {
   justify-content: space-around;
@@ -608,27 +664,59 @@ fin Voir les posts recents
   justify-content: space-around;
   margin: auto;
 }
+.ml-2 {
+  display: flex;
+}
+.avatar {
+  display: contents;
+  width: 5rem;
+}
+.imgUser {
+  width: 6vw;
+  height: 7vw;
+  border-radius: 5rem;
+}
 .avatarProfil {
   width: 17vw;
   height: 10vw;
   border-radius: 5rem;
 }
-.imgUser {
-  width: 10vw;
-  height: 10vw;
-  border-radius: 5rem;
+.userPost {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  margin: 1rem 0 0 1rem;
+}
+.textUser {
+  margin: 0;
+}
+.datePost {
+  margin: 0 0 0 1rem;
+}
+.dropdown {
+  position: relative;
+}
+.dropdown-menu {
+  position: absolute;
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
+  opacity: 0;
+}
+/*******************************
+***********Card body************
+********************************/
+.card-body {
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
 }
 .imgPost {
   width: 40%;
 }
-img {
-  margin: auto;
-}
-.userPost {
-  margin: 1rem 0 0 1rem;
-}
-.datePost {
-  margin: 0 0 0 1rem;
+/*******************************
+***********Card footer**********
+********************************/
+.card-footer {
+  margin: 1rem 0 1rem 0;
+  border-radius: 1rem;
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
 }
 .comentPost {
   margin: 1rem;

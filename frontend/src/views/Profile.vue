@@ -6,11 +6,27 @@
       <h2 class="cardSubtitle">Informations personnelles</h2>
       <div class="form-group" v-if="user.attachment">
         <h3>{{ user.username }}</h3>
-        <img v-bind:src="user.attachment" alt="Photo de profil utilisateur" />
+        <img
+          style="height: 75px; width: 75px"
+          x="0"
+          y="0"
+          height="100%"
+          width="100%"
+          v-bind:src="user.attachment"
+          alt="Photo de profil utilisateur"
+        />
       </div>
       <div v-else>
-        <h3>{{ user.username }}</h3>
-        <img src="../assets/Icons/user-alt-light.svg" alt="avatar" />
+        <h4>{{ user.username }}</h4>
+        <img
+          style="height: 75px; width: 75px"
+          x="0"
+          y="0"
+          height="100%"
+          width="100%"
+          src="../assets/Icons/user-alt-light.svg"
+          alt="avatar"
+        />
       </div>
       <h1>{{ user.email }}</h1>
       <div class="formRow">
@@ -46,7 +62,9 @@
             <span v-else>Modifier le mot de passe</span>
           </button>
         </router-link>
-        <button @click="logout()" class="btn">Déconnexion</button>
+        <button type="button" class="btn btn-primary" @click="logout()">
+          Déconnexion
+        </button>
       </div>
     </div>
   </div>

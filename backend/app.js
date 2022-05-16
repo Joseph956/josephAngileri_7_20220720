@@ -130,7 +130,8 @@ function initial() {
             Post.findOrCreate({
                 where: {
                     title: "1er post title",
-                    content: "1er post"
+                    content: "1er post",
+                    attachment: "",
                 },
                 defaults: {
                     post: "1er post",

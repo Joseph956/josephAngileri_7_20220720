@@ -22,7 +22,7 @@
 
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
+// import { mapState } from "vuex";
 import Arrow from "@/assets/Icons/arrow-right-light.svg";
 import Edit from "@/assets/Icons/edit-regular.svg";
 import Delete from "@/assets/Icons/trash-regular.svg";
@@ -52,27 +52,29 @@ export default {
       posts: [], //Permet l'affichage des posts sur le front.
     };
   },
-  computed: {
-    ...mapState(["status"]),
-  },
-  mounted: function () {
-    if (this.$store.state.user.userId === -1) {
-      this.$router.push("/posts");
-      return;
-    }
-  },
+  // computed: {
+  //   ...mapState(["status"]),
+  // },
+  // mounted: function () {
+  //   if (this.$store.state.user.userId === -1) {
+  //     this.$router.push("/posts");
+  //     return;
+  //   }
+  // },
   beforeMount() {
     //Je récupère la liste des posts
     this.getPostList();
   },
-  //Lister tous les posts (Methode "get"(data){})
-  getPostList() {
-    this.apiPosts
-      .get("")
-      .then((response) => {
-        this.posts = response.data;
-      })
-      .catch(function () {});
+  methods: {
+    //Lister tous les posts (Methode "get"(data){})
+    getPostList() {
+      this.apiPosts
+        .get("")
+        .then((response) => {
+          this.posts = response.data;
+        })
+        .catch(function () {});
+    },
   },
 };
 </script>

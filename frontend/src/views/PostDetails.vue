@@ -1,7 +1,7 @@
 <template>
   <!-- Template affichage détails d'un post -->
   <div class="col-md-8 col-xl-6 middle-wrapper">
-    <navPosts />
+    <navProfil />
     <h1>Details du post</h1>
     <div class="row">
       <div class="col-md-12 grid-margin">
@@ -13,24 +13,38 @@
                 <div class="ml-2 justify-content">
                   <div class="avatar" v-if="post.user.attachment">
                     <img
+                      style="height: 55px; width: 55px"
+                      x="0"
+                      y="0"
+                      height="100%"
+                      width="100%"
                       class="imgUser"
-                      alt="Image du profil utilisateur"
+                      alt="Image du profil"
                       v-bind:src="post.user.attachment"
                       loading="lazy"
                     />
                   </div>
-                  <div v-else>
+                  <div class="avatar" v-else>
                     <img
+                      style="height: 55px; width: 55px"
+                      x="0"
+                      y="0"
+                      height="100%"
+                      width="100%"
                       class="avatarProfil"
                       src="../assets/Icons/user-alt-light.svg"
                       alt="avatar"
                     />
                   </div>
+
                   <div>
                     <div class="userPost">
-                      <p>{{ post.user.username }}</p>
+                      <p class="textUser">{{ post.user.username }}</p>
                     </div>
-                    <br />
+                    <!-- <br /> -->
+                    <div class="datePost">
+                      <p>Posté le : {{ post.createdAt }}</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -159,10 +173,9 @@
             <p class="mb-3 tx-14">{{ post.title }}</p>
             <p class="mb-3 tx-14">{{ post.content }}</p>
             <img class="imgPost" :src="post.attachment" alt="" />
-            <div class="datePost">
-              <p>Posté le : {{ post.createdAt }}</p>
-            </div>
+
             <!-- <comentsCreate :postId="post.id" /> -->
+            <ModalComent />
           </div>
         </div>
       </div>
@@ -172,13 +185,17 @@
 
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
+// import { mapState } from "vuex";
 //Barre de navigation
-import navPosts from "@/components/NavPosts.vue";
+import navProfil from "@/components/NavProfil.vue";
+// import comentsCreate from "@/components/ComentsCreate.vue";
+import modalComent from "@/components/ModalComent.vue";
 export default {
   name: "PostDetails",
   components: {
-    navPosts,
+    navProfil,
+    // comentsCreate,
+    modalComent,
   },
   data: function () {
     return {

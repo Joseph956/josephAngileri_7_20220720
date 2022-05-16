@@ -11,6 +11,7 @@ import PostsUpdate from '@/components/PostsUpdate.vue';
 import PostCardRecent from '@/components/PostCardRecent.vue';
 import ProfilUpdate from '@/components/ProfilUpdate.vue';
 import PasswdUpdate from '@/components/PasswdUpdate.vue';
+import ModalComent from '@/components/ModalComent.vue';
 
 const routes = [
   {
@@ -37,6 +38,11 @@ const routes = [
     path: '/postdetails/:id',
     name: 'PostDetails',
     component: PostDetails,
+  },
+  {
+    path: '/modalcoment',
+    name: 'ModalComent',
+    component: ModalComent,
   },
   {
     path: '/comentscreate',

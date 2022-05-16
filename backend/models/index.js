@@ -29,7 +29,13 @@ db.role = require("../models/role")(sequelize, Sequelize);
 //belongsTo (relation plusieurs à un).
 
 
-db.user.hasMany(db.posts, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); // Un utilisateur peut être l'auteur de plusieurs posts.
+db.user.hasMany(db.posts, { // Un utilisateur peut être l'auteur de plusieurs posts.
+  foreignKey: {
+    name: 'userId',
+    allowNull: false
+  },
+  onDelete: 'CASCADE'
+});
 
 db.posts.belongsTo(db.user, { //Plusieurs posts peuvent appartenir à un seul utilisateur.
   foreignKey: {
