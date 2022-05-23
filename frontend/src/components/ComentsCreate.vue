@@ -6,7 +6,7 @@
         <form>
           <!-- Contenu du commentaire -->
           <div>
-            <p></p>
+            <p>user photo</p>
           </div>
           <div class="form-group">
             <label for="coment"></label>
@@ -111,11 +111,6 @@ export default {
   },
   data: function () {
     return {
-      // coment: {
-      //   coment: null,
-      //   postId: null,
-      //   userId: null,
-      // },
       //Lister tous les coments
       apiComents: axios.create({
         baseURL: "http://localhost:3000/api/",

@@ -112,10 +112,9 @@ module.exports.haveRightOnProfile = (req, res, next) => {
         User.findByPk(userId).then((user) => {
             if (user) {
                 req.user = userId;
-                console.log("   role: " + role.role);
                 if (role.role == "admin") {
                     return next();
-                } else if (userId === req.params.id) {
+                } else if (userId === req.user) {
                     return next();
                 } else {
                     return res.status(403).send({
@@ -148,9 +147,15 @@ module.exports.email = (req, res, next) => {
 //Contrôle du mot de passe (ok).
 const passwdSchema = new passwrdValidator();
 passwdSchema
-    .is().min(8).is().max(1024).has().uppercase().has()
-    .lowercase().has().digits(2).has().symbols(1)
-    .has().not().spaces().is().not().oneOf(['Passw0rd', 'Password123']);
+    .is().min(8)
+    // .is().max(1024)
+    // .has().uppercase(1)
+    // .has().lowercase()
+    // .has().digits(2)
+    // .has().symbols(1)
+    // .has().not().spaces()
+    // .is().not().oneOf(['Passw0rd', 'Password123'])
+    ;
 
 module.exports.passwd = (req, res, next) => {
     if (passwdSchema.validate(req.body.password)) {

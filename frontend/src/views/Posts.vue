@@ -279,8 +279,48 @@
                 <!-- Gestion du post -->
                 <div class="card-footer">
                   <div class="d-flex post-actions">
-                    <a
-                      href="javascript:;"
+                    <!-- <PostLikes
+                      v-bind:to="'/PostLikes/' + post.id"
+                      :postId="post.id"
+                    /> -->
+                    <routeur-link
+                      v-bind:to="'/PostLikes/' + post.id"
+                      class="d-flex align-items-center text-muted mr-4"
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-heart icon-md"
+                      >
+                        <path
+                          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                        ></path>
+                      </svg>
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        @click="postLikeCreate()"
+                        :postId="post.id"
+                        :class="{ 'btn--disabled': !validatedFields }"
+                      >
+                        <span v-if="status == 'loading'"
+                          >Ouverture du formulaire en cours....</span
+                        >
+                        <span v-else>J'aime</span>
+                        <p class="d-none d-md-block ml-2">
+                          {{ post.likes.length }}
+                        </p>
+                      </button>
+                    </routeur-link>
+
+                    <!-- <a
+                      href="PostLikes"
                       class="d-flex align-items-center text-muted mr-4"
                     >
                       <svg
@@ -300,10 +340,12 @@
                         ></path>
                       </svg>
                       <p class="d-none d-md-block ml-2">
-                        {{ post.likes.length }}
-                        J'aime
+                        <routeur-link @click="postLikeCreate()" to="PostLikes">
+                          {{ post.likes.length }}
+                          J'aime
+                        </routeur-link>
                       </p>
-                    </a>
+                    </a> -->
 
                     <a
                       href="javascript:;"
@@ -329,6 +371,7 @@
                         {{ post.coments.length }} Commentaire <br />
                       </p>
                     </a>
+                    <!-- Supprimer un post -->
                     <a
                       href="javascript:;"
                       class="d-flex align-items-center text-muted"
@@ -351,7 +394,7 @@
                         <polyline points="16 6 12 2 8 6"></polyline>
                         <line x1="12" y1="2" x2="12" y2="15"></line>
                       </svg>
-                      <!-- Supprimer un post -->
+
                       <div class="btnFooter">
                         <button
                           type="button"
@@ -426,6 +469,7 @@ import postsUpdate from "@/components/PostsUpdate.vue";
 import postCardRecent from "@/components/PostCardRecent.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
 import modalComent from "@/components/ModalComent.vue";
+import PostLikes from "@/components/PostLikes.vue";
 
 export default {
   name: "Posts",
@@ -437,7 +481,9 @@ export default {
     postDetails,
     comentsCreate,
     modalComent,
+    PostLikes,
   },
+  props: ["postlikes"],
 
   data: function () {
     return {
@@ -461,9 +507,19 @@ export default {
       posts: [], //Permet l'affichage des posts sur le front.
     };
   },
+  async mounted() {
+    const res = await axios.get(
+      `api/posts/${this.$route.params.id}/like/${this.$store.state.user.userId}`
+    );
+    this.likes = res.like;
+  },
   beforeMount() {
     //Je récupère la liste des posts
     this.getPostList();
+  },
+  beforeMount() {
+    //Je récupère la liste des likes
+    this.getLikeList();
   },
   computed: {
     postCardRecent() {
@@ -498,6 +554,34 @@ export default {
         .get("")
         .then((response) => {
           this.posts = response.data;
+        })
+        .catch(function () {});
+    },
+    getLikeList() {
+      this.apiPosts
+        .get("")
+        .then((response) => {
+          this.posts = response.data;
+        })
+        .catch(function () {});
+    },
+    postLikeCreate: function (req, res) {
+      const postId = req.params.id;
+      console.log("------->CONTENU postLikes : postId");
+      console.log(postId);
+      this.apiPosts
+        .put(
+          `/posts/${this.$route.params.id}/like/${this.$store.state.user.userId}`,
+          {
+            postId: this.post.id,
+            userId: this.userId,
+            likes: this.like,
+          }
+        )
+        .then(() => {
+          window.location.reload();
+          this.$router.push("/posts");
+          this.getLikesList();
         })
         .catch(function () {});
     },

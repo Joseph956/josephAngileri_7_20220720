@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 window.axios = require('axios');
 
 import Accueil from '@/views/Accueil.vue';
+import Forgot from '@/components/Forgot.vue';
+import Reset from '@/components/Reset.vue';
 import Profile from '@/views/Profile.vue';
 import Posts from '@/views/Posts.vue';
 import PostDetails from '@/views/PostDetails.vue';
@@ -12,14 +14,25 @@ import PostCardRecent from '@/components/PostCardRecent.vue';
 import ProfilUpdate from '@/components/ProfilUpdate.vue';
 import PasswdUpdate from '@/components/PasswdUpdate.vue';
 import ModalComent from '@/components/ModalComent.vue';
+import PostLikes from '@/components/PostLikes.vue';
 
 const routes = [
+  //Cette route gère la création des comptes utilisateur,
+  //et les login sur les comptes créés.
   {
-    //Cette route gère la création des comptes utilisateur,
-    //et les login sur les comptes créés.
     path: '/',
     name: 'Accueil',
     component: Accueil,
+  },
+  {
+    path: '/forgot',
+    name: 'Forgot',
+    component: Forgot,
+  },
+  {
+    path: '/reset/:token',
+    name: 'Reset',
+    component: Reset,
   },
   //Routage gestion des posts
   //Route parent (posts)
@@ -38,6 +51,11 @@ const routes = [
     path: '/postdetails/:id',
     name: 'PostDetails',
     component: PostDetails,
+  },
+  {
+    path: '/postLikes',
+    name: 'PostLikes',
+    component: PostLikes,
   },
   {
     path: '/modalcoment',

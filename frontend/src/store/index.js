@@ -67,6 +67,23 @@ if (!coment) {
     };
   }
 };
+let like = localStorage.getItem('like');
+if (!like) {
+  post = {
+    likeId: -1,
+    token: '',
+  };
+} else {
+  try {
+    like = JSON.parse(like);
+    instance.defaults.headers.common['Authorization'] = user.token;
+  } catch (ex) {
+    like = {
+      likeId: -1,
+      token: '',
+    };
+  }
+};
 
 //Create a new store instance
 export default createStore({
@@ -96,6 +113,11 @@ export default createStore({
       comentId: '',
       coment: '',
     },
+    like: like,
+    apiLikes: {
+      likeId: '',
+      like: '',
+    },
     postCardRecent: {
       attachment: '',
       userId: '',
@@ -120,6 +142,9 @@ export default createStore({
     },
     comentInfos: function (state, comentInfos) {
       state.comentInfos = comentInfos;
+    },
+    likeInfos: function (state, likeInfos) {
+      state.likeInfos = likeInfos;
     },
     toggleEditPost(state, payload) {
       state.editPost = payload;
@@ -183,7 +208,7 @@ export default createStore({
             console.log(response);
           })
           .catch(error => {
-            commit('setStatus', 'error_login');
+            commit('setStatus', 'error_confirmPassword');
             reject(error);
             console.log(error);
           });
@@ -247,6 +272,24 @@ export default createStore({
           }
         }).then(response => {
           commit('setStatus', 'comentId');
+          resolve(response.data);
+          console.log(response.data);
+        }).catch(function () {
+          reject(error);
+          console.log(error);
+        });
+      });
+    },
+    getLikeInfos: ({ commit, state }) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        commit;
+        instance.get('/posts/:id/like/:userId', {
+          headers: {
+            "Authorization": "BEARER " + state.user.token
+          }
+        }).then(response => {
+          commit('setStatus', 'likeId');
           resolve(response.data);
           console.log(response.data);
         }).catch(function () {

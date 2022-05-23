@@ -4,6 +4,11 @@
       <div class="container">
         <router-link class="navbar-brand" :to="{ name: 'Accueil' }">
           <img
+            style="height: auto; width: 12rem"
+            x="0"
+            y="0"
+            height="100%"
+            width="100%"
             class="imgAccueil"
             src="../assets/Icons/icon-left-font-monochrome-white.svg"
             alt=""
@@ -15,18 +20,20 @@
             <li>
               <button
                 class="
-                  btn
+                  btnProfile
+                  position-fixed
+                  d-flex
                   justify-content-center justify-content-lg-between
                   align-items-center
                 "
                 @click="toggleActions"
                 aria-label="Menu du profil"
               >
-                <div class="containerProfil">
-                  <div class="avatar" v-if="user.attachment">
-                    <div class="containerImgnav">
+                <div class="containerImgProfil">
+                  <div class="imgUser" v-if="user.attachment">
+                    <div class="containerImgUser">
                       <img
-                        style="height: 28px; width: 28px"
+                        style="height: 40px; width: 40px"
                         x="0"
                         y="0"
                         height="100%"
@@ -37,13 +44,13 @@
                       />
                     </div>
                     <div class="nameProfil">
-                      <h6>{{ user.username }}</h6>
+                      <h5>{{ user.username }}</h5>
                     </div>
                   </div>
-                  <div class="menuProfile" v-else>
-                    <div class="containerImgnav">
+                  <div class="avatar" v-else>
+                    <div class="containerImgUser">
                       <img
-                        style="height: 28px; width: 28px"
+                        style="height: 40px; width: 40px"
                         x="0"
                         y="0"
                         height="100%"
@@ -59,6 +66,37 @@
                   </div>
                 </div>
               </button>
+              <div
+                id="menuProfilcollapsed"
+                style="display: none"
+                v-bind:class="`collapse collapsed mt-2 position-fixed visible ${
+                  actionsVisible && 'visible'
+                }`"
+              >
+                <div class="card">
+                  <div class="card-body" @click="toggleActions">
+                    <p class="textCard">
+                      <button
+                        class="btnCollapsed btn-block text-left"
+                        @click="showOrReloadPage('Profile')"
+                        :userId="user.id"
+                        aria-label="Voir mon profil utilisateur"
+                      >
+                        Voir mon profil
+                      </button>
+                    </p>
+                    <p class="textCard">
+                      <button
+                        class="btnCollapsed btn-block text-left"
+                        @click="showOrReloadPage('Posts')"
+                        aria-label="Voir la page publication"
+                      >
+                        Voir les publications
+                      </button>
+                    </p>
+                  </div>
+                </div>
+              </div>
             </li>
 
             <!-- <li class="link btn-primary btn-nav">
@@ -113,6 +151,7 @@ export default {
           Authorization: "BEARER " + this.$store.state.user.token,
         },
       }),
+      actionsVisible: false,
     };
   },
   mounted: function () {
@@ -133,6 +172,9 @@ export default {
     this.checkScreen();
   },
   methods: {
+    toggleActions() {
+      this.actionsVisible = !this.actionsVisible;
+    },
     checkScreen() {
       this.windounWidth = window.innerWidth;
       if (this.windownWidth == 750) {
@@ -155,39 +197,50 @@ export default {
 </script>
 
 <style >
-.btn {
-  /* height: 2rem; */
-}
-
-.btn-nav {
-  margin: 5px;
-  border-radius: 4rem;
-  height: 2rem;
-}
-.containerProfil {
-  display: flex;
-  width: auto;
+/********************************
+****Menu du profil utilisateur****
+*********************************/
+/**Button Image user et nom */
+.btnProfile {
   font-weight: 500;
   border: none;
   color: #000;
   top: 20px;
   right: 45px;
-  height: 2rem;
+  /* Hauteur de l'image navbar*/
+  height: 3rem;
   padding: 5px 5px 5px 10px;
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
   background-color: rgba(108, 117, 125, 0.1);
   border-radius: 40px;
   z-index: 2;
 }
-.avatar {
+.btnProfile:focus {
+  outline: none;
+}
+.btnProfile:hover {
+  background-color: rgba(108, 117, 125, 0.2) !important;
+}
+.btnProfile:visited {
+  background-color: rgba(108, 117, 125, 0.2) !important;
+}
+
+.containerImgProfil {
+  display: flex;
+  width: auto;
+  top: 62px;
+  right: 44px;
+  z-index: 1;
+}
+.imgUser {
   display: contents;
   width: 5rem;
 }
-.menuProfile {
+.avatar {
   display: flex;
   height: 2rem;
 }
-.containerImgnav {
+.containerImgUser {
   margin: 0;
 }
 .imgNavProfil {
@@ -196,7 +249,57 @@ export default {
 }
 .nameProfil {
   display: flex;
-  /* align-items: center;
-  align-content: center; */
+  align-items: center;
+  align-content: center;
 }
+/**Fin button image user et nom */
+
+/**Début menu collapsed */
+#menuProfilcollapsed {
+  top: 62px;
+  right: 44px;
+  z-index: 1;
+}
+.collapse:not(.show) {
+  display: none;
+}
+.visible {
+  visibility: visible;
+  opacity: 1;
+  transform: scaleY(1);
+}
+.btnCollapsed {
+  /* visibility: hidden;
+  display: block !important;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.1s, opacity 0.5s ease-in-out;
+  opacity: 0; */
+}
+.visible {
+  visibility: visible !important;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+}
+/**Fin menu collapsed */
+/********************************
+*Fin menu du profil utilisateur**
+*********************************/
+
+/**************************
+btn-logout 
+****************************/
+/* .btn-nav {
+  margin: 5px;
+  border-radius: 4rem;
+  height: 2rem;
+} */
 </style>

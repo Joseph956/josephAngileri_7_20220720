@@ -5,8 +5,9 @@ const { JsonWebTokenError } = require('jsonwebtoken');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
-const { BOOLEAN } = require('sequelize');
-const { validate } = require('uuid');
+// const { BOOLEAN } = require('sequelize');
+// const { validate } = require('uuid');
+// const { user } = require('../models');
 dotenv.config();
 
 exports.signUp = (req, res, next) => {
@@ -76,25 +77,27 @@ exports.logout = (req, res, next) => {
 
 exports.newPasswd = (req, res, next) => {
     try {
-        const id = req.params.id;
-        const oldPasswd = req.body.oldPassword;
-        const newPasswd = req.body.newPassword;
+        const userId = req.params.id;
+        const oldPasswd = req.body.oldPasswd;
+        const newPasswd = req.body.newPasswd;
         const newPasswdConfirm = req.body.newPasswdConfirm;
         User.findOne({
             where: {
-                id: id
+                id: userId,
             }
-        }).then(user => {
-            const passwdIsValid = bcrypt.compareSync(
+        }).then((user) => {
+            console.log(user.password);
+            console.log(bcrypt.hachSync(oldPasswd, 10));
+            const passwdIsValid = bcrypt.compare(
                 oldPasswd,
-                user.password,
+                user.password
             );
             if (!passwdIsValid) {
                 return res.status(401).json({ message: 'Requête non authentifiée !' });
             } else {
                 if (newPasswdConfirm === newPasswd) {
-                    User.update({ password: bcrypt.hashSync(newPasswd, 4) }, {
-                        where: { id: id },
+                    User.update({ password: bcrypt.hashSync(newPasswd, 10) }, {
+                        where: { id: userId },
                     }).then((num) => {
                         if (num == 1) {
                             res.send({
@@ -116,7 +119,7 @@ exports.newPasswd = (req, res, next) => {
                     });
                 }
             }
-        }).catch((err) => { res.status(428).json({ err, message: "Le mot de passe enregistré, et le mot de passe saisi ne corresponde pas !!!" }) })
+        }).catch(() => { res.status(428).json({ message: "Le mot de passe enregistré, et le mot de passe saisi ne corresponde pas !!!" }) })
 
     } catch (error) {
         res.status(401).json({ error: error | 'Requête non authentifiée !' });

@@ -9,7 +9,6 @@ module.exports = (sequelize, Sequelize) => {
         likes: {
             type: Sequelize.INTEGER,
             allowNull: false,
-            //is: /^1|-1$/i          // @TODO find a solution for this constraint
         }
     });
 

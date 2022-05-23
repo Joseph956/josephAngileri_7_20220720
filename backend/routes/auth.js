@@ -17,6 +17,7 @@ router.post('/login', blocageRequete, authCtrl.signIn);
 router.put('/logout', auth.token, authCtrl.logout);
 
 //Modifier le mot de passe
-router.put('/newPasswd/:id', auth.token, auth.haveRightOnProfile, authCtrl.newPasswd);
+router.put('/newPasswd/:userId', auth.token, auth.haveRightOnProfile, auth.passwd, authCtrl.newPasswd);
+// 
 
 module.exports = router;

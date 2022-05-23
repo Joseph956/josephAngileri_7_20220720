@@ -67,9 +67,6 @@ db.likes.belongsTo(db.user, { foreignKey: { allowNull: false }, onDelete: 'CASCA
 db.posts.hasMany(db.likes, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });   //Un post peut avoir plusieurs likes.
 db.likes.belongsTo(db.posts, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); //Plusieurs likes peuvent appartenir à un seul post.
 
-db.coments.hasMany(db.likes, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });   //Un coment peut avoir plusieurs likes.
-db.likes.belongsTo(db.coments, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' }); //Plusieurs likes peuvent appartenir à un seul coment.
-
 //Les rôles
 db.role.hasMany(db.user, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 db.user.belongsTo(db.role, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });

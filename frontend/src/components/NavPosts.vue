@@ -4,6 +4,11 @@
       <div class="container">
         <router-link class="navbar-brand" :to="{ name: 'Accueil' }">
           <img
+            style="height: auto; width: 12rem"
+            x="0"
+            y="0"
+            height="100%"
+            width="100%"
             class="imgAccueil"
             src="../assets/Icons/icon-left-font-monochrome-white.svg"
             alt=""
@@ -26,7 +31,7 @@
                   <div class="menuProfile" v-if="user.attachment">
                     <div class="containerImgnav">
                       <img
-                        style="height: 28px; width: 28px"
+                        style="height: 40px; width: 40px"
                         x="0"
                         y="0"
                         height="100%"
@@ -38,13 +43,13 @@
                       />
                     </div>
                     <div class="nameProfil">
-                      <h6>{{ user.username }}</h6>
+                      <h5>{{ user.username }}</h5>
                     </div>
                   </div>
                   <div class="menuProfile" v-else>
                     <div class="containerImgnav">
                       <img
-                        style="height: 28px; width: 28px"
+                        style="height: 40px; width: 40px"
                         x="0"
                         y="0"
                         height="100%"

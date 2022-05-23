@@ -2,7 +2,21 @@
   <div class="accueil">
     <div class="container">
       <!-- empêche le rafraîchissement de la page  (@submit.prevent="submit") -->
-      <form @submit.prevent="submit">
+      <form @submit.prevent="handleSubmit">
+        <div>
+          <div v-if="error">
+            <error :error="error" />
+          </div>
+          <div v-else>
+            <div v-if="message" class="alert alert-success" role="alert">
+              {{ message }}
+            </div>
+          </div>
+        </div>
+        <!-- <error v-if="error" :error="error" />
+        <div class="alert alert-success" role="alert">
+          {{ message }}
+        </div> -->
         <h1 class="nav-link-title" v-if="mode == 'login'">Login</h1>
         <h1 class="nav-link-title" v-else>Sign Up</h1>
         <p class="nav-link-subtitle" v-if="mode == 'login'">
@@ -23,68 +37,76 @@
         </p>
 
         <div class="form-group" v-if="mode == 'create'">
-          <label>Username</label>
+          <label class="formContact" for="username">Prenom Nom</label>
+          <span id="usernameMissing" class="infoFieldMissing"></span>
           <input
             v-model="username"
             class="form-control_input"
             type="text"
             placeholder="Username"
+            required
           />
         </div>
 
         <div class="form-group">
-          <label>Email</label>
+          <label class="formContact" for="email">E-mail</label>
           <input
             v-model="email"
             class="form-control_input"
-            type="text"
-            placeholder="Email"
+            type="email"
+            placeholder="E-mail"
+            required
           />
         </div>
 
         <div class="form-group">
           <label for="password">Mot de passe</label>
           <input
-            type="password"
             id="password"
-            placeholder="Mot de passe"
             v-model="password"
             class="form-control_input"
-            required="Veuillez créer votre mot de passe '8 caractères , une majuscule, minimum'"
+            type="password"
+            placeholder="Mot de passe"
+            required
           />
         </div>
 
         <div class="form-group" v-if="mode == 'create'">
-          <label for="confirmPasswd">Confirmer le mot de passe</label>
+          <label v-if="'confirmPasswd' == 'password'" for="confirmPasswd"
+            >Confirmer le mot de passe</label
+          >
           <input
-            type="Password"
             id="confirmPasswd"
-            placeholder="Confirmer le mot de passe"
             v-model="confirmPasswd"
             class="form-control_input"
+            type="Password"
+            placeholder="Confirmer le mot de passe"
             required="Veuillez confirmer votre mot de passe !..."
           />
           <p id="message"></p>
           <input type="button" @click="checkPasswd()" value="SUBMIT" />
         </div>
 
-        <div
-          class="form-group"
-          v-if="mode == 'login' && status == 'error_login'"
-        >
-          Adresse mail et/ou mot de passe invalide !
-        </div>
+        <!-- <div class="form-group">
+          <div
+            class="alert alert-danger"
+            v-if="mode === 'login' && status == 'error_login'"
+          >
+            Adresse mail et/ou mot de passe invalide !
+          </div>
+        </div> -->
 
-        <div
-          class="form-group"
-          v-if="mode == 'create' && status == 'error_create'"
-        >
-          Adresse email déjà utilisée !
+        <div class="form-group">
+          <div
+            class="alert alert-danger"
+            v-if="mode == 'create' && status == 'error_create'"
+          >
+            Adresse email déjà utilisée !
+          </div>
         </div>
-
         <div
-          class="form-group"
-          v-if="mode == 'Password' && status == 'error_confirmPassword'"
+          class="alert alert-danger"
+          v-if="mode == 'Password' && status == 'error_Password'"
         >
           Confirmer votre mot de passe !
         </div>
@@ -99,6 +121,7 @@
             <span v-if="status == 'loading'">Connexion en cours....</span>
             <span v-else>Connexion</span>
           </button>
+
           <button
             class="btn btn-primary"
             @click="createAccount()"
@@ -108,6 +131,11 @@
             <span v-if="status == 'loading'">Création en cours....</span>
             <span v-else>Créer mon compte</span>
           </button>
+          <p class="forgotPasswd">
+            <router-link v-if="mode == 'login'" to="Forgot" text-right
+              >Mot de passe oublié ?
+            </router-link>
+          </p>
         </div>
       </form>
     </div>
@@ -116,10 +144,13 @@
 
 <script>
 import { mapState } from "vuex";
+import Error from "./Error.vue";
 
 export default {
   name: "Accueil",
-  components: {},
+  components: {
+    Error,
+  },
   data: function () {
     return {
       mode: "login",
@@ -127,6 +158,11 @@ export default {
       email: "",
       password: "",
       confirmPassword: "",
+      error: "",
+      message: "",
+      error_login: "",
+      error_create: "",
+      error_confirmPassword: "",
     };
   },
   mounted: function () {
@@ -159,6 +195,21 @@ export default {
     ...mapState(["status"]),
   },
   methods: {
+    async handleSubmit() {
+      try {
+        // const response =
+        await axios.post("login", {
+          email: this.email,
+          password: this.password,
+        });
+        // localStorage.setItem("token", response.data.token);
+        // this.$store.dispatch("user", response.data.user);
+        // this.$router.push("/");
+      } catch (e) {
+        this.error = "Adresse mail et/ou mot de passe invalide !";
+        this.message = "Adresse mail et mot de passe valide !";
+      }
+    },
     switchToCreateAccount: function () {
       this.mode = "create";
     },
@@ -186,7 +237,7 @@ export default {
       if (password.length != 0) {
         let password = document.getElementById("password").value;
         let confirmPasswd = document.getElementById("password").value;
-        if (password == confirmPasswd) {
+        if (password === confirmPasswd) {
           this.$store
             .dispatch("createAccount", {
               username: this.username,
@@ -224,6 +275,7 @@ export default {
         }
       }
     },
+
     // createAccount: function () {
     //   const self = this;
     //   this.$store
