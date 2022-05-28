@@ -99,12 +99,6 @@ export default {
       newPasswdConfirm: "",
     };
   },
-  // mounted: function () {
-  //   if (this.$store.state.user.userId != -1) {
-  //     this.$router.push("/passwdupdate/" + this.$route.params.id);
-  //     return;
-  //   }
-  // },
   computed: {
     validatedFields: function () {
       if (this.mode == "createPasswd") {
@@ -142,18 +136,8 @@ export default {
         oldPasswd: this.oldPasswd,
         newPasswd: this.newPasswd,
         newPasswdConfirm: this.newPasswdConfirm,
-        token: this.$route.params.token,
       };
-      console.log("-------->CONTENU createPasswd : oldPasswd");
-      console.log(oldPasswd);
-      console.log("-------->CONTENU createPasswd : newPasswd");
-      console.log(newPasswd);
-      console.log("-------->CONTENU createPasswd : newPasswdConfirm");
-      console.log(newPasswdConfirm);
       if (
-        this.oldPasswd != "" &&
-        this.newPasswd != "" &&
-        this.newPasswdConfirm != "" &&
         this.oldPasswd == this.oldPasswd &&
         this.newPasswd == this.newPasswdConfirm
       ) {
@@ -161,9 +145,6 @@ export default {
           .put(
             "http://localhost:3000/api/auth/newpasswd/" + this.$route.params.id,
             newPwd
-            // {
-            //   newPasswd: this.newPasswdConfirm,
-            // }
           )
           .then(() => {
             window.location.reload();
@@ -173,30 +154,6 @@ export default {
           .catch(function () {});
       }
     },
-    // createPassword: function () {
-    //   console.log("-------->CONTENU createPasswd : oldPasswd");
-    //   console.log(oldPasswd);
-    //   console.log("-------->CONTENU createPasswd : newPasswd");
-    //   console.log(newPasswd);
-    //   console.log("-------->CONTENU createPasswd : newPasswdConfirm");
-    //   console.log(newPasswdConfirm);
-    //   const self = this;
-    //   this.$store
-    //     .dispatch("createPasswd", {
-    //       oldPasswd: this.oldPasswd,
-    //       newPasswd: this.newPasswd,
-    //       newPasswdConfirm: this.newPasswdConfirm,
-    //     })
-    //     .then(
-    //       function () {
-    //         self.confirmPassword();
-    //         console.log(response.data);
-    //       },
-    //       function (error) {
-    //         console.log(error);
-    //       }
-    //     );
-    // },
   },
 };
 </script>

@@ -146,24 +146,25 @@ module.exports.email = (req, res, next) => {
 
 //Contrôle du mot de passe (ok).
 const passwdSchema = new passwrdValidator();
+
 passwdSchema
     .is().min(8)
-    // .is().max(1024)
-    // .has().uppercase(1)
+    .is().max(100)
+    // .has().uppercase()
     // .has().lowercase()
-    // .has().digits(2)
-    // .has().symbols(1)
+    // .has().digits()
+    // .has().symbols()
     // .has().not().spaces()
-    // .is().not().oneOf(['Passw0rd', 'Password123'])
+    .is().not().oneOf(['Passw0rd', 'Password123'])
     ;
 
 module.exports.passwd = (req, res, next) => {
-    if (passwdSchema.validate(req.body.password)) {
+    if (passwdSchema.validate(req.body.password, req.body.oldPassword)) {
         next();
     } else {
         return res.status(400).json({
             error: "Le mot de passe n'est pas assez fort :" +
-                passwdSchema.validate(req.body.password, { list: true })
+                passwdSchema.validate(req.body.password, req.body.oldPassword, { list: true })
         })
     }
 };

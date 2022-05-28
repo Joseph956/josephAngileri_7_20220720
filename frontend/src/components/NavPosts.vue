@@ -27,11 +27,11 @@
                 "
                 aria-label="Menu du profil"
               >
-                <div class="containerProfil">
+                <div class="containerImgProfil">
                   <div class="menuProfile" v-if="user.attachment">
-                    <div class="containerImgnav">
+                    <div class="containerImgUser">
                       <img
-                        style="height: 40px; width: 40px"
+                        style="height: 40px; width: 45px"
                         x="0"
                         y="0"
                         height="100%"
@@ -46,15 +46,15 @@
                       <h5>{{ user.username }}</h5>
                     </div>
                   </div>
-                  <div class="menuProfile" v-else>
-                    <div class="containerImgnav">
+                  <div class="avatar" v-else>
+                    <div class="containerImgUser">
                       <img
-                        style="height: 40px; width: 40px"
+                        style="height: 40px; width: 45px"
                         x="0"
                         y="0"
                         height="100%"
                         width="100%"
-                        class="imgNavProfil"
+                        class="imgNavAvatar"
                         src="../assets/Icons/user-alt-light.svg"
                         alt="avatar"
                       />
@@ -249,6 +249,13 @@ h5 {
 }
 
 /*******************************
+********Photo du profile********
+*******************************/
+/* .containerImgnav {
+  width: 40px;
+  height: 40px;
+} */
+/*******************************
 ******Menu déroulant profil*****
 *******************************/
 .dropdownProfil.active > .btnCollapsed,
@@ -258,6 +265,10 @@ h5 {
 }
 .dropdownProfil {
   position: relative;
+  /* width: 8rem; */
+}
+.menuProfile {
+  display: flex;
 }
 .dropdownMenuProfil {
   position: absolute;
@@ -280,24 +291,57 @@ h5 {
   font-weight: 500;
   border: none;
   color: #000;
-  top: 20px;
+  /* top: 20px; */
   right: 45px;
-  height: 45px;
-  padding: 5px 5px 5px 16px;
-  box-shadow: 0px 1px 1px 1px rgba(204, 204, 204, 0.2);
+  height: 3rem;
+  padding: 5px 5px 5px 10px;
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
   background-color: rgba(108, 117, 125, 0.1);
   border-radius: 40px;
   z-index: 2;
 }
-/* .btnProfile:hover {
+.btnProfile:hover {
   background-color: rgba(108, 117, 125, 0.2) !important;
-} */
-/* .btnProfile:focus {
+}
+.btnProfile:focus {
   outline: none;
-} */
-/* .btnProfile:visited {
+}
+.btnProfile:visited {
   background-color: rgba(108, 117, 125, 0.2) !important;
-} */
+}
+.containerImgProfil {
+  display: flex;
+  width: auto;
+  top: 62px;
+  right: 44px;
+  z-index: 1;
+}
+.imgUser {
+  display: contents;
+  object-fit: cover;
+}
+.avatar {
+  display: flex;
+  height: 2rem;
+  object-fit: cover;
+}
+.containerImgUser {
+  margin: 0 0 2px auto;
+}
+.imgNavProfil {
+  border-radius: 5rem;
+  object-fit: cover;
+  margin: -2px 10px -4px -4px;
+}
+.imgNavAvatar {
+  margin: -5px 10px 0 0;
+}
+.nameProfil {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  margin: 0 0.3rem 0 0.5rem;
+}
 /* .dropdown {
 } */
 /* #btnCollapseProfil {

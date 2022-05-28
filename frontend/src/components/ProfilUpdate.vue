@@ -47,10 +47,11 @@
           y="0"
           height="100%"
           width="100%"
+          id="imgNavProfil"
           v-bind:src="user.attachment"
           alt="Photo de profil utilisateur"
-          class="w-40 rounded"
         />
+        <!-- class="w-40 rounded" -->
       </div>
       <div v-else>
         <img
@@ -59,11 +60,12 @@
           y="0"
           height="100%"
           width="100%"
+          id="imgNavAvatar"
           src="../assets/Icons/user-alt-light.svg"
           alt="avatar"
         />
       </div>
-      <!-- Choix de l'image du post -->
+      <!-- Choix de l'image du profile -->
       <div class="formGroup">
         <label for="file"></label><br />
         <input
@@ -76,7 +78,7 @@
           @change="onFileSelected()"
         />
       </div>
-      <!-- Publier un post -->
+      <!-- Publier un profile -->
       <div class="formGroup">
         <button
           type="button"
@@ -196,4 +198,8 @@ export default {
 </script>
 
 <style>
+#imgNavProfil {
+  border-radius: 200px;
+  object-fit: cover;
+}
 </style>

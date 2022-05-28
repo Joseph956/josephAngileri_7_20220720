@@ -169,109 +169,140 @@ exports.deletePost = (req, res, next) => {
         }));
     }).catch(() => res.status(500).json({ message: "Erreur serveur" }))
 };
-// exports.likePost = async (req, res, next) => {
-
-//     console.log("--------->CONTENU ctrl like : req.body");
-//     console.log(req.body);
-//     console.log("--------->CONTENU ctrl like : req.params");
-//     console.log(req.params);
-//     console.log("--------->id en _id");
-//     console.log({ _id: req.params.id });
-
-
-
-
-//like = 0 (like = 0, pas de vote)
-
-//like = -1 (dislike = +1)
-
-//like = 0 (dislike = 0, pas de vote)
-
-// const postId = req.params.id;
-// const userId = req.params.userId;
-// const likeObject = req.body;
-// Like.findOne({
-//     where: {
-//         _id: req.params.id,
-//         userId: userId,
-//         postId: postId,
-//     },
-//     include: [
-//         {
-//             model: db.user,
-//             attributes: ['username']
-//         },
-//         {
-//             model: db.likes,
-//             likes: req.params.likeId,
-//             attributes: ['likes'],
-//             order: [["created", "DESC"]]
-//         }
-//     ],
-//     order: [["createdAt", "DESC"]],
-//     attributes: {
-//         exclude: ['updateAt']
-//     }
-// }).then((likeFound) => {
-//     if (likeFound) {
-//         Like.update({
-//             userId: userId,
-//             postId: postId,
-//             likes: 1
-//         }, {
-//             where: { id: likeFound.id },
-//         }).then(() => res.status(200).json({
-//             message: 'Like modifié avec succés!'
-//         })).catch(error => res.status(400).json({ error, message: "Le like n'a pas été modifié !!!" }));
-//     } else {
-//         Like.create({
-//             userId: userId,
-//             postId: postId,
-//             likes: 1
-//         }).then(() => res.status(201).json({
-//             message: 'Like créé avec succés!'
-//         })).catch(error => res.status(400).json({ error, message: "Le like n'a pas été créé !!!" }));
-//     }
-// }).catch(error => res.status(500).json({ error }));
-//like = 1 (like = +1)
-//si userliked est false et si like === 1
-// if (likeObject === 1) {
-//     Like.update({
-//         likes: 1
-//     }, {
-//         where: { _id: req.params.id },
-//     }).then(() => res.status(201).json({
-//         message: "un like est ajouté !"
-//     })).catch((error) => res.status(400).json({
-//         error
-//     }));
-// } else if (likeObject === -1) {
-//     Like.update({
-//         likes: 1
-//     }, {
-//         where: { id: likeObject.id },
-//     }).then(() => res.status(201).json({
-//         message: "un dislike est ajouté !"
-//     })).catch((error) => res.status(400).json({
-//         error
-//     }));
-// } else {
-//     Like.findOne({
-//         _id: req.params.id
-//     }).then((likeObject) => {
-
-//     })
-// }
-// };
 exports.likePost = async (req, res, next) => {
+
+    console.log("--------->CONTENU ctrl like : req.body");
+    console.log(req.body);
+
+    console.log("--------->CONTENU ctrl like : req.params");
+    console.log(req.params);
+    console.log("--------->CONTENU ctrl like : req.params.userId");
+    console.log(req.params.userId);
+    console.log("--------->CONTENU ctrl like : req.params.id");
+    console.log(req.params.id);
+
+    console.log("--------->id en _id");
+    console.log({ _id: req.params.id });
+
+    console.log("--------->id en _id");
+    console.log({ id: req.params.id });
+
+
+
+
+    // like = 0 (like = 0, pas de vote)
+
+    // like = -1 (dislike = +1)
+
+    // like = 0 (dislike = 0, pas de vote)
+
+    // const postId = req.params.id;
+    // const userId = req.params.userId;
+    // const likeObject = req.body;
+    // Like.findOne({
+    //     where: {
+    //         // _id: req.params.id,
+    //         userId: userId,
+    //         postId: postId,
+    //     },
+    // include: [
+    //     {
+    //         model: db.user,
+    //         attributes: ['username']
+    //     },
+    //     {
+    //         model: db.likes,
+    //         likes: req.params.likeId,
+    //         attributes: ['likes'],
+    //         order: [["created", "DESC"]]
+    //     }
+    // ],
+    // order: [["createdAt", "DESC"]],
+    // attributes: {
+    //     exclude: ['updateAt']
+    // }
+    // }).then((likeFound) => {
+    //     if (likeFound) {
+    //         return true
+    //     Like.update({
+    //         userId: userId,
+    //         postId: postId,
+    //         likes: 1
+    //     }, {
+    //         where: { id: likeFound.id },
+    //     }).then(() => res.status(200).json({
+    //         message: 'Like modifié avec succés!'
+    //     })).catch(error => res.status(400).json({ error, message: "Le like n'a pas été modifié !!!" }));
+    // } else {
+    //     return false
+    //     Like.create({
+    //         userId: userId,
+    //         postId: postId,
+    //         likes: 1
+    //     }).then(() => res.status(201).json({
+    //         message: 'Like créé avec succés!'
+    //     })).catch(error => res.status(400).json({ error, message: "Le like n'a pas été créé !!!" }));
+    // }
+    // }).catch(error => res.status(500).json({ error }));
+    // like = 1(like = +1)
+    //si userliked est false et si like === 1
+    // if (likeObject === 1) {
+    //     Like.update({
+    //         likes: 1
+    //     }, {
+    //         where: { _id: req.params.id },
+    //     }).then(() => res.status(201).json({
+    //         message: "un like est ajouté !"
+    //     })).catch((error) => res.status(400).json({
+    //         error
+    //     }));
+    // } else if (likeObject === -1) {
+    //     Like.update({
+    //         likes: 1
+    //     }, {
+    //         where: { id: likeObject.id },
+    //     }).then(() => res.status(201).json({
+    //         message: "un dislike est ajouté !"
+    //     })).catch((error) => res.status(400).json({
+    //         error
+    //     }));
+    // } else {
+    //     Like.findOne({
+    //         _id: req.params.id
+    //     }).then((likeObject) => {
+
+    //     })
+    // }
+    // };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // exports.likePost = async (req, res, next) => {
+    // const postId = req.params.postId;
+    // const userId = req.params.userId;
+    const id = req.params.id;
     const postId = req.params.id;
-    const userId = req.params.userId;
+    const userId = req.user;
     console.log(postId);
     console.log(userId);
+    console.log(id);
     Like.findOne({
         where: {
             userId: userId,
-            postId: postId
+            id: postId,
+            postId: id,
+            postId: postId,
         },
         include: [
             {
@@ -292,6 +323,8 @@ exports.likePost = async (req, res, next) => {
             Like.create({
                 userId: userId,
                 postId: postId,
+                id: postId,
+                postId: id,
                 likes: 1
             }).then(() => res.status(201).json({
                 message: 'Like créé avec succés!'

@@ -284,7 +284,7 @@
                       :postId="post.id"
                     /> -->
                     <routeur-link
-                      v-bind:to="'/PostLikes/' + post.id"
+                      v-bind:to="'/PostLikes/' + postId"
                       class="d-flex align-items-center text-muted mr-4"
                       ><svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -309,43 +309,13 @@
                         :postId="post.id"
                         :class="{ 'btn--disabled': !validatedFields }"
                       >
-                        <span v-if="status == 'loading'"
-                          >Ouverture du formulaire en cours....</span
-                        >
+                        <span v-if="status == 'loading'">Like ....</span>
                         <span v-else>J'aime</span>
                         <p class="d-none d-md-block ml-2">
                           {{ post.likes.length }}
                         </p>
                       </button>
                     </routeur-link>
-
-                    <!-- <a
-                      href="PostLikes"
-                      class="d-flex align-items-center text-muted mr-4"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-heart icon-md"
-                      >
-                        <path
-                          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                        ></path>
-                      </svg>
-                      <p class="d-none d-md-block ml-2">
-                        <routeur-link @click="postLikeCreate()" to="PostLikes">
-                          {{ post.likes.length }}
-                          J'aime
-                        </routeur-link>
-                      </p>
-                    </a> -->
 
                     <a
                       href="javascript:;"
@@ -507,12 +477,12 @@ export default {
       posts: [], //Permet l'affichage des posts sur le front.
     };
   },
-  async mounted() {
-    const res = await axios.get(
-      `api/posts/${this.$route.params.id}/like/${this.$store.state.user.userId}`
-    );
-    this.likes = res.like;
-  },
+  // async mounted() {
+  //   const res = await axios.get(
+  //     `api/posts/${this.$route.params.id}/like/${this.$store.state.user.userId}`
+  //   );
+  //   this.likes = res.like;
+  // },
   beforeMount() {
     //Je récupère la liste des posts
     this.getPostList();
@@ -566,14 +536,11 @@ export default {
         .catch(function () {});
     },
     postLikeCreate: function (req, res) {
-      const postId = req.params.id;
-      console.log("------->CONTENU postLikes : postId");
-      console.log(postId);
       this.apiPosts
         .put(
-          `/posts/${this.$route.params.id}/like/${this.$store.state.user.userId}`,
+          `http://localhost:3000/api/posts/${this.$route.params.id}/like/${this.$store.state.user.userId}`,
           {
-            postId: this.post.id,
+            postId: this.$route.params.id,
             userId: this.userId,
             likes: this.like,
           }
@@ -753,17 +720,13 @@ img {
 }
 .avatar {
   display: contents;
-  width: 5rem;
 }
 .imgUser {
-  width: 6vw;
-  height: 7vw;
   border-radius: 5rem;
 }
 .avatarProfil {
-  width: 17vw;
-  height: 10vw;
-  border-radius: 5rem;
+  width: auto;
+  height: auto;
 }
 .userPost {
   display: flex;

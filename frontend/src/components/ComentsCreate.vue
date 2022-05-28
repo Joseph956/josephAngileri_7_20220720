@@ -3,20 +3,49 @@
     <div class="form-control_input">
       <div>
         <!-- Template créer un commentaire -->
-        <form>
-          <!-- Contenu du commentaire -->
-          <div>
-            <p>user photo</p>
-          </div>
-          <div class="form-group">
-            <label for="coment"></label>
-            <textarea
-              v-model="coment"
-              type="text"
-              id="coment"
-              class="form-control"
-              placeholder="Votre commentaire"
-            />
+        <div class="containerComent">
+          <div class="avatarComent">
+            <div class="imgUser" v-if="user.attachment">
+              <div class="containerImgUser">
+                <img
+                  style="height: 40px; width: 40px"
+                  x="0"
+                  y="0"
+                  height="100%"
+                  width="100%"
+                  id="imgProfile"
+                  :src="user.attachment"
+                  alt=""
+                />
+              </div>
+            </div>
+            <div class="avatar" v-else>
+              <div class="containerImgUser">
+                <img
+                  style="height: 40px; width: 40px"
+                  x="0"
+                  y="0"
+                  height="100%"
+                  width="100%"
+                  id="imgAvatar"
+                  src="../assets/Icons/user-alt-light.svg"
+                  alt="avatar"
+                />
+              </div>
+            </div>
+            <form>
+              <!-- Contenu du commentaire -->
+              <div class="form-group">
+                <label for="coment"></label>
+                <textarea
+                  v-model="coment"
+                  type="text"
+                  id="coment"
+                  class="form-control"
+                  placeholder="Votre commentaire"
+                />
+              </div>
+            </form>
           </div>
           <!-- Publier un commentaire -->
           <div class="form-group">
@@ -30,7 +59,7 @@
               <span v-else>Nouveau commentaire</span>
             </button>
           </div>
-        </form>
+        </div>
         <!-- Lister les commentaires -->
         <div class="col-md-8 col-xl-6 middle-wrapper">
           <div class="row">
@@ -47,7 +76,7 @@
                 <div class="infosUser">
                   <div class="avatarComent" v-if="coment.user.attachment">
                     <img
-                      style="height: 35px; width: 35px"
+                      style="height: 40px; width: 35px"
                       x="0"
                       y="0"
                       height="100%"
@@ -111,6 +140,9 @@ export default {
   },
   data: function () {
     return {
+      user: {
+        attachment: null,
+      },
       //Lister tous les coments
       apiComents: axios.create({
         baseURL: "http://localhost:3000/api/",
@@ -188,13 +220,25 @@ export default {
 </script>
 
 <style>
+.containerComent {
+  display: flex;
+  flex-direction: column;
+}
+.avatarComent {
+  display: flex;
+}
 .infosUser {
   display: flex;
 }
-.imgComent {
+.imgUser {
   display: flex;
   align-items: center;
   align-content: center;
+}
+.containerImgUser {
+  display: flex;
+  align-items: stretch;
+  margin: 0;
 }
 .userComent {
   display: flex;
@@ -211,8 +255,16 @@ export default {
   font-size: small;
 }
 .imgComent {
-  width: 6vw;
-  height: 7vw;
+  /* width: 6vw;
+  height: 7vw; */
   border-radius: 5rem;
+  object-fit: cover;
+}
+.form-group {
+  gap: none;
+}
+#coment {
+  width: 40rem;
+  height: 2rem;
 }
 </style>

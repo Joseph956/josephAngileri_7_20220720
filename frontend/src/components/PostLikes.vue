@@ -51,9 +51,9 @@ export default {
   data: function () {
     return {
       like: {
-        likes: this.like,
-        userId: this.userId,
-        postId: this.postId,
+        likes: null,
+        userId: null,
+        postId: null,
       },
 
       //Lister tous les posts
@@ -80,8 +80,10 @@ export default {
     //Lister les likes
     getLikesList() {
       this.apiLikes
-        .get("")
-        // .get(`/${this.$route.params.id}/like/${this.$store.state.user.userId}`)
+        // .get("")
+        .get(
+          `/${this.$route.params.post.id}/like/${this.$store.state.user.userId}`
+        )
         .then((response) => {
           this.like = response.data;
         })
@@ -90,9 +92,10 @@ export default {
     postLikeCreate: function () {
       this.apiLikes
         .put(
-          `/posts/${this.$route.params.id}/like/${this.$store.state.user.userId}`,
+          `http://localhost:3000/api/posts/${this.$route.params.id}/like/${this.$store.state.user.userId}`,
           {
             postId: this.postId,
+            postId: this.post.id,
             userId: this.userId,
             likes: this.like,
           }

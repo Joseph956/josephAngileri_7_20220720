@@ -60,6 +60,7 @@ span,
 .nav-item,
 #transition,
 footer {
+  margin-bottom: 0;
   text-align: center;
   text-shadow: -3px 3px 2px #f7d1d0;
   font-weight: 500;
@@ -72,6 +73,7 @@ footer {
   flex-wrap: inherit;
   align-items: center;
   justify-content: center;
+  object-fit: cover;
 }
 body,
 html,

@@ -7,23 +7,25 @@
       <div class="form-group" v-if="user.attachment">
         <h3>{{ user.username }}</h3>
         <img
-          style="height: 75px; width: 75px"
+          style="height: 10rem; width: 10rem"
           x="0"
           y="0"
           height="100%"
           width="100%"
+          id="imgProfile"
           v-bind:src="user.attachment"
           alt="Photo de profil utilisateur"
         />
       </div>
       <div v-else>
-        <h4>{{ user.username }}</h4>
+        <h3>{{ user.username }}</h3>
         <img
-          style="height: 75px; width: 75px"
+          style="height: 10rem; width: 10rem"
           x="0"
           y="0"
           height="100%"
           width="100%"
+          id="imgAvatar"
           src="../assets/Icons/user-alt-light.svg"
           alt="avatar"
         />
@@ -128,5 +130,13 @@ export default {
   },
 };
 </script>
+
+<style>
+#imgProfile {
+  margin: auto;
+  object-fit: cover;
+  border-radius: 10rem;
+}
+</style>
 
 

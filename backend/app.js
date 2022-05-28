@@ -131,16 +131,13 @@ function initial() {
                 where: {
                     title: "1er post title",
                     content: "1er post",
-                    attachment: "",
+                    attachment: "Avatar",
                 },
                 defaults: {
                     post: "1er post",
                     userId: users[0].get('id')
                 }
-            })
-                .catch((err) => {
-                    console.log(err);
-                });
+            }).catch((err) => { console.log(err) });
         })
     });
 };

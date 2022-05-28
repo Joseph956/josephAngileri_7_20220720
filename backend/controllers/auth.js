@@ -74,10 +74,11 @@ exports.logout = (req, res, next) => {
     res.Cookies('sessionId', '', { maxAge: 1 })
     res.redirect('/');
 };
-
+//Création d'un nouveau mot de passe
 exports.newPasswd = (req, res, next) => {
     try {
-        const userId = req.params.id;
+        //Validation des paramètres de la requête
+        const userId = req.params.userId;
         const oldPasswd = req.body.oldPasswd;
         const newPasswd = req.body.newPasswd;
         const newPasswdConfirm = req.body.newPasswdConfirm;
@@ -86,12 +87,18 @@ exports.newPasswd = (req, res, next) => {
                 id: userId,
             }
         }).then((user) => {
-            console.log(user.password);
-            console.log(bcrypt.hachSync(oldPasswd, 10));
+            if (!user) {
+                return res.status(401).json({ error: "Ce profil utilisateur n'existe pas !!!" });
+            }
             const passwdIsValid = bcrypt.compare(
-                oldPasswd,
-                user.password
-            );
+                oldPasswd === user.password
+            )
+            bcrypt.compare(req.body.oldPasswd, user.password)
+                .then((valid) => {
+                    if (!valid) {
+                        return res.status(403).json({ error: 'Le mot de passe actuel est incorrect !' });
+                    }
+                });
             if (!passwdIsValid) {
                 return res.status(401).json({ message: 'Requête non authentifiée !' });
             } else {
@@ -108,9 +115,9 @@ exports.newPasswd = (req, res, next) => {
                                 message: `Impossible de mettre à jour le mot de passe avec id=${id}.L'utilisateur n'a pas été trouvé !`,
                             });
                         }
-                    }).catch((err) => {
+                    }).catch(() => {
                         res.status(500).send({
-                            message: " Erreur lors de la mise à jour du mot de passe avec id=" + id,
+                            message: `Erreur lors de la mise à jour du mot de passe avec id=${id}. Erreur serveur `
                         });
                     });
                 } else {

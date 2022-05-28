@@ -33,7 +33,7 @@
                   <div class="imgUser" v-if="user.attachment">
                     <div class="containerImgUser">
                       <img
-                        style="height: 40px; width: 40px"
+                        style="height: 40px; width: 45px"
                         x="0"
                         y="0"
                         height="100%"
@@ -50,12 +50,12 @@
                   <div class="avatar" v-else>
                     <div class="containerImgUser">
                       <img
-                        style="height: 40px; width: 40px"
+                        style="height: 45px; width: 45px"
                         x="0"
                         y="0"
                         height="100%"
                         width="100%"
-                        class="imgNavProfil"
+                        class="imgNavAvatar"
                         src="../assets/Icons/user-alt-light.svg"
                         alt="avatar"
                       />
@@ -205,7 +205,6 @@ export default {
   font-weight: 500;
   border: none;
   color: #000;
-  top: 20px;
   right: 45px;
   /* Hauteur de l'image navbar*/
   height: 3rem;
@@ -234,23 +233,29 @@ export default {
 }
 .imgUser {
   display: contents;
-  width: 5rem;
+  object-fit: cover;
 }
 .avatar {
   display: flex;
   height: 2rem;
+  object-fit: cover;
 }
 .containerImgUser {
-  margin: 0;
+  margin: 0 0 2px auto;
 }
 .imgNavProfil {
   border-radius: 5rem;
-  margin: -3px 12px 0 1px;
+  object-fit: cover;
+  margin: 1px 0 0 -4px;
+}
+.imgNavAvatar {
+  margin: -2px 10px 0 0;
 }
 .nameProfil {
   display: flex;
   align-items: center;
   align-content: center;
+  margin: 0 0.3rem 0 0.5rem;
 }
 /**Fin button image user et nom */
 

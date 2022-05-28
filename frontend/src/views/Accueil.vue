@@ -304,7 +304,6 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 16px 0px;
-  gap: 16px;
   flex-wrap: wrap;
 }
 .form-control_input {
