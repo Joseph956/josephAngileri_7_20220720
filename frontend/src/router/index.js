@@ -53,12 +53,12 @@ const routes = [
     component: PostDetails,
   },
   {
-    path: '/postLikes',
+    path: '/postLikes/:id',
     name: 'PostLikes',
     component: PostLikes,
   },
   {
-    path: '/modalcoment',
+    path: '/modalcoment/:id',
     name: 'ModalComent',
     component: ModalComent,
   },

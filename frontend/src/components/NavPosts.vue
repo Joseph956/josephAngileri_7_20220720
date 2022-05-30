@@ -17,7 +17,98 @@
 
         <div class="collapse navbar-collapse">
           <ul v-show="!mobile" class="navbar-nav ml-auto">
-            <li class="dropdownProfil">
+            <div class="header">
+              <div class="dropdownNav" data-dropdown>
+                <button
+                  class="link"
+                  data-dropdown-button
+                  @click="showOrReloadPage('Profile')"
+                  :userId="user.id"
+                >
+                  <div class="containerImgProfil">
+                    <div class="menuProfile" v-if="user.attachment">
+                      <div class="containerImgUser">
+                        <img
+                          style="height: 30px; width: 25px"
+                          x="0"
+                          y="0"
+                          height="100%"
+                          width="100%"
+                          class="imgNavProfil"
+                          v-bind:src="user.attachment"
+                          alt="Photo de profil utilisateur"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div class="nameProfil">
+                        <h6>{{ user.username }}</h6>
+                      </div>
+                    </div>
+                    <div class="avatar" v-else>
+                      <div class="containerImgUser">
+                        <img
+                          style="height: 30px; width: 30px"
+                          x="0"
+                          y="0"
+                          height="100%"
+                          width="100%"
+                          class="imgNavAvatar"
+                          src="../assets/Icons/user-alt-light.svg"
+                          alt="avatar"
+                        />
+                      </div>
+                      <div class="nameProfil">
+                        <h6>{{ user.username }}</h6>
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+              <div class="dropdown" data-dropdown>
+                <button class="link" data-dropdown-button>Menus</button>
+                <div class="dropdown-menu information-grid">
+                  <div>
+                    <div class="dropdown-heading"></div>
+                    <div class="dropdown-links">
+                      <router-link
+                        class="navbar-brand"
+                        id="link"
+                        :to="{ name: 'Posts' }"
+                      >
+                        Accueil
+                      </router-link>
+                      <!-- <a href="../Posts" class="link">Accueil<br /></a> -->
+                      <a href="#" class="link">Latest<br /></a>
+                      <a href="#" class="link">Popular<br /></a>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="dropdown-heading">Courses</div>
+                    <div class="dropdown-links"></div>
+                    <a href="#" class="link">JavaScrit</a>
+                    <a href="#" class="link">Css</a>
+                    <a href="#" class="link">React</a>
+                  </div>
+                  <div>
+                    <div class="dropdown-heading">Blog</div>
+                    <div class="dropdown-links"></div>
+                    <a href="#" class="link">All</a>
+                    <a href="#" class="link">Latest</a>
+                    <a href="#" class="link">Popular</a>
+                  </div>
+                  <div>
+                    <div class="dropdown-heading">Other</div>
+                    <div class="dropdown-links"></div>
+                    <a href="#" class="link">Twiter</a>
+                    <a href="#" class="link">Newsletter</a>
+                    <a href="#" class="link">Discord</a>
+                  </div>
+                </div>
+              </div>
+              <!-- <button class="link" data-dropdown-button>Login</button>
+              <a href="#" class="link">Pricing</a> -->
+            </div>
+            <!-- <li class="dropdownProfil">
               <button
                 @click="toggleActions"
                 class="
@@ -94,7 +185,7 @@
                   </p>
                 </div>
               </div>
-            </li>
+            </li> -->
             <!-- <li class="link btn-primary btn-nav">
               <router-link to="/posts">Publier un post</router-link>
             </li> -->
@@ -156,6 +247,27 @@ export default {
   created() {
     window.addEventListener("resize", this.checkScreen);
     this.checkScreen();
+  },
+  //test menus déroulants
+  created() {
+    document.addEventListener("click", (e) => {
+      const isDropdownButton = e.target.matches("[data-dropdown-button]");
+      if (!isDropdownButton && e.target.closest("[data-dropdown]") != null)
+        return;
+
+      let currentDropdown;
+      if (isDropdownButton) {
+        currentDropdown = e.target.closest("[data-dropdown]");
+        currentDropdown.classList.toggle("active");
+      }
+
+      document
+        .querySelectorAll("[data-dropdown].active")
+        .forEach((dropdown) => {
+          if (dropdown === currentDropdown) return;
+          dropdown.classList.remove("active");
+        });
+    });
   },
   methods: {
     toggleActions() {
@@ -249,28 +361,70 @@ h5 {
 }
 
 /*******************************
-********Photo du profile********
+*********Button profile**********
 *******************************/
-/* .containerImgnav {
-  width: 40px;
-  height: 40px;
-} */
-/*******************************
-******Menu déroulant profil*****
-*******************************/
-.dropdownProfil.active > .btnCollapsed,
-.btnProfile:hover {
-  color: black;
-  /* opacity: 1; */
-}
-.dropdownProfil {
-  position: relative;
-  /* width: 8rem; */
+.containerImgProfil {
+  display: flex;
+  align-items: center;
 }
 .menuProfile {
   display: flex;
+  align-items: center;
+  align-content: center;
 }
-.dropdownMenuProfil {
+.imgUser {
+  display: contents;
+  object-fit: cover;
+}
+.avatar {
+  display: flex;
+  height: 2rem;
+  object-fit: cover;
+}
+.imgNavAvatar {
+  margin: 2px 5px 0px 7px;
+}
+/****************************
+*******menus déroulant*******
+****************************/
+body {
+  margin: 0;
+}
+
+.header {
+  background-color: f3f3f3;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.link {
+  background: none;
+  border: none;
+  text-decoration: none;
+  color: #777;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dropdown.active > .link,
+.link:hover {
+  color: black;
+}
+
+.dropdownNav {
+  position: relative;
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
+  left: 0;
+  background-color: white;
+  padding: 5px 4px 0 6px;
+  border-radius: 20rem;
+  margin: auto;
+}
+
+.dropdown-menu {
   position: absolute;
   left: 0;
   top: calc(100% + 0.25rem);
@@ -282,91 +436,22 @@ h5 {
   pointer-events: none;
   transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
 }
-.dropdownProfil > .btnCollapsed + .dropdownMenuProfil {
+
+.dropdown.active > .link + .dropdown-menu {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
 }
-.btnProfile {
-  font-weight: 500;
-  border: none;
-  color: #000;
-  /* top: 20px; */
-  right: 45px;
-  height: 3rem;
-  padding: 5px 5px 5px 10px;
-  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
-  background-color: rgba(108, 117, 125, 0.1);
-  border-radius: 40px;
-  z-index: 2;
+
+.information-grid {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 2rem;
 }
-.btnProfile:hover {
-  background-color: rgba(108, 117, 125, 0.2) !important;
-}
-.btnProfile:focus {
-  outline: none;
-}
-.btnProfile:visited {
-  background-color: rgba(108, 117, 125, 0.2) !important;
-}
-.containerImgProfil {
+
+.dropdown-links {
   display: flex;
-  width: auto;
-  top: 62px;
-  right: 44px;
-  z-index: 1;
+  flex-direction: column;
+  gap: 0.25rem;
 }
-.imgUser {
-  display: contents;
-  object-fit: cover;
-}
-.avatar {
-  display: flex;
-  height: 2rem;
-  object-fit: cover;
-}
-.containerImgUser {
-  margin: 0 0 2px auto;
-}
-.imgNavProfil {
-  border-radius: 5rem;
-  object-fit: cover;
-  margin: -2px 10px -4px -4px;
-}
-.imgNavAvatar {
-  margin: -5px 10px 0 0;
-}
-.nameProfil {
-  display: flex;
-  align-items: center;
-  align-content: center;
-  margin: 0 0.3rem 0 0.5rem;
-}
-/* .dropdown {
-} */
-/* #btnCollapseProfil {
-  top: 62px;
-  right: 44px;
-  z-index: 1;
-}
-#btnCollapsed {
-  font-weight: 500;
-  color: #000;
-  background-color: white;
-  border: none;
-  padding: 0.375rem 0.75rem;
-  border-radius: 0.25rem;
-}
-#btnCollapsed:hover {
-  background-color: rgba(108, 117, 125, 0.1);
-  outline: none;
-}
-#btnCollapsed:focus {
-  background-color: rgba(108, 117, 125, 0.1);
-  outline: none;
-}
-#btnCollapsed:active {
-  background-color: rgba(108, 117, 125, 0.1);
-  outline: none;
-} */
 </style>

@@ -17,7 +17,98 @@
 
         <div class="collapse navbar-collapse">
           <ul v-show="!mobile" class="navbar-nav ml-auto">
-            <li>
+            <div class="header">
+              <div class="dropdownNav" data-dropdown>
+                <button
+                  class="link"
+                  data-dropdown-button
+                  @click="showOrReloadPage('Profile')"
+                  :userId="user.id"
+                >
+                  <div class="containerImgProfil">
+                    <div class="menuProfile" v-if="user.attachment">
+                      <div class="containerImgUser">
+                        <img
+                          style="height: 30px; width: 25px"
+                          x="0"
+                          y="0"
+                          height="100%"
+                          width="100%"
+                          class="imgNavProfil"
+                          v-bind:src="user.attachment"
+                          alt="Photo de profil utilisateur"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div class="nameProfil">
+                        <h6>{{ user.username }}</h6>
+                      </div>
+                    </div>
+                    <div class="avatar" v-else>
+                      <div class="containerImgUser">
+                        <img
+                          style="height: 30px; width: 30px"
+                          x="0"
+                          y="0"
+                          height="100%"
+                          width="100%"
+                          class="imgNavAvatar"
+                          src="../assets/Icons/user-alt-light.svg"
+                          alt="avatar"
+                        />
+                      </div>
+                      <div class="nameProfil">
+                        <h6>{{ user.username }}</h6>
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+              <div class="dropdown" data-dropdown>
+                <button class="link" data-dropdown-button>Menus</button>
+                <div class="dropdown-menu information-grid">
+                  <div>
+                    <div class="dropdown-heading"></div>
+
+                    <div class="dropdown-links">
+                      <router-link
+                        class="navbar-brand"
+                        id="link"
+                        :to="{ name: 'Posts' }"
+                      >
+                        Accueil
+                      </router-link>
+                      <!-- <a href="../Posts" class="link">Accueil<br /></a> -->
+                      <a href="#" class="link">Latest<br /></a>
+                      <a href="#" class="link">Popular<br /></a>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="dropdown-heading">Courses</div>
+                    <div class="dropdown-links"></div>
+                    <a href="#" class="link">JavaScrit</a>
+                    <a href="#" class="link">Css</a>
+                    <a href="#" class="link">React</a>
+                  </div>
+                  <div>
+                    <div class="dropdown-heading">Blog</div>
+                    <div class="dropdown-links"></div>
+                    <a href="#" class="link">All</a>
+                    <a href="#" class="link">Latest</a>
+                    <a href="#" class="link">Popular</a>
+                  </div>
+                  <div>
+                    <div class="dropdown-heading">Other</div>
+                    <div class="dropdown-links"></div>
+                    <a href="#" class="link">Twiter</a>
+                    <a href="#" class="link">Newsletter</a>
+                    <a href="#" class="link">Discord</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- <li>
               <button
                 class="
                   btnProfile
@@ -33,7 +124,7 @@
                   <div class="imgUser" v-if="user.attachment">
                     <div class="containerImgUser">
                       <img
-                        style="height: 40px; width: 45px"
+                        style="height: 30px; width: 30px"
                         x="0"
                         y="0"
                         height="100%"
@@ -97,7 +188,7 @@
                   </div>
                 </div>
               </div>
-            </li>
+            </li> -->
 
             <!-- <li class="link btn-primary btn-nav">
               <router-link to="/posts/">Voir les Publication</router-link>
@@ -106,9 +197,7 @@
               <router-link to="PostDetails">Détails du post</router-link>
             </li> -->
             <li class="formRow">
-              <button @click="logout()" class="btn btn-primary btn-nav">
-                Log-Out
-              </button>
+              <button @click="logout()" class="btn">Log-Out</button>
             </li>
           </ul>
         </div>
@@ -171,9 +260,34 @@ export default {
     window.addEventListener("resize", this.checkScreen);
     this.checkScreen();
   },
+  //test menus déroulants
+  created() {
+    document.addEventListener("click", (e) => {
+      const isDropdownButton = e.target.matches("[data-dropdown-button]");
+      if (!isDropdownButton && e.target.closest("[data-dropdown]") != null)
+        return;
+
+      let currentDropdown;
+      if (isDropdownButton) {
+        currentDropdown = e.target.closest("[data-dropdown]");
+        currentDropdown.classList.toggle("active");
+      }
+
+      document
+        .querySelectorAll("[data-dropdown].active")
+        .forEach((dropdown) => {
+          if (dropdown === currentDropdown) return;
+          dropdown.classList.remove("active");
+        });
+    });
+  },
   methods: {
     toggleActions() {
       this.actionsVisible = !this.actionsVisible;
+    },
+    showOrReloadPage(name) {
+      if (name === this.$route.name) return window.location.reload();
+      this.$router.push({ name });
     },
     checkScreen() {
       this.windounWidth = window.innerWidth;
@@ -197,48 +311,24 @@ export default {
 </script>
 
 <style >
-/********************************
-****Menu du profil utilisateur****
-*********************************/
+/*******************************
+******Button profile*****
+*******************************/
+.menuProfile {
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+/**log-out */
+.formRow {
+  display: flex;
+  align-items: center;
+}
 /**Button Image user et nom */
-.btnProfile {
-  font-weight: 500;
-  border: none;
-  color: #000;
-  right: 45px;
-  /* Hauteur de l'image navbar*/
-  height: 3rem;
-  padding: 5px 5px 5px 10px;
-  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
-  background-color: rgba(108, 117, 125, 0.1);
-  border-radius: 40px;
-  z-index: 2;
-}
-.btnProfile:focus {
-  outline: none;
-}
-.btnProfile:hover {
-  background-color: rgba(108, 117, 125, 0.2) !important;
-}
-.btnProfile:visited {
-  background-color: rgba(108, 117, 125, 0.2) !important;
-}
 
 .containerImgProfil {
   display: flex;
-  width: auto;
-  top: 62px;
-  right: 44px;
-  z-index: 1;
-}
-.imgUser {
-  display: contents;
-  object-fit: cover;
-}
-.avatar {
-  display: flex;
-  height: 2rem;
-  object-fit: cover;
+  align-items: center;
 }
 .containerImgUser {
   margin: 0 0 2px auto;
@@ -246,10 +336,10 @@ export default {
 .imgNavProfil {
   border-radius: 5rem;
   object-fit: cover;
-  margin: 1px 0 0 -4px;
+  margin: 0;
 }
 .imgNavAvatar {
-  margin: -2px 10px 0 0;
+  margin: 2px 5px 0px 7px;
 }
 .nameProfil {
   display: flex;
@@ -259,52 +349,74 @@ export default {
 }
 /**Fin button image user et nom */
 
-/**Début menu collapsed */
-#menuProfilcollapsed {
-  top: 62px;
-  right: 44px;
-  z-index: 1;
+/****************************
+********menus déroulant******
+****************************/
+body {
+  margin: 0;
 }
-.collapse:not(.show) {
-  display: none;
+
+.header {
+  background-color: f3f3f3;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
-.visible {
-  visibility: visible;
+
+.link {
+  background: none;
+  border: none;
+  text-decoration: none;
+  color: #777;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dropdown.active > .link,
+.link:hover {
+  color: black;
+}
+
+.dropdownNav {
+  position: relative;
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
+  left: 0;
+  background-color: white;
+  padding: 5px 4px 0 6px;
+  border-radius: 20rem;
+  margin: auto;
+}
+
+.dropdown-menu {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 0.25rem);
+  background-color: white;
+  /* padding: 0.75rem; */
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+}
+
+.dropdown.active > .link + .dropdown-menu {
   opacity: 1;
-  transform: scaleY(1);
+  transform: translateY(0);
+  pointer-events: auto;
 }
-.btnCollapsed {
-  /* visibility: hidden;
-  display: block !important;
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: transform 0.1s, opacity 0.5s ease-in-out;
-  opacity: 0; */
+
+.information-grid {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 2rem;
 }
-.visible {
-  visibility: visible !important;
-}
-.card {
+
+.dropdown-links {
   display: flex;
   flex-direction: column;
-  min-width: 0;
-  word-wrap: break-word;
-  background-color: #fff;
-  background-clip: border-box;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.25rem;
+  gap: 0.25rem;
 }
-/**Fin menu collapsed */
-/********************************
-*Fin menu du profil utilisateur**
-*********************************/
-
-/**************************
-btn-logout 
-****************************/
-/* .btn-nav {
-  margin: 5px;
-  border-radius: 4rem;
-  height: 2rem;
-} */
 </style>

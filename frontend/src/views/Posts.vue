@@ -90,7 +90,7 @@
                       <div class="ml-2 justify-content">
                         <div class="avatar" v-if="post.user.attachment">
                           <img
-                            style="height: 55px; width: 55px"
+                            style="height: 65px; width: 55px"
                             x="0"
                             y="0"
                             height="100%"
@@ -283,137 +283,182 @@
                       v-bind:to="'/PostLikes/' + post.id"
                       :postId="post.id"
                     /> -->
-                    <routeur-link
-                      v-bind:to="'/PostLikes/' + postId"
-                      class="d-flex align-items-center text-muted mr-4"
-                      ><svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-heart icon-md"
-                      >
-                        <path
-                          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                        ></path>
-                      </svg>
-                      <button
-                        type="button"
-                        class="btn btn-primary"
-                        @click="postLikeCreate()"
-                        :postId="post.id"
-                        :class="{ 'btn--disabled': !validatedFields }"
-                      >
-                        <span v-if="status == 'loading'">Like ....</span>
-                        <span v-else>J'aime</span>
-                        <p class="d-none d-md-block ml-2">
-                          {{ post.likes.length }}
-                        </p>
-                      </button>
-                    </routeur-link>
-
-                    <a
-                      href="javascript:;"
-                      class="d-flex align-items-center text-muted mr-4"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-message-square icon-md"
-                      >
-                        <path
-                          d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-                        ></path>
-                      </svg>
-                      <p class="d-none d-md-block ml-2">
-                        {{ post.coments.length }} Commentaire <br />
-                      </p>
-                    </a>
-                    <!-- Supprimer un post -->
-                    <a
-                      href="javascript:;"
-                      class="d-flex align-items-center text-muted"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="feather feather-share icon-md"
-                      >
-                        <path
-                          d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"
-                        ></path>
-                        <polyline points="16 6 12 2 8 6"></polyline>
-                        <line x1="12" y1="2" x2="12" y2="15"></line>
-                      </svg>
-
-                      <div class="btnFooter">
-                        <button
-                          type="button"
-                          class="btn btn-primary"
-                          @click="postDeleted(post.id)"
-                          :class="{ 'btn--disabled': !validatedFields }"
-                        >
-                          <span v-if="status == 'loading'"
-                            >Suppression en cours....</span
+                    <div class="menuPost">
+                      <div class="linkPost">
+                        <routeur-link
+                          v-bind:to="'/PostLikes/' + postId"
+                          class="d-flex align-items-center text-muted mr-4"
+                          ><svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-heart icon-md"
                           >
-                          <span v-else>Supprimer</span>
-                        </button>
-                      </div>
-                      <!-- Modifier un post -->
-                      <div class="btnFooter">
-                        <router-link v-bind:to="'/PostsUpdate/' + post.id">
+                            <path
+                              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                            ></path>
+                          </svg>
                           <button
                             type="button"
-                            class="btn btn-primary"
-                            @click="postModify()"
+                            class="btn btn-like"
+                            @click="postLikeCreate()"
                             :postId="post.id"
                             :class="{ 'btn--disabled': !validatedFields }"
                           >
-                            <span v-if="status == 'loading'"
-                              >Modification en cours....</span
-                            >
-                            <span v-else>Modifier</span>
+                            <span v-if="status == 'loading'">Like ....</span>
+                            <span v-else>
+                              <p class="d-none d-md-block ml-2">
+                                {{ post.likes.length }} J'aime <br />
+                              </p>
+                            </span>
                           </button>
+                        </routeur-link>
+                      </div>
+                      <div class="linkPost">
+                        <router-link v-bind:to="'/ModalComent/' + postId">
+                          <div class="linkModal">
+                            <div>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="feather feather-message-square icon-md"
+                              >
+                                <path
+                                  d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                                ></path>
+                              </svg>
+                            </div>
+                            <div>
+                              <p class="d-none d-md-block ml-2">
+                                {{ post.coments.length }} Commentaire <br />
+                              </p>
+                            </div>
+                          </div>
                         </router-link>
                       </div>
-                      <!-- <p class="d-none d-md-block ml-2">Supprimer</p> -->
-                      <!-- Details d'un post -->
-                      <div class="btnFooter">
-                        <router-link v-bind:to="'/PostDetails/' + post.id">
-                          <button
-                            type="button"
-                            class="btn btn-primary"
-                            @click="postDetails()"
-                            :postId="post.id"
-                            :class="{ 'btn--disabled': !validatedFields }"
-                          >
-                            <span v-if="status == 'loading'"
-                              >Ouverture du formulaire en cours....</span
-                            >
-                            <span v-else>Details du post</span>
+                      <div class="linkPost">
+                        <div class="dropdown" data-dropdown>
+                          <button class="link" data-dropdown-button>
+                            Menus
                           </button>
-                        </router-link>
+                          <div class="dropdown-menu information-grid">
+                            <div class="dropdown-heading"></div>
+                            <div class="dropdown-links">
+                              <!-- Supprimer un post -->
+
+                              <a
+                                href="javascript:;"
+                                class="d-flex align-items-center text-muted"
+                              >
+                                <div class="flexMenu">
+                                  <div>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="24"
+                                      height="24"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      stroke-width="2"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      class="feather feather-share icon-md"
+                                    >
+                                      <path
+                                        d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"
+                                      ></path>
+                                      <polyline
+                                        points="16 6 12 2 8 6"
+                                      ></polyline>
+                                      <line
+                                        x1="12"
+                                        y1="2"
+                                        x2="12"
+                                        y2="15"
+                                      ></line>
+                                    </svg>
+
+                                    <!-- <div class="btnFooter"> -->
+                                    <!-- type="button" -->
+                                    <button
+                                      class="link"
+                                      data-dropdown-button
+                                      @click="postDeleted(post.id)"
+                                      :class="{
+                                        'btn--disabled': !validatedFields,
+                                      }"
+                                    >
+                                      <span v-if="status == 'loading'"
+                                        >Suppression en cours....</span
+                                      >
+                                      <span v-else>Supprimer</span>
+                                    </button>
+                                  </div>
+                                  <!-- </div> -->
+                                  <!-- Modifier un post -->
+                                  <div class="btnFooter">
+                                    <router-link
+                                      v-bind:to="'/PostsUpdate/' + post.id"
+                                    >
+                                      <button
+                                        type="button"
+                                        class="btn"
+                                        @click="postModify()"
+                                        :postId="post.id"
+                                        :class="{
+                                          'btn--disabled': !validatedFields,
+                                        }"
+                                      >
+                                        <span v-if="status == 'loading'"
+                                          >Modification en cours....</span
+                                        >
+                                        <span v-else>Modifier</span>
+                                      </button>
+                                    </router-link>
+                                  </div>
+                                  <!-- <p class="d-none d-md-block ml-2">Supprimer</p> -->
+                                  <!-- Details d'un post -->
+                                  <div class="btnFooter">
+                                    <router-link
+                                      v-bind:to="'/PostDetails/' + post.id"
+                                    >
+                                      <button
+                                        type="button"
+                                        class="btn"
+                                        @click="postDetails()"
+                                        :postId="post.id"
+                                        :class="{
+                                          'btn--disabled': !validatedFields,
+                                        }"
+                                      >
+                                        <span v-if="status == 'loading'"
+                                          >Ouverture du formulaire en
+                                          cours....</span
+                                        >
+                                        <span v-else>Details du post</span>
+                                      </button>
+                                    </router-link>
+                                  </div>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </a>
+                    </div>
                   </div>
                   <comentsCreate :postId="post.id" />
                 </div>
@@ -680,7 +725,10 @@ Formulaire de publication des posts
   border: none;
   color: #141313;
   background: white;
-  border-radius: 0.25rem;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
   padding: 0.375rem 0.75rem;
   font-weight: 700;
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
@@ -764,6 +812,49 @@ img {
   margin: 1rem 0 1rem 0;
   border-radius: 1rem;
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
+}
+.post-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-around;
+  justify-content: space-around;
+}
+.menuPost {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  margin: auto;
+}
+.linkPost {
+  margin: 0 7rem 0 2rem;
+}
+.d-none {
+  margin-bottom: 0;
+}
+.linkModal {
+  display: flex;
+}
+.link {
+  background: none;
+  border: none;
+  text-decoration: none;
+  color: #777;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+.information-grid {
+  display: grid;
+  /* grid-template-columns: repeat(2, -webkit-max-content); */
+  grid-template-columns: repeat(2, max-content);
+  gap: 1rem;
+}
+.dropdown-links {
+  display: flex;
+  flex-direction: column;
+}
+.flexMenu {
 }
 .comentPost {
   margin: 1rem;
