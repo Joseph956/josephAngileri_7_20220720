@@ -42,7 +42,7 @@ export default {
         attachment: null,
       },
       apiPosts: axios.create({
-        baseURL: "http://localhost:3000/api/posts",
+        baseURL: "http://localhost:3000/api/posts/", 
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",

@@ -7,6 +7,8 @@ module.exports = (sequelize, Sequelize) => {
         },
         coment: {
             type: Sequelize.TEXT("long"),
+            allowNull: false,
+            required: true,
         },
     });
 

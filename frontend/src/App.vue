@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="App">
     <NavSignUp />
     <div class="auth-wrapper">
       <div class="auth-inner">
@@ -20,6 +20,8 @@ export default {
 </script>
 
 <style>
+
+
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800");
 
 * {
@@ -44,10 +46,9 @@ body {
   background-size: cover;
   margin: auto;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
   font-weight: 400;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-family: "lato", sans-serif;
+  font-size: large;
 }
 h1,
 h2,
@@ -64,7 +65,8 @@ footer {
   text-align: center;
   text-shadow: -3px 3px 2px #f7d1d0;
   font-weight: 500;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-size: large;
+  font-family: "lato", sans-serif;
 }
 .imgAccueil {
   height: 2vw;
@@ -77,7 +79,7 @@ footer {
 }
 body,
 html,
-#app,
+/* #app, */
 #root,
 .auth-wrapper {
   width: 100%;
@@ -86,9 +88,13 @@ html,
 }
 #app {
   display: flex;
+  margin: auto;
+  align-items: center;
   flex-direction: column;
   min-height: 100vh;
   text-align: center;
+  outline: none;
+  align-items: center;
 }
 .container {
   width: 100%;
@@ -113,8 +119,14 @@ html,
   justify-content: flex-end;
   font-weight: 400;
 }
+@media screen and (max-width: 720px) {
+  .navbar-expand,
+    .navbar-collapse {
+      justify-content: flex-start;
+    }
+}
 .auth-wrapper {
-  display: flex;
+  /* display: flex; */
   margin: 7rem auto;
   justify-content: center;
   text-align: left;
@@ -127,7 +139,19 @@ html,
   padding: 2.5rem 55px 45px 55px;
   border-radius: 15px;
   transition: all 0.3s;
+  outline: none;
 }
+@media screen and (max-width: 900px) {
+  .auth-inner {
+      width: 100%;
+  }
+}
+@media screen and (max-width: 460px) {
+  .auth-inner {
+      width: auto;
+  }
+}
+
 .auth-wrapper .form-control:focus {
   border-color: #167bff;
   box-shadow: none;
@@ -137,6 +161,7 @@ html,
   margin: 0;
   line-height: 1;
   padding-bottom: 20px;
+  font-size: xx-large;
 }
 .custom-control-label {
   font-weight: 400;
@@ -151,6 +176,9 @@ html,
 }
 .forgot-password a {
   color: #167bff;
+}
+.btn {
+  border: none;
 }
 
 /* .post-card-wrap {

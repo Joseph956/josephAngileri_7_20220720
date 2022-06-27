@@ -131,7 +131,7 @@ function initial() {
                 where: {
                     title: "1er post title",
                     content: "1er post",
-                    attachment: "Avatar",
+                    attachment: "",
                 },
                 defaults: {
                     post: "1er post",

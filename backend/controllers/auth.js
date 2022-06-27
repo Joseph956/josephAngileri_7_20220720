@@ -5,9 +5,9 @@ const { JsonWebTokenError } = require('jsonwebtoken');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
-// const { BOOLEAN } = require('sequelize');
-// const { validate } = require('uuid');
-// const { user } = require('../models');
+const { BOOLEAN } = require('sequelize');
+const { validate } = require('uuid');
+const { user } = require('../models');
 dotenv.config();
 
 exports.signUp = (req, res, next) => {

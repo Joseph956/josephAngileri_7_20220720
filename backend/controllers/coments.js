@@ -1,11 +1,9 @@
 const db = require("../models");
 const Coment = db.coments;
-const Like = db.likes;
 const fs = require('fs');
 const dotenv = require('dotenv');
 dotenv.config();
 
-//Lister tous les coments(ok).
 exports.findAllPublished = async (req, res) => {
 
     Coment.findAll({
@@ -13,14 +11,21 @@ exports.findAllPublished = async (req, res) => {
         include: [
             {
                 model: db.user,
-                attributes: ['username']
+                attributes: ['username', 'attachment']
             },
             {
-                model: db.likes,
-                likes: req.params.likeId,
-                attributes: ['likes'],
-                order: [["created", "DESC"]]
-            }
+                model: db.coments,
+                coment: req.params.comentId,
+                attributes: ['id', 'coment', 'userId'],
+                order: [["createdAt", "DESC"]],
+                include: [
+                    {
+                        model: db.user,
+                        attributes: ['username', 'attachment']
+                    }
+                ],
+            },
+
         ],
         order: [["createdAt", "DESC"]],
     }).then(result => {
@@ -33,7 +38,6 @@ exports.findAllPublished = async (req, res) => {
         });
     });
 };
-
 exports.findOnePublished = async (req, res, next) => {
     const comentId = req.params.id;
     Coment.findOne({
@@ -50,7 +54,7 @@ exports.findOnePublished = async (req, res, next) => {
         .then(user => res.status(200).json(user))
         .catch(error => res.status(400).json({ error }));
 };
-
+//Permet l'affichage des commentaires associer à un post
 exports.findCommentsByPostId = async (req, res, next) => {
     const postId = req.params.id;
     Coment.findAll({
@@ -68,8 +72,6 @@ exports.findCommentsByPostId = async (req, res, next) => {
         .then(user => res.status(200).json(user))
         .catch(error => res.status(400).json({ error }));
 };
-
-//Créer un nouveau commentaire (ok).
 exports.createComent = async (req, res, next) => {
     const coment = new Coment({
         ...req.body,
@@ -81,8 +83,19 @@ exports.createComent = async (req, res, next) => {
         res.status(400).json({ error, message: "Le commentaire n'a pas été créé !!!" })
     });
 };
-
 exports.updateComent = async (req, res, next) => {
+    const comentId = req.params.id;
+    Coment.findOne({
+        where: {
+            id: comentId
+        },
+        include: [
+            {
+                model: db.user,
+                attributes: ['username', 'attachment']
+            },
+        ]
+    })
     const comentModify = req.file ? {
         ...req.body.comentId,
     } : { ...req.body }
@@ -90,15 +103,13 @@ exports.updateComent = async (req, res, next) => {
         ...comentModify, id: req.params.id
     }, {
         where: { id: req.params.id },
-        attributes: ['coment', 'likes']
+        attributes: ['coment']
     }).then(() => res.status(200).json({
         message: "Le commentaire a été modifié !"
     })).catch(() => res.status(400).json({
         message: "Le comnentaire n'a pas été modifié !"
     }))
 };
-
-//Supprimer un commentaire.
 exports.deleteComent = (req, res) => {
     const id = req.params.id;
     Coment.destroy({
@@ -106,66 +117,4 @@ exports.deleteComent = (req, res) => {
     }).then(() => res.status(200).json({
         message: 'Coment supprimé!'
     })).catch(error => res.status(400).json({ error }))
-};
-
-exports.likeComent = async (req, res, next) => {
-    const comentId = req.params.id;
-    const userId = req.user;
-    Like.findOne({
-        where: {
-            userId: userId,
-            postId: postId
-        }
-    }
-    ).then(likeFound => {
-        if (likeFound) {
-            Like.update({
-                likes: 1
-            }, {
-                where: { id: likeFound.id },
-            }).then(() => res.status(200).json({
-                message: 'Like modifié avec succés!'
-            }))
-        } else {
-            Like.create({
-                userId: userId,
-                comentId: comentId,
-                likes: 1
-            }).then(() => res.status(200).json({
-                message: 'Like créé avec succés!'
-            }))
-        }
-    })
-        .catch(error => res.status(400).json({ error }));
-};
-
-exports.unLikeComent = async (req, res, next) => {
-    const comentId = req.params.id;
-    const userId = req.user;
-    Like.findOne({
-        where: {
-            userId: userId,
-            comentId: comentId
-        }
-    }
-    ).then(likeFound => {
-        if (likeFound) {
-            Like.update({
-                likes: -1
-            }, {
-                where: { id: likeFound.id },
-            }).then(() => res.status(200).json({
-                message: 'Like modifié avec succés!'
-            }))
-        } else {
-            Like.create({
-                userId: userId,
-                comentId: comentId,
-                likes: -1
-            }).then(() => res.status(200).json({
-                message: 'Like créé avec succés!'
-            }))
-        }
-    })
-        .catch(error => res.status(400).json({ error }));
 };

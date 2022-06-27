@@ -84,6 +84,11 @@ if (!like) {
     };
   }
 };
+const store = createStore({
+  state: {
+    status: '',
+  }
+})
 
 //Create a new store instance
 export default createStore({
@@ -182,12 +187,12 @@ export default createStore({
       return new Promise((resolve, reject) => {
         commit;
         instance.post('auth/register', data)
-          .then(response => {
+          .then(function (response) {
             commit('setStatus', 'created');
             resolve(response);
             console.log(response);
           })
-          .catch(error => {
+          .catch(function (error) {
             commit('setStatus', 'error_create');
             reject(error);
             console.log(error);

@@ -11,13 +11,9 @@ const blocageRequete = rateLimit({
     message: "Requetes abusives, vous devez attendre 5 min",
 });
 
-//S'enregistrer //Se connecter// Se déconnecter
 router.post('/register', auth.email, auth.passwd, authCtrl.signUp);
 router.post('/login', blocageRequete, authCtrl.signIn);
 router.put('/logout', auth.token, authCtrl.logout);
-
-//Modifier le mot de passe
 router.put('/newPasswd/:userId', auth.token, auth.passwd, auth.haveRightOnProfile, authCtrl.newPasswd);
-// 
 
 module.exports = router;

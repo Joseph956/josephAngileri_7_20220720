@@ -9,8 +9,6 @@ router.get("/:id", auth.token, comentCtrl.findOnePublished);
 router.get("/postId/:id", auth.token, comentCtrl.findCommentsByPostId);
 router.post("/", auth.token, comentCtrl.createComent);
 router.put("/:id", auth.token, auth.haveRightOnComent, comentCtrl.updateComent);
-router.put("/:id/like", auth.token, comentCtrl.likeComent);
-router.put("/:id/unlike", auth.token, comentCtrl.likeComent);
 router.delete("/:id", auth.token, auth.haveRightOnComent, comentCtrl.deleteComent);
 
 module.exports = router;

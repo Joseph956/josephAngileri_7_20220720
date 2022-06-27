@@ -3,42 +3,21 @@
     <nav class="navbar navbar-expand navbar-light fixed-top">
       <div class="container">
         <router-link class="navbar-brand" :to="{ name: 'Accueil' }">
-          <img
-            style="height: auto; width: 12rem"
-            x="0"
-            y="0"
-            height="100%"
-            width="100%"
-            class="imgAccueil"
-            src="../assets/Icons/icon-left-font-monochrome-white.svg"
-            alt=""
-          />
+          <img style="height: 2rem; width: 12rem" x="0" y="0" height="100%" width="100%" class="imgAccueil"
+            src="../assets/icon-left-font.svg" alt="" />
         </router-link>
 
         <div class="collapse navbar-collapse">
           <ul v-show="!mobile" class="navbar-nav ml-auto">
             <div class="header">
               <div class="dropdownNav" data-dropdown>
-                <button
-                  class="link"
-                  data-dropdown-button
-                  @click="showOrReloadPage('Profile')"
-                  :userId="user.id"
-                >
+                <button class="link" data-dropdown-button @click="showOrReloadPage('Profile')" :userId="user.id">
                   <div class="containerImgProfil">
                     <div class="menuProfile" v-if="user.attachment">
                       <div class="containerImgUser">
-                        <img
-                          style="height: 30px; width: 25px"
-                          x="0"
-                          y="0"
-                          height="100%"
-                          width="100%"
-                          class="imgNavProfil"
-                          v-bind:src="user.attachment"
-                          alt="Photo de profil utilisateur"
-                          loading="lazy"
-                        />
+                        <img style="height: 45px; width: 45px" x="0" y="0" height="100%" width="100%"
+                          class="imgNavProfil" v-bind:src="user.attachment" alt="Photo de profil utilisateur"
+                          loading="lazy" />
                       </div>
                       <div class="nameProfil">
                         <h6>{{ user.username }}</h6>
@@ -46,16 +25,8 @@
                     </div>
                     <div class="avatar" v-else>
                       <div class="containerImgUser">
-                        <img
-                          style="height: 30px; width: 30px"
-                          x="0"
-                          y="0"
-                          height="100%"
-                          width="100%"
-                          class="imgNavAvatar"
-                          src="../assets/Icons/user-alt-light.svg"
-                          alt="avatar"
-                        />
+                        <img style="height: 30px; width: 30px" x="0" y="0" height="100%" width="100%"
+                          class="imgNavAvatar" src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
                       </div>
                       <div class="nameProfil">
                         <h6>{{ user.username }}</h6>
@@ -65,152 +36,37 @@
                 </button>
               </div>
               <div class="dropdown" data-dropdown>
-                <button class="link" data-dropdown-button>Menus</button>
+                <button class="link" data-dropdown-button>
+                  Menus</button>
                 <div class="dropdown-menu information-grid">
                   <div>
                     <div class="dropdown-heading"></div>
-
                     <div class="dropdown-links">
-                      <router-link
-                        class="navbar-brand"
-                        id="link"
-                        :to="{ name: 'Posts' }"
-                      >
-                        Accueil
+                      <router-link class="navbar-brand" id="link" :to="{ name: 'Posts' }">
+                        <img class="iconPeople" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%"
+                          width="100%" src="../assets/Icons/BiFilePost.svg" alt="">
+                        Lister les publications
                       </router-link>
-                      <!-- <a href="../Posts" class="link">Accueil<br /></a> -->
-                      <a href="#" class="link">Latest<br /></a>
-                      <a href="#" class="link">Popular<br /></a>
+                      <router-link class="navbar-brand" id="link" :to="{ name: 'Users' }">
+                        <img class="iconPeople" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%"
+                          width="100%" src="../assets/Icons/BiPeopleFill.svg" alt="">
+                        Lister les utilisateurs
+                      </router-link>
                     </div>
-                  </div>
-                  <div>
-                    <div class="dropdown-heading">Courses</div>
-                    <div class="dropdown-links"></div>
-                    <a href="#" class="link">JavaScrit</a>
-                    <a href="#" class="link">Css</a>
-                    <a href="#" class="link">React</a>
-                  </div>
-                  <div>
-                    <div class="dropdown-heading">Blog</div>
-                    <div class="dropdown-links"></div>
-                    <a href="#" class="link">All</a>
-                    <a href="#" class="link">Latest</a>
-                    <a href="#" class="link">Popular</a>
-                  </div>
-                  <div>
-                    <div class="dropdown-heading">Other</div>
-                    <div class="dropdown-links"></div>
-                    <a href="#" class="link">Twiter</a>
-                    <a href="#" class="link">Newsletter</a>
-                    <a href="#" class="link">Discord</a>
                   </div>
                 </div>
               </div>
             </div>
-
-            <!-- <li>
-              <button
-                class="
-                  btnProfile
-                  position-fixed
-                  d-flex
-                  justify-content-center justify-content-lg-between
-                  align-items-center
-                "
-                @click="toggleActions"
-                aria-label="Menu du profil"
-              >
-                <div class="containerImgProfil">
-                  <div class="imgUser" v-if="user.attachment">
-                    <div class="containerImgUser">
-                      <img
-                        style="height: 30px; width: 30px"
-                        x="0"
-                        y="0"
-                        height="100%"
-                        width="100%"
-                        class="imgNavProfil"
-                        v-bind:src="user.attachment"
-                        alt="Photo de profil utilisateur"
-                      />
-                    </div>
-                    <div class="nameProfil">
-                      <h5>{{ user.username }}</h5>
-                    </div>
-                  </div>
-                  <div class="avatar" v-else>
-                    <div class="containerImgUser">
-                      <img
-                        style="height: 45px; width: 45px"
-                        x="0"
-                        y="0"
-                        height="100%"
-                        width="100%"
-                        class="imgNavAvatar"
-                        src="../assets/Icons/user-alt-light.svg"
-                        alt="avatar"
-                      />
-                    </div>
-                    <div class="nameProfil">
-                      <h6>{{ user.username }}</h6>
-                    </div>
-                  </div>
-                </div>
-              </button>
-              <div
-                id="menuProfilcollapsed"
-                style="display: none"
-                v-bind:class="`collapse collapsed mt-2 position-fixed visible ${
-                  actionsVisible && 'visible'
-                }`"
-              >
-                <div class="card">
-                  <div class="card-body" @click="toggleActions">
-                    <p class="textCard">
-                      <button
-                        class="btnCollapsed btn-block text-left"
-                        @click="showOrReloadPage('Profile')"
-                        :userId="user.id"
-                        aria-label="Voir mon profil utilisateur"
-                      >
-                        Voir mon profil
-                      </button>
-                    </p>
-                    <p class="textCard">
-                      <button
-                        class="btnCollapsed btn-block text-left"
-                        @click="showOrReloadPage('Posts')"
-                        aria-label="Voir la page publication"
-                      >
-                        Voir les publications
-                      </button>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </li> -->
-
-            <!-- <li class="link btn-primary btn-nav">
-              <router-link to="/posts/">Voir les Publication</router-link>
-            </li> -->
-            <!-- <li class="link btn-primary btn-nav">
-              <router-link to="PostDetails">Détails du post</router-link>
-            </li> -->
             <li class="formRow">
-              <button @click="logout()" class="btn">Log-Out</button>
+              <button @click="logout()" class="btn">
+                <img style="height: 1.5rem; width: 1.5rem" x="0" y="0" height="100%" width="100%"
+                  src="../assets/Icons/sign-out-alt-regular.svg" alt="">
+              </button>
             </li>
           </ul>
         </div>
       </div>
     </nav>
-    <!-- <menuIcon @click="toggleMobileNav" class="menu-icon" v-show="mobile" /> -->
-    <!-- <transition name="mobile-nav">
-    <ul class="mobile-nav">
-    <router-link class="link" to="#">Profile</router-link>
-    <router-link class="link" to="#">Blogs</router-link>
-    <router-link class="link" to="#">Posts</router-link>
-    </ul>
-    <transition /> -->
   </header>
 </template>
 
@@ -230,7 +86,6 @@ export default {
       user: {
         usermame: this.username,
       },
-      //Lister tous les users
       apiUser: axios.create({
         baseURL:
           "http://localhost:3000/api/users/" + this.$store.state.user.userId,
@@ -311,6 +166,9 @@ export default {
 </script>
 
 <style >
+
+
+
 /*******************************
 ******Button profile*****
 *******************************/
@@ -324,14 +182,21 @@ export default {
   display: flex;
   align-items: center;
 }
+@media screen and (max-width: 900px){
+  .formRow {
+    flex-direction: column;
+  }
+}
 /**Button Image user et nom */
 
 .containerImgProfil {
   display: flex;
   align-items: center;
+  /* margin: 0 5px 0 -13px; */
 }
 .containerImgUser {
-  margin: 0 0 2px auto;
+  /* margin: 0 0 2px auto; */
+  /* margin: 0 0.3rem 0.3rem; */
 }
 .imgNavProfil {
   border-radius: 5rem;
@@ -371,7 +236,7 @@ body {
   font-family: inherit;
   font-size: inherit;
   cursor: pointer;
-  padding: 0;
+  padding: 0px 0px 3px;
 }
 
 .dropdown.active > .link,
@@ -418,5 +283,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+.iconPeople {
+  margin: 0 1rem 0 1rem;
 }
 </style>

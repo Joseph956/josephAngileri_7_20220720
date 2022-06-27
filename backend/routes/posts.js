@@ -11,24 +11,9 @@ router.post("/", auth.token, multer, postsCtrl.createPost);
 router.put("/:id", auth.token, auth.haveRightOnPost, multer, postsCtrl.updatePost);
 router.delete("/:id", auth.token, auth.haveRightOnPost, multer, postsCtrl.deletePost);
 
-router.get("/:id/like/:userId", auth.token, postsCtrl.findOnePublished);
 router.put("/:id/like/:userId", auth.token, postsCtrl.likePost);
 router.put("/:id/unlike/:userId", auth.token, postsCtrl.unLikePost);
-
-
-
-//Suppression image réservé au créateur du post (admin).
-// router.delete("/images/:id", postsCtrl.getOneImage);
-
-//Suppression like réservé au créateur du post (admin).
-// router.patch("/:id/like", postsCtrl.postLike);
-
-//Suppression réservé au créateur du post (admin).
-// router.post("/:id/likeUser", postsCtrl.likesByUser);
-
-//Suppression réservé au créateur du post (admin).
-// router.post("/:id/like", postsCtrl.countLikes);
-
-
+router.patch("/:id/like/:userId", auth.token, postsCtrl.likePost);
+router.patch("/:id/unlike/:userId", auth.token, postsCtrl.unLikePost);
 
 module.exports = router;

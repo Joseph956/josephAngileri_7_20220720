@@ -2,13 +2,15 @@
   <header>
     <nav class="navbar navbar-expand navbar-light fixed-top">
       <div class="container">
-        <router-link class="navbar-brand" :to="{ name: 'Accueil' }">
-          <img
-            class="imgAccueil"
-            src="../assets/Icons/icon-left-font-monochrome-white.svg"
-            alt=""
-          />
-        </router-link>
+       
+          <router-link class="navbar-brand" :to="{ name: 'Accueil' }">
+            <img class="imgAccueil" style="height: 2rem; width: 12rem" x="0" y="0" height="100%" width="100%"
+              src="../assets/icon-left-font.svg" alt="" />
+          </router-link>
+       
+        <!-- <div v-else> -->
+
+        <!-- </div> -->
         <!-- <div class="collapse navbar-collapse">
           <ul v-show="!mobile" class="navbar-nav ml-auto">
             <li class="link btn-primary btn-nav">
@@ -38,10 +40,12 @@
 <script>
 import menuIcon from "../assets/Icons/bars-regular.svg";
 
+
 export default {
   name: "NavSignUp",
   components: {
     menuIcon,
+   
   },
   data() {
     return {

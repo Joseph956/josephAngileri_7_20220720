@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
         likes: {
             type: Sequelize.INTEGER,
             allowNull: false,
-        }
+        },
     });
 
     return Like;

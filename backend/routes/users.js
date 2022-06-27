@@ -7,7 +7,7 @@ const usersCtrl = require("../controllers/users");
 router.get("/", auth.token, usersCtrl.findAllPublished);
 router.get("/:id", auth.token, usersCtrl.findOneProfil);
 router.post("/:id", auth.token, usersCtrl.publierProfil);
-router.put("/imageProfil", auth.token, multer, usersCtrl.createAttachment);
+router.put("/:id/imgBottom", auth.token, multer, usersCtrl.createAttachment);
 router.put("/:id", auth.token, auth.haveRightOnProfile, multer, usersCtrl.updateProfil);
 router.delete("/:id", auth.token, auth.haveRightOnProfile, multer, usersCtrl.deleteProfil);
 // router.get('/search', auth.token,);

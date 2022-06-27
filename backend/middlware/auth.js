@@ -7,7 +7,6 @@ const passwrdValidator = require('password-validator');
 const emailSchema = require('validator');
 require('dotenv').config();
 
-//Verification que le token est valide (ok).
 module.exports.token = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
@@ -28,8 +27,6 @@ module.exports.token = (req, res, next) => {
         res.status(403).json({ error: error + 'Requête non authentifiée !' });
     }
 };
-
-//Verification que le token a les droit sur le post (ok).
 module.exports.haveRightOnPost = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
@@ -66,8 +63,6 @@ module.exports.haveRightOnPost = (req, res, next) => {
         res.status(401).json({ error: error | 'Requête non autorisé !' });
     }
 };
-
-//Vérification que le token a les droits sur les commentaires (ok). 
 module.exports.haveRightOnComent = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
@@ -101,7 +96,6 @@ module.exports.haveRightOnComent = (req, res, next) => {
         res.status(401).json({ error: error | 'Requête non autorisé !' });
     }
 };
-
 //Verification que le token a les droits sur le profil (ok).
 module.exports.haveRightOnProfile = (req, res, next) => {
     try {
@@ -112,28 +106,28 @@ module.exports.haveRightOnProfile = (req, res, next) => {
         User.findByPk(userId).then((user) => {
             if (user) {
                 req.user = userId;
+                console.log("   role: " + role.role);
                 if (role.role == "admin") {
                     return next();
                 } else if (userId === req.user) {
                     return next();
                 } else {
-                    return res.status(403).send({
-                        message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ce compte utilisateur !",
-                    });
+                    return res.status(403).send(
+                        {
+                            message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ce compte utilisateur !",
+                        });
                 }
             } else {
-                return res.status(401).send({
-                    message: "Aucun utilisateur trouvé avec ce jeton !",
+                return res.status(407).send({
+                    message: "Requête non authentifiée !",
                 });
             }
         });
     } catch (error) {
         console.log(error);
-        res.status(401).json({ error: error | 'Requête non authentifiée !' });
+        res.status(401).json({ error: error | 'Requête non autorisé !' });
     }
 };
-
-//Contrôle de l'Email (ok).
 module.exports.email = (req, res, next) => {
     if (emailSchema.isEmail(req.body.email)) {
         next();
@@ -144,27 +138,28 @@ module.exports.email = (req, res, next) => {
     }
 };
 
-//Contrôle du mot de passe (ok).
+//Contrôle du mot de passe (ne fonctionne pas).
 const passwdSchema = new passwrdValidator();
 
 passwdSchema
     .is().min(8)
     .is().max(100)
-    // .has().uppercase()
-    // .has().lowercase()
-    // .has().digits()
-    // .has().symbols()
-    // .has().not().spaces()
+    // .has().uppercase(1)
+    // .is().uppercase(1)
+    .has().lowercase()
+    // .has().digits(2)
+    // .has().symbols(1)
+    .has().not().spaces()
     .is().not().oneOf(['Passw0rd', 'Password123'])
     ;
 
 module.exports.passwd = (req, res, next) => {
-    if (passwdSchema.validate(req.body.password, req.body.oldPassword)) {
+    console.log(req.body.newPasswd);
+    if (passwdSchema.validate(req.body.newPasswd)) {
         next();
     } else {
         return res.status(400).json({
-            error: "Le mot de passe n'est pas assez fort :" +
-                passwdSchema.validate(req.body.password, req.body.oldPassword, { list: true })
+            error: "Le mot de passe n'est pas assez fort "
         })
     }
 };

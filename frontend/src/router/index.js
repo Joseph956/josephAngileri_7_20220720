@@ -5,6 +5,7 @@ import Accueil from '@/views/Accueil.vue';
 import Forgot from '@/components/Forgot.vue';
 import Reset from '@/components/Reset.vue';
 import Profile from '@/views/Profile.vue';
+import Users from '@/views/Users.vue';
 import Posts from '@/views/Posts.vue';
 import PostDetails from '@/views/PostDetails.vue';
 import PostsCards from '@/views/PostsCards.vue';
@@ -12,9 +13,10 @@ import PostsCards from '@/views/PostsCards.vue';
 import PostsUpdate from '@/components/PostsUpdate.vue';
 import PostCardRecent from '@/components/PostCardRecent.vue';
 import ProfilUpdate from '@/components/ProfilUpdate.vue';
+import ImgBottomUpdate from '@/components/ImgBottomUpdate.vue';
 import PasswdUpdate from '@/components/PasswdUpdate.vue';
 import ModalComent from '@/components/ModalComent.vue';
-import PostLikes from '@/components/PostLikes.vue';
+
 
 const routes = [
   //Cette route gère la création des comptes utilisateur,
@@ -53,11 +55,6 @@ const routes = [
     component: PostDetails,
   },
   {
-    path: '/postLikes/:id',
-    name: 'PostLikes',
-    component: PostLikes,
-  },
-  {
     path: '/modalcoment/:id',
     name: 'ModalComent',
     component: ModalComent,
@@ -66,6 +63,11 @@ const routes = [
     path: '/comentscreate',
     name: 'ComentsCreate',
     component: () => import('@/components/ComentsCreate.vue')
+  },
+  {
+    path: '/comentsupdate',
+    name: 'ComentsUpdate',
+    component: () => import('@/components/ComentsUpdate.vue')
   },
   //Fin routage gestion des posts
 
@@ -91,9 +93,19 @@ const routes = [
     component: Profile,
   },
   {
+    path: '/users',
+    name: 'Users',
+    component: Users,
+  },
+  {
     path: '/profilupdate/:id',
     name: 'ProfilUpdate',
     component: ProfilUpdate,
+  },
+  {
+    path: '/imgbottomupdate/:id',
+    name: 'ImgBottomUpdate',
+    component: ImgBottomUpdate,
   },
   {
     path: '/passwdupdate/:id',

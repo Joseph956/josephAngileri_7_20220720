@@ -2,8 +2,129 @@
   <div class="accueil">
     <div class="container">
       <!-- empêche le rafraîchissement de la page  (@submit.prevent="submit") -->
-      <form @submit.prevent="handleSubmit">
-        <div>
+      <form id="inscription" name="inscription" @submit.prevent="createAccount">
+        <h1 class="nav-link-title" v-if="mode == 'login'">Login</h1>
+        <h1 class="nav-link-title" v-else>Sign Up</h1>
+        <p class="nav-link-subtitle" v-if="mode == 'login'">
+          Vous n'avez pas encore de compte ?<br />
+          <button type="button" class="btn btn-warning">
+            <span class="nav-link-action" @click="switchToCreateAccount()">
+              <div class="containerCpteCreate">
+                <div class="cpteCreate">
+                  <img style="height: 1.8rem; width: 1.8rem" x="0" y="0" height="100%" width="100%"
+                    src="../assets/Icons/BiVectorPen.svg" alt="inscription">
+                </div>
+                <div class="titleInscription">
+                  <h1>Inscription</h1>
+                </div>
+              </div>
+            </span>
+          </button>
+        </p>
+        <p class="nav-link-subtitle" v-else>
+          Vous avez déjà un compte ?<br />
+          <button type="button" class="btn btn-warning">
+            <span class="nav-link-action" @click="switchToLogin()">
+              <div class="containerCpteCreate">
+                <div class="cpteCreate">
+                  <img style="height: 1.8rem; width: 1.8rem" x="0" y="0" height="100%" width="100%"
+                    src="../assets/Icons/BiHouseDoorFill.svg" alt="se connecter">
+                </div>
+                <div class="titleInscription">
+                  <h1>Connexion</h1>
+                </div>
+              </div>
+            </span>
+          </button>
+        </p>
+        <div class="form-group" v-if="mode == 'create'">
+          <div class="form-controlSignup">
+            <label class="formContact" for="username">Nom prénom</label>
+            <div class="inputData">
+              <input id="username" type="text" v-model="username" class="form-control_input" name="username"
+                placeholder="Nom prénom" required minlength="3" autocomplete="off" />
+              <i class="fas fa-check-circle"></i>
+              <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <small>{{ error }}</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-controlSignup">
+            <label class="formContact" for="email">E-mail</label>
+            <div class="inputData">
+              <input v-model="email" class="form-control_input" type="email" name="email" placeholder="E-mail" required
+                autocomplete="off" />
+              <i class="fas fa-check-circle"></i>
+              <i class="fas fa-exclamation-circle"></i>
+              <small>{{ error }}</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-controlSignup">
+            <label for="password">Mot de passe</label>
+            <div class="inputData">
+              <input id="password" name="password" v-model="password" type="password" placeholder="Mot de passe"
+                class="form-control_input" required autocomplete="off" />
+              <i class="fas fa-check-circle"></i>
+              <i class="fas fa-exclamation-circle"></i>
+              <div class="eyePasswd">
+                <!--  -->
+                <div v-if="mode == 'text'">
+                  <img src="../assets/Icons/BiEye.svg" id="eye" @click="changer()" alt="" />
+                </div>
+                <!-- style="display: none" -->
+                <div v-else>
+                  <img src="../assets/Icons/BiEyeSlash.svg" id="eye" @click="changer()" alt="" />
+                </div>
+              </div>
+            </div>
+            <small>{{message}}</small>
+          </div>
+        </div>
+        <div class="form-group" v-if="mode == 'create'">
+          <div class="form-controlSignup">
+            <label for="confirmPasswd">Confirmer le mot de passe</label>
+            <div class="inputData">
+              <input id="confirmPasswd" name="confirmPasswd" v-model="confirmPasswd" class="form-control_input"
+                autocomplete="off" type="Password" placeholder="Confirmer le mot de passe" required />
+              <i class="fas fa-check-circle"></i>
+              <i class="fas fa-exclamation-circle"></i>
+            </div>
+          </div>
+          <p id="message">
+            <small>{{ message }}</small>
+          </p>
+        </div>
+
+        <div class="form-group">
+          <div class="alert alert-danger" v-if="mode === 'login' && status == 'error_login'">
+            Adresse mail et/ou mot de passe invalide !
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="alert alert-danger" v-if="mode == 'create' && status == 'error_create'">
+            Adresse email déjà utilisée !
+          </div>
+        </div>
+
+        <!-- <div class="form-group">
+          <div class="alert alert-danger" v-if="mode == 'create' && status == 'error_create'">
+            Confirmer votre mot de passe !
+          </div>
+          <div class="alert alert-success" v-else>
+            Votre mot de passe est confirmé !
+          </div>
+        </div> -->
+
+
+
+
+        <!-- <div>
           <div v-if="error">
             <error :error="error" />
           </div>
@@ -12,132 +133,30 @@
               {{ message }}
             </div>
           </div>
-        </div>
-        <!-- <error v-if="error" :error="error" />
-        <div class="alert alert-success" role="alert">
-          {{ message }}
-        </div> -->
-        <h1 class="nav-link-title" v-if="mode == 'login'">Login</h1>
-        <h1 class="nav-link-title" v-else>Sign Up</h1>
-        <p class="nav-link-subtitle" v-if="mode == 'login'">
-          Vous n'avez pas encore de compte ?<br />
-          <button type="button" class="btn btn-warning">
-            <span class="nav-link-action" @click="switchToCreateAccount()"
-              >Créer un compte
-            </span>
-          </button>
-        </p>
-        <p class="nav-link-subtitle" v-else>
-          Vous avez déjà un compte ?<br />
-          <button type="button" class="btn btn-warning">
-            <span class="nav-link-action" @click="switchToLogin()"
-              >Se connecter
-            </span>
-          </button>
-        </p>
-
-        <div class="form-group" v-if="mode == 'create'">
-          <label class="formContact" for="username">Prenom Nom</label>
-          <span id="usernameMissing" class="infoFieldMissing"></span>
-          <input
-            v-model="username"
-            class="form-control_input"
-            type="text"
-            placeholder="Username"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <label class="formContact" for="email">E-mail</label>
-          <input
-            v-model="email"
-            class="form-control_input"
-            type="email"
-            placeholder="E-mail"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="password">Mot de passe</label>
-          <input
-            id="password"
-            v-model="password"
-            class="form-control_input"
-            type="password"
-            placeholder="Mot de passe"
-            required
-          />
-        </div>
-
-        <div class="form-group" v-if="mode == 'create'">
-          <label v-if="'confirmPasswd' == 'password'" for="confirmPasswd"
-            >Confirmer le mot de passe</label
-          >
-          <input
-            id="confirmPasswd"
-            v-model="confirmPasswd"
-            class="form-control_input"
-            type="Password"
-            placeholder="Confirmer le mot de passe"
-            required="Veuillez confirmer votre mot de passe !..."
-          />
-          <p id="message"></p>
-          <input type="button" @click="checkPasswd()" value="SUBMIT" />
-        </div>
-
-        <!-- <div class="form-group">
-          <div
-            class="alert alert-danger"
-            v-if="mode === 'login' && status == 'error_login'"
-          >
-            Adresse mail et/ou mot de passe invalide !
-          </div>
         </div> -->
 
         <div class="form-group">
-          <div
-            class="alert alert-danger"
-            v-if="mode == 'create' && status == 'error_create'"
-          >
-            Adresse email déjà utilisée !
-          </div>
-        </div>
-        <div
-          class="alert alert-danger"
-          v-if="mode == 'Password' && status == 'error_Password'"
-        >
-          Confirmer votre mot de passe !
-        </div>
-
-        <div class="form-group">
-          <button
-            @click="login()"
-            class="btn btn-primary"
-            :class="{ 'btn--disabled': !validatedFields }"
-            v-if="mode == 'login'"
-          >
+          <button @click="login()" class="btn btn-primary" :class="{ 'btn--disabled': !validatedFields }"
+            v-if="mode == 'login'">
             <span v-if="status == 'loading'">Connexion en cours....</span>
             <span v-else>Connexion</span>
           </button>
 
-          <button
-            class="btn btn-primary"
-            @click="createAccount()"
-            :class="{ 'btn--disabled': !validatedFields }"
-            v-else
-          >
+          <button class="btn btn-primary" @click="createAccount()" :disabled="!validatedFields" v-else>
             <span v-if="status == 'loading'">Création en cours....</span>
             <span v-else>Créer mon compte</span>
           </button>
+          <!-- <p class="alert alert-danger">{{ error }}</p> -->
           <p class="forgotPasswd">
-            <router-link v-if="mode == 'login'" to="Forgot" text-right
-              >Mot de passe oublié ?
+            <router-link v-if="mode == 'login'" to="Forgot" text-right>Mot de passe oublié ?
             </router-link>
           </p>
         </div>
       </form>
+      <div>
+        <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
+          src="../assets/logo_transparent.png" alt="" />
+      </div>
     </div>
   </div>
 </template>
@@ -145,24 +164,28 @@
 <script>
 import { mapState } from "vuex";
 import Error from "./Error.vue";
-
+import validateInscription from "@/service/validForm";
+import validatPasswd from "@/service/ValidatPasswd";
 export default {
   name: "Accueil",
   components: {
     Error,
+    validateInscription,
+    validatPasswd,
   },
   data: function () {
     return {
+      error: "",
+      message: "",
+      error_login: "",
+      error_Password: "", //modifier
+      error_confirmPasswd: "", //modifier
+
       mode: "login",
       username: "",
       email: "",
       password: "",
-      confirmPassword: "",
-      error: "",
-      message: "",
-      error_login: "",
-      error_create: "",
-      error_confirmPassword: "",
+      confirmPasswd: "", //modifier
     };
   },
   mounted: function () {
@@ -173,12 +196,13 @@ export default {
   },
   computed: {
     validatedFields: function () {
-      if (this.mode == "create") {
+      if (this.mode == 'create') {
         if (
+          this.username != "" && 
           this.email != "" &&
-          this.username != "" &&
           this.password != "" &&
-          this.confirmPassword !== ""
+          this.confirmPasswd !== "" &&
+          this.password === this.confirmPasswd
         ) {
           return true;
         } else {
@@ -197,15 +221,15 @@ export default {
   methods: {
     async handleSubmit() {
       try {
-        // const response =
         await axios.post("login", {
           email: this.email,
           password: this.password,
         });
-        // localStorage.setItem("token", response.data.token);
-        // this.$store.dispatch("user", response.data.user);
-        // this.$router.push("/");
+        localStorage.setItem("token", response.data.token);
+        this.$store.dispatch("user", response.data.user);
+        this.$router.push("/");
       } catch (e) {
+        this.error = `${"error"}`;
         this.error = "Adresse mail et/ou mot de passe invalide !";
         this.message = "Adresse mail et mot de passe valide !";
       }
@@ -226,98 +250,191 @@ export default {
         .then(
           function () {
             self.$router.push("/posts");
+            document.getElementById("login").reset();
           },
           function (error) {
             console.log(error);
           }
         );
     },
+    changer: function () {
+      let e = true;
+      if (e) {
+        document.getElementById("password").setAttribute("type", "text");
+        document.getElementById("eye").src = "../assets/Icons/BiEye.svg";
+        e = true;
+      } else {
+        document.getElementById("password").setAttribute("type", "password");
+        document.getElementById("eye").src = "../assets/Icons/BiEyeSlash.svg";
+        e = true;
+      }
+    },
     createAccount: function () {
       const self = this;
-      if (password.length != 0) {
-        let password = document.getElementById("password").value;
-        let confirmPasswd = document.getElementById("password").value;
-        if (password === confirmPasswd) {
+      let password = document.getElementById("password").value;
+      let confirmPasswd = document.getElementById("confirmPasswd").value;
+      if (password == confirmPasswd) { 
+         message.textContent = "Passwords match";
+        }else{
+          message.textContent = "Confirmer votre mot de passe !";
+        }    
           this.$store
             .dispatch("createAccount", {
               username: this.username,
               email: this.email,
               password: this.password,
               confirmPasswd: this.confirmPasswd,
-            })
-            .then(
-              function () {
-                self.login();
-                console.log(response.data);
-              },
-              function (error) {
-                console.log(error);
+            }).then(function () {
+              self.login();
+            }).catch(error => {
+              if (error.error) {
+                return (this.error = error.error.errors[0].message)
               }
-            )
-            .catch({});
-        } else {
-          message.textContent = "Passwords don't match";
-        }
-      }
+            }),
+            function (error) {
+              console.log(error);
+            }
     },
-    checkPasswd: function () {
-      let password = document.getElementById("password").value;
-      let confirmPasswd = document.getElementById("password").value;
-      console.log("----->CONTENU : password");
-      console.log(password);
-      console.log("----->CONTENU : confirmPasswd");
-      console.log(confirmPasswd);
-      if (password.length != 0) {
-        if (password == confirmPasswd) {
-          message.textContent = "Passwords match";
-        } else {
-          message.textContent = "Passwords don't match";
-        }
-      }
-    },
-
-    // createAccount: function () {
-    //   const self = this;
-    //   this.$store
-    //     .dispatch("createAccount", {
-    //       username: this.username,
-    //       email: this.email,
-    //       password: this.password,
-    //       confirmPassword: this.confirmPassword,
-    //     })
-    //     .then(
-    //       function () {
-    //         self.login();
-    //         console.log(response.data);
-    //       },
-    //       function (error) {
-    //         console.log(error);
-    //       }
-    //     );
-    // },
   },
 };
 </script>
 
-<style>
+<style >
+
+
+.containerCpteCreate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 1rem 0 1rem;
+}
+.cpteCreate {
+  display: flex;
+  margin: 0 1rem 0 1rem;
+}
+.titleInscription h1{
+  display: flex;
+  margin: 0  1rem 0 1rem;
+}
+.btn-warning {
+  margin: 10px 0 0 0;
+  border: none;
+}
+.btn-primary {
+  border: none;
+}
 .form-group {
   display: flex;
   flex-direction: column;
   margin: 16px 0px;
   flex-wrap: wrap;
 }
-.form-control_input {
+.form-controlSignup {
+  border-radius: 1rem;
+}
+.form-controlSignup label {
+  display: inline-block;
+  margin-bottom: 5px;
+}
+.form-control_input::placeholder {
+  /* color: #a3a2a2; */
+  color: #4E5166;
+}
+.inputData {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  background: #f2f2f2;
+}
+.form-controlSignup {
   padding: 8px;
   border: none;
-  border-radius: 8px;
-  background: #f2f2f2;
+}
+.form-controlSignup img {
+  height: 20px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.form-controlSignup input {
+  position: relative;
+  border: none;
+  outline: none;
+  background: none;
   font-weight: 500;
-  font-size: 16px;
+  display: block;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px;
+  width: 100%;
   flex: 1;
   min-width: 100px;
   color: black;
 }
-.form-control_input::placeholder {
-  color: #a3a2a2;
+.form-controlSignup input:focus {
+  outline: 0;
+  border-color: #777;
+  filter: brightness(1.1);
+}
+.form-controlSignup.success input {
+  border-color: #2ecc71;
+}
+
+.form-controlSignup.error input {
+  border-color: #e74c3c;
+}
+.inputData img {
+  height: 20px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.form-controlSignup i {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  visibility: hidden;
+  position: absolute;
+}
+.form-controlSignup.success i.fa-check-circle {
+  color: #2ecc71;
+  visibility: visible;
+  position: relative;
+}
+
+.form-controlSignup.error i.fa-exclamation-circle {
+  color: #e74c3c;
+  visibility: visible;
+  position: relative;
+}
+.form-controlSignup input::placeholder {
+  /* color: #a3a2a2; */
+  color: #4e516674;
+}
+.form-control input i {
+  position: absolute;
+  visibility: hidden;
+  top: 40px;
+  right: 18px;
+}
+.form-controlSignup small {
+  color: #e74c3c;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  visibility: hidden;
+}
+.form-controlSignup.error small {
+  visibility: visible;
+}
+.form button {
+  background-color: #8e44ad;
+  border: 2px solid #8e44ad;
+  border-radius: 4px;
+  color: #fff;
+  display: block;
+  font-family: inherit;
+  font-size: 16px;
+  padding: 10px;
+  margin-top: 20px;
+  width: 100%;
 }
 </style>

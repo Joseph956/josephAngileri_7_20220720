@@ -12,29 +12,12 @@
               <div class="d-flex align-items-center">
                 <div class="ml-2 justify-content">
                   <div class="avatar" v-if="post.user.attachment">
-                    <img
-                      style="height: 55px; width: 55px"
-                      x="0"
-                      y="0"
-                      height="100%"
-                      width="100%"
-                      class="imgUser"
-                      alt="Image du profil"
-                      v-bind:src="post.user.attachment"
-                      loading="lazy"
-                    />
+                    <img style="height: 55px; width: 55px" x="0" y="0" height="100%" width="100%" class="imgUser"
+                      alt="Image du profil" v-bind:src="post.user.attachment" loading="lazy" />
                   </div>
                   <div class="avatar" v-else>
-                    <img
-                      style="height: 55px; width: 55px"
-                      x="0"
-                      y="0"
-                      height="100%"
-                      width="100%"
-                      class="avatarProfil"
-                      src="../assets/Icons/user-alt-light.svg"
-                      alt="avatar"
-                    />
+                    <img style="height: 55px; width: 55px" x="0" y="0" height="100%" width="100%" class="avatarProfil"
+                      src="../assets/Icons/user-alt-light.svg" alt="avatar" />
                   </div>
 
                   <div>
@@ -48,154 +31,172 @@
                   </div>
                 </div>
               </div>
-              <div class="dropdown">
-                <button
-                  class="btn p-0"
-                  type="button"
-                  id="dropdownMenuButton2"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="feather feather-more-horizontal icon-lg pb-3px"
-                  >
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="19" cy="12" r="1"></circle>
-                    <circle cx="5" cy="12" r="1"></circle>
-                  </svg>
-                </button>
-                <div
-                  class="dropdown-menu"
-                  aria-labelledby="dropdownMenuButton2"
-                >
-                  <a class="dropdown-item d-flex align-items-center" href="#">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="feather feather-meh icon-sm mr-2"
-                    >
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <line x1="8" y1="15" x2="16" y2="15"></line>
-                      <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                      <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                    </svg>
-                    <span class="">Unfollow</span></a
-                  >
-                  <a class="dropdown-item d-flex align-items-center" href="#">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="feather feather-corner-right-up icon-sm mr-2"
-                    >
-                      <polyline points="10 9 15 4 20 9"></polyline>
-                      <path d="M4 20h7a4 4 0 0 0 4-4V4"></path>
-                    </svg>
-                    <span class="">Go to post</span></a
-                  >
-                  <a class="dropdown-item d-flex align-items-center" href="#">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="feather feather-share-2 icon-sm mr-2"
-                    >
-                      <circle cx="18" cy="5" r="3"></circle>
-                      <circle cx="6" cy="12" r="3"></circle>
-                      <circle cx="18" cy="19" r="3"></circle>
-                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                    </svg>
-                    <span class="">Share</span></a
-                  >
-                  <a class="dropdown-item d-flex align-items-center" href="#">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="feather feather-copy icon-sm mr-2"
-                    >
-                      <rect
-                        x="9"
-                        y="9"
-                        width="13"
-                        height="13"
-                        rx="2"
-                        ry="2"
-                      ></rect>
-                      <path
-                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                      ></path>
-                    </svg>
-                    <span class="">Copy link</span></a
-                  >
-                </div>
-              </div>
             </div>
           </div>
           <!-- Affichage du post -->
           <div class="card-body">
             <p class="mb-3 tx-14">{{ post.title }}</p>
             <p class="mb-3 tx-14">{{ post.content }}</p>
-            <img class="imgPost" :src="post.attachment" alt="" />
+            <!-- <img class="imgPost" :src="post.attachment" alt="" /> -->
+            <!-- Image du post -->
+            <div class="form-group">
+              <!-- <div v-if="post.attachment">
+                      <img class="imgPost" style="height: 15rem; width: 20rem" x="0" y="0" height="100%" width="100%"
+                        v-bind:src="post.attachment" alt="" />
+                    </div>
+                    <div v-else>
+                      <img class="imgPost" style="height: 30rem; width: 30rem" x="0" y="0" height="100%" width="100%"
+                        src="../assets/Icons/BiCardImg.svg" alt="avatar" />
+                    </div> -->
+              <div v-if="post.attachment">
+                <!-- Fenêtre modale -->
+                <modale v-bind:revele="revele">
+                  <div @click="toggleModale" :toggleModale="toggleModale" class="btn btn-success">
+                    <div :src="post.attachment">
+                      Modale photo
+                    </div>
+                  </div>
+                </modale>
+                <!-- Fin fenêtre modale -->
+                <a href="#">
+                  <img @click="toggleModale" class="imgPost" :src="post.attachment" alt="Image du post" />
+                </a>
+              </div>
+              <div v-else>
+                <!-- Fenêtre modale -->
+                <modale v-bind:revele="revele">
+                  <div @click="toggleModale" :toggleModale="toggleModale" class="btn btn-success">
+                    <div :src="post.attachment">
+                      Modale photo
+                    </div>
+                  </div>
+                </modale>
+                <!-- Fin fenêtre modale -->
+                <a href="#">
+                  <img @click="toggleModale" class="imgPost" src="../assets/Icons/BiCardImg.svg" alt="Image du post" />
+                </a>
+              </div>
+            </div>
 
-            <!-- <comentsCreate :postId="post.id" /> -->
-            <ModalComent />
+          </div>
+          <!-- Gestion du post -->
+          <div class="card-footer">
+            <div class="d-flex post-actions">
+              <div class="menuPost">
+                <div class="linkPost">
+                  <div class="likeButtons">
+                    <div class="likes">
+                      <routeur-link v-bind:to="'/PostLikes/' + postId"
+                        class="d-flex align-items-center text-muted mr-4">
+                        <button type="button" class="btn btn-like" @click="postLikeCreate(post.id)"
+                          :class="{ 'btn--disabled': !validatedFields }">
+                          <span v-if="status == 'loading'">Like ....</span>
+                          <span v-else>
+                            <div class="likeFlex">
+
+                              <img class="like" style="height: 1.5rem; width: 1.5rem" x="0" y="0" height="100%"
+                                width="100%" src="../assets/Icons/BiHandThumbsUpFill.svg" alt="">
+
+                              <div>
+                                <p class="d-none d-md-block ml-2">
+                                  {{ post.likes.length }} <br />
+                                </p>
+                              </div>
+                            </div>
+                          </span>
+                        </button>
+                      </routeur-link>
+                    </div>
+                  </div>
+                </div>
+                <div class="linkPost">
+                  <router-link v-bind:to="'/ModalComent/' + postId">
+                    <div class="linkModal">
+                      <div class="linkItems">
+                        <img src="../assets/Icons/coment.svg" alt="commentaires">
+                      </div>
+                      <div class="linkModal">
+                        <p class="d-none d-md-block ml-2">
+                          {{ post.coments.length }} Commentaire <br />
+                        </p>
+                      </div>
+                    </div>
+                  </router-link>
+                </div>
+                <div class="linkPost">
+                  <div class="dropdown" data-dropdown>
+                    <button class="link" data-dropdown-button>
+                      <img data-dropdown-button src="../assets/Icons/ariaCircle.svg" alt="menus">
+                    </button>
+                    <div class="dropdown-menu information-grid">
+                      <div class="dropdown-heading"></div>
+                      <div class="dropdown-links">
+                        <!-- Supprimer un post -->
+                        <a href="javascript:;" class="d-flex align-items-center text-muted">
+                          <div class="flexMenu">
+                            <div>
+                              <button class="btn" data-dropdown-button @click="postDeleted(post.id)" :class="{
+                                  'btn--disabled': !validatedFields,
+                                }">
+                                <div class="trashBtn">
+                                  <div class="iconDelete">
+                                    <img src="../assets/Icons/BiTrash3Fill.svg" alt="">
+                                  </div>
+                                  <div class="btnDelete"> <span v-if="status == 'loading'">Suppression en
+                                      cours....</span>
+                                    <span v-else>Supprimer</span>
+                                  </div>
+                                </div>
+                              </button>
+                            </div>
+                            <!-- </div> -->
+                            <!-- Modifier un post -->
+                            <div class="btnFooter">
+                              <router-link v-bind:to="'/PostsUpdate/' + post.id">
+                                <button type="button" class="btn" @click="postModify()" :postId="post.id">
+                                  <div class="modifyBtn">
+                                    <div class="iconModify">
+                                      <img src="../assets/Icons/BiPenFill.svg" alt="">
+                                    </div>
+                                    <div>
+                                      <span v-if="status == 'loading'">Modification en cours....</span>
+                                      <span v-else>Modifier</span>
+                                    </div>
+                                  </div>
+                                </button>
+                              </router-link>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <comentsCreate :postId="post.id" />
           </div>
         </div>
       </div>
     </div>
+    <ModalComent />
   </div>
 </template>
 
 <script>
 import axios from "axios";
-// import { mapState } from "vuex";
-//Barre de navigation
 import navProfil from "@/components/NavProfil.vue";
-// import comentsCreate from "@/components/ComentsCreate.vue";
+import comentsCreate from "@/components/ComentsCreate.vue";
 import modalComent from "@/components/ModalComent.vue";
+import Modale from "@/components/Modale.vue";
+
 export default {
   name: "PostDetails",
   components: {
     navProfil,
-    // comentsCreate,
+    comentsCreate,
     modalComent,
+    Modale,
   },
   data: function () {
     return {
@@ -205,9 +206,9 @@ export default {
         attachment: null,
         user: null,
         admin: null,
+        likes: null,
+        revele: false,
       },
-
-      //Lister tous les posts
       apiPosts: axios.create({
         baseURL: "http://localhost:3000/api/posts/" + this.$route.params.id,
         headers: {
@@ -219,12 +220,13 @@ export default {
     };
   },
   beforeMount() {
-    //Je récupère la liste des posts
     this.getPostOne();
   },
   computed: {},
   methods: {
-    //Afficher un post (Methode "get"(show id){})
+    toggleModale: function () {
+      this.revele = !this.revele;
+    },
     getPostOne() {
       console.log("tst");
       this.apiPosts
@@ -235,9 +237,58 @@ export default {
         })
         .catch(function () {});
     },
+    postLikeCreate: function (postId) {
+      this.apiPosts
+        .put(
+          `http://localhost:3000/api/posts/${postId}/like/${this.$store.state.user.userId}`,
+          {
+            postId: postId,
+            userId: this.userId,
+            likes: this.likeId,
+          }
+        )
+        .then(() => {
+          window.location.reload();
+          this.$router.push("/posts");
+          this.getLikesList();
+        })
+        .catch(function () { });
+    },
+    postDeleted: function (id) {
+      if (confirm("Voulez-vous vraiment supprimer ce post ?")) {
+        this.apiPosts
+          .delete("http://localhost:3000/api/posts/" + id)
+          .then(() => {
+            window.location.reload();
+            this.$router.push("/posts");
+            this.getPostList();
+          });
+      }
+    },
   },
 };
 </script>
 
 <style>
+.card-body {
+  padding-right: 0;
+  padding-left: 0;
+}
+.card-footer {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+.MenuPost {
+  width: 100%;
+}
+.comentForm {
+  margin: 1rem 0 1rem 0;
+  border-radius: 1rem;
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
+}
+.row {
+  padding-left: 0;
+  padding-right: 0;
+}
 </style>
