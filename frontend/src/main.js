@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import vueSweetalert2 from 'vue-sweetalert2';
 import App from './App.vue';
+import Vuelidate from 'vuelidate';
 import router from './router';
 import store from './store';
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -10,8 +11,9 @@ const app = createApp(App).use(router)
 
 app.use(router)
 app.use(store)
+app.use(Vuelidate);
 app.use(vueSweetalert2)
-app.mount('#App')
+app.mount('#app')
 
 //Comment enregistrer les components en global pour les rendres disponiblent aux composants enfants?!!!
 

@@ -65,9 +65,9 @@ const routes = [
     component: () => import('@/components/ComentsCreate.vue')
   },
   {
-    path: '/comentsupdate',
-    name: 'ComentsUpdate',
-    component: () => import('@/components/ComentsUpdate.vue')
+    path: '/comentslist',
+    name: 'ComentsList',
+    component: () => import('@/components/ComentsList.vue')
   },
   //Fin routage gestion des posts
 

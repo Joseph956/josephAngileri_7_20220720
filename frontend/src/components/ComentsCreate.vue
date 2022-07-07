@@ -3,9 +3,10 @@
     <div>
       <div class="containerComent">
         <div class="avatarComent">
+
           <div class="avatar" v-if="user.attachment">
             <div class="imgUserComent">
-              <img style="height: 40px; width: 40px" x="0" y="0" height="100%" width="100%" id="imgProfile"
+              <img style="height: 50px; width: 40px" x="0" y="0" height="100%" width="100%" id="imgProfile"
                 v-bind:src="user.attachment" alt="" />
             </div>
           </div>
@@ -15,13 +16,15 @@
                 src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
             </div>
           </div>
+
           <form>
-            <div class="form-group">
+            <div class="form-groupComent">
               <label for="coment"></label>
               <textarea v-model="coment" type="text" id="coment" class="form-control" placeholder="Votre commentaire"
                 autofocus />
             </div>
           </form>
+
           <button type="button" class="btn" @click="comentCreate()">
             <div class="newComentBtn">
               <div class="ComentBtn">
@@ -33,16 +36,33 @@
               </div>
             </div>
           </button>
+
+
+          <!-- v-if="length > 1 && !displayComents"  -->
+          <!-- <button @click="allComents" class="displayComents btn btn-danger">
+            Lister les commentaires -->
+          <!-- v-if="length > 2" -->
+          <!-- <span>Lister {{ post.coments.length - 1}} les autres commentaires.</span>
+            <span>Lister {{ post.coments.length - 1}} autre commentaire.</span>
+          </button> -->
         </div>
       </div>
+
+
+      <!-- Message erreur création des commentaires  -->
+      <p class="alet text-danger">{{ mesgError }}</p>
+
       <div class="col-md-8 col-xl-6 middle-wrapper">
         <div class="row">
-          <div class="col-md-12 grid-margin" v-for="coment in coments" v-bind:key="coment.id" :coment="coment">
+          <!-- Gestion des commentaires du post-->
+          <div class="col-md-12 grid-margin" v-for="coment in coments.slice(0,1)" v-bind:key="coment.id"
+            :coment="coment">
             <div class="comentPost">
               <div>
+                <!-- Modification des commentaires -->
                 <div class="buttonModify">
                   <textarea v-bind:id="'inputComent-' + coment.id" v-model="coment.coment"
-                    aria-label="Modifier le commentaire" style="display: none" class="comentModify" button>
+                    aria-label="Modifier le commentaire" style="display: none" class="form-control" button>
                   </textarea>
                   <button type="button" v-bind:id="'inputComentBtn-' + coment.id" style="display: none" class="btn"
                     @click="sentModify(coment.id)">
@@ -57,13 +77,17 @@
                     </div>
                   </button>
                 </div>
+                <!-- Fin modification des commentaires -->
+
+                <!-- Affichage du commentaire -->
                 <p class="comentUser">
                   {{ coment.coment }}
                 </p>
               </div>
+              <!-- Informations de l'auteur du commentaire -->
               <div class="infosUser">
                 <div class="avatarComentUser" v-if="coment.user.attachment">
-                  <img style="height: 40px; width: 35px" x="0" y="0" height="100%" width="100%" class="imgComent"
+                  <img style="height: 45px; width: 35px" x="0" y="0" height="100%" width="100%" class="imgComent"
                     :src="coment.user.attachment" alt="" />
                 </div>
                 <div class="avatarComentUser" v-else>
@@ -72,13 +96,31 @@
                 </div>
 
                 <div class="userComent">
-                  <p class="textUserComent">{{ coment.user.username }}</p>
+                  <p class="textUserComent">
+                    {{ coment.user.username }}
+                  </p>
                   <div class="dateComent">
                     Posté le : {{ coment.createdAt }}
                   </div>
                 </div>
+                <!-- Fin informations de l'auteur du commentaire -->
               </div>
+              <!-- Fin gestion des commentaires du post -->
+
+
+
+              <!-- Lister tous les commentaires -->
+              <router-link  v-bind:to="'/ComentsList/'">
+                <button v-if="
+                  coments.length > 1 " @click="allComents()" class="displayComents btn text-danger">
+                  Voir tous les commentaires du post
+                </button>
+              </router-link>
             </div>
+
+
+
+
             <div class="containerBtnComent">
               <div class="btnFooter">
                 <button type="button" class="btn" @click="comentDeleted(coment.id)">
@@ -96,15 +138,25 @@
               </div>
               <div class="btnFooter">
                 <button v-if="role == admin" type="button" class="btn" @click="comentModify(coment.id)">
-                    <img style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%" width="100%"
-                      src="../assets/Icons/BiPenFill.svg" alt="Modifier votre commentaire">
+                  <img style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%" width="100%"
+                    src="../assets/Icons/BiPenFill.svg" alt="Modifier votre commentaire">
                   <span v-if="status == 'loading'">Modification en cours en cours....</span>
                   <span v-else></span>
                 </button>
               </div>
             </div>
           </div>
+
         </div>
+        <!-- <router-link v-bind:to="'/ComentsList/' + post.id">  -->
+        <!-- <button type="button" class="btn" @click="allComents()"             :comentId="coment.id">
+          </button> -->
+        <!-- <button v-bind:to="'/ComentsList/' + post.id">
+            <div class="col-md-12 grid-margin" v-for="coment in coments" v-bind:key="coment.id" :coment="coment">
+            </div>
+
+          </button> -->
+        <!-- </router-link> -->
       </div>
     </div>
   </div>
@@ -113,10 +165,13 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
-import ComentsUpdate from "@/components/ComentsUpdate.vue";
+import comentsList from "@/components/ComentsList.vue";
+
 export default {
   name: "ComentsCreate",
-  components: { ComentsUpdate },
+  components: { 
+    comentsList,
+  },
   props: {
     postId: String,
     comentId: String,
@@ -138,6 +193,9 @@ export default {
         },
       }),
       coments: [],
+      mesgError: "",
+      length: null,
+      displayComents: true,
       apiUser: axios.create({
         baseURL:
           "http://localhost:3000/api/users/" + this.$store.state.user.userId,
@@ -164,6 +222,14 @@ export default {
       })
       .catch(function () {});
   },
+  mounted: function () {
+    this.apiComents
+      .get("")
+      .then((response) => {
+        this.user = response.data;
+      })
+      .catch(function () {});
+  },
   beforeMount() {
     this.getComentList();
   },
@@ -173,7 +239,6 @@ export default {
   },
   methods: {
     getProfilOne() {
-      console.log("tst");
       this.apiUser
         .get("/users/userId/" + this.userId)
         .then((response) => {
@@ -182,15 +247,19 @@ export default {
         .catch(function () {});
     },
     getComentList() {
-      this.apiComents
-        .get("/coments/postId/" + this.postId)
-        .then((response) => {
-          this.coments = response.data;
-          console.log(this.coments);
-        })
-        .catch(function (message) {
-          console.log(message);
-        });
+      if (this.coments > 1) {
+
+      }else{
+        this.apiComents
+          .get("/coments/postId/" + this.postId)
+          .then((response) => {
+            this.coments = response.data;
+            console.log(this.coments);
+          })
+          .catch(function (message) {
+            console.log(message);
+          });
+      }
     },
     comentCreate: function () {
       if (this.coment !== null) {
@@ -200,15 +269,31 @@ export default {
             postId: this.postId,
             coment: this.coment,
           })
-          .then(() => {
+          .then((response) => {
+            if (!response.data) {
+              return (this.mesgError = error.response.data.message)
+            } else {
             window.location.reload();
             this.$router.push("/posts");
-            this.getComentsOne();
+            this.getComentOne();
+            }
           })
-          .catch((alert) => {
+          .catch((error) => {
+            alert(this.mesgError = error.response.data.message)
             alert("Oops ! Un problème est survenue avec vos saisies");
           });
       }
+    },
+    allComents: function () {
+      this.apiComents
+      .get("http://localhost:3000/api/coments")
+        .then((response) => {
+          this.coments = response.data;
+          console.log(this.coments);
+        })
+        .catch(function (message) {
+          console.log(message);
+        });
     },
     comentModify: function (comentId) {
       let comentUser = document.getElementById("inputComent-" + comentId);
@@ -248,12 +333,62 @@ export default {
 
 <style>
 
-.containerComent {
-  display: flex;
-  flex-direction: column;
-  margin: 5px 0 10px 0;
-}
 
+.containerComent {
+  /* display: flex;
+  flex-direction: column; */
+  margin: 1rem;
+}
+.avatarComent {
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  grid-template-rows: 61px 1fr 1fr;
+  padding: 1rem 0 0 0;
+}
+/* @media screen and (max-width: 902px) {
+  .avatarComent {
+      flex-direction: column;
+  }
+}
+@media screen and (max-width: 768px) {
+  .avatarComent {
+      flex-direction: column;
+      padding: 1rem 0 0 0;
+  }
+} */
+/* .newComentBtn { */
+  /* display: flex;
+  flex-direction: row-reverse;
+  align-items: center; */
+  /* margin: 13px;
+} */
+@media screen and (max-width: 768px) {
+  .newComentBtn {
+    flex-direction: column;
+  }
+}
+.ComentBtn {
+  align-content: center;
+  /* margin: 0 1rem 0 0; */
+}
+.ComentBtn:hover {
+  border: transparent;
+  opacity: 2;
+}
+@media screen and (max-width: 768px) {
+  .comentPost {
+    margin: 0;
+  }
+}
+.buttonModify {
+  display: flex;
+  margin: 0 0 1rem 0
+}
+@media screen and (max-width: 768px) {
+.buttonModify {
+    flex-direction: column;
+  }
+}
 .comentModify {
   width: 100%;
   height: 10vh;
@@ -262,27 +397,12 @@ export default {
   text-align: justify;
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
 }
-.avatarComent {
-  display: flex;
-  margin: auto;
-}
-.newComentBtn {
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  margin: 13px;
-}
-.ComentBtn {
-  align-content: center;
-  margin: 0 1rem 0 0;
-}
-.ComentBtn:hover {
-  border: transparent;
-  opacity: 2;
-}
-.buttonModify {
-  display: flex;
-  margin: 0 0 1rem 0
+
+@media screen and (max-width: 768px) {
+  .comentModify {
+    flex-direction: column;
+    border-radius: 1rem;
+  }
 }
 .infosUser {
   display: flex;
@@ -296,6 +416,10 @@ export default {
   display: flex;
   align-items: stretch;
   margin: 0 1rem 0 1rem;
+}
+#imgProfile {
+  border-radius: 5rem;
+  object-fit: cover;
 }
 .userComent {
   display: flex;
@@ -317,14 +441,35 @@ export default {
   border-radius: 5rem;
   object-fit: cover;
 }
-.form-group {
+.form-groupComent {
+  display: flex;
   gap: none;
+  align-content: center;
+  align-items: center;
+  margin: 0.7rem 1rem;
+}
+@media screen and (max-width: 768px) {
+  .form-groupComent {
+      display: flex;
+      margin: 10px 0;
+    }
 }
 #coment {
-  /* width: 35rem; */
   width: 100%;
   height: 1.6rem;
+  background-color: #5c5c6c85;
 }
+@media screen and (max-width: 902px) {
+  #coment {
+      width: 100%;
+    }
+}
+@media screen and (max-width: 768px) {
+  #coment {
+      width: 100%;
+    }
+}
+
 .containerBtnComent {
   display: flex;
   flex-direction: row;

@@ -14,7 +14,7 @@
                   <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
                     src="../assets/Icons/BiLockFill.svg" alt="saisir mot de passe actuel">
                 </div>
-                <input id="oldPasswd" name="oldPasswd" v-model="oldPasswd" type="password" class="form-control_input"
+                <input id="password" name="password" v-model="password" type="password" class="form-control_input"
                   placeholder="Saisir mot de passe actuel" required />
                 <i class="fas fa-check-circle"></i>
                 <i class="fas fa-exclamation-circle"></i>
@@ -98,7 +98,7 @@ import navProfil from "@/components/NavProfil.vue";
 export default {
   name: "PasswdUpdate",
   newPwd: {
-    oldPasswd: null,
+    password: null,
     newPasswd: null,
     newPasswdConfirm: null,
   },
@@ -119,7 +119,7 @@ export default {
       }),
       user: [],
       mode: "createPasswd",
-      oldPasswd: "",
+      password: "",
       newPasswd: "",
       newPasswdConfirm: "",
       error: "",
@@ -132,7 +132,7 @@ export default {
     validatedFields: function () {
       if (this.mode == "createPasswd") {
         if (
-          this.oldPasswd != "" &&
+          this.password != "" &&
           this.newPasswd != "" &&
           this.newPasswdConfirm !== ""
         ) {
@@ -141,7 +141,7 @@ export default {
           return false;
         }
       } else {
-        if (this.oldPasswd != "") {
+        if (this.password != "") {
           message("Le mot de passe actuel est incorrect bis  ! ");
           // return true;
         } else {
@@ -162,12 +162,12 @@ export default {
     },
     createPassword: function () {
       const newPwd = {
-        oldPasswd: this.oldPasswd,
+        password: this.password,
         newPasswd: this.newPasswd,
         newPasswdConfirm: this.newPasswdConfirm,
       };
       if (
-        this.oldPasswd == this.oldPasswd &&
+        this.password == this.password &&
         this.newPasswd == this.newPasswdConfirm &&
         this.newPasswd != "" &&
         this.newPasswdConfirm != ""

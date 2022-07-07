@@ -188,9 +188,13 @@ export default createStore({
         commit;
         instance.post('auth/register', data)
           .then(function (response) {
-            commit('setStatus', 'created');
-            resolve(response);
-            console.log(response);
+            if (!response) {
+              this.error = response.data[0].message
+            } else {
+              commit('setStatus', 'created');
+              resolve(response);
+              console.log(response);
+            }
           })
           .catch(function (error) {
             commit('setStatus', 'error_create');

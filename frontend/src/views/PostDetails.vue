@@ -12,22 +12,40 @@
               <div class="d-flex align-items-center">
                 <div class="ml-2 justify-content">
                   <div class="avatar" v-if="post.user.attachment">
-                    <img style="height: 55px; width: 55px" x="0" y="0" height="100%" width="100%" class="imgUser"
+                    <img style="height: 65px; width: 55px" x="0" y="0" height="100%" width="100%" class="imgUser"
                       alt="Image du profil" v-bind:src="post.user.attachment" loading="lazy" />
                   </div>
                   <div class="avatar" v-else>
                     <img style="height: 55px; width: 55px" x="0" y="0" height="100%" width="100%" class="avatarProfil"
-                      src="../assets/Icons/user-alt-light.svg" alt="avatar" />
+                      src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
                   </div>
 
-                  <div>
-                    <div class="userPost">
-                      <p class="textUser">{{ post.user.username }}</p>
+                  <div class="userPost">
+                    <div>
+                      <p class="datePost">{{ post.user.username }} <br> Posté le : {{ post.createdAt }}</p>
                     </div>
-                    <!-- <br /> -->
-                    <div class="datePost">
-                      <p>Posté le : {{ post.createdAt }}</p>
-                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="linkPost">
+                <div class="dropdown" data-dropdown>
+                  <button class="link" data-dropdown-button type="button">
+                    <img data-dropdown-button src="../assets/Icons/ariaCircle.svg" alt="">
+
+                  </button>
+                  <div class="dropdown-menu information-grid">
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                      <img src="../assets/Icons/infollow.svg" alt="">
+                      <span class="">Unfollow</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                      <img src="../assets/Icons/gotopost.svg" alt="">
+                      <span class="">Go to post</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                      <img src="../assets/Icons/share.svg" alt="">
+                      <span class="">Share</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                      <img src="../assets/Icons/copylynk.svg" alt="">
+                      <span class="">Copy link</span></a>
                   </div>
                 </div>
               </div>
@@ -35,7 +53,16 @@
           </div>
           <!-- Affichage du post -->
           <div class="card-body">
-            <p class="mb-3 tx-14">{{ post.title }}</p>
+            <p class="mb-3 tx-14">
+              <!-- Animation du titre -->
+              <router-link class="external" v-bind:to="'/Posts/'">
+                <div class="infos">
+                  <h6 class="aspect">Afficher les publications:</h6>
+                  {{ post.title }}
+                </div>
+              </router-link>
+              <!-- Fin animation du titre -->
+            </p>
             <p class="mb-3 tx-14">{{ post.content }}</p>
             <!-- <img class="imgPost" :src="post.attachment" alt="" /> -->
             <!-- Image du post -->
@@ -79,9 +106,9 @@
             </div>
 
           </div>
-          <!-- Gestion du post -->
+          <!-- Gestion du post  d-flex-->
           <div class="card-footer">
-            <div class="d-flex post-actions">
+            <div class=" post-actions">
               <div class="menuPost">
                 <div class="linkPost">
                   <div class="likeButtons">

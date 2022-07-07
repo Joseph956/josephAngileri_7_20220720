@@ -1,5 +1,6 @@
 const db = require("../models");
 const User = db.user;
+const Role = db.role;
 const fs = require('fs');
 
 exports.findAllPublished = (req, res, next) => {
@@ -7,6 +8,32 @@ exports.findAllPublished = (req, res, next) => {
         return User.findAll({
             user: (req.body.user),
             attributes: ['id', 'imgBottom', 'attachment', 'username', 'email', 'roleId'],
+            include: [
+                {
+                    model: db.posts,
+                    post: req.params.postId,
+                    attributes: ['id', 'content', 'userId'],
+                    order: [["createdAt", "DESC"]],
+                    include: [
+                        {
+                            model: db.user,
+                            attributes: ['username', 'attachment']
+                        }
+                    ],
+                },
+                {
+                    model: db.coments,
+                    coment: req.params.comentId,
+                    attributes: ['id', 'coment', 'userId'],
+                    order: [["createdAt", "DESC"]],
+                    include: [
+                        {
+                            model: db.user,
+                            attributes: ['username', 'attachment']
+                        }
+                    ],
+                },
+            ],
             order: [["createdAt", "DESC"]],
         });
     }).then((user) => {
@@ -157,8 +184,6 @@ exports.updateProfil = async (req, res, next) => {
     const id = req.params.id;
     console.log("/" + id + "/");
     if (req.file) {
-        console.log("--------->METHODE PUT PROFIL : req.file");
-        console.log(req.file);
         User.findOne({
             where: { id: id }
         }).then(userObject => {
@@ -199,11 +224,7 @@ exports.updateProfil = async (req, res, next) => {
                     message: "Le profil (avec image) n'a pas été modifié !"
                 }));
             }
-            console.log("----->CONTENU : filename profil");
-
-
         }).catch((e) => res.status(404).json({ Message: 'Aucun profil n\'est trouvé avec cet identifiant' + e }));
-
     } else {
         const userObject = { ...req.body };
         User.update({
@@ -217,23 +238,23 @@ exports.updateProfil = async (req, res, next) => {
         }));
     }
 };
-
-
-//Supprimer un profil (ok)
 //Desactiver le profil est plus approprié.
 exports.deleteProfil = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const isAdmin = req.user.admin;
         const user = await User.findOne({ where: { id: id } });
-        if (isAdmin == 'admin') {
-            throw new Error('Le compte administrateur ne peut pas être supprimé !!!')
+        const role = await Role.findOne({ where: { id: user.roleId } });
+        if (role.role == 'admin') {
+            res.status(401).send({
+                message: "Le compte administrateur ne peut pas être supprimé !!! "
+            });
         } else if (user.attachment !== null) {
-
             const filename = user.attachment.split("/images/")[1];
             fs.unlink(`images//${filename}`, () => {
                 User.destroy({ where: { id: id } });
-                res.status(200).send({ message: "L'image de profil a été supprimé avec succès!" });
+                res.status(200).send({
+                    message: "L'image de profil a été supprimée avec succès !!!"
+                });
             });
         } else {
             User.destroy({
@@ -245,6 +266,6 @@ exports.deleteProfil = async (req, res, next) => {
             }));
         }
     } catch (err) {
-        res.status(500).send({ err, message: "coucou delete profile à échoué" });
+        res.status(500).send({ err, message: "La suppression du profil à échoué" });
     }
 };

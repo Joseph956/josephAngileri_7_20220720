@@ -10,12 +10,12 @@
         <div class="collapse navbar-collapse">
           <ul v-show="!mobile" class="navbar-nav ml-auto">
             <div class="header">
-              <div class="dropdownNav" data-dropdown>
+              <div class="dropDownNav" data-dropdown>
                 <button class="link" data-dropdown-button @click="showOrReloadPage('Profile')" :userId="user.id">
                   <div class="containerImgProfil">
                     <div class="menuProfile" v-if="user.attachment">
                       <div class="containerImgUser">
-                        <img style="height: 45px; width: 45px" x="0" y="0" height="100%" width="100%"
+                        <img style="height: 55px; width: 45px" x="0" y="0" height="100%" width="100%"
                           class="imgNavProfil" v-bind:src="user.attachment" alt="Photo de profil utilisateur"
                           loading="lazy" />
                       </div>
@@ -45,12 +45,12 @@
                       <router-link class="navbar-brand" id="link" :to="{ name: 'Posts' }">
                         <img class="iconPeople" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%"
                           width="100%" src="../assets/Icons/BiFilePost.svg" alt="">
-                        Lister les publications
+                        Publications
                       </router-link>
                       <router-link class="navbar-brand" id="link" :to="{ name: 'Users' }">
                         <img class="iconPeople" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%"
                           width="100%" src="../assets/Icons/BiPeopleFill.svg" alt="">
-                        Lister les utilisateurs
+                        Comptes
                       </router-link>
                     </div>
                   </div>
@@ -169,6 +169,11 @@ export default {
 
 
 
+@media screen and (max-width: 768px) {
+  .imgAccueil {
+    background: url("../assets/icon.png") no-repeat center fixed;
+  }
+}
 /*******************************
 ******Button profile*****
 *******************************/
@@ -182,21 +187,18 @@ export default {
   display: flex;
   align-items: center;
 }
-@media screen and (max-width: 900px){
+/* @media screen and (max-width: 902px){
   .formRow {
     flex-direction: column;
   }
-}
-/**Button Image user et nom */
+} */
+/**************************
+Button Image user et nom 
+**************************/
 
 .containerImgProfil {
   display: flex;
   align-items: center;
-  /* margin: 0 5px 0 -13px; */
-}
-.containerImgUser {
-  /* margin: 0 0 2px auto; */
-  /* margin: 0 0.3rem 0.3rem; */
 }
 .imgNavProfil {
   border-radius: 5rem;
@@ -212,13 +214,16 @@ export default {
   align-content: center;
   margin: 0 0.3rem 0 0.5rem;
 }
-/**Fin button image user et nom */
+/***************************
+Fin button image user et nom 
+****************************/
 
 /****************************
 ********menus déroulant******
 ****************************/
 body {
   margin: 0;
+  display: flex;
 }
 
 .header {
@@ -244,12 +249,12 @@ body {
   color: black;
 }
 
-.dropdownNav {
+.dropDownNav {
   position: relative;
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
   left: 0;
   background-color: white;
-  padding: 5px 4px 0 6px;
+  padding: 7px 4px 0 6px;
   border-radius: 20rem;
   margin: auto;
 }
@@ -259,24 +264,28 @@ body {
   left: 0;
   top: calc(100% + 0.25rem);
   background-color: white;
-  /* padding: 0.75rem; */
   border-radius: 0.25rem;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
   opacity: 0;
   pointer-events: none;
   transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
 }
-
 .dropdown.active > .link + .dropdown-menu {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
 }
-
+@media screen and (max-width: 768px) {
+  .dropdown.active>.link+.dropdown-menu {
+      opacity: 1;
+      transform: translateX(-12rem);
+      pointer-events: auto;
+    }
+}
 .information-grid {
-  display: grid;
-  grid-template-columns: repeat(2, max-content);
-  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100px, 10px);
 }
 
 .dropdown-links {

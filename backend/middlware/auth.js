@@ -47,7 +47,7 @@ module.exports.haveRightOnPost = (req, res, next) => {
                                 return next();
                             } else {
                                 return res.status(403).send({
-                                    message: "Sécurité : Vous n'avez pas les droits nécessaires pour modifier ce post !",
+                                    message: "Sécurité : Vous n'avez pas les droits nécessaires pour supprimer ou modifier ce post !",
                                 });
                             }
                         })
@@ -96,7 +96,6 @@ module.exports.haveRightOnComent = (req, res, next) => {
         res.status(401).json({ error: error | 'Requête non autorisé !' });
     }
 };
-//Verification que le token a les droits sur le profil (ok).
 module.exports.haveRightOnProfile = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
@@ -106,15 +105,14 @@ module.exports.haveRightOnProfile = (req, res, next) => {
         User.findByPk(userId).then((user) => {
             if (user) {
                 req.user = userId;
-                console.log("   role: " + role.role);
                 if (role.role == "admin") {
                     return next();
-                } else if (userId === req.user) {
-                    return next();
+                } else if (userId == req.params.id) {
+                    return next()
                 } else {
                     return res.status(403).send(
                         {
-                            message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ce compte utilisateur !",
+                            message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ou supprimer ce compte utilisateur !",
                         });
                 }
             } else {
@@ -125,7 +123,7 @@ module.exports.haveRightOnProfile = (req, res, next) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(401).json({ error: error | 'Requête non autorisé !' });
+        res.status(401).json({ message: 'Requête non autorisé !' });
     }
 };
 module.exports.email = (req, res, next) => {
@@ -137,29 +135,45 @@ module.exports.email = (req, res, next) => {
         });
     }
 };
-
-//Contrôle du mot de passe (ne fonctionne pas).
 const passwdSchema = new passwrdValidator();
 
 passwdSchema
-    .is().min(8)
-    .is().max(100)
-    // .has().uppercase(1)
-    // .is().uppercase(1)
-    .has().lowercase()
-    // .has().digits(2)
-    // .has().symbols(1)
-    .has().not().spaces()
-    .is().not().oneOf(['Passw0rd', 'Password123'])
-    ;
+    .is().min(8)                                    // Minimum length 8
+    .is().max(100)                                  // Maximum length 100
+    .has().uppercase(1)                              // Must have uppercase letters (majuscule)
+    .has().lowercase(1)                              // Must have lowercase letters (minuscule)
+    .has().digits(2)                                // Must have at least 2 digits (chiffres)
+    .has().not().spaces()                           // Should not have spaces
+    .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
 
 module.exports.passwd = (req, res, next) => {
-    console.log(req.body.newPasswd);
-    if (passwdSchema.validate(req.body.newPasswd)) {
+    if (passwdSchema.validate(req.body.password)) {
         next();
     } else {
         return res.status(400).json({
-            error: "Le mot de passe n'est pas assez fort "
+            error: "Le mot de passe que vous avez saisi n’est pas conforme, il doit contenir au moins 8 caractères dont au moins 1 chiffre, 1 majuscule, 1 minuscule et 1 caractère spécial parmi cette liste : !@#$%^&*" +
+                passwdSchema.validate(req.body.password, { list: true })
+        })
+    }
+};
+const confirmPasswdSchema = new passwrdValidator();
+
+confirmPasswdSchema
+    .is().min(8)                                    // Minimum length 8
+    .is().max(100)                                  // Maximum length 100
+    .has().uppercase(1)                              // Must have uppercase letters (majuscule)
+    .has().lowercase(1)                              // Must have lowercase letters (minuscule)
+    .has().digits(2)                                // Must have at least 2 digits (chiffres)
+    .has().not().spaces()                           // Should not have spaces
+    .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
+
+module.exports.confirmPasswd = (req, res, next) => {
+    if (confirmPasswdSchema.validate(req.body.newPasswd)) {
+        next();
+    } else {
+        return res.status(400).json({
+            error: "Le mot de passe que vous avez saisi n’est pas conforme, il doit contenir au moins 8 caractères dont au moins 1 chiffre, 1 majuscule, 1 minuscule et 1 caractère spécial parmi cette liste : !@#$%^&*" +
+                confirmPasswdSchema.validate(req.body.newPasswd, { list: true })
         })
     }
 };

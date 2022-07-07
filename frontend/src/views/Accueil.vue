@@ -2,7 +2,7 @@
   <div class="accueil">
     <div class="container">
       <!-- empêche le rafraîchissement de la page  (@submit.prevent="submit") -->
-      <form id="inscription" name="inscription" @submit.prevent="createAccount">
+      <form id="inscription" name="inscription" @submit.prevent="createAccount" novalidate>
         <h1 class="nav-link-title" v-if="mode == 'login'">Login</h1>
         <h1 class="nav-link-title" v-else>Sign Up</h1>
         <p class="nav-link-subtitle" v-if="mode == 'login'">
@@ -67,8 +67,15 @@
           <div class="form-controlSignup">
             <label for="password">Mot de passe</label>
             <div class="inputData">
-              <input id="password" name="password" v-model="password" type="password" placeholder="Mot de passe"
-                class="form-control_input" required autocomplete="off" />
+              <input 
+              id="password" 
+              type="password" 
+              name="password" 
+              v-model="password" 
+              placeholder="Mot de passe"
+              class="form-control_input" 
+              required 
+              autocomplete="off" />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
               <div class="eyePasswd">
@@ -121,10 +128,7 @@
           </div>
         </div> -->
 
-
-
-
-        <!-- <div>
+        <div>
           <div v-if="error">
             <error :error="error" />
           </div>
@@ -133,20 +137,23 @@
               {{ message }}
             </div>
           </div>
-        </div> -->
+        </div>
 
+        <!-- Mode connexion ou création de compte -->
         <div class="form-group">
-          <button @click="login()" class="btn btn-primary" :class="{ 'btn--disabled': !validatedFields }"
-            v-if="mode == 'login'">
+          <button @click="login()" :disabled="!validatedFields" class="btn btn-primary" v-if="mode == 'login'">
             <span v-if="status == 'loading'">Connexion en cours....</span>
             <span v-else>Connexion</span>
           </button>
-
-          <button class="btn btn-primary" @click="createAccount()" :disabled="!validatedFields" v-else>
+          <button @click="createAccount()" :disabled="!validatedFields" class="btn btn-primary" v-else>
             <span v-if="status == 'loading'">Création en cours....</span>
             <span v-else>Créer mon compte</span>
           </button>
-          <!-- <p class="alert alert-danger">{{ error }}</p> -->
+          <br>
+          <!-- Récupération et affichage des messages d'alertes du backend -->
+          <div v-show="error" class="error">{{ this.mesgError }}</div>
+         
+          <!-- Mot de passe oublié -->
           <p class="forgotPasswd">
             <router-link v-if="mode == 'login'" to="Forgot" text-right>Mot de passe oublié ?
             </router-link>
@@ -175,17 +182,17 @@ export default {
   },
   data: function () {
     return {
-      error: "",
-      message: "",
+      error: null,
+      mesgError: "",
       error_login: "",
       error_Password: "", //modifier
       error_confirmPasswd: "", //modifier
 
       mode: "login",
-      username: "",
-      email: "",
-      password: "",
-      confirmPasswd: "", //modifier
+        username: "",
+        email: "",
+        password: "",
+        confirmPasswd: "", //modifier
     };
   },
   mounted: function () {
@@ -217,6 +224,7 @@ export default {
       }
     },
     ...mapState(["status"]),
+    ...mapState({ user: "userInfos" }),
   },
   methods: {
     async handleSubmit() {
@@ -269,6 +277,38 @@ export default {
         e = true;
       }
     },
+    // createAccount: function () {
+    //   const self = this;
+    //   this.error = false;
+    //   this.mesgError = "";
+    //   // const groupomaniaAuth = groupomania.auth();
+    //   // const createUser = groupomaniaAuth.createUserWithEmailAndPassword(this.email, this.password);
+    //   // const result = createUser;
+    //   // const db = db.user("user").doc(result.user.uid);
+    //   let password = document.getElementById("password").value;
+    //   let confirmPasswd = document.getElementById("confirmPasswd").value;
+    //   if (password == confirmPasswd) { 
+    //      message.textContent = "Passwords match";
+    //     }else{
+    //       message.textContent = "Confirmer votre mot de passe !";
+    //     }    
+    //       this.$store
+    //         .dispatch("createAccount", {
+    //           username: this.username,
+    //           email: this.email,
+    //           password: this.password,
+    //           confirmPasswd: this.confirmPasswd,
+    //         }).then(function () {
+              
+    //           self.login();              
+    //           return;             
+            
+    //         }).catch(( error) => {
+    //           this.error = true;
+    //           this.mesgError = "Merci de remplir tous les champs du formulaire !"
+    //           alert(this.mesgError = error.userInfos[0].message)
+    //         })
+    // },
     createAccount: function () {
       const self = this;
       let password = document.getElementById("password").value;
@@ -284,29 +324,37 @@ export default {
               email: this.email,
               password: this.password,
               confirmPasswd: this.confirmPasswd,
-            }).then(function () {
-              self.login();
-            }).catch(error => {
-              if (error.error) {
-                return (this.error = error.error.errors[0].message)
+            }).then(function (state) {
+              if (!state) {
+                return (this.mesgError = error.userInfos.message)
+              }else{
+                self.login();
               }
-            }),
-            function (error) {
-              console.log(error);
-            }
+            }).catch(( error) => {
+              alert(this.mesgError = error.userInfos.message)
+            })
     },
   },
 };
 </script>
 
 <style >
-
-
+.nav-link-subtitle {
+text-align: left;
+text-align: justify;
+}
 .containerCpteCreate {
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 1rem 0 1rem;
+  
+}
+@media screen and (max-width: 768px) {
+  .containerCpteCreate {
+    flex-direction: column;
+    margin: 0 1rem 0 1rem;
+  }
 }
 .cpteCreate {
   display: flex;

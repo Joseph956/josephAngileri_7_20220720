@@ -50,6 +50,11 @@ export default {
         },
       }),
       posts: [], //Permet l'affichage des posts sur le front.
+      post: {
+        title: null,
+        content: null,
+        attachment: null,
+      }
     };
   },
   // computed: {

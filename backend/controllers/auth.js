@@ -7,7 +7,6 @@ const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const { BOOLEAN } = require('sequelize');
 const { validate } = require('uuid');
-const { user } = require('../models');
 dotenv.config();
 
 exports.signUp = (req, res, next) => {
@@ -78,8 +77,8 @@ exports.logout = (req, res, next) => {
 exports.newPasswd = (req, res, next) => {
     try {
         //Validation des paramètres de la requête
-        const userId = req.params.userId;
-        const oldPasswd = req.body.oldPasswd;
+        const userId = req.params.id;
+        const password = req.body.password;
         const newPasswd = req.body.newPasswd;
         const newPasswdConfirm = req.body.newPasswdConfirm;
         User.findOne({
@@ -91,9 +90,9 @@ exports.newPasswd = (req, res, next) => {
                 return res.status(401).json({ error: "Ce profil utilisateur n'existe pas !!!" });
             }
             const passwdIsValid = bcrypt.compare(
-                oldPasswd === user.password
+                password === user.password
             )
-            bcrypt.compare(req.body.oldPasswd, user.password)
+            bcrypt.compare(req.body.password, user.password)
                 .then((valid) => {
                     if (!valid) {
                         return res.status(403).json({ error: 'Le mot de passe actuel est incorrect !' });

@@ -2,22 +2,15 @@
   <div>
     <div class="post-card-wrap">
       <navProfil />
-
       <div class="posts-cards container">
-        <h1>joseph</h1>
-        <!-- <div class="toggle-edit">
-          <router-link class="navbar-brand" id="link" :to="{ name: 'Users' }">
-            <img class="iconPeople" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%" width="100%"
-              src="../assets/Icons/BiCardImg.svg" alt="">
-            Lister les utilisateurs
-          </router-link>
-          <span>Toggle Editing Post</span>
-          <input type="checbox" v-model="editPost" /> -->
-          <PostCardRecent v-for="post in posts" :key="post.id" :postId="post.id" />
-        <!-- </div> -->
+        <h1>Voir les posts recents</h1>
+        <h2>{{post.title}}</h2>
+        <PostCardRecent v-for="post in posts" :key="post.id" :postId="post.id" />
+          <div v-show="posts.length > 0" v-for="post in posts" :key="post.id" class="col-md-12 grid-margin">
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -27,19 +20,53 @@ import postCardRecent from "@/components/PostCardRecent.vue";
 export default {
   name: "PostsCards",
   components: { postCardRecent, navProfil },
-  computed: {
-    postCardRecent() {
-      return this.$store.state.postCardRecent;
-    },
-    editPost: {
-      get() {
-        return this.$store.state.editPost;
+  data: function () {
+    return {
+      post: {
+        title: null,
+        content: null,
+        attachment: null,
+        user: null,
+        admin: null,
+        likes: null,
       },
-      set(payload) {
-        this.$store.commit("toggleEditPost", payload);
-      },
+      apiPosts: axios.create({
+        baseURL: "http://localhost:3000/api/posts/",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "BEARER " + this.$store.state.user.token,
+        },
+      }),
+      posts: [],
+    };
+  },
+  beforeMount() {
+    this.getPostList();
+  },
+  methods: {
+    getPostList() {
+      this.apiPosts
+        .get("")
+        .then((response) => {
+          this.posts = response.data;
+        })
+        .catch(function () { });
     },
   },
+  // computed: {
+  //   postCardRecent() {
+  //     return this.$store.state.postCardRecent;
+  //   },
+  //   editPost: {
+  //     get() {
+  //       return this.$store.state.editPost;
+  //     },
+  //     set(payload) {
+  //       this.$store.commit("toggleEditPost", payload);
+  //     },
+  //   },
+  // },
 };
 </script>
 

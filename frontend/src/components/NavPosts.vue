@@ -47,12 +47,12 @@
                       <router-link class="navbar-brand" id="link" :to="{ name: 'Posts' }">
                         <img class="iconPeople" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%"
                           width="100%" src="../assets/Icons/BiFilePost.svg" alt="">
-                        Lister les publications
+                        Publications
                       </router-link>
                       <router-link class="navbar-brand" id="link" :to="{ name: 'Users' }">
                         <img class="iconPeople" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%"
                           width="100%" src="../assets/Icons/BiPeopleFill.svg" alt="">
-                        Lister les utilisateurs
+                       Comptes
                       </router-link>
                     </div>
                   </div>
@@ -167,6 +167,7 @@ export default {
 
 
 
+
 header {
   background-color: #fff;
   padding: 0 25px;
@@ -174,6 +175,12 @@ header {
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 99;
 }
+.container {
+
+}
+/* .fixed-top {
+  position: relative;
+} */
 h5 {
   margin-bottom: 0;
 }
@@ -306,19 +313,26 @@ body {
   pointer-events: none;
   transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
 }
-
-.dropdown.active > .link + .dropdown-menu {
+.dropdown.active>.link+.dropdown-menu {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
 }
-
-.information-grid {
-  display: grid;
-  grid-template-columns: repeat(2, max-content);
-  gap: 2rem;
+@media screen and (max-width: 768px) {
+  .dropdown.active>.link+.dropdown-menu {
+    opacity: 1;
+    transform: translateX(-12rem);
+    pointer-events: auto;
+  }
 }
-
+.information-grid {
+  /* display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 2rem; */
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100px, 10px);
+}
 .dropdown-links {
   display: flex;
   flex-direction: column;

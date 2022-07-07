@@ -1,21 +1,26 @@
 <template>
   <div class="postForm">
-    <navPosts />
+    <!-- <navPosts /> -->
+    <navProfil />
     <div class="form-control-input">
       <div class="post-card-wrap">
         <div class="containerRecent">
           <h1>Publication récentes</h1>
           <div class="post-cards">
-            <h1>joseph</h1>
-            <PostCards v-show="posts.length > 0" v-for="post in posts" :key="post.id" />
-
-          </div>
+            <!-- <h1>joseph</h1> -->
+            <PostCards v-show="posts.length > 4" v-for="post in posts" v-bind:key="post.id" :post="post" />
+            <routeur-link 
+              v-bind:to="'/PostsCards/' + post.id" class="d-flex align-items-center text-muted mr-4">
+              <button  @click="postsRecent()" class="postsRecents">Voir les posts récents
+              </button>
+            </routeur-link>
+            </div>
         </div>
       </div>
       <div>
         <div class="publierForm">
+          <!-- Formulaire de création d'un post-->
           <form class="formPublish" enctype="multipart/form-data">
-            <!-- Formulaire de création d'un post-->
             <div class="containerLogo">
               <div class="logoTransparentPost">
                 <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
@@ -65,7 +70,7 @@
                   <img :src="image" class="w-50 rounded" />
                 </div>
                 <div v-else>
-                  <img style="height: 15rem; width: 25rem" x="0" y="0" height="100%" width="100%" class="avatarPost "
+                  <img style="height: 15rem; width: 100%" x="0" y="0" height="100%" width="100%" class="avatarPost "
                     src="../assets/Icons/BiCardImg.svg" alt="">
                 </div>
               </div>
@@ -105,15 +110,10 @@
                           <img style="height: 55px; width: 55px" x="0" y="0" height="100%" width="100%"
                             class="avatarProfil" src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
                         </div>
-                        <div>
-                          <div class="userPost">
-                            <p class="textUser">
-                              {{ post.user.username }}
-                            </p>
-                          </div>
-                          <!-- <br /> -->
-                          <div class="datePost">
-                            <p>Posté le : {{ post.createdAt }}</p>
+
+                        <div class="userPost">
+                          <div>
+                            <p class="datePost">{{ post.user.username }} <br> Posté le : {{ post.createdAt }}</p>
                           </div>
                         </div>
                       </div>
@@ -170,7 +170,7 @@
                       <img class="imgPost" style="height: 30rem; width: 30rem" x="0" y="0" height="100%" width="100%"
                         src="../assets/Icons/BiCardImg.svg" alt="avatar" />
                     </div> -->
-                    <div v-if="post.attachment" >
+                    <div v-if="post.attachment">
                       <!-- Fenêtre modale -->
                       <modale v-bind:revele="revele">
                         <div @click="toggleModale" :toggleModale="toggleModale" class="btn btn-success">
@@ -180,11 +180,11 @@
                         </div>
                       </modale>
                       <!-- Fin fenêtre modale -->
-                            <a href="#">
-                              <img @click="toggleModale" class="imgPost" :src="post.attachment" alt="Image du post" />
-                            </a>
+                      <a href="#">
+                        <img @click="toggleModale" class="imgPost" :src="post.attachment" alt="Image du post" />
+                      </a>
                     </div>
-                    <div v-else >
+                    <div v-else>
                       <!-- Fenêtre modale -->
                       <modale v-bind:revele="revele">
                         <div @click="toggleModale" :toggleModale="toggleModale" class="btn btn-success">
@@ -199,16 +199,18 @@
                           <label for="file">Image de la publication</label>
                         </div>
                         <div>
-                          <img @click="toggleModale" class="imgPost" src="../assets/Icons/BiCardImg.svg" alt="Image du post" />
+                          <img @click="toggleModale" style="height: 85vh; width: 100%" x="0" y="0" height="100%"
+                            width="100%" class="imgBottomPost" src="../assets/Icons/BiCardImg.svg"
+                            alt="Image du post" />
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- Gestion du post -->
+                <!-- Gestion du post d-flex -->
                 <div class="card-footer">
-                  <div class="d-flex post-actions">
+                  <div class=" post-actions">
                     <div class="menuPost">
                       <div class="linkPost">
                         <div class="likeButtons">
@@ -232,7 +234,7 @@
                                 </span>
                               </button>
                             </routeur-link>
-                            <routeur-link v-bind:to="'/PostUnLikes/' + postId"
+                            <!-- <routeur-link v-bind:to="'/PostUnLikes/' + postId"
                               class="d-flex align-items-center text-muted mr-4">
                               <button type="button" class="btn btn-like" @click="postUnlikeCreate(post.id)">
                                 <span v-if="status == 'loading'">unLike ....</span>
@@ -252,7 +254,7 @@
                                   </div>
                                 </span>
                               </button>
-                            </routeur-link>
+                            </routeur-link> -->
                           </div>
                         </div>
                       </div>
@@ -269,6 +271,7 @@
                             </div>
                           </div>
                         </router-link>
+
                       </div>
                       <div class="linkPost">
                         <div class="dropdown" data-dropdown>
@@ -323,7 +326,7 @@
                                           <div>
                                             <span v-if="status == 'loading'">Ouverture du formulaire en
                                               cours....</span>
-                                            <span v-else>Details du post</span>
+                                            <span v-else>Post détaillé</span>
                                           </div>
                                         </div>
                                       </button>
@@ -352,8 +355,8 @@
 import axios from "axios";
 import { mapState } from "vuex";
 //Barre de navigation
-import navPosts from "@/components/NavPosts.vue";
-// import navProfil from "@/components/NavProfil.vue";
+// import navPosts from "@/components/NavPosts.vue";
+import navProfil from "@/components/NavProfil.vue";
 //Les views
 import postDetails from "@/views/PostDetails.vue";
 import postsCards from "@/views/PostsCards.vue";
@@ -361,19 +364,21 @@ import postsCards from "@/views/PostsCards.vue";
 import postsUpdate from "@/components/PostsUpdate.vue";
 import postCardRecent from "@/components/PostCardRecent.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
+import comentsList from "@/components/ComentsList.vue";
 import modalComent from "@/components/ModalComent.vue";
 import Modale from "@/components/Modale.vue";
 
 export default {
   name: "Posts",
   components: {
-    // navProfil,
-    navPosts,
+    navProfil,
+    // navPosts,
     postsUpdate,
     postsCards,
     postCardRecent,
     postDetails,
     comentsCreate,
+    comentsList,
     modalComent,
     modale: Modale,
   },
@@ -465,6 +470,14 @@ export default {
         })
         .catch(function () {});
     },
+    postsRecent: function () {
+      this.apiPosts
+        .get("http://localhost:3000/api/posts")
+        .then(() => {
+          this.getPostList();
+        })
+        .catch(function () { });
+    },
     postLikeCreate: function (postId) {
       this.apiPosts
         .put(
@@ -533,6 +546,12 @@ export default {
 </script>
 
 <style>
+
+
+
+
+
+
 /************************ 
 Voir les posts récents 
 ************************/
@@ -540,7 +559,14 @@ Voir les posts récents
 h1 {
   font-weight: 400;
   font-size: 35px;
-  margin-bottom: 32px;
+  margin: 32px 0 32px 0;
+  /* margin-bottom: 32px; */
+}
+@media screen and (max-width: 768px) {
+  .blog-card-wrap,
+    h1 {
+    font-size: 25px;
+  }
 }
 
 .updates,
@@ -554,6 +580,11 @@ h1 {
   /* @media (min-width: 800px) padding: 125px 25px; */
   display: block;
   flex-direction: row;
+}
+@media screen and (max-width: 768px) {
+  .container {
+      flex-direction: column;
+  }
 }
 
 .router-button {
@@ -586,7 +617,7 @@ fin Voir les posts recents
 ***************************/
 
 .containerRecent {
-  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e51665a;
+  box-shadow: 5px 5px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   /* margin-left: 0.4rem;
   margin-right: 0.4rem; */
   border-radius: 1rem;
@@ -596,9 +627,14 @@ fin Voir les posts recents
 Formulaire de publication des posts
 ***********************************/
 .publierForm {
-  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e516659;
+  background-color: 4e5166;
+  box-shadow: 0px 0px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   margin-bottom: 2.2rem;
   border-radius: 1rem;
+  outline: none;
+}
+.formPublish {
+  background: #4e5166;
 }
 .containerLogo{
   display: flex;
@@ -628,7 +664,7 @@ Formulaire de publication des posts
   flex-direction: column;
   width: 100%;
   margin: auto;
-  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 0 #4e51665a;
+  /* box-shadow: 5px 5px 10px #cecdcd, -5px -5px 0 #4e51665a; */
   border: 0.5px solid #ffd6d6;
   border-radius: 1rem;
 }
@@ -683,18 +719,25 @@ img {
 ***********Card header***********
 *********************************/
 .card-header {
-  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e516674;
+  box-shadow: 0px 0px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   border-radius: calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0;
 }
 .justify-content-between {
   justify-content: space-around;
 }
 .justify-content {
+  text-align: left;
   justify-content: space-around;
   margin: auto;
 }
 .ml-2 {
   display: flex;
+}
+@media screen and (max-width: 768px) {
+  .ml-2 {
+      display: flex;
+      /* flex-direction: column; */
+    }
 }
 .avatar {
   display: contents;
@@ -713,26 +756,47 @@ img {
   align-items: center;
   margin: 1rem 0 0 1rem;
 }
+@media screen and (max-width: 768px) {
+  .userPost {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
 .textUser {
   margin: 0;
 }
 .datePost {
   margin: 0 0 0 1rem;
 }
+@media screen and (max-width: 768px) {
+  .textUser {
+    margin-bottom: 1rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .datePost {
+      margin: 0;
+      text-overflow: ellipsis;
+      overflow: hidden;
+  }
+}
 .dropdown {
   position: relative;
 }
 .dropdown-menu {
   position: absolute;
-  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e516674;
+  /* box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e516674; */
+  box-shadow: 5px 5px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   opacity: 0;
+  transform: translate(-5rem, 10px);
 }
 /*******************************
 ***********Card body************
 ********************************/
 .card-body {
   /* margin: 5px 0 -5px 0; */
-  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e516659;
+box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
 }
 /******************************
 *******Animation du titre******
@@ -775,9 +839,27 @@ img {
 }
 .imgPost {
   width: 100%;
-  height: 40vw;
+  height: auto;
   object-fit: cover;
   margin: auto;
+}
+@media screen and (max-width: 902px) {
+  .imgPost {
+  width: 100%;  
+  height: 60vw;
+  }
+}
+@media screen and (max-width: 768px) {
+  .imgPost {
+  width: 100%;  
+  height: auto;
+  }
+}
+@media screen and (max-width: 768px) {
+  .imgBottomPost {
+  width: 100%;  
+  height: 100vh;
+  }
 }
 .readMore .addText {
   display: none;
@@ -787,14 +869,36 @@ img {
 ********************************/
 .card-footer {
   margin: 0 0 0.6rem 0;
-  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e51665a;
+  /* box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e51665a; */
+  box-shadow: 0px 0px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   padding: 2rem 2rem 1rem 2rem;
+  background: #4e5166;
 }
 .post-actions {
   display: flex;
   flex-wrap: wrap;
   align-content: space-around;
   justify-content: space-around;
+}
+@media screen and (max-width: 768px) {
+  .post-actions {
+      display: block;
+    }
+}
+.form-control_input {
+  padding: 2 rem;
+  border: none;
+  border-radius: 1rem;
+  background: #5c5c6c85;
+  font-weight: 500;
+  font-size: 16px;
+  flex: 1;
+  min-width: 100px;
+  color: #4e516600;
+}
+.form-control_input::placeholder {
+  /* color: #a3a2a2; */
+  color: #4e51665a;
 }
 .menuPost {
   display: flex;
@@ -805,8 +909,14 @@ img {
 .linkPost {
   margin: 0 4rem 0 2rem;
 }
+/* @media screen and (max-width: 768px) {
+  .linkPost {
+      margin: auto;
+    }
+} */
 .likeButtons {
   display: flex;
+  margin: auto;
 }
 .likes {
   display: flex;
@@ -815,11 +925,11 @@ img {
   display: flex;
   margin: auto;
 }
-.like{
+.likes{
   margin: auto 0.2em;
   color: blue;
 }
-.like:hover {
+.likes:hover {
   color: rgb(89, 165, 13);
 }
 .unLikeFlex {
@@ -851,10 +961,18 @@ img {
   cursor: pointer;
   padding: 0;
 }
+.dropdown.active>.link+.dropdown-menu {
+  opacity: 1;
+  /* transform: translateY(0); */
+  transform: translateX(-5rem);
+  pointer-events: auto;
+}
 .information-grid {
-  display: grid;
+  /* display: grid;
   grid-template-columns: repeat(2, max-content);
-  gap: 1rem;
+  gap: 1rem; */
+  display: flex;
+  flex-direction: column;
 }
 .dropdown-links {
   display: flex;
@@ -874,19 +992,5 @@ img {
   gap: 16px;
   /* flex-wrap: wrap; */
 }
-.form-control_input {
-  padding: 2 rem;
-  border: none;
-  border-radius: 0 8px 0 2px;
-  background: #f2f2f2;
-  font-weight: 500;
-  font-size: 16px;
-  flex: 1;
-  min-width: 100px;
-  color: #4e516600;
-}
-.form-control_input::placeholder {
-  /* color: #a3a2a2; */
-  color: #4e51665a;
-}
+
 </style>

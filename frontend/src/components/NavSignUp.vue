@@ -81,6 +81,7 @@ export default {
 </script>
 
 <style>
+
 header {
   background-color: #fff;
   padding: 0 25px;
@@ -88,6 +89,9 @@ header {
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 99;
 }
+/* .fixed-top {
+  position: relative;
+} */
 img,
 .imgAccueil {
   display: flex;

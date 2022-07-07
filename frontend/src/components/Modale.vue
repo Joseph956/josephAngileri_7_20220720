@@ -61,6 +61,9 @@ export default {
           console.log(error);
         });
     },
+    toggleModale() {
+      this.$emit("toggleModale");
+    },
   },
 };
 </script>

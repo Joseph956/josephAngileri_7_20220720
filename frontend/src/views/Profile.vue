@@ -4,27 +4,20 @@
     <div class="card">
       <h1 class="cardTitle">Profil utilisateur</h1>
       <h2 class="cardSubtitle">Informations personnelles</h2>
-
-
-
-
       <!-- Image de fond -->
       <div class="form-grouProfile" v-if="user.imgBottom">
-        <img id="imgBottomUser"
+        <img style="height: auto; width: 100%" x="0" y="0" height="100%" width="100%" id="imgBottomUser"
           v-bind:src="user.imgBottom" alt="Image de fond compte utilisateur" />
       </div>
       <div class="form-grouProfile" v-else>
-        <img style="height: 20rem; width: 40rem" x="0" y="0" height="100%" width="100%" id="imgBottomAvatar"
+        <img style="height: 25vw; width: 100%" x="0" y="0" height="100%" width="100%" id="imgBottomAvatar"
           src="../assets/Fond-Gris.jpg" alt="avatar" />
       </div>
-
-
       <!--Photo de profil  -->
       <div class="form-grouProfile">
         <div v-if="user.attachment">
           <img style="height: 10rem; width: 10rem" x="0" y="0" height="100%" width="100%" id="imgProfileUser"
             v-bind:src="user.attachment" alt="Photo de profil utilisateur" />
-          <!-- <h3>{{ user.username }}</h3> -->
         </div>
         <div class="form-grouProfile" v-else>
           <img style="height: 10rem; width: 10rem" x="0" y="0" height="100%" width="100%" id="imgAvatarUser"
@@ -36,56 +29,51 @@
         <h1>{{ user.email }}</h1>
       </div>
       <div class="formRowProfile">
-        <router-link v-bind:to="'/ProfilUpdate/' + user.id">
-          <button type="button" class="btn btn-primary" @click="userModify()" :userId="user.id">
-            <span v-if=" status=='loading'">Ouverture du formulaire de modification en cours....</span>
-            <span v-else>Modifier le profil</span>
-          </button>
-        </router-link>
-
-        <router-link v-bind:to="'/PasswdUpdate/' + user.id">
-          <button type="button" class="btn btn-primary" @click="passwdModify()" :userId="user.id">
-            <span v-if="status == 'loading'">Ouverture du formulaire de modification en cours....</span>
-            <span v-else>Modifier le mot de passe</span>
-          </button>
-        </router-link>
-
-
-
-        <!-- Rendu conditionnel du bouton supprimer -->
-        <div>
-          <div v-if="mode == 'isAdmin'">
-            <button class="btn" data-dropdown-button @click="userDeleted()">
-              <div class="trashBtn">
-                <div class="btnComent">
-                  <img src="../assets/Icons/BiTrash3Fill.svg" alt="">
+        <ul class="btnFooterProfil">
+          <li class="liBtn">
+            <router-link v-bind:to="'/ProfilUpdate/' + user.id">
+              <button type="button" class="btnModify" @click="userModify()" :userId="user.id">
+                <img style=" height: 1.5rem; width: 1.5rem" x="0" y="0" height="100%" width="100%"
+                  src="../assets/Icons/BiPenFill.svg" alt="modifier le profil">
+                <span v-if=" status=='loading'">Ouverture du formulaire de modification en cours....</span>
+                <span v-else></span>
+              </button>
+            </router-link>
+          </li>
+          <li class="liBtn">
+            <router-link v-bind:to="'/PasswdUpdate/' + user.id">
+              <button type="button" class="btnModify " @click="passwdModify()" :userId="user.id">
+                <img style=" height: 1.5rem; width: 1.5rem" x="0" y="0" height="100%" width="100%"
+                  src="../assets/Icons/BiLockFill.svg" alt="modifier le mot de passe">
+                <span v-if="status == 'loading'">Ouverture du formulaire de modification en cours....</span>
+                <span v-else></span>
+              </button>
+            </router-link>
+          </li>
+          <li class="liBtn">
+            <button class="btnTrash" data-dropdown-button @click="userDeleted(user.id)">
+              <div class="btnModify">
+                <div class="btnModify">
+                  <img class="btnTrash" style=" height: 1.5rem; width: 1.5rem" x="0" y="0" height="100%" width="100%"
+                    src="../assets/Icons/BiTrash3Fill.svg" alt="supprimer le compte utilisateur">
                 </div>
-                <div class="btnComent">
+                <div class="btnModify">
                   <span v-if="status == 'loading'">Suppression en cours....</span>
-                  <span v-else>Supprimer</span>
+                  <span v-else></span>
                 </div>
               </div>
             </button>
-          </div>
-          <div v-else>
-            <button class="btn" data-dropdown-button @click="userDeleted()">
-              <div class="trashBtn">
-                <div class="btnComent">
-                  <img src="../assets/Icons/BiTrash3Fill.svg" alt="">
-                </div>
-                <div class="btnComent">
-                  <span v-if="status == 'loading'">Suppression en cours....</span>
-                  <span v-else>Supprimer</span>
-                </div>
-              </div>
+          </li>
+          <li class="liBtn">
+            <button type="button" class="btnModify" @click="logout()">
+              <img style="height: 1.5rem; width: 1.5rem" x="0" y="0" height="100%" width="100%"
+                src="../assets/Icons/sign-out-alt-regular.svg" alt="deconnexion">
             </button>
-          </div>
-        </div>
-        <!-- Fin rendu conditionnel -->
-        <button type="button" class="btn btn-primary" @click="logout()">
-          Déconnexion
-        </button>
+          </li>
+        </ul>
+
       </div>
+      <div class="alert text-danger">{{ mesgError }} </div>
     </div>
     <div class="logoTransparent">
       <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
@@ -98,19 +86,20 @@
 import axios from "axios";
 import { mapState } from "vuex";
 import navProfil from "@/components/NavProfil.vue";
-import Profils from "./Users.vue";
+// import Profils from "./Users.vue";
 import ProfilUpdate from "@/components/ProfilUpdate.vue";
 import PasswdUpdate from "@/components/PasswdUpdate.vue";
 export default {
   name: "Profile",
   components: {
-    Profils,
+    // Profils,
     navProfil,
     ProfilUpdate,
     PasswdUpdate,
   },
   data: function () {
     return {
+      mesgError: "",
       user: {
         usermame: this.username,
         email: this.email,
@@ -161,18 +150,30 @@ export default {
     }),
   },
   methods: {
-    //Supprimer un profil avec ses posts et coments
-    userDeleted: function (id) {
-      console.log("------->CONTENU USER: id");
-      console.log(id);
+    getUserOne() {
+      this.apiUser
+        .get("")
+        .then((response) => {
+          this.user = response.data;
+          window.location.reload();
+        })
+        .catch(function (error) { });
+    },
+    userDeleted: function (userId) {
       if (
         window.confirm("Voulez-vous vraiment supprimer ce compte utilisateur ?")
       ) {
         this.apiUser
-          .delete("http://localhost:3000/api/users/" + id)
-          .then(() => {
-            this.$store.commit("logout");
-            this.$router.push("/");
+          .delete("http://localhost:3000/api/users/" + userId)
+          .then((response) => {
+            if (!response) {
+              this.mesgError = error.response.data.message
+            } else {
+              this.$store.commit("logout");
+              this.$router.push("/");
+            }
+          }).catch((error) => {
+            alert(this.mesgError = error.response.data.message)
           });
       }
     },
@@ -191,6 +192,21 @@ export default {
 
 
 
+
+
+
+.card {
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e51665a;
+  border-radius: 1rem;
+  background: #4e5166;
+}
+
+
+.cardSubtitle {
+  font-size: 15px;
+  margin-bottom: 32px;
+}
+
 .form-grouProfile {
   position: relative;
   border: none;
@@ -198,6 +214,24 @@ export default {
 }
 #imgBottomUser {
   width: 100%;
+}
+@media screen and (max-width: 768px) {
+  .cardSubtitle, h1 {
+      font-size: 15px;
+        margin: 0 0 17px 0;
+    }
+  #imgBottomAvatar {
+    width: auto;
+    height: 10rem;
+  }
+   h1 {
+    font-size: 17px;
+  }
+}
+.btnModify,
+.btnComent,
+.btnTrash {
+  background: 0;
 }
 #imgProfileUser {
   position: absolute;
@@ -224,13 +258,32 @@ export default {
 
 .formRowProfile {
   display: flex;
-  margin: 1rem 0 0 0;
+  align-items: center;
+  align-content: center;
+  justify-content: space-around;
+  /* margin: 1rem 0 0 0; */
 }
-@media screen and (max-width: 740px) {
+.btnFooterProfil {
+  display: flex;
+}
+.liBtn {
+  margin: 0 3rem;
+}
+@media screen and (max-width: 768px) {
   .formRowProfile {
      flex-direction: column;
      align-items: center;
      align-content: center;
+     justify-content: space-between;
+    }
+    .btnFooterProfil, li {
+      display: flex;
+      flex-direction: column;
+      margin: 1rem;
+      padding-left: 0;
+    }
+    .liBtn, li{
+     margin: 1rem;
     }
 }
 </style>

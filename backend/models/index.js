@@ -72,7 +72,7 @@ db.user.hasMany(db.unlikes, {// Un utilisateur peut être l'auteur de plusieurs 
 /*****************************************
 **************relation posts**************
 *****************************************/
-db.posts.belongsTo(db.user, { //Un post peut appartenir à un seul utilisateur.
+db.posts.belongsTo(db.user, { //Un post appartient à un seul utilisateur.
   foreignKey: {
     //Relation (un à un) clé étrangère définie dans le modèle source (db.posts).
     name: 'userId',
@@ -146,11 +146,11 @@ db.posts.hasMany(db.unlikes, {//Un post peut avoir plusieurs unlikes.
 //     as: 'user',
 //     allowNull: false
 //   },
-//   otherKey: 'comentId',
-//   through: db.coments,
+//   otherKey: 'postId',
+//   through: db.posts,
 //   onDelete: 'CASCADE'
 // });
-db.coments.belongsTo(db.posts, { //Un coment peut appartenir à un seul post.
+db.coments.belongsTo(db.posts, { //Un coment appartient à un seul post.
   foreignKey: {
     // Relation(un à un) clé étrangère définie dans le modèle source(db.coments).
     name: 'postId',
@@ -161,7 +161,7 @@ db.coments.belongsTo(db.posts, { //Un coment peut appartenir à un seul post.
   through: db.coments,
   onDelete: 'CASCADE'
 });
-db.coments.belongsTo(db.user, { //Un coment peut appartenir à un seul utilisateur.
+db.coments.belongsTo(db.user, { //Un coment appartient à un seul utilisateur.
   foreignKey: {
     // Relation(un à un) clé étrangère définie dans le modèle source(db.coments).
     name: 'userId',

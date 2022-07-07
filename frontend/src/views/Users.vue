@@ -8,9 +8,11 @@
                         src="../assets/logo_transparent.png" alt="" />
                 </div>
                 <div class="cardTitle">
-                   <h1 >Lister tous les profils utilisateurs</h1>
+                    <h1>Lister tous les profils utilisateurs</h1>
                 </div>
             </div>
+            <br>
+                <p class="alet text-danger">{{ mesgError }}</p>
             <div class="row">
                 <div v-show="users.length > 0" v-for="user in users" :key="user.id">
                     <div class="cardUsers rounded">
@@ -32,8 +34,8 @@
                                     </div>
                                     <div class="positionTrash">
                                         <button class="btn" data-dropdown-button @click="userDeleted(user.id)" :class="{
-                                                    'btn--disabled': !validatedFields,
-                                                  }">
+                                          'btn--disabled': !validatedFields,
+                                        }">
                                             <div class="trashBtn">
                                                 <div class="btnComent">
                                                     <img style="height: 1.5rem; width: 1.5rem" x="0" y="0" height="100%"
@@ -65,8 +67,9 @@
                                     </div>
                                     <div class="positionTrash">
                                         <button class="btn" data-dropdown-button @click="userDeleted(user.id)" :class="{
-                                                    'btn--disabled': !validatedFields,
-                                                  }">
+                                          'btn--disabled': !validatedFields,
+                                        }">
+
                                             <div class="trashBtn">
                                                 <div class="btnTrashUser">
                                                     <img style="height: 1.5rem; width: 1.5rem" x="0" y="0" height="100%"
@@ -102,6 +105,7 @@ export default {
     components: { navProfil },
     data: function () {
         return {
+            mesgError: "",
             //Lister tous les users
             apiUser: axios.create({
                 baseURL:
@@ -137,41 +141,53 @@ export default {
                 .then((response) => {
                     this.users = response.data;
                 })
-                .catch(function (error) {
-                });
+                .catch(function (error) {});
         },
         //Supprimer un profil avec ses posts et coments
-        userDeleted: function (id) {
-            // const roleId = admin;
-           
-            // console.log("--------->CONTENU role : isadmin");
-            // console.log(isadmin);
-            // if (roleId === 'admin') {
-            //     return false
-            // }else{
+        userDeleted: function (userId) {
                 if (
                     window.confirm("Voulez-vous vraiment supprimer ce compte utilisateur ?")
                 ) {
-                    this.apiUser
-                        .delete("http://localhost:3000/api/users/" + id)
-                        .then(() => {
-                            window.location.reload();
-                        });
-                };
-            // }
+                this.apiUser
+                    .delete("http://localhost:3000/api/users/" + userId
+                ).then((response) => {
+                    if (!response.data) {
+                      return (this.mesgError = error.response.data.message)
+                    }else{
+                        window.location.reload()
+                    }
+                }).catch((error) => {
+                    alert(this.mesgError = error.response.data.message)
+                });
+            };
         },
     },
-
 };
 </script>
 
 <style scoped>
 
+
+
+
+.col-md-8 {
+    background: #4e5166;
+    padding: 2rem;
+    border-radius: 2rem;
+}
 .containerTitre, h1 {
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 1rem 0 1rem;
+}
+@media screen and (max-width: 768px) {
+    .containerTitre,
+    h1 {
+        display: flex;
+        flex-direction: column;
+        font-size: larger;
+    }
 }
 .logoTransparentUser {
     display: flex;
@@ -184,17 +200,31 @@ margin: 1rem;
 }
 .listInfosUsers {
     display: flex;
-    /* justify-content: space-evenly; */
     align-items: center;
+    margin: auto;
     background: #f2f2f2;
     box-shadow: 0px 0px 10px #cecdcd, -5px -5px 10px #cfcece;
     border-radius: 5rem;
     padding: 0.5rem;
 }
+#imgProfile {
+    border-radius: 5rem;
+    object-fit: cover;
+}
+@media screen and (max-width: 768px) {
+    .listInfosUsers {
+        flex-direction: column;
+    }
+}
 .listInfosUser {
     display: flex;
-    margin: auto;
-   
+    margin: 0 5rem 0 7rem
+}
+@media screen and (max-width: 768px) {
+    .listInfosUser {
+        flex-direction: column;
+        margin: 1rem;
+    }
 }
 .imgAvatarUser {
     margin: 0 auto 0 auto;
@@ -203,6 +233,12 @@ margin: 1rem;
     display: flex;
     align-items: center;
     margin: 0 0rem 0 5rem;
+}
+@media screen and (max-width: 768px) {
+    .positionTrash {
+        justify-content: center;
+        margin: auto;
+    }
 }
 .btnTrashUser {
     font-size: 2rem;

@@ -5,24 +5,53 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 exports.findAllPublished = async (req, res) => {
-
     Coment.findAll({
-
         include: [
             {
                 model: db.user,
                 attributes: ['username', 'attachment']
             },
+            // {
+            //     model: db.coments,
+            //     coment: req.params.comentId,
+            //     attributes: ['id', 'coment', 'userId'],
+            //     order: [["createdAt", "DESC"]],
+            //     include: [
+            //         {
+            //             model: db.user,
+            //             attributes: ['username', 'attachment']
+            //         },
+            //         {
+            //             model: db.posts,
+            //             post: req.params.postId,
+            //             attributes: ['id', 'content', 'userId'],
+            //             order: [["createdAt", "DESC"]],
+            //         }
+            //     ],
+            // },
             {
-                model: db.coments,
-                coment: req.params.comentId,
-                attributes: ['id', 'coment', 'userId'],
+                model: db.posts,
+                post: req.params.postId,
+                attributes: ['id', 'content', 'userId'],
                 order: [["createdAt", "DESC"]],
                 include: [
                     {
                         model: db.user,
                         attributes: ['username', 'attachment']
-                    }
+                    },
+                    {
+                        model: db.coments,
+                        coment: req.params.comentId,
+                        attributes: ['id', 'coment', 'userId'],
+                        order: [["createdAt", "DESC"]],
+                        include: [
+                            {
+                                model: db.user,
+                                attributes: ['username', 'attachment']
+                            },
+                        ]
+                    },
+
                 ],
             },
 
@@ -66,6 +95,18 @@ exports.findCommentsByPostId = async (req, res, next) => {
                 model: db.user,
                 attributes: ['username', 'attachment']
             },
+            {
+                model: db.posts,
+                post: req.params.postId,
+                attributes: ['id', 'content', 'userId'],
+                order: [["createdAt", "DESC"]],
+                include: [
+                    {
+                        model: db.user,
+                        attributes: ['username', 'attachment']
+                    }
+                ],
+            },
         ]
 
     })
@@ -80,7 +121,7 @@ exports.createComent = async (req, res, next) => {
         console.log(coment);
         res.status(201).json({ message: 'Objet enregistré !' })
     }).catch((error) => {
-        res.status(400).json({ error, message: "Le commentaire n'a pas été créé !!!" })
+        res.status(400).json({ error, message: "Oops ! Un problème est survenue avec vos saisies" })
     });
 };
 exports.updateComent = async (req, res, next) => {
@@ -115,6 +156,6 @@ exports.deleteComent = (req, res) => {
     Coment.destroy({
         where: { id: id }
     }).then(() => res.status(200).json({
-        message: 'Coment supprimé!'
+        message: 'Commentaire supprimé!'
     })).catch(error => res.status(400).json({ error }))
 };
