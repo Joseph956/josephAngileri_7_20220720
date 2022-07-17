@@ -37,7 +37,6 @@ module.exports.haveRightOnPost = (req, res, next) => {
         User.findByPk(userId).then((user) => {
             if (user) {
                 req.user = userId;
-                console.log("   role: " + role.role);
                 if (role.role == "admin") {
                     return next();
                 } else {
@@ -81,7 +80,7 @@ module.exports.haveRightOnComent = (req, res, next) => {
                             return next();
                         } else {
                             return res.status(403).send({
-                                message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ce commentaire !",
+                                message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ou supprimer ce commentaire !",
                             });
                         }
                     })
@@ -151,36 +150,29 @@ module.exports.passwd = (req, res, next) => {
         next();
     } else {
         return res.status(400).json({
-            error: "Le mot de passe que vous avez saisi n’est pas conforme, il doit contenir au moins 8 caractères dont au moins 1 chiffre, 1 majuscule, 1 minuscule et 1 caractère spécial parmi cette liste : !@#$%^&*" +
+            message: "Le mot de passe que vous avez saisi n’est pas conforme, il doit contenir au moins 8 caractères dont au moins un chiffre, une lettre majuscule, et une lettre minuscule" +
                 passwdSchema.validate(req.body.password, { list: true })
         })
     }
 };
-const confirmPasswdSchema = new passwrdValidator();
+// const confirmPasswdSchema = new passwrdValidator();
 
-confirmPasswdSchema
-    .is().min(8)                                    // Minimum length 8
-    .is().max(100)                                  // Maximum length 100
-    .has().uppercase(1)                              // Must have uppercase letters (majuscule)
-    .has().lowercase(1)                              // Must have lowercase letters (minuscule)
-    .has().digits(2)                                // Must have at least 2 digits (chiffres)
-    .has().not().spaces()                           // Should not have spaces
-    .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
+// confirmPasswdSchema
+//     .is().min(8)                                    // Minimum length 8
+//     .is().max(100)                                  // Maximum length 100
+//     .has().uppercase(1)                              // Must have uppercase letters (majuscule)
+//     .has().lowercase(1)                              // Must have lowercase letters (minuscule)
+//     .has().digits(2)                                // Must have at least 2 digits (chiffres)
+//     .has().not().spaces()                           // Should not have spaces
+//     .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
 
-module.exports.confirmPasswd = (req, res, next) => {
-    if (confirmPasswdSchema.validate(req.body.newPasswd)) {
-        next();
-    } else {
-        return res.status(400).json({
-            error: "Le mot de passe que vous avez saisi n’est pas conforme, il doit contenir au moins 8 caractères dont au moins 1 chiffre, 1 majuscule, 1 minuscule et 1 caractère spécial parmi cette liste : !@#$%^&*" +
-                confirmPasswdSchema.validate(req.body.newPasswd, { list: true })
-        })
-    }
-};
-
-
-//Justificatif d'identité : 
-// Vérifie que le token utlisé pour faire une création ou une modification correspond au token d'authentification de l'utilisateur connecté.
-module.exports.credential = (req, res, next) => {
-
-};
+// module.exports.confirmPasswd = (req, res, next) => {
+//     if (confirmPasswdSchema.validate(req.body.newPasswd)) {
+//         next();
+//     } else {
+//         return res.status(400).json({
+//             message: "Le mot de passe que vous avez saisi n’est pas conforme, il doit contenir au moins 8 caractères dont au moins un chiffre, une lettre majuscule, et une lettre minuscule" +
+//                 confirmPasswdSchema.validate(req.body.newPasswd, { list: true })
+//         })
+//     }
+// };

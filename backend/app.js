@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { sequelize } = require('./models');
 const dotenv = require('dotenv');
+// const dayjs = require('dayjs')
 dotenv.config();
 require('./config/config');
 
@@ -33,6 +34,7 @@ app.disable('x-powered-by');
 app.use(xssclean());
 app.use(helmet());
 app.use(noCache());
+// app.use(dayjs());
 
 // //logger requests/responses.
 app.use(morgan('dev'));

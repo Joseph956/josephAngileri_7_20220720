@@ -6,80 +6,75 @@
           <img class="imgAccueil" style="height: 2rem; width: 12rem" x="0" y="0" height="100%" width="100%"
             src="../assets/icon-left-font.svg" alt="" />
         </router-link>
+      </div>
 
-        <div class="collapse navbar-collapse">
-          <ul v-show="!mobile" class="navbar-nav ml-auto">
-            <div class="header">
-              <div class="dropdownNav" data-dropdown>
-                <button class="linkDropdown" data-dropdown-button @click="showOrReloadPage('Profile')"
-                  :userId="user.id">
-                  <div class="containerImgProfil">
-                    <div class="menuProfile" v-if="user.attachment">
-                      <div class="containerImgUser">
-                        <img style="height: 50px; width: 45px" x="0" y="0" height="100%" width="100%"
-                          class="imgNavProfil" v-bind:src="user.attachment" alt="Photo de profil utilisateur"
-                          loading="lazy" />
-                      </div>
-                      <div class="nameProfil">
-                        <h6>{{ user.username }}</h6>
-                      </div>
-                    </div>
-                    <div class="avatar" v-else>
-                      <div class="containerImgUser">
-                        <img style="height: 30px; width: 30px" x="0" y="0" height="100%" width="100%"
-                          class="imgNavAvatar" src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
-                      </div>
-                      <div class="nameProfil">
-                        <h6>{{ user.username }}</h6>
-                      </div>
-                    </div>
+      <div class="toggle" toggle @click="toggle()">
+        <img style="height: 2rem; width: 4rem" x="0" y="0" height="100%" width="100%" class="open"
+          src="../assets/Icons/bars-regular.svg" alt="ouvrir le menu">
+
+        <img style="height: 2rem; width: 4rem" x="0" y="0" height="100%" width="100%" class="close"
+          src="../assets/Icons/BiXCircle.svg" alt="fermer le menu">
+      </div>
+      <!-- -->
+      <div class="iconsMenuAccueil">
+        <ul class="menuAccueil">
+          <li class="formRow">
+            <router-link class="navbar-brand" id="link" :to="{ name: 'Posts' }">
+              <img class="iconPeople" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%" width="100%"
+                src="../assets/Icons/BiHouseDoorFill.svg" alt="">
+            </router-link>
+          </li>
+          <li class="formRow">
+            <router-link class="navbar-brand" id="link" :to="{ name: 'Users' }">
+              <img class="iconPeople" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%" width="100%"
+                src="../assets/Icons/MdiAccountGroup.svg" alt="">
+            </router-link>
+          </li>
+          <li class="formRow">
+            <router-link class="navbar-brand" id="link" :to="{ name: 'Users' }">
+              <img class="iconPeople" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%" width="100%"
+                src="../assets/Icons/BiPeopleFill.svg" alt="">
+            </router-link>
+          </li>
+          <li class="formRow">
+
+            <button type="button" class="btn" data-dropdown-button @click="showOrReloadPage('Profile')"
+              :userId="user.id">
+              <div class="containerImgProfil">
+                <div class="menuProfile" v-if="user.attachment">
+                  <div class="containerImgUser">
+                    <img style="height: 50px; width: 45px" x="0" y="0" height="100%" width="100%" class="imgNavProfil"
+                      v-bind:src="user.attachment" alt="Photo de profil utilisateur" loading="lazy" />
                   </div>
-                </button>
-              </div>
-              <div class="dropdown" data-dropdown>
-                <button class="linkDropdown" data-dropdown-button type="button">
-                  <img data-dropdown-button src="../assets/Icons/ariaCircle.svg" alt="">
-                </button>
-                <div class="dropdown-menu information-grid">
-                  <div>
-                    <div class="dropdown-heading"></div>
-                    <div class="dropdown-links">
-                      <router-link class="navbar-brand" id="link" :to="{ name: 'Posts' }">
-                        <img class="iconPeople" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%"
-                          width="100%" src="../assets/Icons/BiFilePost.svg" alt="">
-                        Publications
-                      </router-link>
-                      <router-link class="navbar-brand" id="link" :to="{ name: 'Users' }">
-                        <img class="iconPeople" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%"
-                          width="100%" src="../assets/Icons/BiPeopleFill.svg" alt="">
-                       Comptes
-                      </router-link>
-                    </div>
+                </div>
+                <div class="avatar" v-else>
+                  <div class="containerImgUser">
+                    <img style="height: 30px; width: 30px" x="0" y="0" height="100%" width="100%" class="imgNavAvatar"
+                      src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
                   </div>
                 </div>
               </div>
-            </div>
-            <li class="formRow">
-              <button @click="logout()" class="btn">
-                <img style="height: 1.5rem; width: 1.5rem" x="0" y="0" height="100%" width="100%"
-                  src="../assets/Icons/sign-out-alt-regular.svg" alt="">
-              </button>
-            </li>
-          </ul>
-        </div>
+            </button>
+
+          </li>
+          <li class="formRow">
+            <button type="button" @click="logout()" class="btn">
+              <img style="height: 1.5rem; width: 1.5rem" x="0" y="0" height="100%" width="100%"
+                src="../assets/Icons/sign-out-alt-regular.svg" alt="">
+            </button>
+          </li>
+        </ul>
       </div>
     </nav>
   </header>
 </template>
 
 <script>
-import menuIcon from "../assets/Icons/bars-regular.svg";
+// import {liens} from "@/service/liens";
 
 export default {
   name: "NavPosts",
-  components: {
-    menuIcon,
-  },
+  components: {},
   data() {
     return {
       mobile: null,
@@ -98,16 +93,18 @@ export default {
         },
       }),
       actionsVisible: false,
+    mode: "openMenu",
     };
   },
-  mounted: function () {
-    this.apiUser
-      .get("")
-      .then((response) => {
-        this.user = response.data;
-      })
-      .catch(function () {});
-  },
+  // mounted: function () {
+  //   this.apiUser
+  //     .get("")
+  //     .then((response) => {
+  //       this.user = response.data;
+  //     })
+  //     .catch(function () {});
+  // },
+  
   created() {
     window.addEventListener("resize", this.checkScreen);
     this.checkScreen();
@@ -134,6 +131,14 @@ export default {
     });
   },
   methods: {
+    toggle() {
+      let toggle = document.querySelector('.toggle');
+      let body = document.querySelector('body');
+
+      toggle.addEventListener('click', function () {
+        body.classList.toggle('openMenu');
+      })
+    },
     toggleActions() {
       this.actionsVisible = !this.actionsVisible;
     },
@@ -163,24 +168,106 @@ export default {
 </script>
 
 <style scoped>
-
-
-
-
-
 header {
+  position: absolute;
+  width: 100%;
   background-color: #fff;
-  padding: 0 25px;
+  padding: 0 2rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 99;
+  margin: 0 0 0 1.5rem;
+  color: #fff;
 }
-.container {
 
+nav {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  align-items: center;
 }
-/* .fixed-top {
-  position: relative;
-} */
+.navbar {
+  background: #4e5166;
+}
+.toggle {
+  display: none;
+}
+.iconsMenuAccueil ul {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  margin: 0;
+ 
+}
+.menuAccueil {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  list-style: none;
+  margin-bottom: 0;
+  width: 55rem;
+}
+.menuAccueil li {
+  display: flex;
+  color: #fff;
+  text-decoration: none;
+  margin: 0 2rem 0 2rem;
+}
+@media screen and (max-width: 1332px) {
+.menuAccueil {
+  width: 44rem;
+}
+}
+@media screen and (max-width: 991px) {
+  
+    .toggle {
+      display: block;
+      font-size: 2rem;
+      cursor: pointer;
+      position: relative;
+      z-index: 20;
+    }
+    .imgAccueil {
+      position: relative;
+      z-index: 20;
+    }
+         .open {
+           display: block;
+         }
+    
+         .close {
+           display: none;
+         }
+    
+         .openMenu .open {
+           display: none;
+         }
+    
+         .openMenu .close {
+           display: block;
+         }
+        .menuAccueil {
+          position: absolute;
+            top: 0;
+            left: 0;
+            width: 5%;
+            height: 100vh;
+            background: #4e5166;
+            flex-direction: column;
+            padding: 2rem;
+            justify-content: space-around;
+            transform: translateX(-100%);
+            transition: transform 1s;
+        }
+
+        .menuAccueil {
+          font-size: 4rem;
+        }
+                .openMenu .menuAccueil {
+                  transform: translateX(0);
+                }
+}
+
 h5 {
   margin-bottom: 0;
 }
@@ -237,10 +324,25 @@ h5 {
   display: flex;
   align-items: center;
 }
+@media screen and (max-width: 393px) {
+.containerImgProfil {
+  margin: 0 0 0 0;
+}
+}
+.imgNavProfil {
+  border-radius: 5rem;
+  object-fit: cover;
+  margin: 0;
+}
 .menuProfile {
   display: flex;
   align-items: center;
   align-content: center;
+}
+.formRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .imgUser {
   display: contents;
@@ -248,15 +350,16 @@ h5 {
 }
 .avatar {
   display: flex;
-  height: 2rem;
   object-fit: cover;
 }
-.imgNavAvatar {
-  margin: 2px 5px 0px 7px;
+.nameProfil {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  margin: 0 0.3rem 0 0.5rem;
 }
-/****************************
-*******menus déroulant*******
-****************************/
+
+
 body {
   margin: 0;
 }
@@ -279,71 +382,7 @@ body {
   font-family: inherit;
   font-size: inherit;
   cursor: pointer;
-  padding: 0px 0px 5px;
-    /* margin: -2px 0 0px 13px; */
   font-weight: 500;
-  /* padding: 0 8px; */
   transition: 0.3s color ease;
-}
-
-.dropdown.active > .link,
-.link:hover {
-  color: black;
-}
-
-.dropdownNav {
-  position: relative;
-  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
-  left: 0;
-  background-color: white;
-  padding: 5px 4px 0 6px;
-  border-radius: 20rem;
-  margin: auto;
-}
-
-.dropdown-menu {
-  position: absolute;
-  left: 0;
-  top: calc(100% + 0.25rem);
-  background-color: white;
-  padding: 0.75rem;
-  border-radius: 0.25rem;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
-}
-.dropdown.active>.link+.dropdown-menu {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-@media screen and (max-width: 768px) {
-  .dropdown.active>.link+.dropdown-menu {
-    opacity: 1;
-    transform: translateX(-12rem);
-    pointer-events: auto;
-  }
-}
-.information-grid {
-  /* display: grid;
-  grid-template-columns: repeat(2, max-content);
-  gap: 2rem; */
-  display: flex;
-  flex-direction: column;
-  transform: translateX(-100px, 10px);
-}
-.dropdown-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-.iconPeople {
-  margin: 0 1rem 0 1rem;
-}
-.formRow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 </style>

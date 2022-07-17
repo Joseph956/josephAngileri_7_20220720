@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navProfil />
+    <navPosts />
     <!-- TEMPLATE MODIFICATION D'UN POST-->
     <h1>Modifier un post</h1>
     <form enctype="multipart/form-data">
@@ -21,40 +21,41 @@
         <div class="imgPostUpdate" v-if="posts.attachment">
           <img :src="posts.attachment" class=" w-50 rounded" />
         </div>
-        <div  v-else>
+        <div v-else>
           <img style="height: 15rem; width: 25rem" x="0" y="0" height="100%" width="100%" class="avatarPost "
             src="../assets/Icons/BiCardImg.svg" alt="">
         </div>
       </div>
-      <!-- Choix de l'image du post -->
-      <div class="formGroup">
-        <label for="file"></label><br />
-        <input class="formFilePublich" id="file" ref="file" type="file" name="image" accept="image/*"
-          @change="onFileSelected()" />
-      </div>
-      <!-- Publier un post -->
-      <div class="formGroup">
-        <button type="button" class="btn btn-primary" @click="postUpdate()"
-          :class="{ 'btn--disabled': !validatedFields }">
-          <span v-if="status == 'loading'">Publication en cours....</span>
-          <span v-else>Modifier la publication</span>
-        </button>
-      </div>
     </form>
-    <!-- <comentsUpdate :comentId="coment.id" /> -->
+    <p class="alert alert-info text-danger">{{ mesgError }}</p>
+    <!-- Choix de l'image du post -->
+    <div class="formGroup">
+      <label for="file"></label><br />
+      <input class="formFilePublich" id="file" ref="file" type="file" name="image" accept="image/*"
+        @change="onFileSelected()" />
+    </div>
+    <!-- Publier un post -->
+    <div class="formGroup">
+      <button type="button" class="btn btn-primary" @click="postUpdate()"
+        :class="{ 'btn--disabled': !validatedFields }">
+        <span v-if="status == 'loading'">Publication en cours....</span>
+        <span v-else>Modifier la publication</span>
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
-import navProfil from "@/components/NavProfil.vue";
+import navPosts from "@/components/NavPosts.vue";
 
 export default {
   name: "PostsUpdate",
-  components: { navProfil },
+  components: { navPosts },
   data: function () {
     return {
+      mesgError: "",
       //Afficher les infos du post à modifier
       apiPosts: axios.create({
         baseURL: "http://localhost:3000/api/posts/" + this.$route.params.id,
@@ -102,7 +103,7 @@ export default {
     //Afficher un post (Methode "get"(show id){})
     getPostOne() {
       this.apiPosts
-        .get("")
+        .get("/")
         .then((response) => {
           this.posts = response.data;
         })
@@ -116,17 +117,26 @@ export default {
       dataPost.append("title", this.posts.title);
       dataPost.append("content", this.posts.content);
       dataPost.append("image", this.file);
+      if (
+        window.confirm("Voulez-vous vraiment modifier votre post ?")
+      ) {
       this.apiPosts
         .put(
           "http://localhost:3000/api/posts/" + this.$route.params.id,
           dataPost
         )
-        .then(() => {
+        .then((response) => {
+          if (!response.data) {
+            return (this.mesgError = error.response.data.message)
+          } else {
           window.location.reload();
           this.$router.push("/posts/");
           this.getPostOne();
-        })
-        .catch(function () {});
+          }
+        }).catch((error) => {
+          alert(this.mesgError = error.response.data.message)
+        });
+      }
     },
   },
 };

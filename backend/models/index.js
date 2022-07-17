@@ -161,6 +161,17 @@ db.coments.belongsTo(db.posts, { //Un coment appartient à un seul post.
   through: db.coments,
   onDelete: 'CASCADE'
 });
+// db.coments.belongsToMany(db.posts, { //Plusieurs coments peuvent appartenir à plusieurs posts et inversement.
+//   foreignKey: {
+//    //Relation (+ à +), utilise une table de jonction qui contient les clés étrangères 
+//     name: 'comenId',
+//     as: 'coment',
+//     allowNull: false
+//   },
+//   otherKey: 'postId',
+//   through: db.coments,
+//   onDelete: 'CASCADE'
+// });
 db.coments.belongsTo(db.user, { //Un coment appartient à un seul utilisateur.
   foreignKey: {
     // Relation(un à un) clé étrangère définie dans le modèle source(db.coments).
@@ -172,6 +183,17 @@ db.coments.belongsTo(db.user, { //Un coment appartient à un seul utilisateur.
   through: db.coments,
   onDelete: 'CASCADE'
 });
+// db.coments.hasMany(db.user, { // Un utilisateur peut être l'auteur de plusieurs coments.
+//   foreignKey: {
+//     //hasMany relation un à plusieurs (La clé étrangère est définie dans le modèle cible).
+//     name: 'userId',
+//     as: 'user',
+//     allowNull: false
+//   },
+//   otherKey: 'comentId',
+//   through: db.coments,
+//   onDelete: 'CASCADE'
+// });
 
 /******************************************
  ********Fin relation commentaires*********
@@ -240,26 +262,37 @@ db.user.belongsTo(db.role, { foreignKey: { allowNull: false }, onDelete: 'CASCAD
 
 //define relationships
 
-//relation un à un (La clé étrangère est définie dans le modèle cible).
+//hasOne relation un à un (La clé étrangère est définie dans le modèle cible).
 // db.user.hasOne(db.posts); // Un post n'a qu'un auteur.
 // db.user.hasOne(db.coments); // Un coment n'a qu'un auteur.
 // db.user.hasOne(db.likes); // Un like n'a qu'un auteur.
 
-// //relation un à un (La clé étrangère est définie dans le modèle source).
+
+// //belongsTo relation un à un (La clé étrangère est définie dans le modèle source).
 // db.user.belongsTo(db.posts); // Un post n'a qu'un auteur.
 // db.user.belongsTo(db.coments); // Un coment n'a qu'un auteur.
 // db.user.belongsTo(db.likes); // Un like n'a qu'un auteur.
-
-// //relation un à plusieurs (La clé étrangère est définie dans le modèle cible).
-// db.user.hasMany(db.posts); // Un user est l'auteur de plusieurs posts.
-// db.user.hasMany(db.coments); // Un user est l'auteur de plusieurs coments.
-// db.user.hasMany(db.likes); // Un user est l'auteur de plusieurs likes.
-
-// db.coments.hasMany(db.user); // Un utilisateur peut être l'auteur de plusieurs coments.
-// db.likes.hasMany(db.user); // Un utilisateur peut être l'auteur de plusieurs likes.
 // db.posts.belongsTo(db.user); // Un post n'appartient qu'à un utilisateur.
 // db.coments.belongsTo(db.user); //Un commentaire n'appartient qu'à un utilisateur.
 // db.likes.belongsTo(db.user); //un like n'appartient qu'a un utilisateur.
+
+
+
+// //hasMany relation un à plusieurs (La clé étrangère est définie dans le modèle cible).
+// db.user.hasMany(db.posts); // Un user est l'auteur de plusieurs posts.
+// db.user.hasMany(db.coments); // Un user est l'auteur de plusieurs coments.
+// db.user.hasMany(db.likes); // Un user est l'auteur de plusieurs likes.
+// db.coments.hasMany(db.user); // Un utilisateur peut être l'auteur de plusieurs coments.
+// db.likes.hasMany(db.user); // Un utilisateur peut être l'auteur de plusieurs likes.
+
+
+
+
+
+
+
+
+
 
 // db.user.hasOne(db.posts); // Un post n'appartient qu'a un utilisateur.
 // db.user.hasOne(db.coments); // Un coment n'appartient qu'a un utilisateur.

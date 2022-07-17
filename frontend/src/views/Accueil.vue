@@ -67,15 +67,8 @@
           <div class="form-controlSignup">
             <label for="password">Mot de passe</label>
             <div class="inputData">
-              <input 
-              id="password" 
-              type="password" 
-              name="password" 
-              v-model="password" 
-              placeholder="Mot de passe"
-              class="form-control_input" 
-              required 
-              autocomplete="off" />
+              <input id="password" type="password" name="password" v-model="password" placeholder="Mot de passe"
+                class="form-control_input" required autocomplete="off" />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
               <div class="eyePasswd">
@@ -108,34 +101,15 @@
         </div>
 
         <div class="form-group">
-          <div class="alert alert-danger" v-if="mode === 'login' && status == 'error_login'">
+          <div class="alert alert-info text-danger" v-if="mode === 'login' && status == 'error_login'">
             Adresse mail et/ou mot de passe invalide !
+            {{ mesgError }}
           </div>
         </div>
 
         <div class="form-group">
-          <div class="alert alert-danger" v-if="mode == 'create' && status == 'error_create'">
-            Adresse email déjà utilisée !
-          </div>
-        </div>
-
-        <!-- <div class="form-group">
-          <div class="alert alert-danger" v-if="mode == 'create' && status == 'error_create'">
-            Confirmer votre mot de passe !
-          </div>
-          <div class="alert alert-success" v-else>
-            Votre mot de passe est confirmé !
-          </div>
-        </div> -->
-
-        <div>
-          <div v-if="error">
-            <error :error="error" />
-          </div>
-          <div v-else>
-            <div v-if="message" class="alert alert-success" role="alert">
-              {{ message }}
-            </div>
+          <div class="alert alert-info text-danger" v-if="mode == 'create' && status == 'error_create'">
+            {{ mesgError }}
           </div>
         </div>
 
@@ -150,9 +124,7 @@
             <span v-else>Créer mon compte</span>
           </button>
           <br>
-          <!-- Récupération et affichage des messages d'alertes du backend -->
-          <div v-show="error" class="error">{{ this.mesgError }}</div>
-         
+
           <!-- Mot de passe oublié -->
           <p class="forgotPasswd">
             <router-link v-if="mode == 'login'" to="Forgot" text-right>Mot de passe oublié ?
@@ -227,7 +199,7 @@ export default {
     ...mapState({ user: "userInfos" }),
   },
   methods: {
-    async handleSubmit() {
+    async createAccount() {
       try {
         await axios.post("login", {
           email: this.email,
@@ -255,15 +227,16 @@ export default {
           email: this.email,
           password: this.password,
         })
-        .then(
-          function () {
+        .then((response) => { 
+          if (!response) {
+            return (this.mesgError = error.response.data.message)
+          } else {           
             self.$router.push("/posts");
             document.getElementById("login").reset();
-          },
-          function (error) {
-            console.log(error);
           }
-        );
+        }).catch((error) => {
+          alert(this.msgError = error.response.data.message)
+          });
     },
     changer: function () {
       let e = true;
@@ -316,7 +289,7 @@ export default {
       if (password == confirmPasswd) { 
          message.textContent = "Passwords match";
         }else{
-          message.textContent = "Confirmer votre mot de passe !";
+          return false;
         }    
           this.$store
             .dispatch("createAccount", {
@@ -324,14 +297,14 @@ export default {
               email: this.email,
               password: this.password,
               confirmPasswd: this.confirmPasswd,
-            }).then(function (state) {
-              if (!state) {
-                return (this.mesgError = error.userInfos.message)
+            }).then((response) => {
+              if (!response) {
+                return (this.mesgError = error.response.data.message)
               }else{
                 self.login();
               }
             }).catch(( error) => {
-              alert(this.mesgError = error.userInfos.message)
+              alert(this.mesgError = error.response.data.message)
             })
     },
   },
@@ -339,6 +312,7 @@ export default {
 </script>
 
 <style >
+
 .nav-link-subtitle {
 text-align: left;
 text-align: justify;
@@ -354,6 +328,9 @@ text-align: justify;
   .containerCpteCreate {
     flex-direction: column;
     margin: 0 1rem 0 1rem;
+  }
+  .nav-link-subtitle {
+    text-align: center;
   }
 }
 .cpteCreate {

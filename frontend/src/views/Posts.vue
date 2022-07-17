@@ -1,21 +1,18 @@
 <template>
   <div class="postForm">
-    <!-- <navPosts /> -->
-    <navProfil />
+    <navPosts />
+    <div class="form-grouProfile" v-if="user.imgBottom">
+      <img style="height: auto; width: 100%" x="0" y="0" height="100%" width="100%" id="imgBottomUser"
+        v-bind:src="user.imgBottom" alt="Image de fond compte utilisateur" />
+    </div>
+    <div class="form-grouProfile" v-else>
+      <img style="height: 25vw; width: 100%" x="0" y="0" height="100%" width="100%" id="imgBottomAvatar"
+        src="../assets/icon-left-font.svg" alt="avatar" />
+    </div>
+    <div>
+    </div>
     <div class="form-control-input">
       <div class="post-card-wrap">
-        <div class="containerRecent">
-          <h1>Publication récentes</h1>
-          <div class="post-cards">
-            <!-- <h1>joseph</h1> -->
-            <PostCards v-show="posts.length > 4" v-for="post in posts" v-bind:key="post.id" :post="post" />
-            <routeur-link 
-              v-bind:to="'/PostsCards/' + post.id" class="d-flex align-items-center text-muted mr-4">
-              <button  @click="postsRecent()" class="postsRecents">Voir les posts récents
-              </button>
-            </routeur-link>
-            </div>
-        </div>
       </div>
       <div>
         <div class="publierForm">
@@ -27,7 +24,7 @@
                   src="../assets/logo_transparent.png" alt="" />
               </div>
               <div class="titlePublish">
-                <h1>Publier un post</h1>
+                <h1>Publications</h1>
               </div>
               <div>
                 <div class="formGroup" v-if="mode == 'publishPost'">
@@ -199,16 +196,15 @@
                           <label for="file">Image de la publication</label>
                         </div>
                         <div>
-                          <img @click="toggleModale" style="height: 85vh; width: 100%" x="0" y="0" height="100%"
+                          <img @click="toggleModale" style="height: 30vh; width: 60%" x="0" y="0" height="100%"
                             width="100%" class="imgBottomPost" src="../assets/Icons/BiCardImg.svg"
                             alt="Image du post" />
                         </div>
                       </div>
                     </div>
+                    <p class="alert alert-info text-danger">{{ mesgError }}</p>
                   </div>
                 </div>
-
-                <!-- Gestion du post d-flex -->
                 <div class="card-footer">
                   <div class=" post-actions">
                     <div class="menuPost">
@@ -221,10 +217,8 @@
                                 <span v-if="status == 'loading'">Like ....</span>
                                 <span v-else>
                                   <div class="likeFlex">
-
                                     <img class="like" style="height: 1.5rem; width: 1.5rem" x="0" y="0" height="100%"
                                       width="100%" src="../assets/Icons/BiHandThumbsUpFill.svg" alt="">
-
                                     <div>
                                       <p class="d-none d-md-block ml-2">
                                         {{ post.likes.length }} <br />
@@ -234,45 +228,22 @@
                                 </span>
                               </button>
                             </routeur-link>
-                            <!-- <routeur-link v-bind:to="'/PostUnLikes/' + postId"
-                              class="d-flex align-items-center text-muted mr-4">
-                              <button type="button" class="btn btn-like" @click="postUnlikeCreate(post.id)">
-                                <span v-if="status == 'loading'">unLike ....</span>
-                                <span v-else>
-                                  <div class="unLikeFlex">
-                                    <div>
-
-                                      <img class="unLike" style=" height: 1.5rem; width: 1.5rem" x="0" y="0"
-                                        height="100%" width="100%" src="../assets/Icons/BiHandThumbsDownFill.svg"
-                                        alt="">
-                                    </div>
-                                    <div>
-                                      <p class="d-none d-md-block ml-2">
-                                        {{ post.unlikes.length }} <br />
-                                      </p>
-                                    </div>
-                                  </div>
-                                </span>
-                              </button>
-                            </routeur-link> -->
                           </div>
                         </div>
                       </div>
-                      <div class="linkPost">
-                        <router-link v-bind:to="'/ModalComent/' + postId">
-                          <div class="linkModal">
-                            <div class="linkItems">
-                              <img src="../assets/Icons/coment.svg" alt="commentaires">
-                            </div>
-                            <div class="linkModal">
-                              <p class="d-none d-md-block ml-2">
-                                {{ post.coments.length }} Commentaire <br />
-                              </p>
-                            </div>
-                          </div>
-                        </router-link>
-
-                      </div>
+                      <router-link class="displayComents" @click="displayAllComents()"
+                        v-bind:to="`/ComentsList/${post.id}`">
+                        <div class="linkItems">
+                          <img src="../assets/Icons/coment.svg" alt="commentaires">
+                        </div>
+                        <div class="linkComent">
+                          <p class="d-none d-md-block ml-2">
+                            <span v-if="post.coments.length > 2"> - {{ post.coments.length }} - Commentaires
+                              <br /></span>
+                            <span v-else> - {{ post.coments.length }} - Commentaire <br /></span>
+                          </p>
+                        </div>
+                      </router-link>
                       <div class="linkPost">
                         <div class="dropdown" data-dropdown>
                           <button class="link" data-dropdown-button>
@@ -281,7 +252,6 @@
                           <div class="dropdown-menu information-grid">
                             <div class="dropdown-heading"></div>
                             <div class="dropdown-links">
-                              <!-- Supprimer un post -->
                               <a href="javascript:;" class="d-flex align-items-center text-muted">
                                 <div class="flexMenu">
                                   <div>
@@ -297,8 +267,6 @@
                                       </div>
                                     </button>
                                   </div>
-                                  <!-- </div> -->
-                                  <!-- Modifier un post -->
                                   <div class="btnFooter">
                                     <router-link v-bind:to="'/PostsUpdate/' + post.id">
                                       <button type="button" class="btn" @click="postModify()" :postId="post.id">
@@ -314,8 +282,6 @@
                                       </button>
                                     </router-link>
                                   </div>
-                                  <!-- <p class="d-none d-md-block ml-2">Supprimer</p> -->
-                                  <!-- Details d'un post -->
                                   <div class="btnFooter">
                                     <router-link v-bind:to="'/PostDetails/' + post.id">
                                       <button type="button" class="btn" @click="postDetails()" :postId="post.id">
@@ -355,37 +321,34 @@
 import axios from "axios";
 import { mapState } from "vuex";
 //Barre de navigation
-// import navPosts from "@/components/NavPosts.vue";
-import navProfil from "@/components/NavProfil.vue";
+import navPosts from "@/components/NavPosts.vue";
 //Les views
 import postDetails from "@/views/PostDetails.vue";
-import postsCards from "@/views/PostsCards.vue";
 //Les components
 import postsUpdate from "@/components/PostsUpdate.vue";
-import postCardRecent from "@/components/PostCardRecent.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
 import comentsList from "@/components/ComentsList.vue";
 import modalComent from "@/components/ModalComent.vue";
 import Modale from "@/components/Modale.vue";
 
+
 export default {
   name: "Posts",
   components: {
-    navProfil,
-    // navPosts,
+    navPosts,
     postsUpdate,
-    postsCards,
-    postCardRecent,
     postDetails,
     comentsCreate,
     comentsList,
     modalComent,
     modale: Modale,
   },
-  // props: ["postlikes", "postUnlikes"],
-
   data: function () {
     return {
+      msgError: "",
+      user: {
+        imgBottom: this.imgBottom,
+      },
       post: {
         title: null,
         content: null,
@@ -410,15 +373,21 @@ export default {
         },
       }),
       posts: [],
+      apiComents: axios.create({
+        baseURL: "http://localhost:3000/api/coments/",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "BEARER " + this.$store.state.user.token,
+        },
+      }),
+      coments: [],
     };
   },
   beforeMount() {
     this.getPostList();
   },
   computed: {
-    postCardRecent() {
-      return this.$store.state.postCardRecent;
-    },
     validatedFields: function () {
       if (this.mode == "publishPost") {
         if (
@@ -455,29 +424,40 @@ export default {
     },
     getPostList() {
       this.apiPosts
-        .get("")
+        .get("/")
         .then((response) => {
+          if (!response) {
+            return (this.msgError = error.response.data.message)
+          } else {
           this.posts = response.data;
+          }
         })
-        .catch(function () {});
+        .catch(function (error) {
+          alert(this.mesgError = error.response.data.message)
+        });
     },
-    getPostOne() {
-      console.log("tst");
-      this.apiPosts
-        .get("")
-        .then((response) => {
-          this.posts = response.data;
-        })
-        .catch(function () {});
+    getComentList() {
+        this.apiComents
+          .get("/")
+          .then((response) => {
+            if (!response) {
+              return (this.msgError = error.response.data.message)
+            } else {
+            this.coments = response.data;
+            console.log(this.coments);
+            }
+          }).catch(function (error) {
+            alert(this.mesgError = error.response.data.message)
+          });
     },
-    postsRecent: function () {
-      this.apiPosts
-        .get("http://localhost:3000/api/posts")
-        .then(() => {
-          this.getPostList();
-        })
-        .catch(function () { });
-    },
+    // postsRecent: function () {
+    //   this.apiPosts
+    //     .get("http://localhost:3000/api/posts")
+    //     .then(() => {
+    //       this.getPostList();
+    //     })
+    //     .catch(function () { });
+    // },
     postLikeCreate: function (postId) {
       this.apiPosts
         .put(
@@ -488,32 +468,18 @@ export default {
             likes: this.likeId,
           }
         )
-        .then(() => {
+        .then((response) => {
+          if (!response) {
+            return (this.msgError = error.response.data.message)
+          } else {
           window.location.reload();
           this.$router.push("/posts");
           this.getLikesList();
-        })
-        .catch(function () {});
-    },
-    postUnlikeCreate: function (postId) {
-      if (post.likes.length == 1) {
-        
-      }
-      this.apiPosts
-        .put(
-          `http://localhost:3000/api/posts/${postId}/unlike/${this.$store.state.user.userId}`,
-          {
-            postId: postId,
-            userId: this.userId,
-            likes: this.unlike,
           }
-        )
-        .then(() => {
-          this.$router.push("/posts");
-          window.location.reload();
-          this.getLikesList();
         })
-        .catch(function () {});
+        .catch(function (error) {
+          alert(this.mesgError = error.response.data.message)
+        });
     },
     postCreate: function () {
       const dataPost = new FormData();
@@ -523,22 +489,50 @@ export default {
       dataPost.append("userId", this.$store.state.user.userId);
       this.apiPosts
         .post("http://localhost:3000/api/posts", dataPost)
-        .then(() => {
-          window.location.reload();
-          this.$router.push("/posts");
-          this.getPostList();
-        })
-        .catch(function () {});
-    },
-    postDeleted: function (id) {
-      if (confirm("Voulez-vous vraiment supprimer ce post ?")) {
-        this.apiPosts
-          .delete("http://localhost:3000/api/posts/" + id)
-          .then(() => {
+        .then((response) => {
+          if (!response) {
+            return (this.msgError = error.response.data.message)
+          }else {
             window.location.reload();
             this.$router.push("/posts");
             this.getPostList();
-          });
+          }
+        })
+        .catch(function (error) {
+          alert(this.mesgError = error.response.data.message)
+        });
+    },
+    displayAllComents: function () {
+      this.apiPosts
+        .get("/")
+        .then((response) => {
+          if (!response) {
+            return (this.msgError = error.response.data.message)
+          } else {
+          this.coments = response.data;
+          console.log(this.coments);
+          }
+        }).catch(function (error) {
+          alert(this.mesgError = error.response.data.message)
+        });
+    },
+    postDeleted: function (postId) {
+      if (
+        window.confirm("Voulez-vous vraiment supprimer ce post ?")
+        ) {
+        this.apiPosts
+          .delete("http://localhost:3000/api/posts/" + postId
+        ).then((response) => {
+          if (!response.data) {
+            return (this.mesgError = error.response.data.message)
+          } else {
+            window.location.reload();
+            this.$router.push("/posts");
+            this.getPostList();
+          }
+        }).catch((error) => {
+          alert(this.mesgError = error.response.data.message)
+        });
       }
     },
   },
@@ -546,10 +540,6 @@ export default {
 </script>
 
 <style>
-
-
-
-
 
 
 /************************ 
@@ -585,6 +575,9 @@ h1 {
   .container {
       flex-direction: column;
   }
+  .avatarPost {
+    width: 100%;
+  }
 }
 
 .router-button {
@@ -617,12 +610,10 @@ fin Voir les posts recents
 ***************************/
 
 .containerRecent {
-  box-shadow: 5px 5px 10px #FFD7D7, -5px -5px 10px #4e51665a;
-  /* margin-left: 0.4rem;
-  margin-right: 0.4rem; */
+  box-shadow: 0px 0px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   border-radius: 1rem;
+  margin: 1rem 0;
 }
-
 /***********************************
 Formulaire de publication des posts
 ***********************************/
@@ -635,6 +626,7 @@ Formulaire de publication des posts
 }
 .formPublish {
   background: #4e5166;
+  border-radius: 1rem;
 }
 .containerLogo{
   display: flex;
@@ -643,12 +635,17 @@ Formulaire de publication des posts
   margin: 0 1rem 0 1rem;
   padding: 1.5rem 0 1rem 0;
 }
+@media screen and (max-width: 768px) {
+  .containerLogo {
+    flex-direction: column;
+  }
+}
 .logoTransparentPost {
   display: flex;
 }
 .titlePublish h1{
   display: flex;
-  margin: 0 1rem 0 1rem;
+  margin: 0.7rem 1rem 0.7rem 1rem;
 }
 .formGroup {
   display: flex;
@@ -677,6 +674,7 @@ Formulaire de publication des posts
 }
 .formFilePublich {
   display: flex;
+  width: 100%;
   margin: 1rem auto 0 auto;
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 0 #4e51665a;
   border: 0.5px solid #ffd6d6;
@@ -733,15 +731,16 @@ img {
 .ml-2 {
   display: flex;
 }
-@media screen and (max-width: 768px) {
-  .ml-2 {
-      display: flex;
-      /* flex-direction: column; */
-    }
-}
 .avatar {
   display: contents;
 }
+@media screen and (max-width: 768px) {
+  .ml-2 {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 .imgUser {
   border-radius: 5rem;
   object-fit: cover;
@@ -754,15 +753,36 @@ img {
   display: flex;
   align-content: center;
   align-items: center;
-  margin: 1rem 0 0 1rem;
+  /* margin: 1rem 0 0 1rem; */
+  flex: 1;
+  overflow: hidden;
+  /* white-space: nowrap; */
+}
+.datePost {
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 @media screen and (max-width: 768px) {
   .userPost {
     flex: 1;
     overflow: hidden;
-    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin: 0;
+    /* white-space: nowrap; */
+  }
+    .datePost {
+      text-align: center;
+    }
+  .d-flex {
+    flex-direction: column-reverse;
   }
 }
+.nameUser {
+  font-weight: inherit;
+}
+
 .textUser {
   margin: 0;
 }
@@ -787,9 +807,10 @@ img {
 .dropdown-menu {
   position: absolute;
   /* box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e516674; */
-  box-shadow: 5px 5px 10px #FFD7D7, -5px -5px 10px #4e51665a;
+  box-shadow: 0px 0px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   opacity: 0;
   transform: translate(-5rem, 10px);
+  background-color: #8c8c9f;
 }
 /*******************************
 ***********Card body************
@@ -813,7 +834,8 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   display: inline-block;
   width: auto;
   height: 20px;
-  background-color: #fff;
+  /* background-color: #fff; */
+  background: #5c5c6c85;
   color: #000;
   text-align: left;
   display: none;
@@ -839,7 +861,7 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
 }
 .imgPost {
   width: 100%;
-  height: auto;
+  height:70vh;
   object-fit: cover;
   margin: auto;
 }
@@ -852,7 +874,7 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
 @media screen and (max-width: 768px) {
   .imgPost {
   width: 100%;  
-  height: auto;
+  height: 45vh;
   }
 }
 @media screen and (max-width: 768px) {
@@ -864,14 +886,16 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
 .readMore .addText {
   display: none;
 }
+/* .alert {
+  padding: 1rem 0 0 0;
+} */
 /*******************************
 ***********Card footer**********
 ********************************/
 .card-footer {
   margin: 0 0 0.6rem 0;
-  /* box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e51665a; */
   box-shadow: 0px 0px 10px #FFD7D7, -5px -5px 10px #4e51665a;
-  padding: 2rem 2rem 1rem 2rem;
+  padding: 1rem 2rem 1rem 2rem;
   background: #4e5166;
 }
 .post-actions {
@@ -902,13 +926,39 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
 }
 .menuPost {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   align-content: center;
-  margin: auto;
+  margin: 0 auto 1rem auto;
 }
 .linkPost {
   margin: 0 4rem 0 2rem;
 }
+.linkItems {
+  margin: 5px 0.5rem 0 2.5rem;
+}
+.linkComent {
+  margin: 0 5rem 0 0;
+}
+@media screen and (max-width: 768px) {
+  /* .menuPost {
+    flex-direction: column;
+  } */
+  .linkPost {
+    margin: 0 0 0.5rem 0;
+  }
+  .linkItems {
+    margin: 1rem 0;
+  }
+  .linkComent {
+    margin: 0;
+  }
+}
+.displayComents {
+  display: flex;
+}
+
+
 /* @media screen and (max-width: 768px) {
   .linkPost {
       margin: auto;
@@ -948,10 +998,9 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
 .linkModal {
   display: flex;
 }
-.linkItems {
-  margin: 5px 0.5rem 0 0.5rem;
-}
+
 .link {
+  display: block;
   background: none;
   border: none;
   text-decoration: none;
@@ -984,6 +1033,7 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
 .comentUser {
   text-align: justify;
   color: #000;
+  margin: 1rem;
 }
 .postForm {
   display: flex;

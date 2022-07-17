@@ -24,6 +24,13 @@ module.exports = (sequelize, Sequelize) => {
             unique: true,
             allowNull: false,
             required: true,
+            validate: {
+                isEmail: true,
+                async ensureEmailIsUnique(email) {
+                    if (await User.findOne({ where: { email } }))
+                        throw new Error('Cette adresse email est déjà utilisée !!!')
+                },
+            },
         },
         password: {
             type: Sequelize.STRING,

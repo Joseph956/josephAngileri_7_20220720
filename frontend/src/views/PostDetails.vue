@@ -1,7 +1,7 @@
 <template>
   <!-- Template affichage détails d'un post -->
   <div class="col-md-8 col-xl-6 middle-wrapper">
-    <navProfil />
+    <navPosts />
     <h1>Details du post</h1>
     <div class="row">
       <div class="col-md-12 grid-margin">
@@ -104,7 +104,7 @@
                 </a>
               </div>
             </div>
-
+            <div class="alert alert-info text-danger">{{ mesgError }}</div>
           </div>
           <!-- Gestion du post  d-flex-->
           <div class="card-footer">
@@ -136,20 +136,18 @@
                     </div>
                   </div>
                 </div>
-                <div class="linkPost">
-                  <router-link v-bind:to="'/ModalComent/' + postId">
-                    <div class="linkModal">
-                      <div class="linkItems">
-                        <img src="../assets/Icons/coment.svg" alt="commentaires">
-                      </div>
-                      <div class="linkModal">
-                        <p class="d-none d-md-block ml-2">
-                          {{ post.coments.length }} Commentaire <br />
-                        </p>
-                      </div>
-                    </div>
-                  </router-link>
-                </div>
+                <router-link class="displayComents" @click="displayAllComents()" v-bind:to="`/ComentsList/${post.id}`">
+                  <div class="linkItems">
+                    <img src="../assets/Icons/coment.svg" alt="commentaires">
+                  </div>
+                  <div class="linkComent">
+                    <p class="d-none d-md-block ml-2">
+                      <span v-if="post.coments.length > 2"> - {{ post.coments.length }} - Commentaires
+                        <br /></span>
+                      <span v-else>{{ post.coments.length }} Commentaire <br /></span>
+                    </p>
+                  </div>
+                </router-link>
                 <div class="linkPost">
                   <div class="dropdown" data-dropdown>
                     <button class="link" data-dropdown-button>
@@ -162,9 +160,7 @@
                         <a href="javascript:;" class="d-flex align-items-center text-muted">
                           <div class="flexMenu">
                             <div>
-                              <button class="btn" data-dropdown-button @click="postDeleted(post.id)" :class="{
-                                  'btn--disabled': !validatedFields,
-                                }">
+                              <button class="btn" data-dropdown-button @click="postDeleted(post.id)">
                                 <div class="trashBtn">
                                   <div class="iconDelete">
                                     <img src="../assets/Icons/BiTrash3Fill.svg" alt="">
@@ -200,33 +196,34 @@
                   </div>
                 </div>
               </div>
+              <p class="alert text-danger">
+                {{ mesgError }}
+              </p>
             </div>
             <comentsCreate :postId="post.id" />
           </div>
         </div>
       </div>
     </div>
-    <ModalComent />
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import navProfil from "@/components/NavProfil.vue";
+import navPosts from "@/components/NavPosts.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
-import modalComent from "@/components/ModalComent.vue";
 import Modale from "@/components/Modale.vue";
 
 export default {
   name: "PostDetails",
   components: {
-    navProfil,
+    navPosts,
     comentsCreate,
-    modalComent,
     Modale,
   },
   data: function () {
     return {
+      msgError: "",
       post: {
         title: null,
         content: null,
@@ -257,12 +254,18 @@ export default {
     getPostOne() {
       console.log("tst");
       this.apiPosts
-        .get("")
+        .get("/")
         .then((response) => {
+          if (!response.data) {
+            return (this.mesgError = error.response.data.message)
+          } else {
           this.post = response.data;
           console.log(this.post);
+          }
         })
-        .catch(function () {});
+        .catch((error) => {
+          alert(this.mesgError = error.response.data.message)
+        });
     },
     postLikeCreate: function (postId) {
       this.apiPosts
@@ -274,21 +277,33 @@ export default {
             likes: this.likeId,
           }
         )
-        .then(() => {
+        .then((response) => {
+          if (!response.data) {
+            return (this.mesgError = error.response.data.message)
+          } else {
           window.location.reload();
           this.$router.push("/posts");
           this.getLikesList();
+          }
         })
-        .catch(function () { });
+        .catch((error) => {
+          alert(this.mesgError = error.response.data.message)
+        });
     },
-    postDeleted: function (id) {
+    postDeleted: function (postId) {
       if (confirm("Voulez-vous vraiment supprimer ce post ?")) {
         this.apiPosts
-          .delete("http://localhost:3000/api/posts/" + id)
-          .then(() => {
+          .delete("http://localhost:3000/api/posts/" + postId)
+          .then((response) => {  
+            if (!response.data) {
+              return (this.mesgError = error.response.data.message)
+            } else {          
             window.location.reload();
             this.$router.push("/posts");
             this.getPostList();
+            }
+          }).catch((error) => {
+            alert(this.mesgError = error.response.data.message)
           });
       }
     },

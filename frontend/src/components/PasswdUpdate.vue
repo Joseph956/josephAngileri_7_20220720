@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navProfil />
+    <navPosts />
     <div class="modifPasswd">
       <div class="container">
         <h1>Modifier votre mot de passe</h1>
@@ -60,18 +60,12 @@
             </p>
           </div>
 
-          <!-- message d'alerte -->
-          <div class="alert alert-danger" v-if="mode == 'createPasswd' && status == 'error_newPasswd'">
-            Saisir votre nouveau mot de passe !
-          </div>
-
           <p id="message">
             <small>{{ message }}</small>
           </p>
 
-          <!-- Message d'alerte -->
-          <div class="alert alert-danger" v-if="mode == 'createPasswd' && status == 'error_newPasswdConfirm'">
-            Confirmer votre mot de passe !
+          <div class="alert alert-info text-danger">
+            {{ mesgError }}
           </div>
 
           <div class="form-group">
@@ -93,7 +87,7 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
-import navProfil from "@/components/NavProfil.vue";
+import navPosts from "@/components/NavPosts.vue";
 // import validatPasswd from "@/service/ValidatPasswd";
 export default {
   name: "PasswdUpdate",
@@ -103,11 +97,12 @@ export default {
     newPasswdConfirm: null,
   },
   components: {
-    navProfil,
+    navPosts,
     // validatPasswd,
   },
   data: function () {
     return {
+      msgError: "",
       //Modifier le mot de passe utilisateur.
       apiPasswd: axios.create({
         baseURL: "http://localhost:3000/api/auth/" + this.$store.state.user.userId,
@@ -179,17 +174,19 @@ export default {
             .put(
               "http://localhost:3000/api/auth/newpasswd/" + this.$store.state.user.userId,
               newPwd
-            ).then(() => {
+            ).then((response) => {
+              if (!response) {
+                return (this.mesgError = error.response.data.message)
+              } else {
               this.getPasswd();
               this.$store.commit("logout");
               this.$router.push("/");
-            }).catch(error => {
-              if (error.error) {
-                return (this.error = error.error.errors[0].message)
               }
-            })
+            }).catch((error) => {
+              alert(this.mesgError = error.response.data.message)
+            });
         } else {
-          message ("Le mot de passe actuel est incorrect bis  ! ");
+          message ("Le mot de passe actuel est incorrect ! ");
         }
       }
     },

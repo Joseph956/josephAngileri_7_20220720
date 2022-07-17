@@ -8,9 +8,13 @@ router.get("/", auth.token, usersCtrl.findAllPublished);
 router.get("/:id", auth.token, usersCtrl.findOneProfil);
 router.post("/:id", auth.token, usersCtrl.publierProfil);
 router.put("/:id/imgBottom", auth.token, auth.haveRightOnProfile, multer, usersCtrl.createAttachment);
-router.put("/:id", auth.token, auth.haveRightOnProfile, multer, usersCtrl.updateProfil);
+router.put("/:id/profile", auth.token, auth.haveRightOnProfile, multer, usersCtrl.updateProfil);
 router.delete("/:id", auth.token, auth.haveRightOnProfile, multer, usersCtrl.deleteProfil);
+
+
+
 // router.get('/search', auth.token,);
+// router.post("/:id", auth.token, usersCtrl.publierProfil);
 
 // // Modérateur: Modérer les interactions entre salariés.
 // // Employés: Doivent pouvoir reperer facilement les derniers posts.

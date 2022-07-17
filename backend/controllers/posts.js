@@ -29,14 +29,14 @@ exports.findAllPublished = async (req, res, next) => {
                 model: db.likes,
                 likes: req.body.likeId,
                 attributes: ['likes'],
-                order: [["created", "DESC"]]
+                order: [["created", "DESC"]],
+                include: [
+                    {
+                        model: db.user,
+                        attributes: ['username', 'attachment']
+                    }
+                ],
             },
-            {
-                model: db.unlikes,
-                likes: req.body.likeId,
-                attributes: ['unlikes'],
-                order: [["created", "DESC"]]
-            }
         ],
         order: [["createdAt", "DESC"]],
         attributes: {
@@ -95,6 +95,54 @@ exports.findOnePublished = async (req, res, next) => {
         res.status(400).json({ error })
     });
 };
+exports.findpostByUser = async (req, res, next) => {
+    Post.findAll({
+        where: {
+            userId: req.params.userId
+        },
+        include: [
+            {
+                model: db.user,
+                attributes: ['username', 'attachment']
+            },
+            {
+                model: db.coments,
+                coment: req.params.comentId,
+                attributes: ['id', 'coment', 'userId'],
+                order: [["createdAt", "DESC"]],
+                include: [
+                    {
+                        model: db.user,
+                        attributes: ['username', 'attachment']
+                    }
+                ],
+            },
+            {
+                model: db.likes,
+                likes: req.body.likeId,
+                attributes: ['likes'],
+                order: [["created", "DESC"]],
+                include: [
+                    {
+                        model: db.user,
+                        attributes: ['username', 'attachment']
+                    }
+                ],
+            },
+        ],
+        order: [["createdAt", "DESC"]],
+        attributes: {
+            exclude: ['updateAt']
+        }
+    }).then(posts => {
+        console.log(posts);
+        res.status(200).json(posts);
+    }).catch(() => {
+        res.status(400).json({
+            message: "Une erreur s'est produite lors de la récupération des publications de l'utilisateur !",
+        });
+    });
+};
 exports.createPost = async (req, res, next) => {
     const post = new Post({
         ...req.body,
@@ -102,8 +150,8 @@ exports.createPost = async (req, res, next) => {
     });
     post.save().then(() => {
         res.status(201).json({ message: 'Objet enregistré !' })
-    }).catch((error) => {
-        res.status(400).json({ error, message: "Le post n'a pas été créé !!!" })
+    }).catch(() => {
+        res.status(400).json({ message: "Le post n'a pas été créé !!!" })
     });
 };
 exports.updatePost = async (req, res, next) => {
@@ -112,10 +160,8 @@ exports.updatePost = async (req, res, next) => {
             where: { id: req.params.id },
         }).then(postObject => {
             if (postObject.attachment != null) {
-
                 const filename = postObject.attachment.split("/images/")[1];
                 fs.unlink(`images/${filename}`, () => {
-                    console.log(req.file);
                     const postObject = req.file ?
                         {
                             ...req.body,
@@ -123,13 +169,12 @@ exports.updatePost = async (req, res, next) => {
                         } : {
                             ...req.body
                         }
-                    console.log(postObject);
                     Post.update({ ...postObject, id: req.params.id }, {
                         where: { id: req.params.id }
                     }).then(() => res.status(200).json({
-                        message: "Le post (avec image) a été modifié !"
+                        message: "L'image de votre post a été mis à jour !"
                     })).catch(() => res.status(400).json({
-                        message: "Le post (avec image) n'a pas été modifié !"
+                        message: "L'image de votre post n'a pas été modifié !"
                     }));
                 });
             } else {
@@ -137,7 +182,7 @@ exports.updatePost = async (req, res, next) => {
                 Post.update({ ...postObject, id: req.params.id }, {
                     where: { id: req.params.id }
                 }).then(() => res.status(200).json({
-                    message: "Le post a été modifié !"
+                    message: "Le post a été mis à jour !"
                 })).catch(() => res.status(400).json({
                     message: "Le post n'a pas été modifié !"
                 }));
@@ -150,7 +195,7 @@ exports.updatePost = async (req, res, next) => {
         Post.update({ ...postObject, id: req.params.id }, {
             where: { id: req.params.id }
         }).then(() => res.status(200).json({
-            message: "Le post a été modifié !"
+            message: "Le post a été mis à jour !"
         })).catch(() => res.status(400).json({
             message: "Le post n'a pas été modifié !"
         }));

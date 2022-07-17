@@ -1,6 +1,6 @@
 <template>
     <div>
-        <navProfil />
+        <navPosts />
         <div class="col-md-8 col-xl-6 middle-wrapper">
             <div class="containerTitre">
                 <div class="logoTransparentUser">
@@ -12,16 +12,21 @@
                 </div>
             </div>
             <br>
-                <p class="alet text-danger">{{ mesgError }}</p>
+
+            <p class="alert alert-info  text-danger">
+                {{ mesgError }}
+            </p>
             <div class="row">
                 <div v-show="users.length > 0" v-for="user in users" :key="user.id">
                     <div class="cardUsers rounded">
                         <div class="cardUser">
                             <div class="listInfosUsers " v-if="user.attachment">
                                 <div>
-                                    <img style="height: 10rem; width: 10rem" x="0" y="0" height="100%" width="100%"
-                                        id="imgProfile" v-bind:src="user.attachment"
-                                        alt="Photo de profil utilisateur" />
+                                    <router-link v-bind:to="'/Profile/'">
+                                        <img style="height: 10rem; width: 10rem" x="0" y="0" height="100%" width="100%"
+                                            id="imgProfile" v-bind:src="user.attachment"
+                                            alt="Photo de profil utilisateur" />
+                                    </router-link>
                                 </div>
                                 <div class="listInfosUser">
                                     <div>
@@ -52,9 +57,11 @@
                             </div>
                             <div class="listInfosUsers " v-else>
                                 <div>
-                                    <img style="height: 10rem; width: 10rem" x="0" y="0" height="100%" width="100%"
-                                        id="imgAvatar" src="../assets/Icons/BiPersonCircle.svg" alt="avatar"
+                                    <router-link v-bind:to="'/Profile/'">
+                                        <img style="height: 10rem; width: 10rem" x="0" y="0" height="100%" width="100%"                                        id="imgAvatar" 
+                                        src="../assets/Icons/BiPersonCircle.svg" alt="avatar"
                                         class="imgAvatarUser" />
+                                    </router-link>
                                 </div>
                                 <div class="listInfosUser">
                                     <div>
@@ -99,10 +106,11 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
-import navProfil from "@/components/NavProfil.vue";
+// import navProfil from "@/components/NavProfil.vue";
+import navPosts from "@/components/NavPosts.vue";
 export default {
     name: 'Users',
-    components: { navProfil },
+    components: { navPosts },
     data: function () {
         return {
             mesgError: "",
@@ -121,9 +129,9 @@ export default {
     },
     mounted: function () {
         this.apiUser
-            .get("")
+            .get("/")
             .then((response) => {
-                this.user = response.data;
+                this.users = response.data;
             })
             .catch(function () { });
     },
@@ -137,7 +145,7 @@ export default {
     methods: {
         getUserList() {
             this.apiUser
-                .get("")
+                .get("/")
                 .then((response) => {
                     this.users = response.data;
                 })
@@ -166,10 +174,6 @@ export default {
 </script>
 
 <style scoped>
-
-
-
-
 .col-md-8 {
     background: #4e5166;
     padding: 2rem;
@@ -192,6 +196,12 @@ export default {
 .logoTransparentUser {
     display: flex;
 }
+.alert-info {
+    background: #5c5c6c85;
+    border-color: #5c5c6c85;
+    border-radius: 1rem;
+    padding: 0;
+}
 .cardTitle {
     display: flex;
 }
@@ -206,6 +216,7 @@ margin: 1rem;
     box-shadow: 0px 0px 10px #cecdcd, -5px -5px 10px #cfcece;
     border-radius: 5rem;
     padding: 0.5rem;
+    background: #5c5c6c85;
 }
 #imgProfile {
     border-radius: 5rem;

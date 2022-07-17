@@ -2,7 +2,7 @@
   <div>
     <NavSignUp />
     <div class="auth-wrapper">
-      <div class="auth-inner">
+      <div class="auth-inner">        
         <router-view />
       </div>
     </div>
@@ -20,6 +20,8 @@ export default {
 </script>
 
 <style>
+
+
 
 
 
@@ -63,7 +65,7 @@ h4,
 h5,
 h6,
 label,
-span,
+/* span, */
 .nav-item,
 #transition,
 footer {
@@ -130,6 +132,7 @@ html,
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  margin: 0;
 }
 
 .navbar-light {
@@ -142,7 +145,7 @@ html,
 
 .navbar-expand,
 .navbar-collapse {
-  justify-content: flex-end;
+  justify-content: center;
   font-weight: 400;
 }
 
@@ -156,13 +159,12 @@ html,
 
 .auth-wrapper {
   display: flex;
-  margin: 7rem auto;
+  /* margin: 7rem auto; */
   justify-content: center;
-  /* text-align: left; */
 }
 
 .auth-inner {
-  width: 900px;
+  width: 1000px;
   margin: auto;
   background: #4E5166;
   box-shadow: 0px 14px 80px rgba(26, 8, 11, 0.7);
@@ -172,16 +174,16 @@ html,
   outline: none;
 }
 
-/* @media screen and (max-width: 900px) {
+@media screen and (max-width: 900px) {
   .auth-inner {
-      width: 100%;
+      width: auto;
   }
-}*/
-/* @media screen and (max-width: 768px) {
+}
+@media screen and (max-width: 768px) {
   .auth-inner {
     width: auto;
   }
-} */
+}
 
 .auth-wrapper .form-control:focus {
   border-color: #167bff;
@@ -218,33 +220,4 @@ html,
 .forgot-password a {
   color: #167bff;
 }
-
-.btn {
-  border: none;
-}
-
-/* .post-card-wrap {
-  position: relative;
-  padding: 80px 16px;
-  background-color: #f1f1f1;
-}
-@media (min-width: 500px) {
-  padding: 100px 16px;
-}
-
-.post-cards {
-  display: grid;
-  gap: 32px;
-  grid-template-columns: 1fr;
-
-  @media (min-width: 500px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @media (min-width: 900px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  @media (min-width: 1200px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-} */
 </style>

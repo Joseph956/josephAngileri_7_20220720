@@ -1,9 +1,7 @@
 <template>
   <div>
-    <navProfil />
+    <navPosts />
     <div class="card">
-      <h1 class="cardTitle">Profil utilisateur</h1>
-      <h2 class="cardSubtitle">Informations personnelles</h2>
       <!-- Image de fond -->
       <div class="form-grouProfile" v-if="user.imgBottom">
         <img style="height: auto; width: 100%" x="0" y="0" height="100%" width="100%" id="imgBottomUser"
@@ -25,8 +23,10 @@
         </div>
       </div>
       <div class="infosUserProfile">
+        <h1 class="cardTitle">Profil utilisateur</h1>
+        <h2 class="cardSubtitle">Informations personnelles</h2>
         <h3>{{ user.username }}</h3>
-        <h1>{{ user.email }}</h1>
+        <h3>{{ user.email }}</h3>
       </div>
       <div class="formRowProfile">
         <ul class="btnFooterProfil">
@@ -71,9 +71,216 @@
             </button>
           </li>
         </ul>
-
+        <!-- Lister les publication de l'utilisateur -->
       </div>
-      <div class="alert text-danger">{{ mesgError }} </div>
+      <div class="alert alert-info text-danger">{{ mesgError }} </div>
+      <!-- Template affichage détails d'un post -->
+      <div class="col-md-8 col-xl-6 middle-wrapper">
+        <navPosts />
+        <h1>Details des publications de l'utilisateur</h1>
+        <div class="row">
+          <div v-show="posts.length > 0" v-for="post in posts" :key="post.id" class="col-md-12 grid-margin">
+            <div class="col-md-12 grid-margin">
+              <div class="card rounded">
+                <!-- Infos créateur du post -->
+                <div class="card-header">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                      <div class="ml-2 justify-content">
+                        <div class="avatar" v-if="post.user.attachment">
+                          <img style="height: 65px; width: 55px" x="0" y="0" height="100%" width="100%" class="imgUser"
+                            alt="Image du profil" v-bind:src="post.user.attachment" loading="lazy" />
+                        </div>
+                        <div class="avatar" v-else>
+                          <img style="height: 55px; width: 55px" x="0" y="0" height="100%" width="100%"
+                            class="avatarProfil" src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
+                        </div>
+
+                        <div class="userPost">
+                          <div>
+                            <p class="datePost">{{ post.user.username }} <br> Posté le : {{ post.createdAt }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="linkPost">
+                      <div class="dropdown" data-dropdown>
+                        <button class="link" data-dropdown-button type="button">
+                          <img data-dropdown-button src="../assets/Icons/ariaCircle.svg" alt="">
+
+                        </button>
+                        <div class="dropdown-menu information-grid">
+                          <a class="dropdown-item d-flex align-items-center" href="#">
+                            <img src="../assets/Icons/infollow.svg" alt="">
+                            <span class="">Unfollow</span></a>
+                          <a class="dropdown-item d-flex align-items-center" href="#">
+                            <img src="../assets/Icons/gotopost.svg" alt="">
+                            <span class="">Go to post</span></a>
+                          <a class="dropdown-item d-flex align-items-center" href="#">
+                            <img src="../assets/Icons/share.svg" alt="">
+                            <span class="">Share</span></a>
+                          <a class="dropdown-item d-flex align-items-center" href="#">
+                            <img src="../assets/Icons/copylynk.svg" alt="">
+                            <span class="">Copy link</span></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Affichage du post -->
+                <div class="card-body">
+                  <p class="mb-3 tx-14">
+                    <!-- Animation du titre -->
+                    <router-link class="external" v-bind:to="'/Posts/'">
+                      <div class="infos">
+                        <h6 class="aspect">Afficher les publications:</h6>
+                        {{ post.title }}
+                      </div>
+                    </router-link>
+                    <!-- Fin animation du titre -->
+                  </p>
+                  <p class="mb-3 tx-14">{{ post.content }}</p>
+                  <!-- <img class="imgPost" :src="post.attachment" alt="" /> -->
+                  <!-- Image du post -->
+                  <div class="form-group">
+                    <!-- <div v-if="post.attachment">
+                      <img class="imgPost" style="height: 15rem; width: 20rem" x="0" y="0" height="100%" width="100%"
+                        v-bind:src="post.attachment" alt="" />
+                    </div>
+                    <div v-else>
+                      <img class="imgPost" style="height: 30rem; width: 30rem" x="0" y="0" height="100%" width="100%"
+                        src="../assets/Icons/BiCardImg.svg" alt="avatar" />
+                    </div> -->
+                    <div v-if="post.attachment">
+                      <!-- Fenêtre modale -->
+                      <modale v-bind:revele="revele">
+                        <div @click="toggleModale" :toggleModale="toggleModale" class="btn btn-success">
+                          <div :src="post.attachment">
+                            Modale photo
+                          </div>
+                        </div>
+                      </modale>
+                      <!-- Fin fenêtre modale -->
+                      <a href="#">
+                        <img @click="toggleModale" class="imgPost" :src="post.attachment" alt="Image du post" />
+                      </a>
+                    </div>
+                    <div v-else>
+                      <!-- Fenêtre modale -->
+                      <modale v-bind:revele="revele">
+                        <div @click="toggleModale" :toggleModale="toggleModale" class="btn btn-success">
+                          <div :src="post.attachment">
+                            Modale photo
+                          </div>
+                        </div>
+                      </modale>
+                      <!-- Fin fenêtre modale -->
+                      <a href="#">
+                        <img @click="toggleModale" class="imgPost" src="../assets/Icons/BiCardImg.svg"
+                          alt="Image du post" />
+                      </a>
+                    </div>
+                  </div>
+
+                </div>
+                <!-- Gestion du post  d-flex-->
+                <div class="card-footer">
+                  <div class=" post-actions">
+                    <div class="menuPost">
+                      <div class="linkPost">
+                        <div class="likeButtons">
+                          <div class="likes">
+                            <routeur-link v-bind:to="'/PostLikes/' + postId"
+                              class="d-flex align-items-center text-muted mr-4">
+                              <button type="button" class="btn btn-like" @click="postLikeCreate(post.id)">
+                                <span v-if="status == 'loading'">Like ....</span>
+                                <span v-else>
+                                  <div class="likeFlex">
+                                    <img class="like" style="height: 1.5rem; width: 1.5rem" x="0" y="0" height="100%"
+                                      width="100%" src="../assets/Icons/BiHandThumbsUpFill.svg" alt="liker">
+
+                                    <div>
+                                      <p class="d-none d-md-block ml-2">
+                                        {{ post.likes.length }} <br />
+                                      </p>
+                                    </div>
+                                  </div>
+                                </span>
+                              </button>
+                            </routeur-link>
+                          </div>
+                        </div>
+                      </div>
+                      <router-link class="displayComents" @click="displayAllComents()"
+                        v-bind:to="`/ComentsList/${post.id}`">
+                        <div class="linkItems">
+                          <img src="../assets/Icons/coment.svg" alt="commentaires">
+                        </div>
+
+                        <div class="linkComent">
+                          <p class="d-none d-md-block ml-2">
+                            <span v-if="post.coments.length > 2"> - {{ post.coments.length }} - Commentaires
+                              <br /></span>
+                            <span v-else>{{ post.coments.length }} Commentaire <br /></span>
+                          </p>
+                        </div>
+                      </router-link>
+                      <div class="linkPost">
+                        <div class="dropdown" data-dropdown>
+                          <button class="link" data-dropdown-button>
+                            <img data-dropdown-button src="../assets/Icons/ariaCircle.svg" alt="menus">
+                          </button>
+                          <div class="dropdown-menu information-grid">
+                            <div class="dropdown-heading"></div>
+                            <div class="dropdown-links">
+                              <!-- Supprimer un post -->
+                              <a href="javascript:;" class="d-flex align-items-center text-muted">
+                                <div class="flexMenu">
+                                  <div>
+                                    <button class="btn" data-dropdown-button @click="postDeleted(post.id)">
+                                      <div class="trashBtn">
+                                        <div class="iconDelete">
+                                          <img src="../assets/Icons/BiTrash3Fill.svg" alt="">
+                                        </div>
+                                        <div class="btnDelete"> <span v-if="status == 'loading'">Suppression en
+                                            cours....</span>
+                                          <span v-else>Supprimer</span>
+                                        </div>
+                                      </div>
+                                    </button>
+                                  </div>
+                                  <!-- </div> -->
+                                  <!-- Modifier un post -->
+                                  <div class="btnFooter">
+                                    <router-link v-bind:to="'/PostsUpdate/' + post.id">
+                                      <button type="button" class="btn" @click="postModify()" :postId="post.id">
+                                        <div class="modifyBtn">
+                                          <div class="iconModify">
+                                            <img src="../assets/Icons/BiPenFill.svg" alt="">
+                                          </div>
+                                          <div>
+                                            <span v-if="status == 'loading'">Modification en cours....</span>
+                                            <span v-else>Modifier</span>
+                                          </div>
+                                        </div>
+                                      </button>
+                                    </router-link>
+                                  </div>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <comentsCreate :postId="post.id" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="logoTransparent">
       <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
@@ -85,29 +292,35 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
-import navProfil from "@/components/NavProfil.vue";
-// import Profils from "./Users.vue";
+import navPosts from "@/components/NavPosts.vue";
 import ProfilUpdate from "@/components/ProfilUpdate.vue";
 import PasswdUpdate from "@/components/PasswdUpdate.vue";
+
 export default {
   name: "Profile",
   components: {
-    // Profils,
-    navProfil,
+    navPosts,
     ProfilUpdate,
     PasswdUpdate,
+    
   },
   data: function () {
     return {
       mesgError: "",
       user: {
+        imgBottom: this.imgBottom,
+        attachment: this.attachment,
         usermame: this.username,
         email: this.email,
-        attachment: this.attachment,
-        imgBottom: this.imgBottom,
       },
-      mode: "isAdmin",
-      role: "",
+      posts: {
+        title: this.title,
+        content: this.content,
+        attachment: this.attachment,
+      },
+      coments: {
+        coment: this.coment,
+      },
       apiUser: axios.create({
         baseURL:
           "http://localhost:3000/api/users/" + this.$store.state.user.userId,
@@ -117,47 +330,86 @@ export default {
           Authorization: "BEARER " + this.$store.state.user.token,
         },
       }),
+      apiPosts: axios.create({
+        baseURL: "http://localhost:3000/api/posts/",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "BEARER " + this.$store.state.user.token,
+        },
+      }),
+      posts: [],
+      coments: [],
+      like: [],
     };
   },
   mounted: function () {
     this.apiUser
-      .get("")
+      .get("/")
       .then((response) => {
-        this.user = response.data;
-      })
-      .catch(function () {});
+        if (!response) {
+          this.mesgError = error.response.data.message
+        } else {
+          this.user = response.data;
+          console.log("apiUser");
+          this.getPostList();
+        }
+      }).catch((error) => {
+        alert(this.mesgError = error.response.data.message)
+      });
   },
   computed: {
-    validatedFields: function () {
-      if (this.mode == "isAdmin") {
-        if (
-          this.role != "" &&
-          this.role == "admin") {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        if (this.role != "") {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    },
+    // validatedFields: function () {
+    //   if (this.mode == "isAdmin") {
+    //     if (
+    //       this.role != "" &&
+    //       this.role == "admin") {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   } else {
+    //     if (this.role != "") {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   }
+    // },
     ...mapState({
       user: "userInfos",
     }),
   },
   methods: {
-    getUserOne() {
-      this.apiUser
-        .get("")
+    displayAllComents: function () {
+      this.apiPosts
+        .get("/")
         .then((response) => {
-          this.user = response.data;
-          window.location.reload();
+          if (!response.data) {
+            return (this.mesgError = error.response.data.message)
+          } else {
+          this.coments = response.data;
+          console.log(this.coments);
+          }
         })
-        .catch(function (error) { });
+        .catch(function (message) {
+          console.log(message);
+        });
+    },
+    getPostList: function () {
+      console.log("getPostList");
+      this.apiPosts
+        .get(`http://localhost:3000/api/posts/postUser/${this.user.id}`)
+        .then((response) => {
+          if (!response) {
+            this.mesgError = error.response.data.message
+          } else {
+          this.posts = response.data;
+          }
+        })
+        .catch((error) =>{
+          alert(this.mesgError = error.response.data.message)
+        });
     },
     userDeleted: function (userId) {
       if (
@@ -187,24 +439,23 @@ export default {
 
 <style>
 
-
-
-
-
-
-
-
-
 .card {
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e51665a;
   border-radius: 1rem;
   background: #4e5166;
 }
-
-
 .cardSubtitle {
   font-size: 15px;
   margin-bottom: 32px;
+}
+
+.alert-info {
+  background: #5c5c6c85;
+  border-color: #5c5c6c85;
+  border-radius: 1rem;
+  padding: 0;
+  width: 90%;
+  margin: auto;
 }
 
 .form-grouProfile {
@@ -253,7 +504,7 @@ export default {
   border-radius: 10rem;
 }
 .infosUserProfile {
-  margin: 6rem auto 0 auto;
+  margin: 6rem auto 2rem auto;
 }
 
 .formRowProfile {
@@ -261,7 +512,7 @@ export default {
   align-items: center;
   align-content: center;
   justify-content: space-around;
-  /* margin: 1rem 0 0 0; */
+  margin: 1rem 0 0 0;
 }
 .btnFooterProfil {
   display: flex;

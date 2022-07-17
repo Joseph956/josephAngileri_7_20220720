@@ -1,51 +1,23 @@
 <template>
   <header>
     <nav class="navbar navbar-expand navbar-light fixed-top">
-      <div class="container">
-       
+      <div class="container">       
           <router-link class="navbar-brand" :to="{ name: 'Accueil' }">
             <img class="imgAccueil" style="height: 2rem; width: 12rem" x="0" y="0" height="100%" width="100%"
               src="../assets/icon-left-font.svg" alt="" />
           </router-link>
-       
-        <!-- <div v-else> -->
-
-        <!-- </div> -->
-        <!-- <div class="collapse navbar-collapse">
-          <ul v-show="!mobile" class="navbar-nav ml-auto">
-            <li class="link btn-primary btn-nav">
-              <router-link to="Profile">Profile</router-link>
-            </li>
-            <li class="link btn-primary btn-nav">
-              <router-link to="Blog">Blogs</router-link>
-            </li>
-            <li class="formRow">
-              <button @click="logout()" class="btn">Log-Out</button>
-            </li>
-          </ul>
-        </div> -->
       </div>
     </nav>
-    <!-- <menuIcon @click="toggleMobileNav" class="menu-icon" v-show="mobile" /> -->
-    <!-- <transition name="mobile-nav">
-    <ul class="mobile-nav">
-    <router-link class="link" to="#">Profile</router-link>
-    <router-link class="link" to="#">Blogs</router-link>
-    <router-link class="link" to="#">Posts</router-link>
-    </ul>
-    <transition /> -->
   </header>
 </template>
 
 <script>
 import menuIcon from "../assets/Icons/bars-regular.svg";
 
-
 export default {
   name: "NavSignUp",
   components: {
-    menuIcon,
-   
+    menuIcon,   
   },
   data() {
     return {
@@ -82,6 +54,10 @@ export default {
 
 <style>
 
+
+
+
+
 header {
   background-color: #fff;
   padding: 0 25px;
@@ -89,9 +65,10 @@ header {
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 99;
 }
-/* .fixed-top {
-  position: relative;
-} */
+.navbar>.container {
+  justify-content: center;
+}
+
 img,
 .imgAccueil {
   display: flex;

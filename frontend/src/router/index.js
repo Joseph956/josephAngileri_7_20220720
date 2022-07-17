@@ -8,10 +8,8 @@ import Profile from '@/views/Profile.vue';
 import Users from '@/views/Users.vue';
 import Posts from '@/views/Posts.vue';
 import PostDetails from '@/views/PostDetails.vue';
-import PostsCards from '@/views/PostsCards.vue';
 
 import PostsUpdate from '@/components/PostsUpdate.vue';
-import PostCardRecent from '@/components/PostCardRecent.vue';
 import ProfilUpdate from '@/components/ProfilUpdate.vue';
 import ImgBottomUpdate from '@/components/ImgBottomUpdate.vue';
 import PasswdUpdate from '@/components/PasswdUpdate.vue';
@@ -65,26 +63,11 @@ const routes = [
     component: () => import('@/components/ComentsCreate.vue')
   },
   {
-    path: '/comentslist',
+    path: '/comentslist/:id',
     name: 'ComentsList',
     component: () => import('@/components/ComentsList.vue')
   },
   //Fin routage gestion des posts
-
-  //Routage des posts récents
-  //Parents
-  {
-    path: '/postscards',
-    name: 'PostsCards',
-    component: PostsCards,
-  },
-  // //Enfant postCardRecent
-  {
-    path: '/postcardrecent',
-    name: 'PostCardRecent',
-    component: PostCardRecent,
-  },
-  //Fin posts récents
 
   //Routage du profile utilisateur
   {

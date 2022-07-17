@@ -7,7 +7,7 @@
                     v-bind:src="user.imgBottom" alt="Image de fond compte utilisateur" />
             </div>
             <div class="formGroup" v-else>
-                <img style="height: auto; width: 100%" x="0" y="0" height="100%" width="100%" id="imgFondAvatar"
+                <img style="height: auto; width: 30%" x="0" y="0" height="100%" width="100%" id="imgFondAvatar"
                     src="../assets/Icons/BiCardImg.svg" alt="avatar" />
                 <label for="file" class="legend">Image de fond</label>
             </div>
@@ -24,6 +24,7 @@
                     </button>
                 </div>
             </div>
+                <div class="alert text-danger">{{ mesgError }} </div>
         </form>
     </div>
 </template>
@@ -33,6 +34,7 @@ export default {
     name: 'ImgBottomUpdate',
     data: function () {
         return {
+            mesgError: "",
             apiUser: axios.create({
                 baseURL: "http://localhost:3000/api/users/" + this.$route.params.id,
                 headers: {
@@ -47,31 +49,41 @@ export default {
         };
     },
     methods: {
-    onFileSelected() {
-      this.fileBottom = this.$refs.fileBottom.files[0];
-      this.user.imgBottom = URL.createObjectURL(this.fileBottom);
+        onFileSelected() {
+        this.fileBottom = this.$refs.fileBottom.files[0];
+        this.user.imgBottom = URL.createObjectURL(this.fileBottom);
+        },
+        imgFondUpdate: function () {
+            if (
+                window.confirm("Voulez-vous vraiment modifier votre image de fond ?")
+            ) {
+            const dataImgBottom = new FormData();
+            dataImgBottom.append("image", this.fileBottom);
+            this.apiUser
+                .put(
+                `http://localhost:3000/api/users/${this.$route.params.id}/imgBottom`,
+                dataImgBottom
+                )
+                .then((response) => {
+                    if (!response) {
+                        this.mesgError = error.response.data.message
+                    }else{
+                        window.location.reload();
+                        this.$router.push("/profile");
+                        this.getProfilOne();
+                    }
+                }).catch(function (error) {
+                    alert(this.mesgError = error.response.data.message)
+                });
+            }
+        },
     },
-    imgFondUpdate: function () {
-      const dataImgBottom = new FormData();
-      dataImgBottom.append("image", this.fileBottom);
-      this.apiUser
-        .put(
-          `http://localhost:3000/api/users/${this.$route.params.id}/imgBottom`,
-          dataImgBottom
-        )
-        .then(() => {
-          window.location.reload();
-          this.$router.push("/profile");
-          this.getProfilOne();
-        })
-        .catch(function () { });
-    },
-    }
-
-}
+};
 </script>
 
 <style>
+
+
 .imgBottom {
     box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e51665a;
     border-radius: 1rem;
@@ -80,11 +92,12 @@ export default {
     padding: 1rem;
 }
 .legend, label {
-    margin-top: 1rem;
+    margin: 1rem 0 1rem 0;
     font-size: 1.5rem;
 }
 .selectBottom {
     display: flex;
+    /* flex-direction: column-reverse; */
     align-items: center;
     margin: 1rem;
     align-content: space-between;
@@ -100,10 +113,10 @@ export default {
         height: 10rem;
     }
     .formFilePublich {
-        width: 20rem;
+        width: 100%;
     }
-    .selectBottom {
-       flex-direction: column;
-    }
+        .selectBottom {
+            flex-direction: column-reverse;
+        }
 }
 </style>

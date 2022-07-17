@@ -4,9 +4,9 @@ import axios from "axios";
 const instance = axios.create({
   baseURL: 'http://localhost:3000/api/',
   headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  }
+    'Accept': "application/json",
+    "Content-Type": "application/json",
+  },
 });
 
 let state = {
@@ -123,12 +123,12 @@ export default createStore({
       likeId: '',
       like: '',
     },
-    postCardRecent: {
-      attachment: '',
-      userId: '',
-      postId: '',
-      content: '',
-    },
+    // postCardRecent: {
+    //   attachment: '',
+    //   userId: '',
+    //   postId: '',
+    //   content: '',
+    // },
   },
   mutations: {
     setStatus: function (state, status) {
@@ -189,7 +189,7 @@ export default createStore({
         instance.post('auth/register', data)
           .then(function (response) {
             if (!response) {
-              this.error = response.data[0].message
+              return (this.mesgError = error.response.data.message)
             } else {
               commit('setStatus', 'created');
               resolve(response);
@@ -200,6 +200,7 @@ export default createStore({
             commit('setStatus', 'error_create');
             reject(error);
             console.log(error);
+            alert(this.mesgError = error.response.data.message)
           });
       });
     },
