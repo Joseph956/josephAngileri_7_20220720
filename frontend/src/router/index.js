@@ -8,12 +8,17 @@ import Profile from '@/views/Profile.vue';
 import Users from '@/views/Users.vue';
 import Posts from '@/views/Posts.vue';
 import PostDetails from '@/views/PostDetails.vue';
-
 import PostsUpdate from '@/components/PostsUpdate.vue';
 import ProfilUpdate from '@/components/ProfilUpdate.vue';
 import ImgBottomUpdate from '@/components/ImgBottomUpdate.vue';
 import PasswdUpdate from '@/components/PasswdUpdate.vue';
-import ModalComent from '@/components/ModalComent.vue';
+import NotFound from '@/views/NotFound.vue';
+
+
+
+import Admin from '@/views/Admin/Moderateur.vue';
+import Dashboard from '@/views/Admin/Dashboard.vue';
+import Compte from '@/views/Admin/Compte.vue';
 
 
 const routes = [
@@ -24,6 +29,17 @@ const routes = [
     name: 'Accueil',
     component: Accueil,
   },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: Admin,
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard,
+  },
+
   {
     path: '/forgot',
     name: 'Forgot',
@@ -53,11 +69,6 @@ const routes = [
     component: PostDetails,
   },
   {
-    path: '/modalcoment/:id',
-    name: 'ModalComent',
-    component: ModalComent,
-  },
-  {
     path: '/comentscreate',
     name: 'ComentsCreate',
     component: () => import('@/components/ComentsCreate.vue')
@@ -67,6 +78,7 @@ const routes = [
     name: 'ComentsList',
     component: () => import('@/components/ComentsList.vue')
   },
+
   //Fin routage gestion des posts
 
   //Routage du profile utilisateur
@@ -74,6 +86,11 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: Profile,
+  },
+  {
+    path: '/compte/:id/admin',
+    name: 'Compte',
+    component: Compte,
   },
   {
     path: '/users',
@@ -96,6 +113,9 @@ const routes = [
     component: PasswdUpdate,
   },
   //Fin routage profil utilisateur
+  {
+    path: '/:pathMatch(.*)*', component: NotFound
+  }
 ];
 
 const router = new createRouter({

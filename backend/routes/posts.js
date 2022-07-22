@@ -13,8 +13,6 @@ router.put("/:id", auth.token, auth.haveRightOnPost, multer, postsCtrl.updatePos
 router.delete("/:id", auth.token, auth.haveRightOnPost, multer, postsCtrl.deletePost);
 
 router.put("/:id/like/:userId", auth.token, postsCtrl.likePost);
-router.put("/:id/unlike/:userId", auth.token, postsCtrl.unLikePost);
 router.patch("/:id/like/:userId", auth.token, postsCtrl.likePost);
-router.patch("/:id/unlike/:userId", auth.token, postsCtrl.unLikePost);
 
 module.exports = router;

@@ -2,7 +2,7 @@
   <div>
     <NavSignUp />
     <div class="auth-wrapper">
-      <div class="auth-inner">        
+      <div class="auth-inner">
         <router-view />
       </div>
     </div>
@@ -20,13 +20,6 @@ export default {
 </script>
 
 <style>
-
-
-
-
-
-
-
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800");
 
 * {
@@ -46,9 +39,8 @@ export default {
 html {
   scroll-behavior: smooth;
 }
-
 body {
-  background: url("./assets/icon.png") no-repeat center fixed;
+  background: url("./assets/Fond-Gris.jpg") no-repeat center fixed;
   background-position: center;
   background-size: cover;
   margin: auto;
@@ -71,7 +63,7 @@ label,
 footer {
   margin-bottom: 0;
   text-align: center;
-  text-shadow: -3px 3px 4px #f7d1d0;
+  text-shadow: 1px 1px 4px #f7d1d0;
   font-weight: 500;
   font-size: large;
   font-family: "lato", sans-serif;
@@ -104,7 +96,8 @@ html,
     }
 } */
 #app {
-  /* display: flex; */
+  /* background-color: #5c5c6c85; */
+  height: 100vh;
   margin: auto;
   align-items: center;
   flex-direction: column;
@@ -150,7 +143,6 @@ html,
 }
 
 @media screen and (max-width: 768px) {
-
   .navbar-expand,
   .navbar-collapse {
     justify-content: flex-start;
@@ -159,14 +151,13 @@ html,
 
 .auth-wrapper {
   display: flex;
-  /* margin: 7rem auto; */
   justify-content: center;
 }
 
 .auth-inner {
   width: 1000px;
   margin: auto;
-  background: #4E5166;
+  background: #4e5166;
   box-shadow: 0px 14px 80px rgba(26, 8, 11, 0.7);
   padding: 2.5rem 55px 45px 55px;
   border-radius: 15px;
@@ -174,11 +165,6 @@ html,
   outline: none;
 }
 
-@media screen and (max-width: 900px) {
-  .auth-inner {
-      width: auto;
-  }
-}
 @media screen and (max-width: 768px) {
   .auth-inner {
     width: auto;

@@ -123,12 +123,6 @@ export default createStore({
       likeId: '',
       like: '',
     },
-    // postCardRecent: {
-    //   attachment: '',
-    //   userId: '',
-    //   postId: '',
-    //   content: '',
-    // },
   },
   mutations: {
     setStatus: function (state, status) {
@@ -164,7 +158,7 @@ export default createStore({
     }
   },
   actions: {
-    //Creation du compte utlisateur
+    //Connexion au compte utilisateur
     login: ({ commit }, data) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
@@ -182,6 +176,7 @@ export default createStore({
           });
       });
     },
+    //Creation du compte utilisateur
     createAccount: ({ commit }, data) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {

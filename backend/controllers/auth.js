@@ -26,13 +26,18 @@ exports.signUp = (req, res, next) => {
                     user.roleId = role.id;
                     user
                         .save()
-                        .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-                        .catch(error => res.status(400).json({ error, message: "Cette adresse email existe déjà !!! " }));
+                        .then(() => res.status(201).json({
+                            message: 'Utilisateur créé !'
+                        })).catch(error => res.status(400).json({
+                            error, message: "Cette adresse email existe déjà !!! "
+                        }));
                 } else {
                     res.status(400).json("Le rôle utilisateur n'a pas été trouvé !!! ");
                 }
             });
-        }).catch(error => res.status(500).json({ error, message: "erreur serveur !!! " }));
+        }).catch(error => res.status(500).json({
+            error, message: "Cette email n'existe pas !!! "
+        }));
 };
 
 exports.signIn = (req, res, next) => {
@@ -43,12 +48,16 @@ exports.signIn = (req, res, next) => {
         }
     }).then((user) => {
         if (!user) {
-            return res.status(401).json({ error, message: "Ce profil utilisateur n'existe pas !!!" });
+            return res.status(401).json({
+                error, message: "Ce profil utilisateur n'existe pas !!!"
+            });
         }
         bcrypt.compare(req.body.password, user.password)
             .then((valid) => {
                 if (!valid) {
-                    return res.status(403).json({ error, message: 'Le mot de passe est incorrect !' });
+                    return res.status(403).json({
+                        error, message: 'Le mot de passe est incorrect !'
+                    });
                 }
                 //GET LOGGED USER ROLE
                 Role.findOne({
@@ -64,10 +73,12 @@ exports.signIn = (req, res, next) => {
                             process.env.RANDOM_TOKEN_SECRET, { expiresIn: '24h' })
                     });
                 })
-            })
-            .catch((error) => res.status(400).json({ error, message: "Adresse mail et/ ou mot de passe invalide !!! " }));
-    })
-        .catch((error) => res.status(500).json({ error, message: "Erreur serveur !!! " }));
+            }).catch((error) => res.status(400).json({
+                error, message: "Adresse mail et/ ou mot de passe invalide !!! "
+            }));
+    }).catch((error) => res.status(500).json({
+        error, message: "Cette email n'existe pas !!! "
+    }));
 };
 
 exports.logout = (req, res, next) => {

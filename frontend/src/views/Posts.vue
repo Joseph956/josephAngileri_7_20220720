@@ -1,27 +1,53 @@
 <template>
   <div class="postForm">
+    <div>
+      <button type="button" class="btnUp" @click="switchToUp()">
+        <img src="../assets/Icons/BiArrowUpCircleFill.svg" alt="icon" />
+      </button>
+    </div>
     <navPosts />
     <div class="form-grouProfile" v-if="user.imgBottom">
-      <img style="height: auto; width: 100%" x="0" y="0" height="100%" width="100%" id="imgBottomUser"
-        v-bind:src="user.imgBottom" alt="Image de fond compte utilisateur" />
+      <img
+        style="height: auto; width: 100%"
+        x="0"
+        y="0"
+        height="100%"
+        width="100%"
+        id="imgBottomUser"
+        v-bind:src="user.imgBottom"
+        alt="Image de fond compte utilisateur"
+      />
     </div>
     <div class="form-grouProfile" v-else>
-      <img style="height: 25vw; width: 100%" x="0" y="0" height="100%" width="100%" id="imgBottomAvatar"
-        src="../assets/icon-left-font.svg" alt="avatar" />
+      <img
+        style="height: 25vw; width: 100%"
+        x="0"
+        y="0"
+        height="100%"
+        width="100%"
+        id="imgBottomAvatar"
+        src="../assets/grpm.png"
+        alt="avatar"
+      />
     </div>
-    <div>
-    </div>
+    <div></div>
     <div class="form-control-input">
-      <div class="post-card-wrap">
-      </div>
+      <div class="post-card-wrap"></div>
       <div>
         <div class="publierForm">
           <!-- Formulaire de création d'un post-->
           <form class="formPublish" enctype="multipart/form-data">
             <div class="containerLogo">
               <div class="logoTransparentPost">
-                <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
-                  src="../assets/logo_transparent.png" alt="" />
+                <img
+                  style="height: 2.5rem; width: 2.5rem"
+                  x="0"
+                  y="0"
+                  height="100%"
+                  width="100%"
+                  src="../assets/logo_transparent.png"
+                  alt=""
+                />
               </div>
               <div class="titlePublish">
                 <h1>Publications</h1>
@@ -29,8 +55,11 @@
               <div>
                 <div class="formGroup" v-if="mode == 'publishPost'">
                   <div>
-                    <button type="button" class="btn  " @click="switchToPost()">
-                      <img src="../assets/Icons/BiPenFill.svg" alt="Créer une publication">
+                    <button type="button" class="btn" @click="switchToPost()">
+                      <img
+                        src="../assets/Icons/BiPenFill.svg"
+                        alt="Créer une publication"
+                      />
                       <span v-if="status == 'loading'">publication....</span>
                       <span v-else></span>
                     </button>
@@ -38,9 +67,18 @@
                 </div>
                 <div class="formGroup" v-else>
                   <div>
-                    <button type="button" class="btn  " @click="switchToNewPost()">
-                      <img src="../assets/Icons/BiPenFill.svg" alt="Créer une publication">
-                      <span v-if="status == 'loading'">Créer une publication....</span>
+                    <button
+                      type="button"
+                      class="btn"
+                      @click="switchToNewPost()"
+                    >
+                      <img
+                        src="../assets/Icons/BiPenFill.svg"
+                        alt="Créer une publication"
+                      />
+                      <span v-if="status == 'loading'"
+                        >Créer une publication....</span
+                      >
                       <span v-else></span>
                     </button>
                   </div>
@@ -51,14 +89,28 @@
             <!-- Titre du post -->
             <div class="form-group" v-if="mode == 'publication'">
               <label for="title"></label>
-              <input ref="firstfield" v-model="title" type="text" id="title" class="form-control"
-                placeholder="Titre de votre message" />
+              <input
+                ref="firstfield"
+                v-model="title"
+                type="text"
+                id="title"
+                class="form-control"
+                placeholder="Titre de votre message"
+              />
             </div>
             <!-- Contenu du post -->
             <div class="form-group" v-if="mode == 'publication'">
               <label for="content"></label>
-              <textarea v-model="content" type="text" id="content" class="form-control"
-                placeholder="Contenu de votre message" />
+              <textarea
+                v-model="content"
+                type="text"
+                id="content"
+                cols="30"
+                rows="10"
+                class="form-control"
+                placeholder="Contenu de votre message"
+              >
+              </textarea>
             </div>
             <!-- Affichage de l'image du post avant publication-->
             <div class="formGroup publish" v-if="mode == 'publication'">
@@ -67,21 +119,40 @@
                   <img :src="image" class="w-50 rounded" />
                 </div>
                 <div v-else>
-                  <img style="height: 15rem; width: 100%" x="0" y="0" height="100%" width="100%" class="avatarPost "
-                    src="../assets/Icons/BiCardImg.svg" alt="">
+                  <img
+                    style="height: 15rem; width: 100%"
+                    x="0"
+                    y="0"
+                    height="100%"
+                    width="100%"
+                    class="avatarPost"
+                    src="../assets/Icons/BiCardImg.svg"
+                    alt=""
+                  />
                 </div>
               </div>
             </div>
             <!-- Choix de l'image du post -->
             <div class="formGroup" v-if="mode == 'publication'">
               <label for="file"></label><br />
-              <input class="formFilePublich" id="file" ref="file" type="file" name="image" accept="image/*"
-                @change="onFileSelected()" />
+              <input
+                class="formFilePublich"
+                id="file"
+                ref="file"
+                type="file"
+                name="image"
+                accept="image/*"
+                @change="onFileSelected()"
+              />
             </div>
             <!-- Publier un post -->
             <div class="formGroup">
-              <button type="button" class="btn btn-primary btnPublication" @click="postCreate()"
-                :disabled="!validatedFields">
+              <button
+                type="button"
+                class="btn btn-primary btnPublication"
+                @click="postCreate()"
+                :disabled="!validatedFields"
+              >
                 <span v-if="status == 'loading'">Publication en cours....</span>
                 <span v-else>Nouvelle publication</span>
               </button>
@@ -92,50 +163,96 @@
         <!-- Afficher la liste des posts-->
         <div class="col-md-8 col-xl-6 middle-wrapper">
           <div class="row">
-            <div v-show="posts.length > 0" v-for="post in posts" :key="post.id" class="col-md-12 grid-margin">
+            <div
+              v-show="posts.length > 0"
+              v-for="post in posts"
+              :key="post.id"
+              class="col-md-12 grid-margin"
+            >
               <div class="card rounded">
                 <!-- Infos créateur du post -->
                 <div class="card-header">
-                  <div class="d-flex align-items-center justify-content-between">
+                  <div
+                    class="d-flex align-items-center justify-content-between"
+                  >
                     <div class="d-flex align-items-center">
                       <div class="ml-2 justify-content">
                         <div class="avatar" v-if="post.user.attachment">
-                          <img style="height: 65px; width: 55px" x="0" y="0" height="100%" width="100%" class="imgUser"
-                            alt="Image du profil" v-bind:src="post.user.attachment" loading="lazy" />
+                          <img
+                            style="height: 65px; width: 55px"
+                            x="0"
+                            y="0"
+                            height="100%"
+                            width="100%"
+                            class="imgUser"
+                            alt="Image du profil"
+                            v-bind:src="post.user.attachment"
+                            loading="lazy"
+                          />
                         </div>
                         <div class="avatar" v-else>
-                          <img style="height: 55px; width: 55px" x="0" y="0" height="100%" width="100%"
-                            class="avatarProfil" src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
+                          <img
+                            style="height: 55px; width: 55px"
+                            x="0"
+                            y="0"
+                            height="100%"
+                            width="100%"
+                            class="avatarProfil"
+                            src="../assets/Icons/BiPersonCircle.svg"
+                            alt="avatar"
+                          />
                         </div>
 
                         <div class="userPost">
                           <div>
-                            <p class="datePost">{{ post.user.username }} <br> Posté le : {{ post.createdAt }}</p>
+                            <p class="datePost">
+                              {{ post.user.username }} <br />
+                              Posté le : {{ post.createdAt }}
+                            </p>
                           </div>
                         </div>
                       </div>
                     </div>
                     <!-- id="dropdownMenuButton2"
                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" -->
-                    <div class="linkPost">
+                    <div class="linkPostDpd">
                       <div class="dropdown" data-dropdown>
                         <button class="link" data-dropdown-button type="button">
-                          <img data-dropdown-button src="../assets/Icons/ariaCircle.svg" alt="">
-
+                          <img
+                            data-dropdown-button
+                            src="../assets/Icons/ariaCircle.svg"
+                            alt=""
+                          />
                         </button>
                         <div class="dropdown-menu information-grid">
-                          <a class="dropdown-item d-flex align-items-center" href="#">
-                            <img src="../assets/Icons/infollow.svg" alt="">
-                            <span class="">Unfollow</span></a>
-                          <a class="dropdown-item d-flex align-items-center" href="#">
-                            <img src="../assets/Icons/gotopost.svg" alt="">
-                            <span class="">Go to post</span></a>
-                          <a class="dropdown-item d-flex align-items-center" href="#">
-                            <img src="../assets/Icons/share.svg" alt="">
-                            <span class="">Share</span></a>
-                          <a class="dropdown-item d-flex align-items-center" href="#">
-                            <img src="../assets/Icons/copylynk.svg" alt="">
-                            <span class="">Copy link</span></a>
+                          <a
+                            class="dropdown-item d-flex align-items-center"
+                            href="#"
+                          >
+                            <img src="../assets/Icons/infollow.svg" alt="" />
+                            <span class="">Unfollow</span></a
+                          >
+                          <a
+                            class="dropdown-item d-flex align-items-center"
+                            href="#"
+                          >
+                            <img src="../assets/Icons/gotopost.svg" alt="" />
+                            <span class="">Go to post</span></a
+                          >
+                          <a
+                            class="dropdown-item d-flex align-items-center"
+                            href="#"
+                          >
+                            <img src="../assets/Icons/share.svg" alt="" />
+                            <span class="">Share</span></a
+                          >
+                          <a
+                            class="dropdown-item d-flex align-items-center"
+                            href="#"
+                          >
+                            <img src="../assets/Icons/copylynk.svg" alt="" />
+                            <span class="">Copy link</span></a
+                          >
                         </div>
                       </div>
                     </div>
@@ -145,7 +262,10 @@
                 <div class="card-body">
                   <p class="mb-3 tx-14">
                     <!-- Animation du titre -->
-                    <router-link class="external" v-bind:to="'/PostDetails/' + post.id">
+                    <router-link
+                      class="external"
+                      v-bind:to="'/PostDetails/' + post.id"
+                    >
                       <div class="infos">
                         <h6 class="aspect">Afficher les détails du post :</h6>
                         {{ post.title }}
@@ -159,70 +279,74 @@
                   </div>
                   <!-- Image du post -->
                   <div class="form-group">
-                    <!-- <div v-if="post.attachment">
-                      <img class="imgPost" style="height: 15rem; width: 20rem" x="0" y="0" height="100%" width="100%"
-                        v-bind:src="post.attachment" alt="" />
-                    </div>
-                    <div v-else>
-                      <img class="imgPost" style="height: 30rem; width: 30rem" x="0" y="0" height="100%" width="100%"
-                        src="../assets/Icons/BiCardImg.svg" alt="avatar" />
-                    </div> -->
                     <div v-if="post.attachment">
-                      <!-- Fenêtre modale -->
-                      <modale v-bind:revele="revele">
-                        <div @click="toggleModale" :toggleModale="toggleModale" class="btn btn-success">
-                          <div :src="post.attachment">
-                            Modale photo
-                          </div>
-                        </div>
-                      </modale>
-                      <!-- Fin fenêtre modale -->
-                      <a href="#">
-                        <img @click="toggleModale" class="imgPost" :src="post.attachment" alt="Image du post" />
-                      </a>
+                      <img
+                        class="imgPost"
+                        style="width: 100%"
+                        x="0"
+                        y="0"
+                        height="100%"
+                        width="100%"
+                        v-bind:src="post.attachment"
+                        alt=""
+                      />
                     </div>
                     <div v-else>
-                      <!-- Fenêtre modale -->
-                      <modale v-bind:revele="revele">
-                        <div @click="toggleModale" :toggleModale="toggleModale" class="btn btn-success">
-                          <div :src="post.attachment">
-                            Modale photo
-                          </div>
-                        </div>
-                      </modale>
-                      <!-- Fin fenêtre modale -->
-                      <div>
-                        <div>
-                          <label for="file">Image de la publication</label>
-                        </div>
-                        <div>
-                          <img @click="toggleModale" style="height: 30vh; width: 60%" x="0" y="0" height="100%"
-                            width="100%" class="imgBottomPost" src="../assets/Icons/BiCardImg.svg"
-                            alt="Image du post" />
-                        </div>
-                      </div>
+                      <img
+                        class="imgPost"
+                        style="width: 100%"
+                        x="0"
+                        y="0"
+                        height="100%"
+                        width="100%"
+                        src="../assets/Icons/BiCardImg.svg"
+                        alt="avatar"
+                      />
                     </div>
                     <p class="alert alert-info text-danger">{{ mesgError }}</p>
                   </div>
                 </div>
                 <div class="card-footer">
-                  <div class=" post-actions">
+                  <div class="post-actions">
                     <div class="menuPost">
-                      <div class="linkPost">
-                        <div class="likeButtons">
+                      <div class="linksPost">
+                        <div class="likesPost">
                           <div class="likes">
-                            <routeur-link v-bind:to="'/PostLikes/' + post.id"
-                              class="d-flex align-items-center text-muted mr-4">
-                              <button type="button" class="btn btn-like" @click="postLikeCreate(post.id)">
-                                <span v-if="status == 'loading'">Like ....</span>
+                            <routeur-link
+                              v-bind:to="'/PostLikes/' + postId"
+                              class="d-flex align-items-center text-muted mr-4"
+                            >
+                              <button
+                                type="button"
+                                class="btn btn-like"
+                                @click="postLikeCreate(post.id)"
+                              >
+                                <span v-if="status == 'loading'"
+                                  >Like ....</span
+                                >
                                 <span v-else>
                                   <div class="likeFlex">
-                                    <img class="like" style="height: 1.5rem; width: 1.5rem" x="0" y="0" height="100%"
-                                      width="100%" src="../assets/Icons/BiHandThumbsUpFill.svg" alt="">
+                                    <img
+                                      class="like"
+                                      style="height: 1.5rem; width: 1.5rem"
+                                      x="0"
+                                      y="0"
+                                      height="100%"
+                                      width="100%"
+                                      src="../assets/Icons/BiHandThumbsUpFill.svg"
+                                      alt="liker la publication"
+                                    />
                                     <div>
-                                      <p class="d-none d-md-block ml-2">
-                                        {{ post.likes.length }} <br />
-                                      </p>
+                                      <div class="linkLike">
+                                        <p class="d-none d-md-block ml-2">
+                                          <span v-if="post.likes.length < 2">
+                                            - {{ post.likes.length }} - Like<br
+                                          /></span>
+                                          <span v-else>
+                                            - {{ post.likes.length }} - likes<br
+                                          /></span>
+                                        </p>
+                                      </div>
                                     </div>
                                   </div>
                                 </span>
@@ -230,78 +354,30 @@
                             </routeur-link>
                           </div>
                         </div>
-                      </div>
-                      <router-link class="displayComents" @click="displayAllComents()"
-                        v-bind:to="`/ComentsList/${post.id}`">
-                        <div class="linkItems">
-                          <img src="../assets/Icons/coment.svg" alt="commentaires">
-                        </div>
-                        <div class="linkComent">
-                          <p class="d-none d-md-block ml-2">
-                            <span v-if="post.coments.length > 2"> - {{ post.coments.length }} - Commentaires
-                              <br /></span>
-                            <span v-else> - {{ post.coments.length }} - Commentaire <br /></span>
-                          </p>
-                        </div>
-                      </router-link>
-                      <div class="linkPost">
-                        <div class="dropdown" data-dropdown>
-                          <button class="link" data-dropdown-button>
-                            <img data-dropdown-button src="../assets/Icons/ariaCircle.svg" alt="menus">
-                          </button>
-                          <div class="dropdown-menu information-grid">
-                            <div class="dropdown-heading"></div>
-                            <div class="dropdown-links">
-                              <a href="javascript:;" class="d-flex align-items-center text-muted">
-                                <div class="flexMenu">
-                                  <div>
-                                    <button class="btn" data-dropdown-button @click="postDeleted(post.id)">
-                                      <div class="trashBtn">
-                                        <div class="iconDelete">
-                                          <img src="../assets/Icons/BiTrash3Fill.svg" alt="">
-                                        </div>
-                                        <div class="btnDelete">
-                                          <span v-if="status == 'loading'">Suppression en cours....</span>
-                                          <span v-else>Supprimer</span>
-                                        </div>
-                                      </div>
-                                    </button>
-                                  </div>
-                                  <div class="btnFooter">
-                                    <router-link v-bind:to="'/PostsUpdate/' + post.id">
-                                      <button type="button" class="btn" @click="postModify()" :postId="post.id">
-                                        <div class="modifyBtn">
-                                          <div class="iconModify">
-                                            <img src="../assets/Icons/BiPenFill.svg" alt="">
-                                          </div>
-                                          <div>
-                                            <span v-if="status == 'loading'">Modification en cours....</span>
-                                            <span v-else>Modifier</span>
-                                          </div>
-                                        </div>
-                                      </button>
-                                    </router-link>
-                                  </div>
-                                  <div class="btnFooter">
-                                    <router-link v-bind:to="'/PostDetails/' + post.id">
-                                      <button type="button" class="btn" @click="postDetails()" :postId="post.id">
-                                        <div class="detailedBtn">
-                                          <div class="iconDetailed">
-                                            <img src="../assets/Icons/BiArrowUpSquare.svg" alt="">
-                                          </div>
-                                          <div>
-                                            <span v-if="status == 'loading'">Ouverture du formulaire en
-                                              cours....</span>
-                                            <span v-else>Post détaillé</span>
-                                          </div>
-                                        </div>
-                                      </button>
-                                    </router-link>
-                                  </div>
-                                </div>
-                              </a>
+                        <div class="comentsPost">
+                          <router-link
+                            class="displayComents"
+                            @click="displayAllComents()"
+                            v-bind:to="`/ComentsList/${post.id}`"
+                          >
+                            <div class="linkItems">
+                              <img
+                                src="../assets/Icons/coment.svg"
+                                alt="commentaires"
+                              />
                             </div>
-                          </div>
+                            <div class="linkComent">
+                              <p class="d-none d-md-block ml-2">
+                                <span v-if="post.coments.length < 2">
+                                  - {{ post.coments.length }} - Commentaire <br
+                                /></span>
+                                <span v-else>
+                                  - {{ post.coments.length }} - Commentaires
+                                  <br
+                                /></span>
+                              </p>
+                            </div>
+                          </router-link>
                         </div>
                       </div>
                     </div>
@@ -328,9 +404,6 @@ import postDetails from "@/views/PostDetails.vue";
 import postsUpdate from "@/components/PostsUpdate.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
 import comentsList from "@/components/ComentsList.vue";
-import modalComent from "@/components/ModalComent.vue";
-import Modale from "@/components/Modale.vue";
-
 
 export default {
   name: "Posts",
@@ -340,8 +413,6 @@ export default {
     postDetails,
     comentsCreate,
     comentsList,
-    modalComent,
-    modale: Modale,
   },
   data: function () {
     return {
@@ -356,7 +427,6 @@ export default {
         user: null,
         admin: null,
         likes: null,
-        unlikes: null,
         revele: false,
       },
       mode: "publishPost",
@@ -390,10 +460,7 @@ export default {
   computed: {
     validatedFields: function () {
       if (this.mode == "publishPost") {
-        if (
-          this.title != "" && 
-          this.content != "" && 
-          this.attachment != "") {
+        if (this.title != "" && this.content != "" && this.attachment != "") {
           return true;
         } else {
           return false;
@@ -410,10 +477,10 @@ export default {
   },
   methods: {
     switchToNewPost: function () {
-      this.mode = 'publishPost';
+      this.mode = "publishPost";
     },
     switchToPost: function () {
-      this.mode = 'publication';
+      this.mode = "publication";
     },
     toggleModale: function () {
       this.revele = !this.revele;
@@ -427,37 +494,31 @@ export default {
         .get("/")
         .then((response) => {
           if (!response) {
-            return (this.msgError = error.response.data.message)
+            return (this.msgError = error.response.data.message);
           } else {
-          this.posts = response.data;
+            this.posts = response.data;
           }
         })
         .catch(function (error) {
-          alert(this.mesgError = error.response.data.message)
+          alert((this.mesgError = error.response.data.message));
         });
     },
     getComentList() {
-        this.apiComents
-          .get("/")
-          .then((response) => {
-            if (!response) {
-              return (this.msgError = error.response.data.message)
-            } else {
+      this.apiComents
+        .get("/")
+        .then((response) => {
+          if (!response) {
+            return (this.msgError = error.response.data.message);
+          } else {
+            window.location.reload();
             this.coments = response.data;
             console.log(this.coments);
-            }
-          }).catch(function (error) {
-            alert(this.mesgError = error.response.data.message)
-          });
+          }
+        })
+        .catch(function (error) {
+          alert((this.mesgError = error.response.data.message));
+        });
     },
-    // postsRecent: function () {
-    //   this.apiPosts
-    //     .get("http://localhost:3000/api/posts")
-    //     .then(() => {
-    //       this.getPostList();
-    //     })
-    //     .catch(function () { });
-    // },
     postLikeCreate: function (postId) {
       this.apiPosts
         .put(
@@ -470,15 +531,15 @@ export default {
         )
         .then((response) => {
           if (!response) {
-            return (this.msgError = error.response.data.message)
+            return (this.msgError = error.response.data.message);
           } else {
-          window.location.reload();
-          this.$router.push("/posts");
-          this.getLikesList();
+            window.location.reload();
+            this.$router.push("/posts");
+            this.getLikesList();
           }
         })
         .catch(function (error) {
-          alert(this.mesgError = error.response.data.message)
+          alert((this.mesgError = error.response.data.message));
         });
     },
     postCreate: function () {
@@ -491,15 +552,15 @@ export default {
         .post("http://localhost:3000/api/posts", dataPost)
         .then((response) => {
           if (!response) {
-            return (this.msgError = error.response.data.message)
-          }else {
+            return (this.msgError = error.response.data.message);
+          } else {
             window.location.reload();
             this.$router.push("/posts");
             this.getPostList();
           }
         })
         .catch(function (error) {
-          alert(this.mesgError = error.response.data.message)
+          alert((this.mesgError = error.response.data.message));
         });
     },
     displayAllComents: function () {
@@ -507,54 +568,79 @@ export default {
         .get("/")
         .then((response) => {
           if (!response) {
-            return (this.msgError = error.response.data.message)
+            return (this.msgError = error.response.data.message);
           } else {
-          this.coments = response.data;
-          console.log(this.coments);
+            this.coments = response.data;
+            console.log(this.coments);
           }
-        }).catch(function (error) {
-          alert(this.mesgError = error.response.data.message)
+        })
+        .catch(function (error) {
+          alert((this.mesgError = error.response.data.message));
         });
     },
-    postDeleted: function (postId) {
-      if (
-        window.confirm("Voulez-vous vraiment supprimer ce post ?")
-        ) {
-        this.apiPosts
-          .delete("http://localhost:3000/api/posts/" + postId
-        ).then((response) => {
-          if (!response.data) {
-            return (this.mesgError = error.response.data.message)
-          } else {
-            window.location.reload();
-            this.$router.push("/posts");
-            this.getPostList();
-          }
-        }).catch((error) => {
-          alert(this.mesgError = error.response.data.message)
+    switchToUp: function () {
+      const btnUp = document.querySelector(".btnUP");
+      btnUp.addEventListener("click", () => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "smooth",
         });
-      }
+      });
     },
+    // postDeleted: function (postId) {
+    //   if (
+    //     window.confirm("Voulez-vous vraiment supprimer ce post ?")
+    //     ) {
+    //     this.apiPosts
+    //       .delete("http://localhost:3000/api/posts/" + postId
+    //     ).then((response) => {
+    //       if (!response.data) {
+    //         return (this.mesgError = error.response.data.message)
+    //       } else {
+    //         window.location.reload();
+    //         this.$router.push("/posts");
+    //         this.getPostList();
+    //       }
+    //     }).catch((error) => {
+    //       alert(this.mesgError = error.response.data.message)
+    //     });
+    //   }
+    // },
   },
 };
 </script>
 
 <style>
-
-
 /************************ 
 Voir les posts récents 
 ************************/
+
+.btnUp {
+  height: 1rem;
+  width: 1rem;
+  background: red;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  cursor: pointer;
+}
+.icon {
+  width: 50px;
+}
 .blog-card-wrap,
 h1 {
   font-weight: 400;
   font-size: 35px;
   margin: 32px 0 32px 0;
-  /* margin-bottom: 32px; */
 }
 @media screen and (max-width: 768px) {
   .blog-card-wrap,
-    h1 {
+  h1 {
     font-size: 25px;
   }
 }
@@ -562,18 +648,20 @@ h1 {
 .updates,
 .container {
   padding: 0px 25px;
+  margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .container {
-  /* @media (min-width: 800px) padding: 125px 25px; */
   display: block;
   flex-direction: row;
 }
 @media screen and (max-width: 768px) {
   .container {
-      flex-direction: column;
+    /* flex-direction: column; */
+    padding-left: 0;
+    padding-right: 0;
   }
   .avatarPost {
     width: 100%;
@@ -587,21 +675,20 @@ h1 {
 }
 
 @media (min-width: 800px) {
-    .router-button {
+  .router-button {
     margin-left: auto;
   }
 }
 h2 {
   font-weight: 400;
   font-size: 32px;
-  /* max-width: 425px; */
   width: 100%;
   text-align: center;
   text-transform: uppercase;
 }
 @media (min-width: 800px) {
-    h2, .router-button {
-    /* text-align: initial; */
+  h2,
+  .router-button {
     font-size: 40px;
   }
 }
@@ -610,7 +697,7 @@ fin Voir les posts recents
 ***************************/
 
 .containerRecent {
-  box-shadow: 0px 0px 10px #FFD7D7, -5px -5px 10px #4e51665a;
+  box-shadow: 0px 0px 10px #ffd7d7, -5px -5px 10px #4e51665a;
   border-radius: 1rem;
   margin: 1rem 0;
 }
@@ -619,7 +706,7 @@ Formulaire de publication des posts
 ***********************************/
 .publierForm {
   background-color: 4e5166;
-  box-shadow: 0px 0px 10px #FFD7D7, -5px -5px 10px #4e51665a;
+  box-shadow: 0px 0px 10px #ffd7d7, -5px -5px 10px #4e51665a;
   margin-bottom: 2.2rem;
   border-radius: 1rem;
   outline: none;
@@ -628,7 +715,7 @@ Formulaire de publication des posts
   background: #4e5166;
   border-radius: 1rem;
 }
-.containerLogo{
+.containerLogo {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -643,7 +730,7 @@ Formulaire de publication des posts
 .logoTransparentPost {
   display: flex;
 }
-.titlePublish h1{
+.titlePublish h1 {
   display: flex;
   margin: 0.7rem 1rem 0.7rem 1rem;
 }
@@ -652,17 +739,18 @@ Formulaire de publication des posts
   flex-direction: column-reverse;
   width: auto;
 }
-.form-group, .publish {
+.form-group,
+.publish {
   width: 95%;
-  margin: 1rem auto 1rem auto;
+  margin: 0 auto 0 auto;
 }
 .form-control {
   display: flex;
   flex-direction: column;
   width: 100%;
   margin: auto;
-  /* box-shadow: 5px 5px 10px #cecdcd, -5px -5px 0 #4e51665a; */
   border: 0.5px solid #ffd6d6;
+  background: #5c5c6c85;
   border-radius: 1rem;
 }
 .form-controlSignUp {
@@ -670,7 +758,6 @@ Formulaire de publication des posts
   flex-direction: column;
   width: 100%;
   margin: auto;
-
 }
 .formFilePublich {
   display: flex;
@@ -678,7 +765,6 @@ Formulaire de publication des posts
   margin: 1rem auto 0 auto;
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 0 #4e51665a;
   border: 0.5px solid #ffd6d6;
- 
 }
 #file {
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 0 #4e51665b;
@@ -709,15 +795,37 @@ Affichage de la liste des posts
 .row {
   padding-left: 0;
   padding-right: 0;
+  margin-right: -2px;
+  margin-left: -2px;
 }
 img {
   margin: auto;
+}
+@media screen and (max-width: 902px) {
+  img {
+    margin: auto;
+  }
+}
+@media screen and (max-width: 768px) {
+  img {
+    margin: auto;
+  }
+}
+@media screen and (max-width: 393px) {
+  img {
+    margin: auto;
+  }
+}
+@media screen and (max-width: 280px) {
+  img {
+    margin: auto;
+  }
 }
 /********************************
 ***********Card header***********
 *********************************/
 .card-header {
-  box-shadow: 0px 0px 10px #FFD7D7, -5px -5px 10px #4e51665a;
+  box-shadow: 0px 0px 2px #ffd7d7, -5px -5px 5px #4e51665a;
   border-radius: calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0;
 }
 .justify-content-between {
@@ -734,7 +842,10 @@ img {
 .avatar {
   display: contents;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 372px) {
+  .d-flex {
+    flex-direction: column-reverse;
+  }
   .ml-2 {
     display: flex;
     flex-direction: column;
@@ -753,10 +864,8 @@ img {
   display: flex;
   align-content: center;
   align-items: center;
-  /* margin: 1rem 0 0 1rem; */
   flex: 1;
   overflow: hidden;
-  /* white-space: nowrap; */
 }
 .datePost {
   font-size: 1rem;
@@ -769,14 +878,6 @@ img {
     overflow: hidden;
     text-overflow: ellipsis;
     overflow: hidden;
-    margin: 0;
-    /* white-space: nowrap; */
-  }
-    .datePost {
-      text-align: center;
-    }
-  .d-flex {
-    flex-direction: column-reverse;
   }
 }
 .nameUser {
@@ -796,9 +897,23 @@ img {
     overflow: hidden;
   }
   .datePost {
-      margin: 0;
-      text-overflow: ellipsis;
-      overflow: hidden;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+@media screen and (max-width: 392px) {
+  .userPost {
+    text-align: center;
+  }
+  .datePost {
+    margin: 0 0 0 1rem;
+    text-align: left;
+  }
+}
+@media screen and (max-width: 280px) {
+  .datePost {
+    margin: 1rem 0 0 0;
+    text-align: center;
   }
 }
 .dropdown {
@@ -806,18 +921,16 @@ img {
 }
 .dropdown-menu {
   position: absolute;
-  /* box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e516674; */
-  box-shadow: 0px 0px 10px #FFD7D7, -5px -5px 10px #4e51665a;
+  box-shadow: 0px 0px 10px #ffd7d7, -5px -5px 10px #4e51665a;
   opacity: 0;
-  transform: translate(-5rem, 10px);
+  transform: translate(1rem, 10px);
   background-color: #8c8c9f;
 }
 /*******************************
 ***********Card body************
 ********************************/
 .card-body {
-  /* margin: 5px 0 -5px 0; */
-box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
+  box-shadow: 0px -3px 0px #ffd7d7, -5px -5px 0px #4e51665a;
 }
 /******************************
 *******Animation du titre******
@@ -828,13 +941,13 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
 }
 .infos {
   position: relative;
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 .aspect {
   display: inline-block;
   width: auto;
   height: 20px;
-  /* background-color: #fff; */
+  font-size: 1.5rem;
   background: #5c5c6c85;
   color: #000;
   text-align: left;
@@ -861,53 +974,49 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
 }
 .imgPost {
   width: 100%;
-  height:70vh;
+  height: 70vh;
   object-fit: cover;
   margin: auto;
 }
 @media screen and (max-width: 902px) {
   .imgPost {
-  width: 100%;  
-  height: 60vw;
+    width: 100%;
+    height: 60vw;
   }
 }
 @media screen and (max-width: 768px) {
   .imgPost {
-  width: 100%;  
-  height: 45vh;
+    width: 100%;
   }
 }
 @media screen and (max-width: 768px) {
   .imgBottomPost {
-  width: 100%;  
-  height: 100vh;
+    width: 100%;
+    height: 100vh;
   }
 }
 .readMore .addText {
   display: none;
 }
-/* .alert {
-  padding: 1rem 0 0 0;
-} */
 /*******************************
 ***********Card footer**********
 ********************************/
 .card-footer {
   margin: 0 0 0.6rem 0;
-  box-shadow: 0px 0px 10px #FFD7D7, -5px -5px 10px #4e51665a;
+  box-shadow: 0px 0px 0px #ffd7d7, -5px -5px 0px #4e51665a;
   padding: 1rem 2rem 1rem 2rem;
   background: #4e5166;
 }
 .post-actions {
-  display: flex;
+  /* display: flex; */
   flex-wrap: wrap;
   align-content: space-around;
   justify-content: space-around;
 }
 @media screen and (max-width: 768px) {
   .post-actions {
-      display: block;
-    }
+    display: block;
+  }
 }
 .form-control_input {
   padding: 2 rem;
@@ -921,18 +1030,10 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   color: #4e516600;
 }
 .form-control_input::placeholder {
-  /* color: #a3a2a2; */
   color: #4e51665a;
 }
-.menuPost {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-content: center;
-  margin: 0 auto 1rem auto;
-}
 .linkPost {
-  margin: 0 4rem 0 2rem;
+  margin: 0 4rem 0 4rem;
 }
 .linkItems {
   margin: 5px 0.5rem 0 2.5rem;
@@ -941,11 +1042,14 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   margin: 0 5rem 0 0;
 }
 @media screen and (max-width: 768px) {
-  /* .menuPost {
-    flex-direction: column;
-  } */
+  .menuPost {
+    justify-content: space-between;
+  }
+  .linkPostDpd {
+    margin: 0 0 3rem 0;
+  }
   .linkPost {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 2.5rem 0;
   }
   .linkItems {
     margin: 1rem 0;
@@ -958,12 +1062,14 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   display: flex;
 }
 
-
-/* @media screen and (max-width: 768px) {
+@media screen and (max-width: 280px) {
+  .menuPost {
+    flex-direction: column;
+  }
   .linkPost {
-      margin: auto;
-    }
-} */
+    margin: 1rem auto;
+  }
+}
 .likeButtons {
   display: flex;
   margin: auto;
@@ -975,7 +1081,11 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   display: flex;
   margin: auto;
 }
-.likes{
+.linkLike {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.likes {
   margin: auto 0.2em;
   color: blue;
 }
@@ -994,6 +1104,7 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
 }
 .d-none {
   margin-bottom: 0;
+  padding: 0 0 0 0.2rem;
 }
 .linkModal {
   display: flex;
@@ -1010,17 +1121,14 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   cursor: pointer;
   padding: 0;
 }
-.dropdown.active>.link+.dropdown-menu {
+.dropdown.active > .link + .dropdown-menu {
   opacity: 1;
   /* transform: translateY(0); */
   transform: translateX(-5rem);
   pointer-events: auto;
 }
 .information-grid {
-  /* display: grid;
-  grid-template-columns: repeat(2, max-content);
-  gap: 1rem; */
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
 }
 .dropdown-links {
@@ -1040,7 +1148,5 @@ box-shadow: 0px 10px 10px #FFD7D7, -5px -5px 10px #4e51665a;
   flex-direction: column;
   margin: auto;
   gap: 16px;
-  /* flex-wrap: wrap; */
 }
-
 </style>

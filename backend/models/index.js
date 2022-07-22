@@ -22,7 +22,7 @@ db.user = require("../models/user")(sequelize, Sequelize);
 db.posts = require("../models/post")(sequelize, Sequelize);
 db.coments = require("../models/coment")(sequelize, Sequelize);
 db.likes = require("../models/like")(sequelize, Sequelize);
-db.unlikes = require("../models/unlike")(sequelize, Sequelize);
+// db.unlikes = require("../models/unlike")(sequelize, Sequelize);
 db.role = require("../models/role")(sequelize, Sequelize);
 
 //define relationships
@@ -56,15 +56,15 @@ db.user.hasMany(db.likes, {// Un utilisateur peut être l'auteur de plusieurs li
   },
   onDelete: 'CASCADE'
 });
-db.user.hasMany(db.unlikes, {// Un utilisateur peut être l'auteur de plusieurs unlikes.
-  // C'est une relation (un à +) clé étrangère définie dans le modèle cible.
-  foreignKey: {
-    name: 'userId',
-    through: db.unlikes,
-    allowNull: false
-  },
-  onDelete: 'CASCADE'
-});
+// db.user.hasMany(db.unlikes, {// Un utilisateur peut être l'auteur de plusieurs unlikes.
+//   // C'est une relation (un à +) clé étrangère définie dans le modèle cible.
+//   foreignKey: {
+//     name: 'userId',
+//     through: db.unlikes,
+//     allowNull: false
+//   },
+//   onDelete: 'CASCADE'
+// });
 /******************************************
  * *********Fin relation users*************
  *****************************************/
@@ -114,15 +114,15 @@ db.posts.hasMany(db.likes, {//Un post peut avoir plusieurs likes.
   onDelete: 'CASCADE'
 });
 
-db.posts.hasMany(db.unlikes, {//Un post peut avoir plusieurs unlikes.
-  foreignKey: {
-    //Relation un à plusieurs clé étrangère définie dans le modèle cible (db.unlikes).
-    name: 'postId',
-    through: db.unlikes,
-    allowNull: false
-  },
-  onDelete: 'CASCADE'
-});
+// db.posts.hasMany(db.unlikes, {//Un post peut avoir plusieurs unlikes.
+//   foreignKey: {
+//     //Relation un à plusieurs clé étrangère définie dans le modèle cible (db.unlikes).
+//     name: 'postId',
+//     through: db.unlikes,
+//     allowNull: false
+//   },
+//   onDelete: 'CASCADE'
+// });
 /******************************************
  * *********Fin relation posts************
  *****************************************/
@@ -212,15 +212,15 @@ db.likes.belongsTo(db.user, {//plusieurs likes peuvent appartenir à un seul utl
   onDelete: 'CASCADE'
 });
 
-db.unlikes.belongsTo(db.user, {//plusieurs unlikes peuvent appartenir à un seul utlisateur.
-  foreignKey: {
-    name: 'userId',
-    as: 'user',
-    allowNull: false
-  },
-  through: db.unlikes,
-  onDelete: 'CASCADE'
-});
+// db.unlikes.belongsTo(db.user, {//plusieurs unlikes peuvent appartenir à un seul utlisateur.
+//   foreignKey: {
+//     name: 'userId',
+//     as: 'user',
+//     allowNull: false
+//   },
+//   through: db.unlikes,
+//   onDelete: 'CASCADE'
+// });
 
 // db.likes.belongsToMany(db.user, {
 //   foreignKey: {
@@ -242,15 +242,15 @@ db.likes.belongsTo(db.posts, {//Plusieurs likes peuvent appartenir à un seul po
   onDelete: 'CASCADE'
 });
 
-db.unlikes.belongsTo(db.posts, {//Plusieurs unlikes peuvent appartenir à un seul post.
-  foreignKey: {
-    name: 'postId',
-    as: 'post',
-    allowNull: false
-  },
-  through: db.unlikes,
-  onDelete: 'CASCADE'
-});
+// db.unlikes.belongsTo(db.posts, {//Plusieurs unlikes peuvent appartenir à un seul post.
+//   foreignKey: {
+//     name: 'postId',
+//     as: 'post',
+//     allowNull: false
+//   },
+//   through: db.unlikes,
+//   onDelete: 'CASCADE'
+// });
 /******************************************
  * *********Fin relation likes************
  *****************************************/

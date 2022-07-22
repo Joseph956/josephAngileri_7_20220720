@@ -2,7 +2,12 @@
   <div class="accueil">
     <div class="container">
       <!-- empêche le rafraîchissement de la page  (@submit.prevent="submit") -->
-      <form id="inscription" name="inscription" @submit.prevent="createAccount" novalidate>
+      <form
+        id="inscription"
+        name="inscription"
+        @submit.prevent="createAccount"
+        novalidate
+      >
         <h1 class="nav-link-title" v-if="mode == 'login'">Login</h1>
         <h1 class="nav-link-title" v-else>Sign Up</h1>
         <p class="nav-link-subtitle" v-if="mode == 'login'">
@@ -11,8 +16,15 @@
             <span class="nav-link-action" @click="switchToCreateAccount()">
               <div class="containerCpteCreate">
                 <div class="cpteCreate">
-                  <img style="height: 1.8rem; width: 1.8rem" x="0" y="0" height="100%" width="100%"
-                    src="../assets/Icons/BiVectorPen.svg" alt="inscription">
+                  <img
+                    style="height: 1.8rem; width: 1.8rem"
+                    x="0"
+                    y="0"
+                    height="100%"
+                    width="100%"
+                    src="../assets/Icons/BiVectorPen.svg"
+                    alt="inscription"
+                  />
                 </div>
                 <div class="titleInscription">
                   <h1>Inscription</h1>
@@ -27,8 +39,15 @@
             <span class="nav-link-action" @click="switchToLogin()">
               <div class="containerCpteCreate">
                 <div class="cpteCreate">
-                  <img style="height: 1.8rem; width: 1.8rem" x="0" y="0" height="100%" width="100%"
-                    src="../assets/Icons/BiHouseDoorFill.svg" alt="se connecter">
+                  <img
+                    style="height: 1.8rem; width: 1.8rem"
+                    x="0"
+                    y="0"
+                    height="100%"
+                    width="100%"
+                    src="../assets/Icons/BiHouseDoorFill.svg"
+                    alt="se connecter"
+                  />
                 </div>
                 <div class="titleInscription">
                   <h1>Connexion</h1>
@@ -41,8 +60,17 @@
           <div class="form-controlSignup">
             <label class="formContact" for="username">Nom prénom</label>
             <div class="inputData">
-              <input id="username" type="text" v-model="username" class="form-control_input" name="username"
-                placeholder="Nom prénom" required minlength="3" autocomplete="off" />
+              <input
+                id="username"
+                type="text"
+                v-model="username"
+                class="form-control_input"
+                name="username"
+                placeholder="Nom prénom"
+                required
+                minlength="3"
+                autocomplete="off"
+              />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
             </div>
@@ -54,8 +82,15 @@
           <div class="form-controlSignup">
             <label class="formContact" for="email">E-mail</label>
             <div class="inputData">
-              <input v-model="email" class="form-control_input" type="email" name="email" placeholder="E-mail" required
-                autocomplete="off" />
+              <input
+                v-model="email"
+                class="form-control_input"
+                type="email"
+                name="email"
+                placeholder="E-mail"
+                required
+                autocomplete="off"
+              />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
               <small>{{ error }}</small>
@@ -67,30 +102,56 @@
           <div class="form-controlSignup">
             <label for="password">Mot de passe</label>
             <div class="inputData">
-              <input id="password" type="password" name="password" v-model="password" placeholder="Mot de passe"
-                class="form-control_input" required autocomplete="off" />
+              <input
+                id="password"
+                type="password"
+                name="password"
+                v-model="password"
+                placeholder="Mot de passe"
+                class="form-control_input"
+                required
+                autocomplete="off"
+              />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
               <div class="eyePasswd">
                 <!--  -->
                 <div v-if="mode == 'text'">
-                  <img src="../assets/Icons/BiEye.svg" id="eye" @click="changer()" alt="" />
+                  <img
+                    src="../assets/Icons/BiEye.svg"
+                    id="eye"
+                    @click="changer()"
+                    alt=""
+                  />
                 </div>
                 <!-- style="display: none" -->
                 <div v-else>
-                  <img src="../assets/Icons/BiEyeSlash.svg" id="eye" @click="changer()" alt="" />
+                  <img
+                    src="../assets/Icons/BiEyeSlash.svg"
+                    id="eye"
+                    @click="changer()"
+                    alt=""
+                  />
                 </div>
               </div>
             </div>
-            <small>{{message}}</small>
+            <small>{{ message }}</small>
           </div>
         </div>
         <div class="form-group" v-if="mode == 'create'">
           <div class="form-controlSignup">
             <label for="confirmPasswd">Confirmer le mot de passe</label>
             <div class="inputData">
-              <input id="confirmPasswd" name="confirmPasswd" v-model="confirmPasswd" class="form-control_input"
-                autocomplete="off" type="Password" placeholder="Confirmer le mot de passe" required />
+              <input
+                id="confirmPasswd"
+                name="confirmPasswd"
+                v-model="confirmPasswd"
+                class="form-control_input"
+                autocomplete="off"
+                type="Password"
+                placeholder="Confirmer le mot de passe"
+                required
+              />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
             </div>
@@ -101,40 +162,75 @@
         </div>
 
         <div class="form-group">
-          <div class="alert alert-info text-danger" v-if="mode === 'login' && status == 'error_login'">
+          <div
+            class="alert alert-info text-danger"
+            v-if="mode === 'login' && status == 'error_login'"
+          >
             Adresse mail et/ou mot de passe invalide !
             {{ mesgError }}
           </div>
         </div>
 
+        <p class="alert alert-info text-danger">
+          {{ mesgError }}
+        </p>
+
         <div class="form-group">
-          <div class="alert alert-info text-danger" v-if="mode == 'create' && status == 'error_create'">
+          <div
+            class="alert alert-info text-danger"
+            v-if="mode == 'create' && status == 'error_create'"
+          >
             {{ mesgError }}
           </div>
         </div>
 
         <!-- Mode connexion ou création de compte -->
         <div class="form-group">
-          <button @click="login()" :disabled="!validatedFields" class="btn btn-primary" v-if="mode == 'login'">
+          <button
+            @click="login()"
+            :disabled="!validatedFields"
+            class="btns btn-primary"
+            v-if="mode == 'login'"
+          >
             <span v-if="status == 'loading'">Connexion en cours....</span>
             <span v-else>Connexion</span>
           </button>
-          <button @click="createAccount()" :disabled="!validatedFields" class="btn btn-primary" v-else>
+          <button
+            @click="createAccount()"
+            :disabled="!validatedFields"
+            class="btns btn-primary"
+            v-else
+          >
             <span v-if="status == 'loading'">Création en cours....</span>
             <span v-else>Créer mon compte</span>
           </button>
-          <br>
+          <br />
+
+          <!-- Accès administrateur -->
+          <p class="credential">
+            <router-link v-if="mode == 'login'" to="admin" text-right
+              >Modérateur du site
+            </router-link>
+          </p>
 
           <!-- Mot de passe oublié -->
           <p class="forgotPasswd">
-            <router-link v-if="mode == 'login'" to="Forgot" text-right>Mot de passe oublié ?
+            <router-link v-if="mode == 'login'" to="Forgot" text-right
+              >Mot de passe oublié ?
             </router-link>
           </p>
         </div>
       </form>
       <div>
-        <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
-          src="../assets/logo_transparent.png" alt="" />
+        <img
+          style="height: 2.5rem; width: 2.5rem"
+          x="0"
+          y="0"
+          height="100%"
+          width="100%"
+          src="../assets/logo_transparent.png"
+          alt=""
+        />
       </div>
     </div>
   </div>
@@ -143,14 +239,10 @@
 <script>
 import { mapState } from "vuex";
 import Error from "./Error.vue";
-import validateInscription from "@/service/validForm";
-import validatPasswd from "@/service/ValidatPasswd";
 export default {
   name: "Accueil",
   components: {
     Error,
-    validateInscription,
-    validatPasswd,
   },
   data: function () {
     return {
@@ -161,10 +253,10 @@ export default {
       error_confirmPasswd: "", //modifier
 
       mode: "login",
-        username: "",
-        email: "",
-        password: "",
-        confirmPasswd: "", //modifier
+      username: "",
+      email: "",
+      password: "",
+      confirmPasswd: "", //modifier
     };
   },
   mounted: function () {
@@ -175,9 +267,9 @@ export default {
   },
   computed: {
     validatedFields: function () {
-      if (this.mode == 'create') {
+      if (this.mode == "create") {
         if (
-          this.username != "" && 
+          this.username != "" &&
           this.email != "" &&
           this.password != "" &&
           this.confirmPasswd !== "" &&
@@ -227,16 +319,17 @@ export default {
           email: this.email,
           password: this.password,
         })
-        .then((response) => { 
+        .then((response) => {
           if (!response) {
-            return (this.mesgError = error.response.data.message)
-          } else {           
+            return (this.mesgError = error.response.data.message);
+          } else {
             self.$router.push("/posts");
             document.getElementById("login").reset();
           }
-        }).catch((error) => {
-          alert(this.msgError = error.response.data.message)
-          });
+        })
+        .catch((error) => {
+          alert((this.msgError = error.response.data.message));
+        });
     },
     changer: function () {
       let e = true;
@@ -250,79 +343,47 @@ export default {
         e = true;
       }
     },
-    // createAccount: function () {
-    //   const self = this;
-    //   this.error = false;
-    //   this.mesgError = "";
-    //   // const groupomaniaAuth = groupomania.auth();
-    //   // const createUser = groupomaniaAuth.createUserWithEmailAndPassword(this.email, this.password);
-    //   // const result = createUser;
-    //   // const db = db.user("user").doc(result.user.uid);
-    //   let password = document.getElementById("password").value;
-    //   let confirmPasswd = document.getElementById("confirmPasswd").value;
-    //   if (password == confirmPasswd) { 
-    //      message.textContent = "Passwords match";
-    //     }else{
-    //       message.textContent = "Confirmer votre mot de passe !";
-    //     }    
-    //       this.$store
-    //         .dispatch("createAccount", {
-    //           username: this.username,
-    //           email: this.email,
-    //           password: this.password,
-    //           confirmPasswd: this.confirmPasswd,
-    //         }).then(function () {
-              
-    //           self.login();              
-    //           return;             
-            
-    //         }).catch(( error) => {
-    //           this.error = true;
-    //           this.mesgError = "Merci de remplir tous les champs du formulaire !"
-    //           alert(this.mesgError = error.userInfos[0].message)
-    //         })
-    // },
     createAccount: function () {
       const self = this;
       let password = document.getElementById("password").value;
       let confirmPasswd = document.getElementById("confirmPasswd").value;
-      if (password == confirmPasswd) { 
-         message.textContent = "Passwords match";
-        }else{
-          return false;
-        }    
-          this.$store
-            .dispatch("createAccount", {
-              username: this.username,
-              email: this.email,
-              password: this.password,
-              confirmPasswd: this.confirmPasswd,
-            }).then((response) => {
-              if (!response) {
-                return (this.mesgError = error.response.data.message)
-              }else{
-                self.login();
-              }
-            }).catch(( error) => {
-              alert(this.mesgError = error.response.data.message)
-            })
+      if (password == confirmPasswd) {
+        message.textContent = "Passwords match";
+      } else {
+        return false;
+      }
+      this.$store
+        .dispatch("createAccount", {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+          confirmPasswd: this.confirmPasswd,
+        })
+        .then((response) => {
+          if (!response) {
+            return (this.mesgError = error.response.data.message);
+          } else {
+            self.login();
+          }
+        })
+        .catch((error) => {
+          alert((this.mesgError = error.response.data.message));
+        });
     },
   },
 };
 </script>
 
 <style >
-
 .nav-link-subtitle {
-text-align: left;
-text-align: justify;
+  text-align: left;
+  text-align: justify;
 }
 .containerCpteCreate {
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 1rem 0 1rem;
-  
 }
 @media screen and (max-width: 768px) {
   .containerCpteCreate {
@@ -337,16 +398,22 @@ text-align: justify;
   display: flex;
   margin: 0 1rem 0 1rem;
 }
-.titleInscription h1{
+.titleInscription h1 {
   display: flex;
-  margin: 0  1rem 0 1rem;
+  margin: 0 1rem 0 1rem;
 }
 .btn-warning {
   margin: 10px 0 0 0;
   border: none;
 }
-.btn-primary {
+.btns {
   border: none;
+  margin: 1.5rem 0.5rem 0 0.5rem;
+  padding: 1rem 5rem;
+  border-radius: 1rem;
+  box-shadow: 0px 0px 10px #ffd7d7, 0px 0px 0px #ffd7d7;
+  cursor: pointer;
+  transition: opacity 0.8s;
 }
 .form-group {
   display: flex;
@@ -363,7 +430,7 @@ text-align: justify;
 }
 .form-control_input::placeholder {
   /* color: #a3a2a2; */
-  color: #4E5166;
+  color: #4e5166;
 }
 .inputData {
   display: flex;
