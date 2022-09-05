@@ -12,7 +12,7 @@ module.exports.token = (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
         const userId = decodedToken.userId;
-        User.findByPk(userId).then((user) => {
+        User.findOne({ where: { id: userId } }).then((user) => {
             if (user) {
                 req.token = token;
                 req.user = userId;
@@ -130,7 +130,7 @@ module.exports.email = (req, res, next) => {
         next();
     } else {
         return res.status(400).json({
-            error: "Veuillez saisir un email valide !"
+            message: "Veuillez saisir un email valide !!!"
         });
     }
 };
@@ -144,7 +144,7 @@ module.exports.passwd = (req, res, next) => {
         next();
     } else {
         return res.status(400).json({
-            message: "Le mot de passe que vous avez saisi n’est pas conforme, il doit contenir au moins 8 caractères dont au moins un chiffre, une lettre majuscule, et une lettre minuscule" +
+            message: "Mot de passe faible, au moins 8 caractères dont un chiffre, une lettre majuscule, et minuscule" +
                 passwdSchema.validate(req.body.password, { list: true })
         })
     }
@@ -158,7 +158,7 @@ module.exports.confirmPasswd = (req, res, next) => {
         next();
     } else {
         return res.status(400).json({
-            message: "Le mot de passe que vous avez saisi n’est pas conforme, il doit contenir au moins 8 caractères dont au moins un chiffre, une lettre majuscule, et une lettre minuscule" +
+            message: "Mot de passe faible, au moins 8 caractères dont un chiffre, une lettre majuscule, et minuscule" +
                 confirmPasswdSchema.validate(req.body.newPasswd, { list: true })
         })
     }

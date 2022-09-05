@@ -2,8 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 window.axios = require('axios');
 
 import Accueil from '@/views/Accueil.vue';
-import Forgot from '@/components/Forgot.vue';
-import Reset from '@/components/Reset.vue';
 import Profile from '@/views/Profile.vue';
 import Users from '@/views/Users.vue';
 import Posts from '@/views/Posts.vue';
@@ -14,11 +12,10 @@ import ImgBottomUpdate from '@/components/ImgBottomUpdate.vue';
 import PasswdUpdate from '@/components/PasswdUpdate.vue';
 import NotFound from '@/views/NotFound.vue';
 
+import ProfileUsers from '@/views/ProfileUsers.vue';
 
-
-import Admin from '@/views/Admin/Moderateur.vue';
-import Dashboard from '@/views/Admin/Dashboard.vue';
-import Compte from '@/views/Admin/Compte.vue';
+import Reset from '@/components/Reset.vue';
+import Forgot from '@/components/Forgot.vue';
 
 
 const routes = [
@@ -30,17 +27,6 @@ const routes = [
     component: Accueil,
   },
   {
-    path: '/admin',
-    name: 'Admin',
-    component: Admin,
-  },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard,
-  },
-
-  {
     path: '/forgot',
     name: 'Forgot',
     component: Forgot,
@@ -51,13 +37,11 @@ const routes = [
     component: Reset,
   },
   //Routage gestion des posts
-  //Route parent (posts)
   {
     path: '/posts',
     name: 'Posts',
     component: Posts,
   },
-  //Enfants PostsUpdate, PostsDetails, ComentCreate.
   {
     path: '/postsupdate/:id',
     name: 'PostsUpdate',
@@ -78,9 +62,6 @@ const routes = [
     name: 'ComentsList',
     component: () => import('@/components/ComentsList.vue')
   },
-
-  //Fin routage gestion des posts
-
   //Routage du profile utilisateur
   {
     path: '/profile',
@@ -88,9 +69,9 @@ const routes = [
     component: Profile,
   },
   {
-    path: '/compte/:id/admin',
-    name: 'Compte',
-    component: Compte,
+    path: '/profileusers/:id',
+    name: 'ProfileUsers',
+    component: ProfileUsers,
   },
   {
     path: '/users',
@@ -112,9 +93,9 @@ const routes = [
     name: 'PasswdUpdate',
     component: PasswdUpdate,
   },
-  //Fin routage profil utilisateur
   {
-    path: '/:pathMatch(.*)*', component: NotFound
+    path: '/:pathMatch(.*)*',
+    component: NotFound,
   }
 ];
 

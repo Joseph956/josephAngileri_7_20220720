@@ -87,8 +87,12 @@ if (!like) {
 const store = createStore({
   state: {
     status: '',
-  }
-})
+    // user: {
+    //   userId: -1,
+    //   token: '',
+    // },
+  },
+});
 
 //Create a new store instance
 export default createStore({
@@ -96,6 +100,7 @@ export default createStore({
     status: '',
     user: user,
     userInfos: {
+      imgBottom: '',
       attachment: '',
       username: '',
       email: '',
@@ -155,6 +160,10 @@ export default createStore({
         token: '',
       }
       localStorage.removeItem('user');
+    },
+    DELETE_USER(state, userId) {
+      let user = state.user.filter(user => user.id != userId)
+      state.user = user;
     }
   },
   actions: {
@@ -179,27 +188,34 @@ export default createStore({
     //Creation du compte utilisateur
     createAccount: ({ commit }, data) => {
       commit('setStatus', 'loading');
+      console.log(data);
       return new Promise((resolve, reject) => {
         commit;
         instance.post('auth/register', data)
           .then(function (response) {
-            if (!response) {
-              return (this.mesgError = error.response.data.message)
-            } else {
-              commit('setStatus', 'created');
-              resolve(response);
-              console.log(response);
-            }
+            // if (!response) {
+            //   return (this.mesgError = error.response.data.message)
+            // } else {
+            commit('setStatus', 'created');
+            resolve(response);
+            console.log(response);
+            // }
           })
           .catch(function (error) {
             commit('setStatus', 'error_create');
             reject(error);
             console.log(error);
-            alert(this.mesgError = error.response.data.message)
+            // this.mesgError = error.response.data.message;
+            // alert(this.mesgError);
           });
       });
     },
     //Fin Creation de compte
+    //Suppression du compte utlisateur
+    deleteUser({ commit }, user) {
+      //Delete user on server
+      commit('DELETE_USER', user.id);
+    },
 
     //Modification ou confirmation du mot de passe
     confirmPassword: ({ commit }, data) => {
@@ -260,7 +276,7 @@ export default createStore({
         }).then(response => {
           commit('setStatus', 'postId', 'postInfos');
           resolve(response.data);
-          console.log(response.data);
+          console.log(response.data.users);
         }).catch(function () {
           reject(error);
           console.log(error);

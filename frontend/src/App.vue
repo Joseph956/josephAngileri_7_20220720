@@ -57,14 +57,15 @@ h4,
 h5,
 h6,
 label,
-/* span, */
+p,
 .nav-item,
 #transition,
 footer {
   margin-bottom: 0;
-  text-align: center;
-  text-shadow: 1px 1px 4px #f7d1d0;
+  /* text-align: center; */
+  /* text-shadow: 1px 1px 4px #f7d1d0; */
   font-weight: 500;
+  color: black;
   font-size: large;
   font-family: "lato", sans-serif;
 }
@@ -124,7 +125,7 @@ html,
 .navbar-brand {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   margin: 0;
 }
 
@@ -145,7 +146,7 @@ html,
 @media screen and (max-width: 768px) {
   .navbar-expand,
   .navbar-collapse {
-    justify-content: flex-start;
+    justify-content: space-between;
   }
 }
 
@@ -168,6 +169,13 @@ html,
 @media screen and (max-width: 768px) {
   .auth-inner {
     width: auto;
+    padding: 3.5rem 30px 45px 30px;
+  }
+}
+@media screen and (max-width: 280px) {
+  .auth-inner {
+    width: auto;
+    padding: 0;
   }
 }
 

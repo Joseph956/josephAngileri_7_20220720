@@ -2,6 +2,7 @@ const db = require("../models");
 const User = db.user;
 const Role = db.role;
 const fs = require('fs');
+const { user } = require("../models");
 
 exports.findAllPublished = (req, res, next) => {
     User.sync({ alter: true }).then(() => {
@@ -17,7 +18,7 @@ exports.findAllPublished = (req, res, next) => {
                     include: [
                         {
                             model: db.user,
-                            attributes: ['username', 'attachment']
+                            attributes: ['username', 'attachment', 'imgBottom']
                         }
                     ],
                 },
@@ -29,7 +30,7 @@ exports.findAllPublished = (req, res, next) => {
                     include: [
                         {
                             model: db.user,
-                            attributes: ['username', 'attachment']
+                            attributes: ['username', 'attachment', 'imgBottom']
                         }
                     ],
                 },
@@ -41,7 +42,7 @@ exports.findAllPublished = (req, res, next) => {
                     include: [
                         {
                             model: db.user,
-                            attributes: ['username', 'attachment']
+                            attributes: ['username', 'attachment', 'imgBottom']
                         }
                     ],
                 },
@@ -84,7 +85,7 @@ exports.findOneProfil = (req, res, next) => {
             include: [
                 {
                     model: db.user,
-                    attributes: ['username', 'attachment']
+                    attributes: ['username', 'attachment', 'imgBottom']
                 }
             ],
         },
@@ -106,7 +107,7 @@ exports.findOneProfil = (req, res, next) => {
         }
     }).catch(error => res.status(500).json({ error }));
 };
-exports.createAttachment = (req, res, next) => {
+exports.createImgBottom = (req, res, next) => {
     const id = req.params.id;
     if (req.file) {
         User.findOne({
@@ -149,10 +150,7 @@ exports.createAttachment = (req, res, next) => {
                     message: "L'image de fond de votre profil n'a pas été modifié !"
                 }));
             }
-            console.log("----->CONTENU : filename profil");
-
-
-        }).catch((e) => res.status(404).json({ Message: 'Aucun profil n\'est trouvé avec cet identifiant' + e }));
+        }).catch((e) => res.status(400).json({ Message: 'Aucun profil n\'est trouvé avec cet identifiant' + e }));
 
     } else {
         const userObject = { ...req.body };
@@ -167,11 +165,42 @@ exports.createAttachment = (req, res, next) => {
         }));
     }
 };
+exports.deleteImgBottom = (req, res, next) => {
+    try {
+
+        const id = req.params.id;
+        // if (req.file) {
+
+        // }
+        User.findOne({
+            where: { id: id },
+            attributes: ['imgBottom']
+        }).then((user => {
+            if (user.imgBottom !== null) {
+                const filename = user.imgBottom.split("/images/")[1];
+                fs.unlink(`images/${filename}`, () => {
+                    User.destroy({ where: { id: id } });
+                    res.status(200).send({
+                        message: "L'image de fond a été supprimée avec succès !!!"
+                    });
+                });
+
+            } else {
+                res.status(400).json({ message: "Il n'y a pas d'image à supprimer !!!" });
+            }
+
+        })).catch(() => res.status(500).json({
+            message: "Erreur serveur"
+        }));
+    } catch (err) {
+        res.status(500).send({ err, message: "La suppression de l'\image de fond à échoué !!!" });
+    }
+};
 exports.publierProfil = async (req, res, next) => {
     User.findOne({
         user: (req.body.user),
         // attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-        attributes: ['id', 'attachment', 'username', 'email', 'roleId'],
+        attributes: ['id', 'imgBottom', 'attachment', 'username', 'email', 'roleId'],
         order: [["createdAt", "DESC"]],
     }).then((user) => {
         if (!user) {
@@ -183,68 +212,6 @@ exports.publierProfil = async (req, res, next) => {
         }
     }).catch(error => res.status(500).json({ error }));
 };
-// exports.updateProfil = (req, res, next) => {
-//     const id = req.params.id;
-//     if (req.file) {
-//         User.findOne({
-//             where: { id: id }
-//         }).then(userObject => {
-//             if (userObject.attachment != null) {
-//                 const filename = userObject.attachment.split("/images/")[1];
-//                 fs.unlink(`images/${filename}`, () => {
-//                     console.log(req.file);
-//                     const userObject = req.file ?
-//                         {
-//                             ...req.body,
-//                             attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-//                         } : {
-//                             ...req.body
-//                         }
-//                     console.log(userObject);
-//                     User.update({ ...userObject, id: req.params.id }, {
-//                         where: { id: id }
-//                     }).then(() => res.status(200).json({
-//                         message: "Votre image de fond a été mis à jour !"
-//                     })).catch(() => res.status(400).json({
-//                         message: "Votre image de fond n'a pas été modifié !"
-//                     }));
-//                 });
-//             } else {
-//                 const userObject = req.file ?
-//                     {
-//                         ...req.body,
-//                         attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-//                     } : {
-//                         ...req.body
-//                     }
-//                 console.log(userObject);
-//                 User.update({ ...userObject, id: req.params.id }, {
-//                     where: { id: id }
-//                 }).then(() => res.status(200).json({
-//                     message: "L'image de fond de votre profil a été modifié !"
-//                 })).catch(() => res.status(400).json({
-//                     message: "L'image de fond de votre profil n'a pas été modifié !"
-//                 }));
-//             }
-//             console.log("----->CONTENU : filename profil");
-
-
-//         }).catch((e) => res.status(404).json({ Message: 'Aucun profil n\'est trouvé avec cet identifiant' + e }));
-
-//     } else {
-//         const userObject = { ...req.body };
-//         User.update({
-//             ...userObject, id: req.params.id
-//         }, {
-//             where: { id: id }
-//         }).then(() => res.status(200).json({
-//             message: "L'image de fond de votre profil utilisateur a été modifié !"
-//         })).catch(() => res.status(400).json({
-//             message: "L'image de fond de votre profil utilisateur n'a pas été modifié !",
-//         }));
-//     }
-// };
-
 exports.updateProfil = async (req, res, next) => {
     const id = req.params.id;
     if (req.file) {
@@ -254,7 +221,6 @@ exports.updateProfil = async (req, res, next) => {
             if (userObject.attachment != null) {
                 const filename = userObject.attachment.split("/images/")[1];
                 fs.unlink(`images/${filename}`, () => {
-                    console.log(req.file);
                     const userObject = req.file ?
                         {
                             ...req.body,
@@ -262,8 +228,7 @@ exports.updateProfil = async (req, res, next) => {
                         } : {
                             ...req.body
                         }
-                    console.log(userObject);
-                    User.update({ ...userObject, id: id }, {
+                    User.update({ "username": userObject.username, "attachment": userObject.attachment }, {
                         where: { id: id }
                     }).then(() => res.status(200).json({
                         message: "L'image de votre profil a été mis à jour !"
@@ -272,8 +237,13 @@ exports.updateProfil = async (req, res, next) => {
                     }));
                 });
             } else {
-                const userObject = { ...req.body };
-                console.log(userObject);
+                const userObject = req.file ?
+                    {
+                        ...req.body,
+                        attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                    } : {
+                        ...req.body
+                    }
                 User.update({ "username": userObject.username, "attachment": userObject.attachment }, {
                     where: { id: id }
                 }).then(() => res.status(200).json({
@@ -282,13 +252,11 @@ exports.updateProfil = async (req, res, next) => {
                     message: "La photo de votre profil n'a pas été modifié !" + error
                 }));
             }
-        }).catch((e) => res.status(405).json({ Message: 'Aucun profil n\'est trouvé avec cet identifiant' + e }));
+        }).catch((e) => res.status(400).json({ Message: 'Aucun profil n\'est trouvé avec cet identifiant' + e }));
 
     } else {
         const userObject = { ...req.body };
-        User.update({
-            ...userObject, id: id
-        }, {
+        User.update({ "username": userObject.username }, {
             where: { id: id }
         }).then(() => res.status(200).json({
             message: "Les informations de votre profil ont été mis à jour !"
@@ -315,6 +283,7 @@ exports.deleteProfil = async (req, res, next) => {
                     message: "L'image de profil a été supprimée avec succès !!!"
                 });
             });
+
         } else {
             User.destroy({
                 where: { id: id },
@@ -325,7 +294,7 @@ exports.deleteProfil = async (req, res, next) => {
             }));
         }
     } catch (err) {
-        res.status(500).send({ err, message: "La suppression du profil à échoué" });
+        res.status(500).send({ err, message: "La suppression du profil à échoué !!!" });
     }
 };
 

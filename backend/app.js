@@ -6,10 +6,11 @@ const fs = require('fs');
 const path = require('path');
 const { sequelize } = require('./models');
 const dotenv = require('dotenv');
-// const dayjs = require('dayjs')
+
+
+
 dotenv.config();
 require('./config/config');
-
 
 const morgan = require('morgan'); //logs http
 const helmet = require('helmet');
@@ -23,7 +24,6 @@ const authRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
 const postsRoutes = require('./routes/posts');
 const comentsRoutes = require('./routes/coments');
-// const likesRoutes = require('./routes/likes');
 
 //lancement du framework d'application Web
 const app = express();
@@ -34,7 +34,6 @@ app.disable('x-powered-by');
 app.use(xssclean());
 app.use(helmet());
 app.use(noCache());
-// app.use(dayjs());
 
 // //logger requests/responses.
 app.use(morgan('dev'));
@@ -42,7 +41,7 @@ app.use(morgan('combined', { stream: accessLogStream }));
 
 //Parse le body des requêtes .json
 //Inclut à partir de la version 4.17 express
-//Utilisation de json pour récupération de paramétres.
+//Utilisation de .json pour récupération de paramétres.
 app.use(express.json());
 //Pour encoder le contenu.
 app.use(express.urlencoded({ extended: true }));
@@ -121,11 +120,11 @@ function initial() {
     }).then(createdRole => {
         // CREATE FIRST USER (ADMIN)
         User.findOrCreate({
-            where: { username: "admin", },
+            where: { email: "admin@gmail.com", },
             defaults: {
                 username: "admin",
                 email: "admin@gmail.com",
-                password: bcrypt.hashSync("admin", 4),
+                password: bcrypt.hashSync("Admin4548$", 4),
                 roleId: createdRole[0].id
             }
         }).then(users => {
@@ -133,10 +132,10 @@ function initial() {
                 where: {
                     title: "1er post title",
                     content: "1er post",
-                    attachment: "",
                 },
                 defaults: {
-                    post: "1er post",
+                    title: "1er post",
+                    content: "Description du contenu",
                     userId: users[0].get('id')
                 }
             }).catch((err) => { console.log(err) });

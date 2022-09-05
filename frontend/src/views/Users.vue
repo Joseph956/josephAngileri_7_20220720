@@ -1,161 +1,184 @@
 <template>
   <div>
     <navPosts />
-    <div class="col-md-8 col-xl-6 middle-wrapper">
-      <div class="containerTitre">
-        <div class="logoTransparentUser">
-          <img
-            style="height: 2.5rem; width: 2.5rem"
-            x="0"
-            y="0"
-            height="100%"
-            width="100%"
-            src="../assets/logo_transparent.png"
-            alt=""
-          />
+    <div>
+      <div class="col-md-8 col-xl-6 middle-wrapper">
+        <div class="containerTitre">
+          <div class="logoTransparentUser">
+            <img
+              style="height: 2.5rem; width: 2.5rem"
+              x="0"
+              y="0"
+              height="100%"
+              width="100%"
+              src="../assets/logo_transparent.png"
+              alt="logo"
+            />
+          </div>
+          <div class="cardTitleUser">
+            <h1>Lister tous les profils utilisateurs</h1>
+          </div>
         </div>
-        <div class="cardTitle">
-          <h1>Lister tous les profils utilisateurs</h1>
-        </div>
-      </div>
-      <br />
+        <div class="separatorUser"></div>
+        <br />
 
-      <p class="alert alert-info text-danger">
-        {{ mesgError }}
-      </p>
-      <div class="row">
-        <div v-show="users.length > 0" v-for="user in users" :key="user.id">
-          <div class="cardUsers rounded">
-            <div class="cardUser">
-              <div class="listInfosUsers" v-if="user.attachment">
-                <div>
-                  <router-link v-bind:to="'/Profile/'">
-                    <img
-                      style="height: 10rem; width: 10rem"
-                      x="0"
-                      y="0"
-                      height="100%"
-                      width="100%"
-                      id="imgProfile"
-                      v-bind:src="user.attachment"
-                      alt="Photo de profil utilisateur"
-                    />
-                  </router-link>
-                </div>
-                <div class="listInfosUser">
-                  <div>
+        <!-- v-if="$store.state.user.userId == user.id" -->
+        <p class="alert alert-info text-danger">
+          {{ mesgError }}
+        </p>
+        <div class="row">
+          <div class="wrapUsers">
+            <div v-show="users.length > 0" v-for="user in users" :key="user.id">
+              <div class="cardUsers rounded">
+                <div class="cardUser">
+                  <div class="listInfosUsers" v-if="user.attachment">
                     <div>
-                      <h3>{{ user.username }}</h3>
+                      <router-link v-bind:to="`/ProfileUsers/${user.id}`">
+                        <img
+                          style="height: 3rem; width: 3rem"
+                          x="0"
+                          y="0"
+                          height="100%"
+                          width="100%"
+                          id="imgProfile"
+                          v-bind:src="user.attachment"
+                          alt="Photo de profil utilisateur"
+                        />
+                      </router-link>
                     </div>
-                    <div>
-                      <h3>{{ user.email }}</h3>
-                    </div>
-                  </div>
-                  <div class="positionTrash">
-                    <button
-                      class="btn"
-                      data-dropdown-button
-                      @click="userDeleted(user.id)"
-                      :class="{
-                        'btn--disabled': !validatedFields,
-                      }"
-                    >
-                      <div class="trashBtn">
-                        <div class="btnComent">
-                          <img
-                            style="height: 1.5rem; width: 1.5rem"
-                            x="0"
-                            y="0"
-                            height="100%"
-                            width="100%"
-                            src="../assets/Icons/BiTrash3Fill.svg"
-                            alt=""
-                          />
-                        </div>
-                        <div class="btnComent">
-                          <span v-if="status == 'loading'"
-                            >Suppression en cours....</span
-                          >
-                          <span v-else></span>
+                    <div class="listInfosUser">
+                      <div class="infoUser">
+                        <div class="infosHeader">
+                          <div class="infosTitle">
+                            <h3>{{ user.username }}</h3>
+                          </div>
+                          <div class="infosDescription">
+                            <h3>{{ user.email }}</h3>
+                          </div>
                         </div>
                       </div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="listInfosUsers" v-else>
-                <div>
-                  <router-link v-bind:to="'/Profile/'">
-                    <img
-                      style="height: 10rem; width: 10rem"
-                      x="0"
-                      y="0"
-                      height="100%"
-                      width="100%"
-                      id="imgAvatar"
-                      src="../assets/Icons/BiPersonCircle.svg"
-                      alt="avatar"
-                      class="imgAvatarUser"
-                    />
-                  </router-link>
-                </div>
-                <div class="listInfosUser">
-                  <div>
-                    <div>
-                      <h3>{{ user.username }}</h3>
                     </div>
-                    <div>
-                      <h3>{{ user.email }}</h3>
-                    </div>
-                  </div>
-                  <div class="positionTrash">
-                    <button
-                      class="btn"
-                      data-dropdown-button
-                      @click="userDeleted(user.id)"
-                      :class="{
-                        'btn--disabled': !validatedFields,
-                      }"
-                    >
-                      <div class="trashBtn">
-                        <div class="btnTrashUser">
-                          <img
-                            style="height: 1.5rem; width: 1.5rem"
-                            x="0"
-                            y="0"
-                            height="100%"
-                            width="100%"
-                            src="../assets/Icons/BiTrash3Fill.svg"
-                            alt=""
-                          />
+                    <div class="positionTrash">
+                      <button
+                        class="btn"
+                        data-dropdown-button
+                        @click="userDeleted(user.id)"
+                      >
+                        <div class="trashBtn">
+                          <div class="btnComent">
+                            <img
+                              style="height: 1.2rem; width: 1.2rem"
+                              x="0"
+                              y="0"
+                              height="100%"
+                              width="100%"
+                              src="../assets/Icons/BiTrash3Fill.svg"
+                              alt="supprimer le profil"
+                            />
+                          </div>
+                          <div class="btnComent">
+                            <span v-if="status == 'loading'"
+                              >Suppression en cours....</span
+                            >
+                            <span v-else></span>
+                          </div>
                         </div>
-                        <div class="btnTrashUser">
-                          <span v-if="status == 'loading'"
-                            >Suppression en cours....</span
-                          >
-                          <span v-else></span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="listInfosUsers" v-else>
+                    <div>
+                      <router-link v-bind:to="`/ProfileUsers/${user.id}`">
+                        <img
+                          style="height: 3rem; width: 3rem"
+                          x="0"
+                          y="0"
+                          height="100%"
+                          width="100%"
+                          id="imgAvatar"
+                          src="../assets/Icons/BiPersonCircle.svg"
+                          alt="avatar"
+                          class="imgAvatarUser"
+                        />
+                      </router-link>
+                    </div>
+                    <div class="listInfosUser">
+                      <div class="infoUser">
+                        <div class="infosHeader">
+                          <h3 class="infosTitle">{{ user.username }}</h3>
+                          <p class="infosDescription">{{ user.email }}</p>
                         </div>
                       </div>
-                    </button>
+                    </div>
+                    <div class="positionTrash">
+                      <button
+                        class="btn"
+                        data-dropdown-button
+                        @click="userDeleted(user.id)"
+                      >
+                        <div class="trashBtn">
+                          <div class="btnComent">
+                            <img
+                              style="height: 1.2rem; width: 1.2rem"
+                              x="0"
+                              y="0"
+                              height="100%"
+                              width="100%"
+                              src="../assets/Icons/BiTrash3Fill.svg"
+                              alt="supprimer le profil"
+                            />
+                          </div>
+                          <div class="btnComent">
+                            <span v-if="status == 'loading'"
+                              >Suppression en cours....</span
+                            >
+                            <span v-else></span>
+                          </div>
+                        </div>
+                      </button>
+                    </div>
                   </div>
+
+                  <p
+                    v-if="$store.state.user.userId == user.userId"
+                    class="alert alert-info text-danger"
+                  >
+                    {{ mesgError }}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="logoTransparent">
-          <img
-            style="height: 2.5rem; width: 2.5rem"
-            x="0"
-            y="0"
-            height="100%"
-            width="100%"
-            src="../assets/logo_transparent.png"
-            alt=""
-          />
+          <div class="logoTransparent">
+            <img
+              style="height: 2.5rem; width: 2.5rem"
+              x="0"
+              y="0"
+              height="100%"
+              width="100%"
+              src="../assets/logo_transparent.png"
+              alt=""
+            />
+          </div>
         </div>
       </div>
     </div>
+    <!-- ScrollToTop button -->
+    <button type="button" class="btnUp" @click="switchToUp()">
+      <!-- <img
+              style="height: auto; width: 100%"
+              x="0"
+              y="0"
+              height="100%"
+              width="100%"
+              src="../assets/Icons/BiArrowUpCircleFill.svg"
+              alt="icon"
+            /> -->
+      <a class="bloc-button btn btn-d scrollToTop" @click="switchToUp('1')">
+        <span class="fa fa-chevron-up"></span>
+      </a>
+    </button>
+    <!-- ScrollToTop button end-->
   </div>
 </template>
 
@@ -166,9 +189,11 @@ import navPosts from "@/components/NavPosts.vue";
 export default {
   name: "Users",
   components: { navPosts },
+  props: ["profile"],
   data: function () {
     return {
       mesgError: "",
+      isAdmin: false,
       apiUser: axios.create({
         baseURL: "http://localhost:3000/api/users/",
         headers: {
@@ -184,13 +209,29 @@ export default {
     this.apiUser
       .get("/")
       .then((response) => {
-        this.users = response.data;
+        if (!response.data) {
+          return (this.mesgError = error.response.data.message);
+        } else {
+          this.users = response.data;
+        }
       })
-      .catch(function () {});
+      .catch((error) => {
+        this.mesgError = error.response.data.message;
+        alert(this.mesgError);
+      });
   },
+
   beforeMount() {
+    if (this.$store.state.user.role.role == "admin") {
+      this.isAdmin = true;
+      console.log("mess users" + this.isAdmin);
+    }
     this.getUserList();
   },
+  // beforeMount() {
+  //   this.getProfilOne();
+  //   // this.getUserOne();
+  // },
   computed: {
     ...mapState(["status"]),
     ...mapState({ user: "userInfos" }),
@@ -200,11 +241,45 @@ export default {
       this.apiUser
         .get("/")
         .then((response) => {
-          this.users = response.data;
+          if (!response.data) {
+            return (this.mesgError = error.response.data.message);
+          } else {
+            this.users = response.data;
+          }
         })
-        .catch(function (error) {});
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
+        });
     },
-    //Supprimer un profil avec ses posts et coments
+    switchToUp: function () {
+      const btnUp = document.querySelector(".btnUp");
+      btnUp.addEventListener("click", () => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "smooth",
+        });
+      });
+    },
+    // getProfilOne: function () {
+    //   console.log("tst");
+    //   this.apiUser
+    //     .get(`${this.$route.params.id}/admin`)
+    //     .then((response) => {
+    //       if (!response) {
+    //         this.mesgError = error.response.data.message;
+    //       } else {
+    //         this.user = response.data;
+    //         console.log("--------->CONTENU front-profilUpdate : response.data");
+    //         console.log(response.data);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       alert((this.mesgError = error.response.data.message));
+    //     });
+    // },
+
     userDeleted: function (userId) {
       if (
         window.confirm("Voulez-vous vraiment supprimer ce compte utilisateur ?")
@@ -219,7 +294,8 @@ export default {
             }
           })
           .catch((error) => {
-            alert((this.mesgError = error.response.data.message));
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           });
       }
     },
@@ -228,6 +304,18 @@ export default {
 </script>
 
 <style scoped>
+.wrapUsers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  /* flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center; */
+}
+/* .cardUsers {
+  /* padding: 1rem; 
+} */
 .col-md-8 {
   background: #4e5166;
   padding: 2rem;
@@ -240,31 +328,37 @@ h1 {
   justify-content: center;
   margin: 0 1rem 0 1rem;
 }
-@media screen and (max-width: 768px) {
-  .containerTitre,
-  h1 {
-    display: flex;
-    flex-direction: column;
-    font-size: larger;
-  }
-}
+
 .logoTransparentUser {
   display: flex;
+  margin: 2rem 0 0 0;
 }
+
 .alert-info {
   background: #5c5c6c85;
   border-color: #5c5c6c85;
   border-radius: 1rem;
   padding: 0;
 }
-.cardTitle {
+.cardTitleUser {
   display: flex;
+  margin: 2rem 0 0 0;
+  text-decoration: none;
 }
+.separatorUser {
+  width: 6rem;
+  height: 4px;
+  background-color: #ffd7d7;
+  margin: 1rem 0 0.5rem 12rem;
+}
+
 .cardUser {
   margin: 1rem;
 }
+
 .listInfosUsers {
   display: flex;
+  /* width: 55%; */
   align-items: center;
   margin: auto;
   background: #f2f2f2;
@@ -272,41 +366,93 @@ h1 {
   border-radius: 5rem;
   padding: 0.5rem;
   background: #5c5c6c85;
+  justify-content: space-between;
 }
 #imgProfile {
   border-radius: 5rem;
   object-fit: cover;
 }
-@media screen and (max-width: 768px) {
-  .listInfosUsers {
-    flex-direction: column;
-  }
-}
 .listInfosUser {
   display: flex;
-  margin: 0 5rem 0 7rem;
+  margin: 0 0 0 1rem;
 }
-@media screen and (max-width: 768px) {
-  .listInfosUser {
-    flex-direction: column;
-    margin: 1rem;
-  }
+.infoUser h3 {
+  font-size: 1rem;
+  padding: 5px;
+  text-align: center;
 }
+.infoUser .infosHeader h3 {
+  justify-content: center;
+}
+.infoUser .infosHeader {
+  text-align: center;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.infoUser .infosTitle {
+  font-weight: inherit;
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.infoUser .infosDescription {
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .imgAvatarUser {
   margin: 0 auto 0 auto;
 }
-.positionTrash {
+.infoUser .positionTrash {
   display: flex;
-  align-items: center;
-  margin: 0 0rem 0 5rem;
-}
-@media screen and (max-width: 768px) {
-  .positionTrash {
-    justify-content: center;
-    margin: auto;
-  }
+  align-items: end;
+  margin: 0 0 0 1rem;
 }
 .btnTrashUser {
   font-size: 2rem;
+}
+
+@media screen and (max-width: 768px) {
+  .containerTitre,
+  h1 {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.2rem;
+  }
+  .logoTransparentUser {
+    margin: 5.2rem 0 0 0;
+  }
+  .cardUser {
+    margin: 1rem 0 1rem 0;
+  }
+  .cardTitleUser {
+    margin: 1rem 0 0 0;
+  }
+  .separatorUser {
+    display: flex;
+    align-items: center;
+    width: 4rem;
+    margin: 1rem auto 0.5rem auto;
+  }
+  .wrapUsers {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  .listInfosUsers {
+    /* flex-direction: column; */
+    /* box-shadow: none; */
+  }
+  .listInfosUser {
+    /* flex-direction: column; */
+    margin: 0 1rem 0 1rem;
+  }
+  .positionTrash {
+    display: contents;
+    justify-content: center;
+    margin: auto;
+  }
 }
 </style>

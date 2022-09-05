@@ -66,6 +66,9 @@
         </div>
         <div class="col-md-8 col-xl-6 middle-wrapper">
           <div class="row">
+            <div class="alert alert-info text-danger">
+              {{ mesgError }}
+            </div>
             <!-- Gestion des commentaires du post-->
             <div
               class="col-md-12 grid-margin"
@@ -76,9 +79,6 @@
               <div class="comentPost">
                 <div>
                   <!-- Modification des commentaires -->
-                  <div class="alert alert-info text-danger">
-                    {{ mesgError }}
-                  </div>
                   <div class="buttonModify">
                     <textarea
                       v-bind:id="'inputComent-' + coment.id"
@@ -90,10 +90,10 @@
                     >
                     </textarea>
                     <button
+                      class="btn"
                       type="button"
                       v-bind:id="'inputComentBtn-' + coment.id"
                       style="display: none"
-                      class="btn"
                       @click="sentModify(coment.id)"
                     >
                       <div class="newComentBtn">
@@ -157,57 +157,72 @@
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="containerBtnComent">
-                <div class="btnFooter">
-                  <button
-                    type="button"
-                    class="btn"
-                    @click="comentDeleted(coment.id)"
-                  >
-                    <div class="trashBtn">
-                      <div class="btnComent">
-                        <img
-                          class="icon"
-                          style="height: 1.2rem; width: 1.2rem"
-                          x="0"
-                          y="0"
-                          height="100%"
-                          width="100%"
-                          src="../assets/Icons/BiTrash3Fill.svg"
-                          alt="Supprimer votre commentaire"
-                        />
-                      </div>
-                      <div class="btnComent">
-                        <span v-if="status == 'loading'"
-                          >Suppression en cours....</span
-                        >
-                        <span v-else></span>
-                      </div>
-                    </div>
-                  </button>
-                </div>
-                <div class="btnFooter">
-                  <button
-                    v-if="role == admin"
-                    type="button"
-                    class="btn"
-                    @click="comentModify(coment.id)"
-                  >
-                    <img
-                      style="height: 1.2rem; width: 1.2rem"
-                      x="0"
-                      y="0"
-                      height="100%"
-                      width="100%"
-                      src="../assets/Icons/BiPenFill.svg"
-                      alt="Modifier votre commentaire"
-                    />
-                    <span v-if="status == 'loading'"
-                      >Modification en cours en cours....</span
+                <div class="containerBtnComent">
+                  <div class="btnFooter">
+                    <button
+                      v-if="
+                        isAdmin == true ||
+                        $store.state.user.userId == coment.userId
+                      "
+                      block
+                      class="btn d-block"
+                      type="button"
+                      @click="comentDeleted(coment.id)"
                     >
-                    <span v-else></span>
-                  </button>
+                      <div class="trashBtn">
+                        <div class="btnComent">
+                          <img
+                            class="icon"
+                            style="height: 1.2rem; width: 1.2rem"
+                            x="0"
+                            y="0"
+                            height="100%"
+                            width="100%"
+                            src="../assets/Icons/BiTrash3Fill.svg"
+                            alt="Supprimer votre commentaire"
+                          />
+                        </div>
+                        <div class="btnComent">
+                          <span v-if="status == 'loading'"
+                            >Suppression en cours....</span
+                          >
+                          <span v-else>Supprimer</span>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                  <div class="btnFooter">
+                    <button
+                      v-if="
+                        isAdmin == true ||
+                        $store.state.user.userId == coment.userId
+                      "
+                      block
+                      class="btn d-block"
+                      type="button"
+                      @click="comentModify(coment.id)"
+                    >
+                      <div class="trashBtn">
+                        <div class="btnComent">
+                          <img
+                            style="height: 1.2rem; width: 1.2rem"
+                            x="0"
+                            y="0"
+                            height="100%"
+                            width="100%"
+                            src="../assets/Icons/BiPenFill.svg"
+                            alt="Modifier votre commentaire"
+                          />
+                        </div>
+                        <div class="btnComent">
+                          <span v-if="status == 'loading'"
+                            >Modification en cours en cours....</span
+                          >
+                          <span v-else>Modifier</span>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -237,6 +252,7 @@ export default {
   data: function () {
     return {
       mesgError: "",
+      isAdmin: false,
       user: {
         username: this.username,
         email: this.email,
@@ -244,7 +260,7 @@ export default {
         role: this.role,
       },
       apiComents: axios.create({
-        baseURL: "http://localhost:3000/api/",
+        baseURL: "http://localhost:3000/api/coments",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -254,7 +270,6 @@ export default {
       coments: [],
       error: "",
       message: "",
-      mesgError: "",
       length: null,
       displayComents: true,
       apiUser: axios.create({
@@ -283,15 +298,11 @@ export default {
       })
       .catch(function () {});
   },
-  mounted: function () {
-    this.apiComents
-      .get("")
-      .then((response) => {
-        this.user = response.data;
-      })
-      .catch(function () {});
-  },
   beforeMount() {
+    if (this.$store.state.user.role.role == "admin") {
+      this.isAdmin = true;
+    }
+    console.log("mess : coment create" + this.isAdmin);
     this.getComentList();
   },
   computed: {
@@ -303,21 +314,32 @@ export default {
       this.apiUser
         .get("/users/userId/" + this.userId)
         .then((response) => {
-          this.user = response.data;
+          if (!response.data) {
+            return this.mesgError.response.data.message;
+          } else {
+            this.user = response.data;
+          }
         })
-        .catch(function () {});
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
+        });
     },
     getComentList() {
       if (this.coments > 1) {
       } else {
         this.apiComents
-          .get("/coments/postId/" + this.postId)
+          .get("/postId/" + this.postId)
           .then((response) => {
-            this.coments = response.data;
-            console.log(this.coments);
+            if (!response.data) {
+              return this.mesgError.response.data.message;
+            } else {
+              this.coments = response.data;
+            }
           })
-          .catch(function (message) {
-            console.log(message);
+          .catch((error) => {
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           });
       }
     },
@@ -328,13 +350,16 @@ export default {
           postId: this.postId,
           coment: this.coment,
         })
-        .then(() => {
-          window.location.reload();
-          this.$router.push("/posts");
-          this.getComentOne();
+        .then((response) => {
+          if (!response.data) {
+            return this.mesgError.response.data.message;
+          } else {
+            window.location.reload();
+          }
         })
         .catch((error) => {
-          alert((this.mesgError = error.response.data.message));
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
         });
     },
     comentModify: function (comentId) {
@@ -353,15 +378,14 @@ export default {
           })
           .then((response) => {
             if (!response.data) {
-              return this.msgError.response.data.message;
+              return this.mesgError.response.data.message;
             } else {
               window.location.reload();
-              this.$router.push("/posts");
-              this.getComentList();
             }
           })
           .catch((error) => {
-            alert((this.msgError = error.response.data.message));
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           });
       }
     },
@@ -374,12 +398,11 @@ export default {
               return (this.mesgError = error.response.data.message);
             } else {
               window.location.reload();
-              this.$router.push("/posts");
-              this.getComentList();
             }
           })
           .catch((error) => {
-            alert((this.msgError = error.response.data.message));
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           });
       }
     },
@@ -464,7 +487,7 @@ export default {
 }
 .dateComent {
   text-align: left;
-  margin-bottom: 0;
+  margin: 0.5rem 0 0 0;
 }
 @media screen and (max-width: 768px) {
   .comentModify {
@@ -475,7 +498,7 @@ export default {
     align-content: center;
   }
   .textUserComent {
-    margin: 0 0 0 0.6rem;
+    margin: 0.5rem 0 0 0;
   }
 }
 .infosUser {
@@ -602,7 +625,8 @@ export default {
   color: rgb(199, 16, 46);
 }
 .btnComent {
-  margin: 0 0.3rem;
+  display: contents;
+  margin: 0.5rem 0.3rem;
 }
 .btnComent:hover {
   color: rgb(199, 16, 46);

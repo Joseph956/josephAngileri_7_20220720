@@ -7,17 +7,18 @@ const adminCtrl = require("../controllers/users");
 
 router.get("/", auth.token, usersCtrl.findAllPublished);
 router.get("/:id", auth.token, usersCtrl.findOneProfil);
+// auth.haveRightOnProfile,
 router.post("/:id", auth.token, usersCtrl.publierProfil);
-router.put("/:id/imgBottom", auth.token, auth.haveRightOnProfile, multer, usersCtrl.createAttachment);
-// router.put("/:id", auth.token, auth.haveRightOnProfile, multer, usersCtrl.updateProfil);
 router.put("/:id/profile", auth.token, auth.haveRightOnProfile, multer, usersCtrl.updateProfil);
 router.delete("/:id", auth.token, auth.haveRightOnProfile, multer, usersCtrl.deleteProfil);
 // 
+router.put("/:id/imgBottom", auth.token, auth.haveRightOnProfile, multer, usersCtrl.createImgBottom);
+router.delete("/:id/imgBottom", auth.token, auth.haveRightOnProfile, multer, usersCtrl.deleteImgBottom);
 
 //Les routes d'administrations du site.
-router.get('/admin', auth.token, adminCtrl.findAllPublished);
-router.get('/:userId/admin', auth.token, adminCtrl.findOneProfil);
-router.delete('/:userId/admin', auth.token, multer, adminCtrl.deleteProfil);
+// router.get('/admin', auth.token, adminCtrl.findAllPublished);
+// router.get('/:id/admin', auth.token, adminCtrl.findOneProfil);
+// router.delete('/:userId/admin', auth.token, multer, adminCtrl.deleteProfil);
 
 // router.get('/search', auth.token,);
 // router.post("/:id", auth.token, usersCtrl.publierProfil);

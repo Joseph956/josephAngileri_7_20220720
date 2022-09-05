@@ -25,7 +25,7 @@
           src="../assets/Icons/BiCardImg.svg"
           alt="avatar"
         />
-        <label for="file" class="legend">Image de fond</label>
+        <label for="file" class="legend">Changer la photo de couverture</label>
       </div>
       <div class="selectBottom">
         <div class="formGroup">
@@ -99,12 +99,11 @@ export default {
               this.mesgError = error.response.data.message;
             } else {
               window.location.reload();
-              this.$router.push("/profile");
-              this.getProfilOne();
             }
           })
-          .catch(function (error) {
-            alert((this.mesgError = error.response.data.message));
+          .catch((error) => {
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           });
       }
     },
@@ -117,17 +116,17 @@ export default {
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e51665a;
   border-radius: 1rem;
   background: #4e5166;
-  margin: 0.5rem;
-  padding: 1rem;
+  margin: 0.5rem 0 1rem 0;
+  /* padding: 1rem; */
 }
 .legend,
 label {
   margin: 1rem 0 1rem 0;
   font-size: 1.5rem;
+  text-decoration-line: underline;
 }
 .selectBottom {
   display: flex;
-  /* flex-direction: column-reverse; */
   align-items: center;
   margin: 1rem;
   align-content: space-between;
@@ -147,6 +146,20 @@ label {
   }
   .selectBottom {
     flex-direction: column-reverse;
+  }
+  .imgBottom {
+    font-size: 1.1rem;
+  }
+}
+@media screen and (max-width: 768px) {
+  .imgBottom {
+    font-size: 0.5rem;
+  }
+}
+@media screen and (max-width: 393px) {
+  .legend,
+  label {
+    font-size: 1.2rem;
   }
 }
 </style>

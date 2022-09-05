@@ -3,6 +3,7 @@
     <navPosts />
     <div class="card">
       <!-- Image de fond -->
+      <div></div>
       <div class="form-grouProfile" v-if="user.imgBottom">
         <img
           style="height: auto; width: 100%"
@@ -17,7 +18,7 @@
       </div>
       <div class="form-grouProfile" v-else>
         <img
-          style="height: 25vw; width: 100%"
+          style="height: 20vw; width: 100%"
           x="0"
           y="0"
           height="100%"
@@ -27,11 +28,34 @@
           alt="avatar"
         />
       </div>
+      <div class="imgDelete">
+        <button
+          class="btn btn-secondary btnImgDelete"
+          type="button"
+          @click="imgFondDelete()"
+          :userId="user.id"
+        >
+          <span v-if="status == 'loading'">Publication en cours....</span>
+          <span v-else>
+            <img
+              style="height: 25px; width: 25px"
+              x="0"
+              y="0"
+              height="100%"
+              width="100%"
+              src="../assets/Icons/BiTrash3Fill.svg"
+              alt=""
+            />
+            <p></p>
+          </span>
+          <div>Supprimer la photo de couverture</div>
+        </button>
+      </div>
       <!--Photo de profil  -->
       <div class="form-grouProfile">
         <div v-if="user.attachment">
           <img
-            style="height: 10rem; width: 10rem"
+            style="height: 6rem; width: 6rem"
             x="0"
             y="0"
             height="100%"
@@ -43,7 +67,7 @@
         </div>
         <div class="form-grouProfile" v-else>
           <img
-            style="height: 10rem; width: 10rem"
+            style="height: 6rem; width: 6rem"
             x="0"
             y="0"
             height="100%"
@@ -54,22 +78,13 @@
           />
         </div>
       </div>
+      <!-- Infos du profil -->
       <div class="infosUserProfile">
-        <h1 class="cardTitle">Profil utilisateur</h1>
-        <h3 class="cardSubtitle">Informations personnelles</h3>
-        <h3>{{ user.username }}</h3>
-        <h3>{{ user.email }}</h3>
-      </div>
-      <div class="formRowProfile">
-        <ul class="btnFooterProfil">
+        <div>
+          <!-- Modif profil  -->
           <li class="liBtn">
             <router-link v-bind:to="'/ProfilUpdate/' + user.id">
-              <button
-                type="button"
-                class="btnModify"
-                @click="userModify()"
-                :userId="user.id"
-              >
+              <button type="button" class="btnModify" :userId="user.id">
                 <img
                   style="height: 1.5rem; width: 1.5rem"
                   x="0"
@@ -86,14 +101,40 @@
               </button>
             </router-link>
           </li>
+        </div>
+
+        <h1 class="cardTitle">Profil utilisateur</h1>
+        <div class="separatorProfilUser"></div>
+        <!-- <h3 class="cardSubtitle">Informations personnelles</h3> -->
+        <h3>{{ user.username }}</h3>
+        <h3>{{ user.email }}</h3>
+      </div>
+      <div class="formRowProfile">
+        <ul class="btnFooterProfil">
+          <!-- Bouton Modification profil -->
+          <li class="liBtn">
+            <router-link v-bind:to="'/ProfilUpdate/' + user.id">
+              <button type="button" class="btnModify" :userId="user.id">
+                <img
+                  style="height: 1.5rem; width: 1.5rem"
+                  x="0"
+                  y="0"
+                  height="100%"
+                  width="100%"
+                  src="../assets/Icons/BiPenFill.svg"
+                  alt="modifier le profil"
+                />
+                <span v-if="status == 'loading'"
+                  >Ouverture du formulaire de modification en cours....</span
+                >
+                <span v-else></span>
+              </button>
+            </router-link>
+          </li>
+          <!-- Bouton Modification mdp -->
           <li class="liBtn">
             <router-link v-bind:to="'/PasswdUpdate/' + user.id">
-              <button
-                type="button"
-                class="btnModify"
-                @click="passwdModify()"
-                :userId="user.id"
-              >
+              <button type="button" class="btnModify" :userId="user.id">
                 <img
                   style="height: 1.5rem; width: 1.5rem"
                   x="0"
@@ -110,6 +151,7 @@
               </button>
             </router-link>
           </li>
+          <!-- Bouton Suppression profil-->
           <li class="liBtn">
             <button
               class="btnTrash"
@@ -138,6 +180,7 @@
               </div>
             </button>
           </li>
+          <!-- Bouton Deconnexion profil -->
           <li class="liBtn">
             <button type="button" class="btnModify" @click="logout()">
               <img
@@ -152,13 +195,31 @@
             </button>
           </li>
         </ul>
-        <!-- Lister les publication de l'utilisateur -->
       </div>
+
+      <!-- Affichage des messages derreurs -->
       <div class="alert alert-info text-danger">{{ mesgError }}</div>
-      <!-- Template affichage détails d'un post -->
+
+      <!-- Lister les publication de l'utilisateur -->
       <div class="col-md-8 col-xl-6 middle-wrapper">
-        <navPosts />
-        <h1>Details des publications de l'utilisateur</h1>
+        <div class="containTitleProfil">
+          <div class="logoTransparentProfile">
+            <img
+              style="height: 2.5rem; width: 2.5rem"
+              x="0"
+              y="0"
+              height="100%"
+              width="100%"
+              src="../assets/logo_transparent.png"
+              alt="logo"
+            />
+          </div>
+          <div class="cardTitleProfile">
+            <h1 class="titlePostUser">Details de vos publications</h1>
+            <div class="separatorPostUser"></div>
+          </div>
+        </div>
+
         <div class="row">
           <div
             v-show="posts.length > 0"
@@ -175,7 +236,7 @@
                   >
                     <div class="d-flex align-items-center">
                       <div class="ml-2 justify-content">
-                        <div class="avatar" v-if="post.user.attachment">
+                        <div class="avatar" v-if="user.attachment">
                           <img
                             style="height: 65px; width: 55px"
                             x="0"
@@ -184,7 +245,7 @@
                             width="100%"
                             class="imgUser"
                             alt="Image du profil"
-                            v-bind:src="post.user.attachment"
+                            v-bind:src="user.attachment"
                             loading="lazy"
                           />
                         </div>
@@ -256,8 +317,8 @@
                 </div>
                 <!-- Affichage du post -->
                 <div class="card-body">
+                  <!-- Animation du titre -->
                   <p class="mb-3 tx-14">
-                    <!-- Animation du titre -->
                     <router-link class="external" v-bind:to="'/Posts/'">
                       <div class="infos">
                         <p class="aspect">Afficher les publications:</p>
@@ -273,7 +334,7 @@
                       <div v-if="post.attachment">
                         <img
                           class="imgPost"
-                          style="height: 70vh; width: 100%"
+                          style="width: 100%"
                           x="0"
                           y="0"
                           height="100%"
@@ -285,7 +346,7 @@
                       <div v-else>
                         <img
                           class="imgPost"
-                          style="height: 30rem; width: 30rem"
+                          style="width: 100%"
                           x="0"
                           y="0"
                           height="100%"
@@ -300,9 +361,16 @@
                     </div>
                   </div>
                   <div class="flexMenu">
+                    <!-- Supprimer un post -->
                     <div class="btnDelPost">
                       <button
-                        class="btn"
+                        v-if="
+                          isAdmin == true ||
+                          $store.state.user.userId == post.userId
+                        "
+                        block
+                        class="btn d-block"
+                        type="button"
                         data-dropdown-button
                         @click="postDeleted(post.id)"
                       >
@@ -330,8 +398,13 @@
                     <div class="btnModifyPost">
                       <router-link v-bind:to="'/PostsUpdate/' + post.id">
                         <button
+                          v-if="
+                            isAdmin == true ||
+                            $store.state.user.userId == post.userId
+                          "
+                          block
+                          class="btn d-block"
                           type="button"
-                          class="btn"
                           @click="postModify()"
                           :postId="post.id"
                         >
@@ -346,8 +419,10 @@
                                 alt="modifier la publication"
                               />
                             </div>
-                            <div>
-                              <span v-if="status == 'loading'"
+                            <div class="labelModify">
+                              <span
+                                class="labelModify"
+                                v-if="status == 'loading'"
                                 >Modification en cours....</span
                               >
                               <span v-else>Modifier votre publication</span>
@@ -391,7 +466,7 @@
                                     />
                                     <div>
                                       <div class="linkLike">
-                                        <p class="d-none d-md-block ml-2">
+                                        <p class="d-md-block ml-2">
                                           <span v-if="post.likes.length < 2">
                                             - {{ post.likes.length }} - Like<br
                                           /></span>
@@ -420,7 +495,7 @@
                               />
                             </div>
                             <div class="linkComent">
-                              <p class="d-none d-md-block ml-2">
+                              <p class="d-md-block ml-2">
                                 <span v-if="post.coments.length < 2">
                                   - {{ post.coments.length }} - Commentaire <br
                                 /></span>
@@ -454,6 +529,22 @@
         alt=""
       />
     </div>
+    <!-- ScrollToTop button -->
+    <button type="button" class="btnUp" @click="switchToUp()">
+      <!-- <img
+              style="height: auto; width: 100%"
+              x="0"
+              y="0"
+              height="100%"
+              width="100%"
+              src="../assets/Icons/BiArrowUpCircleFill.svg"
+              alt="icon"
+            /> -->
+      <a class="bloc-button btn btn-d scrollToTop" @click="switchToUp('1')">
+        <span class="fa fa-chevron-up"></span>
+      </a>
+    </button>
+    <!-- ScrollToTop button end-->
   </div>
 </template>
 
@@ -474,6 +565,7 @@ export default {
   data: function () {
     return {
       mesgError: "",
+      isAdmin: false,
       user: {
         imgBottom: this.imgBottom,
         attachment: this.attachment,
@@ -518,12 +610,12 @@ export default {
           this.mesgError = error.response.data.message;
         } else {
           this.user = response.data;
-          console.log("apiUser");
           this.getPostList();
         }
       })
       .catch((error) => {
-        alert((this.mesgError = error.response.data.message));
+        this.mesgError = error.response.data.message;
+        alert(this.mesgError);
       });
   },
   computed: {
@@ -540,15 +632,15 @@ export default {
             return (this.mesgError = error.response.data.message);
           } else {
             this.coments = response.data;
-            console.log(this.coments);
           }
         })
-        .catch(function (message) {
-          console.log(message);
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
         });
     },
     getPostList: function () {
-      console.log("getPostList");
+      // console.log("getPostList");
       this.apiPosts
         .get(`http://localhost:3000/api/posts/postUser/${this.user.id}`)
         .then((response) => {
@@ -559,7 +651,8 @@ export default {
           }
         })
         .catch((error) => {
-          alert((this.mesgError = error.response.data.message));
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
         });
     },
     userDeleted: function (userId) {
@@ -577,9 +670,63 @@ export default {
             }
           })
           .catch((error) => {
-            alert((this.mesgError = error.response.data.message));
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           });
       }
+    },
+    imgFondDelete: function () {
+      if (
+        window.confirm("Voulez-vous vraiment supprimer votre image de fond ?")
+      ) {
+        const dataImgBottom = new FormData();
+        dataImgBottom.append("image", this.fileBottom);
+        this.apiUser
+          .delete(
+            `http://localhost:3000/api/users/${this.user.id}/imgBottom`,
+            dataImgBottom
+          )
+          .then((response) => {
+            if (!response) {
+              this.mesgError = error.response.data.message;
+            } else {
+              window.location.reload();
+            }
+          })
+          .catch((error) => {
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
+          });
+      }
+    },
+    postDeleted: function (postId) {
+      if (window.confirm("Voulez-vous vraiment supprimer ce post ?")) {
+        this.apiPosts
+          .delete("http://localhost:3000/api/posts/" + postId)
+          .then((response) => {
+            if (!response.data) {
+              return (this.mesgError = error.response.data.message);
+            } else {
+              window.location.reload();
+              this.$router.push("/posts");
+              this.getPostList();
+            }
+          })
+          .catch((error) => {
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
+          });
+      }
+    },
+    switchToUp: function () {
+      const btnUp = document.querySelector(".btnUp");
+      btnUp.addEventListener("click", () => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "smooth",
+        });
+      });
     },
     logout: function () {
       this.$store.commit("logout");
@@ -598,6 +745,29 @@ export default {
 .cardSubtitle {
   font-size: 15px;
   margin-bottom: 32px;
+}
+#imgBottomUser {
+  position: relative;
+}
+#imgBottomAvatarGpm {
+  position: relative;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+#imgBottomAvatar {
+  position: relative;
+}
+.imgDelete {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+.btnImgDelete {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  margin: 1rem;
+  border-radius: 0.5rem;
 }
 
 .alert-info {
@@ -631,6 +801,9 @@ export default {
     font-size: 17px;
   }
 }
+.labelModify {
+  text-decoration: none;
+}
 .btnModify,
 .btnComent,
 .btnTrash {
@@ -657,6 +830,109 @@ export default {
 }
 .infosUserProfile {
   margin: 6rem auto 2rem auto;
+}
+.containTitleProfil {
+  display: flex;
+  justify-content: center;
+  font-size: larger;
+  /* margin: 0 2rem 0 6rem; */
+}
+.logoTransparentProfile {
+  display: flex;
+  margin: -1rem 0 0 0;
+}
+
+.cardTitleProfile {
+  display: flex;
+  margin: 0rem 1rem 1rem 1rem;
+  text-decoration: none;
+  flex-direction: column;
+}
+.separatorProfilUser {
+  width: 5rem;
+  height: 4px;
+  background-color: #ffd7d7;
+  margin: 1rem 0 1.5rem 1.3rem;
+}
+.separatorPostUser {
+  width: 6rem;
+  height: 4px;
+  background-color: #ffd7d7;
+}
+@media screen and (max-width: 912px) {
+  .separatorProfilUser {
+    margin: 1rem 0 1.5rem 2.5rem;
+  }
+}
+@media screen and (max-width: 900px) {
+  .cardTitleProfile {
+    margin: 0 1rem 0 1rem;
+  }
+  .titlePostUser {
+    font-size: 25px;
+  }
+  .separatorProfilUser {
+    margin: 1rem 0 1.5rem 2.5rem;
+  }
+  .separatorPostUser {
+    margin: 0rem 1rem 1rem 0.2rem;
+  }
+}
+@media screen and (max-width: 768px) {
+  .containTitleProfil {
+    flex-direction: column;
+    margin: 0 auto 0 auto;
+  }
+  .logoTransparentProfile {
+    margin: 1rem 0 0 0;
+  }
+  .cardTitleProfile {
+    margin: 0 0 1rem 0;
+    font-size: 20px;
+  }
+  .separatorProfilUser {
+    margin: 1rem 0 1.5rem 0.1rem;
+  }
+  .separatorPostUser {
+    margin: 0rem auto 1rem auto;
+  }
+}
+@media screen and (max-width: 393px) {
+  .containTitleProfil {
+    flex-direction: column;
+    margin: 0 auto 0 auto;
+  }
+  .logoTransparentProfile {
+    margin: 1rem 0 0 0;
+  }
+  .cardTitleProfile {
+    margin: 0 auto 1.5rem auto;
+    font-size: 20px;
+  }
+  .separatorProfilUser {
+    margin: 1rem 0 1.5rem 0.1rem;
+  }
+  .separatorPostUser {
+    margin: 0rem auto 1rem auto;
+  }
+}
+@media screen and (max-width: 280px) {
+  .containTitleProfil {
+    flex-direction: column;
+    margin: 0 auto 0 auto;
+  }
+  .logoTransparentProfile {
+    margin: 0;
+  }
+  .cardTitleProfile {
+    margin: 0 auto 1.5rem auto;
+  }
+  .separatorProfilUser {
+    margin: 1rem auto 1.5rem auto;
+  }
+  .separatorPostUser {
+    margin: 0rem auto 1rem auto;
+  }
 }
 
 .formRowProfile {

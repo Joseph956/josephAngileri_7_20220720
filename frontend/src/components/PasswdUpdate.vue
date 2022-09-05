@@ -2,8 +2,24 @@
   <div>
     <navPosts />
     <div class="modifPasswd">
+      <div class="containTitle">
+        <div class="logoTransparentUpdatePasswd">
+          <img
+            style="height: 2.5rem; width: 2.5rem"
+            x="0"
+            y="0"
+            height="100%"
+            width="100%"
+            src="../assets/logo_transparent.png"
+            alt="logo"
+          />
+        </div>
+        <div class="cardTitle">
+          <h1>Modifier votre mot de passe</h1>
+          <div class="separatorUpdatePasswd"></div>
+        </div>
+      </div>
       <div class="container">
-        <h1>Modifier votre mot de passe</h1>
         <form @submit.prevent="handleSubmit">
           <!-- Saisir l'ancien mot de passe -->
           <div class="form-group">
@@ -253,6 +269,30 @@ export default {
 </script>
 
 <style >
+.container {
+  margin: 0 auto 0 auto;
+}
+.logoTransparentUpdatePasswd {
+  display: flex;
+  margin: -0.5rem 0 0 0;
+}
+.separatorUpdatePasswd {
+  width: 6rem;
+  height: 4px;
+  background-color: #ffd7d7;
+  margin: 0 0 1.5rem 0;
+}
+@media screen and (max-width: 768px) {
+  .container {
+    margin: 0 auto 0 auto;
+  }
+  .logoTransparentUpdatePasswd {
+    margin: 1.5rem 0 0 0;
+  }
+  .separatorUpdatePasswd {
+    margin: 0 auto 1.5rem auto;
+  }
+}
 .inputDataNewPasswd {
   display: flex;
   align-items: center;

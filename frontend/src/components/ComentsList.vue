@@ -20,7 +20,25 @@
           />
         </button>
       </a>
-      <h1>lister les commentaires de la publication</h1>
+      <div class="containTitleComent">
+        <div class="logoTransparentComent">
+          <img
+            style="height: 2.5rem; width: 2.5rem"
+            x="0"
+            y="0"
+            height="100%"
+            width="100%"
+            src="../assets/logo_transparent.png"
+            alt="logo"
+          />
+        </div>
+        <div class="flexTitle">
+          <div class="cardTitleComent">
+            <h1>lister les commentaires de la publication</h1>
+            <div class="separatorComent"></div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col-md-8 col-xl-6 middle-wrapper">
       <div class="rowList">
@@ -31,6 +49,50 @@
           :post="post"
           class="col-md-12 grid-margin"
         >
+          <!-- Modification des commentaires -->
+          <div>
+            <div
+              v-bind:id="'mesgError-' + coment.id"
+              class="alert alert-info text-danger"
+            >
+              {{ mesgError }}
+            </div>
+            <div class="buttonModify">
+              <textarea
+                v-bind:id="'inputComent-' + coment.id"
+                v-model="coment.coment"
+                aria-label="Modifier le commentaire"
+                style="display: none"
+                class="form-control"
+                button
+              >
+              </textarea>
+              <button
+                type="button"
+                v-bind:id="'inputComentBtn-' + coment.id"
+                style="display: none"
+                class="btn"
+                @click="sentModify(coment.id)"
+              >
+                <div class="newComentBtn">
+                  <div class="ComentBtn">
+                    <img
+                      src="../assets/Icons/envoyer.svg"
+                      alt="Envoyer votre commentaire modifier"
+                    />
+                  </div>
+                </div>
+                <div class="ComentBtn">
+                  <span v-if="status == 'loading'"
+                    >Publication en cours....</span
+                  >
+                  <span v-else></span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Contenu des commentaires -->
           <div class="comentPost">
             <p class="comentUser">
               {{ coment.coment }}
@@ -70,12 +132,74 @@
               <div class="dateComent">Posté le : {{ coment.createdAt }}</div>
             </div>
           </div>
-          <!-- Fin informations de l'auteur du commentaire -->
+          <!-- Boutons supprimer/modifier -->
+          <div class="containerBtnComent">
+            <div class="btnFooter">
+              <button
+                v-if="
+                  isAdmin == true || $store.state.user.userId == coment.userId
+                "
+                block
+                class="btn d-block"
+                type="button"
+                @click="comentDeleted(coment.id)"
+              >
+                <div class="trashBtn">
+                  <div class="btnComent">
+                    <img
+                      class="icon"
+                      style="height: 1.2rem; width: 1.2rem"
+                      x="0"
+                      y="0"
+                      height="100%"
+                      width="100%"
+                      src="../assets/Icons/BiTrash3Fill.svg"
+                      alt="Supprimer votre commentaire"
+                    />
+                  </div>
+                  <div class="btnComent">
+                    <span v-if="status == 'loading'"
+                      >Suppression en cours....</span
+                    >
+                    <span v-else>Supprimer</span>
+                  </div>
+                </div>
+              </button>
+            </div>
+            <div class="btnFooter">
+              <button
+                v-if="
+                  isAdmin == true || $store.state.user.userId == coment.userId
+                "
+                block
+                class="btn d-block"
+                type="button"
+                @click="comentModify(coment.id)"
+              >
+                <div class="trashBtn">
+                  <div class="btnComent">
+                    <img
+                      style="height: 1.2rem; width: 1.2rem"
+                      x="0"
+                      y="0"
+                      height="100%"
+                      width="100%"
+                      src="../assets/Icons/BiPenFill.svg"
+                      alt="Modifier votre commentaire"
+                    />
+                  </div>
+                  <div class="btnComent">
+                    <span v-if="status == 'loading'"
+                      >Modification en cours en cours....</span
+                    >
+                    <span v-else>Modifier</span>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      <p class="alert alert-info text-danger">
-        {{ mesgError }}
-      </p>
     </div>
   </div>
 </template>
@@ -89,7 +213,8 @@ export default {
   },
   data: function () {
     return {
-      msgError: "",
+      mesgError: "",
+      isAdmin: false,
       apiComents: axios.create({
         baseURL:
           "http://localhost:3000/api/coments/postId/" + this.$route.params.id,
@@ -113,10 +238,15 @@ export default {
         }
       })
       .catch((error) => {
-        alert((this.mesgError = error.response.data.message));
+        this.mesgError = error.response.data.message;
+        alert(this.mesgError);
       });
   },
   beforeMount() {
+    if (this.$store.state.user.role.role == "admin") {
+      this.isAdmin = true;
+    }
+    console.log("mess : coment list" + this.isAdmin);
     this.getComentList();
   },
 
@@ -129,12 +259,56 @@ export default {
             return (this.mesgError = error.response.data.message);
           } else {
             this.coments = response.data;
-            console.log(this.coments);
           }
         })
-        .catch(function (error) {
-          alert((this.mesgError = error.response.data.message));
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
         });
+    },
+    comentModify: function (comentId) {
+      let comentUser = document.getElementById("inputComent-" + comentId);
+      comentUser.style.display = "block";
+
+      let inputComent = document.getElementById("inputComentBtn-" + comentId);
+      inputComent.style.display = "block";
+    },
+    sentModify: function (comentId) {
+      let comentModify = document.getElementById("inputComent-" + comentId);
+      if (window.confirm("Voulez-vous vraiment modifier ce commentaire ?")) {
+        this.apiComents
+          .put("http://localhost:3000/api/coments/" + comentId, {
+            coment: comentModify.value,
+          })
+          .then((response) => {
+            if (!response.data) {
+              return this.mesgError.response.data.message;
+            } else {
+              window.location.reload();
+            }
+          })
+          .catch((error) => {
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
+          });
+      }
+    },
+    comentDeleted: function (comentId) {
+      if (window.confirm("Voulez-vous vraiment supprimer ce commentaire ?")) {
+        this.apiComents
+          .delete("http://localhost:3000/api/coments/" + comentId)
+          .then((response) => {
+            if (!response.data) {
+              return (this.mesgError = error.response.data.message);
+            } else {
+              window.location.reload();
+            }
+          })
+          .catch((error) => {
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
+          });
+      }
     },
     postDetailReturn: function () {
       this.$router.push("/");
@@ -146,9 +320,30 @@ export default {
 <style>
 .fleche {
   display: flex;
+  align-items: center;
+}
+.containTitleComent {
+  display: flex;
+  align-items: center;
+}
+.logoTransparentComent {
+  margin: 2.3rem 0;
+}
+.flexTitle {
+  display: flex;
+  flex-direction: column;
+}
+.cardTitleComent {
+  margin: 2.3rem 0 1rem 1rem;
+}
+.separatorComent {
+  width: 5rem;
+  height: 4px;
+  background-color: #ffd7d7;
+  margin: 0rem 0 1.5rem 0rem;
 }
 .returnPg {
-  margin: 2rem 5rem 0 3rem;
+  margin: 0 5rem 0 3rem;
 }
 
 .rowList {
@@ -159,5 +354,38 @@ export default {
 .comentPost {
   margin: 1rem;
   border-top: 1px solid grey;
+}
+@media screen and (max-width: 966px) {
+  .cardTitleComent h1 {
+    font-size: 1.5rem;
+  }
+}
+@media screen and (max-width: 768px) {
+  .containTitleComent {
+    flex-direction: column;
+  }
+  .logoTransparentComent {
+    margin: 1rem 0 0 0;
+  }
+  .cardTitleComent {
+    margin: 0;
+  }
+  .cardTitleComent h1 {
+    font-size: 1.5rem;
+  }
+  .separatorComent {
+    margin: 1rem auto 1rem auto;
+  }
+}
+@media screen and (max-width: 393px) {
+  .fleche {
+    flex-direction: column;
+  }
+  .returnPg {
+    margin: 3rem 3rem 0 3rem;
+  }
+}
+
+@media screen and (max-width: 280px) {
 }
 </style>

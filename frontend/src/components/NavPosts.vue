@@ -11,7 +11,7 @@
             height="100%"
             width="100%"
             src="../assets/icon-left-font.svg"
-            alt=""
+            alt="logo groupomania"
           />
         </router-link>
       </div>
@@ -70,21 +70,6 @@
               />
             </router-link>
           </li>
-          <li class="formRow">
-            <router-link class="navbar-brand" id="link" :to="{ name: 'Users' }">
-              <img
-                class="iconPeople"
-                style="height: 2rem; width: 1.2rem"
-                x="0"
-                y="0"
-                height="100%"
-                width="100%"
-                src="../assets/Icons/MdiAccountGroup.svg"
-                alt="groupes"
-              />
-            </router-link>
-          </li>
-
           <li class="formRow">
             <button
               type="button"
@@ -172,31 +157,14 @@ export default {
       mode: "openMenu",
     };
   },
-  // created() {
-  //   window.addEventListener("resize", this.checkScreen);
-  //   this.checkScreen();
-  // },
-  // //test menus déroulants
-  // created() {
-  //   document.addEventListener("click", (e) => {
-  //     const isDropdownButton = e.target.matches("[data-dropdown-button]");
-  //     if (!isDropdownButton && e.target.closest("[data-dropdown]") != null)
-  //       return;
-
-  //     let currentDropdown;
-  //     if (isDropdownButton) {
-  //       currentDropdown = e.target.closest("[data-dropdown]");
-  //       currentDropdown.classList.toggle("active");
-  //     }
-
-  //     document
-  //       .querySelectorAll("[data-dropdown].active")
-  //       .forEach((dropdown) => {
-  //         if (dropdown === currentDropdown) return;
-  //         dropdown.classList.remove("active");
-  //       });
-  //   });
-  // },
+  mounted: function () {
+    this.apiUser
+      .get("")
+      .then((response) => {
+        this.user = response.data;
+      })
+      .catch(function () {});
+  },
   methods: {
     toggle() {
       let toggle = document.querySelector(".toggle");
@@ -206,30 +174,14 @@ export default {
         body.classList.toggle("openMenu");
       });
     },
-    // toggleActions() {
-    //   this.actionsVisible = !this.actionsVisible;
-    // },
     showOrReloadPage(name) {
       if (name === this.$route.name) return window.location.reload();
       this.$router.push({ name });
     },
-    // checkScreen() {
-    //   this.windounWidth = window.innerWidth;
-    //   if (this.windownWidth == 750) {
-    //     this.mobile = true;
-    //     return;
-    //   }
-    //   this.mobile = false;
-    //   this.mobileNav = false;
-    //   return;
-    // },
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
     },
-    // toggleMobileNav() {
-    //   this.mobileNav = !this.mobileNav;
-    // },
   },
 };
 </script>
@@ -250,7 +202,7 @@ header {
 nav {
   width: 100%;
   display: flex;
-  justify-content: end;
+  /* justify-content: end; */
   align-items: center;
 }
 .navbar {
@@ -351,6 +303,9 @@ nav {
 
 h5 {
   margin-bottom: 0;
+}
+.btn {
+  padding: 0;
 }
 .btn-nav {
   margin: 5px;

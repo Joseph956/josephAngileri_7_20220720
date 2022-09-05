@@ -1,10 +1,5 @@
 <template>
   <div class="postForm">
-    <div>
-      <button type="button" class="btnUp" @click="switchToUp()">
-        <img src="../assets/Icons/BiArrowUpCircleFill.svg" alt="icon" />
-      </button>
-    </div>
     <navPosts />
     <div class="form-grouProfile" v-if="user.imgBottom">
       <img
@@ -25,7 +20,7 @@
         y="0"
         height="100%"
         width="100%"
-        id="imgBottomAvatar"
+        id="imgBottomAvatarGpm"
         src="../assets/grpm.png"
         alt="avatar"
       />
@@ -36,130 +31,156 @@
       <div>
         <div class="publierForm">
           <!-- Formulaire de création d'un post-->
-          <form class="formPublish" enctype="multipart/form-data">
-            <div class="containerLogo">
-              <div class="logoTransparentPost">
-                <img
-                  style="height: 2.5rem; width: 2.5rem"
-                  x="0"
-                  y="0"
-                  height="100%"
-                  width="100%"
-                  src="../assets/logo_transparent.png"
-                  alt=""
+          <div class="imgBottom">
+            <form class="formPublish" enctype="multipart/form-data">
+              <div class="containerLogo">
+                <div class="publish">
+                  <div class="logoTransparentPost">
+                    <img
+                      style="height: 2.5rem; width: 2.5rem"
+                      x="0"
+                      y="0"
+                      height="100%"
+                      width="100%"
+                      src="../assets/logo_transparent.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="titlePublish">
+                    <h1>Publications</h1>
+                  </div>
+                  <div class="iconPencil">
+                    <div class="formGroup" v-if="mode == 'publishPost'">
+                      <div>
+                        <button
+                          type="button"
+                          class="btn"
+                          @click="switchToPost()"
+                        >
+                          <img
+                            src="../assets/Icons/BiPenFill.svg"
+                            alt="Créer une publication"
+                          />
+                          <span v-if="status == 'loading'"
+                            >publication....</span
+                          >
+                          <span v-else></span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="formGroup" v-else>
+                      <div>
+                        <button
+                          type="button"
+                          class="btn"
+                          @click="switchToNewPost()"
+                        >
+                          <img
+                            src="../assets/Icons/BiPenFill.svg"
+                            alt="Créer une publication"
+                          />
+                          <span v-if="status == 'loading'"
+                            >Créer une publication....</span
+                          >
+                          <span v-else></span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="separatorPostsUser"></div>
+              </div>
+
+              <!-- Titre du post -->
+              <div class="form-group" v-if="mode == 'publication'">
+                <label for="title"></label>
+                <input
+                  ref="firstfield"
+                  v-model="title"
+                  type="text"
+                  id="title"
+                  class="form-control"
+                  placeholder="Titre de votre message"
                 />
               </div>
-              <div class="titlePublish">
-                <h1>Publications</h1>
+              <!-- Contenu du post -->
+              <div class="form-group" v-if="mode == 'publication'">
+                <label for="content"></label>
+                <textarea
+                  v-model="content"
+                  type="text"
+                  id="content"
+                  cols="30"
+                  rows="10"
+                  class="form-control"
+                  placeholder="Contenu de votre message"
+                >
+                </textarea>
               </div>
-              <div>
-                <div class="formGroup" v-if="mode == 'publishPost'">
-                  <div>
-                    <button type="button" class="btn" @click="switchToPost()">
-                      <img
-                        src="../assets/Icons/BiPenFill.svg"
-                        alt="Créer une publication"
-                      />
-                      <span v-if="status == 'loading'">publication....</span>
-                      <span v-else></span>
-                    </button>
+              <!-- Affichage de l'image du post avant publication-->
+              <div class="formGroup publish" v-if="mode == 'publication'">
+                <div class="formGroup">
+                  <div class="imgPostForm" v-if="attachment">
+                    <img :src="attachment" class="w-50 rounded" />
+                  </div>
+                  <div v-else>
+                    <img
+                      style="height: 15rem; width: 100%"
+                      x="0"
+                      y="0"
+                      height="100%"
+                      width="100%"
+                      class="avatarPost"
+                      src="../assets/Icons/BiCardImg.svg"
+                      alt=""
+                    />
                   </div>
                 </div>
-                <div class="formGroup" v-else>
-                  <div>
-                    <button
-                      type="button"
-                      class="btn"
-                      @click="switchToNewPost()"
-                    >
-                      <img
-                        src="../assets/Icons/BiPenFill.svg"
-                        alt="Créer une publication"
-                      />
-                      <span v-if="status == 'loading'"
-                        >Créer une publication....</span
-                      >
-                      <span v-else></span>
-                    </button>
-                  </div>
-                </div>
               </div>
-            </div>
-
-            <!-- Titre du post -->
-            <div class="form-group" v-if="mode == 'publication'">
-              <label for="title"></label>
-              <input
-                ref="firstfield"
-                v-model="title"
-                type="text"
-                id="title"
-                class="form-control"
-                placeholder="Titre de votre message"
-              />
-            </div>
-            <!-- Contenu du post -->
-            <div class="form-group" v-if="mode == 'publication'">
-              <label for="content"></label>
-              <textarea
-                v-model="content"
-                type="text"
-                id="content"
-                cols="30"
-                rows="10"
-                class="form-control"
-                placeholder="Contenu de votre message"
-              >
-              </textarea>
-            </div>
-            <!-- Affichage de l'image du post avant publication-->
-            <div class="formGroup publish" v-if="mode == 'publication'">
-              <div class="formGroup">
-                <div class="imgPostForm" v-if="image">
-                  <img :src="image" class="w-50 rounded" />
-                </div>
-                <div v-else>
-                  <img
-                    style="height: 15rem; width: 100%"
-                    x="0"
-                    y="0"
-                    height="100%"
-                    width="100%"
-                    class="avatarPost"
-                    src="../assets/Icons/BiCardImg.svg"
-                    alt=""
+              <!-- Choix de l'image du post -->
+              <div class="selectBottom">
+                <div class="formGroup" v-if="mode == 'publication'">
+                  <label for="file"></label><br />
+                  <input
+                    class="formFilePublich"
+                    id="file"
+                    ref="file"
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    @change="onFileSelected()"
                   />
                 </div>
               </div>
-            </div>
-            <!-- Choix de l'image du post -->
-            <div class="formGroup" v-if="mode == 'publication'">
-              <label for="file"></label><br />
-              <input
-                class="formFilePublich"
-                id="file"
-                ref="file"
-                type="file"
-                name="image"
-                accept="image/*"
-                @change="onFileSelected()"
-              />
-            </div>
-            <!-- Publier un post -->
-            <div class="formGroup">
-              <button
-                type="button"
-                class="btn btn-primary btnPublication"
-                @click="postCreate()"
-                :disabled="!validatedFields"
-              >
-                <span v-if="status == 'loading'">Publication en cours....</span>
-                <span v-else>Nouvelle publication</span>
-              </button>
-            </div>
-          </form>
+              <!-- Publier un post -->
+              <div class="formGroup">
+                <button
+                  type="button"
+                  class="btn btn-primary btnPublication"
+                  @click="postCreate()"
+                  :disabled="!validatedFields"
+                >
+                  <span v-if="status == 'loading'"
+                    >Publication en cours....</span
+                  >
+                  <span v-else>Nouvelles Publications</span>
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-
+        <div>
+          <!-- ScrollToTop button -->
+          <button type="button" class="btnUp" @click="switchToUp()">
+            <a
+              class="bloc-button btn btn-d scrollToTop"
+              @click="switchToUp('1')"
+            >
+              <span class="fa fa-chevron-up"></span>
+            </a>
+          </button>
+          <!-- ScrollToTop button end-->
+        </div>
         <!-- Afficher la liste des posts-->
         <div class="col-md-8 col-xl-6 middle-wrapper">
           <div class="row">
@@ -205,24 +226,31 @@
 
                         <div class="userPost">
                           <div>
+                            <div>{{ post.user.username }} <br /></div>
                             <p class="datePost">
-                              {{ post.user.username }} <br />
-                              Posté le : {{ post.createdAt }}
+                              Posté le :
+                              {{ post.createdAt }}
+                              <!-- {{ Dayjs(post.createdAt).locale("fr") }} -->
+                              <!-- <span>{{
+                                post.createdAt | Dayjs("daysInMonth")
+                              }}</span> -->
+                              <!-- {{ dayjs(post.createdAt).format("MMMM") }} -->
                             </p>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <!-- id="dropdownMenuButton2"
-                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" -->
-                    <div class="linkPostDpd">
+                    <div class="linkPost">
                       <div class="dropdown" data-dropdown>
-                        <button class="link" data-dropdown-button type="button">
-                          <img
-                            data-dropdown-button
-                            src="../assets/Icons/ariaCircle.svg"
-                            alt=""
-                          />
+                        <button
+                          class="link"
+                          data-dropdown-button
+                          @click="dropdown()"
+                          type="button"
+                        >
+                          ...
+
+                          <!-- <img src="../assets/Icons/ariaCircle.svg" alt="" /> -->
                         </button>
                         <div class="dropdown-menu information-grid">
                           <a
@@ -273,6 +301,7 @@
                     </router-link>
                     <!-- Fin animation du titre -->
                   </p>
+                  <div class="separator"></div>
                   <!-- Texte du post -->
                   <div class="readMore">
                     <p class="mb-3 tx-14">{{ post.content }}</p>
@@ -297,7 +326,6 @@
                         style="width: 100%"
                         x="0"
                         y="0"
-                        height="100%"
                         width="100%"
                         src="../assets/Icons/BiCardImg.svg"
                         alt="avatar"
@@ -338,7 +366,7 @@
                                     />
                                     <div>
                                       <div class="linkLike">
-                                        <p class="d-none d-md-block ml-2">
+                                        <p class="d-md-block ml-2">
                                           <span v-if="post.likes.length < 2">
                                             - {{ post.likes.length }} - Like<br
                                           /></span>
@@ -367,7 +395,7 @@
                               />
                             </div>
                             <div class="linkComent">
-                              <p class="d-none d-md-block ml-2">
+                              <p class="d-md-block ml-2">
                                 <span v-if="post.coments.length < 2">
                                   - {{ post.coments.length }} - Commentaire <br
                                 /></span>
@@ -404,10 +432,12 @@ import postDetails from "@/views/PostDetails.vue";
 import postsUpdate from "@/components/PostsUpdate.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
 import comentsList from "@/components/ComentsList.vue";
+import dayjs from "dayjs";
 
 export default {
   name: "Posts",
   components: {
+    dayjs,
     navPosts,
     postsUpdate,
     postDetails,
@@ -416,9 +446,12 @@ export default {
   },
   data: function () {
     return {
-      msgError: "",
+      mesgError: "",
       user: {
         imgBottom: this.imgBottom,
+        attachment: this.attachment,
+        username: this.username,
+        email: this.email,
       },
       post: {
         title: null,
@@ -485,22 +518,47 @@ export default {
     toggleModale: function () {
       this.revele = !this.revele;
     },
+    dropdown: function () {
+      document.addEventListener("click", (e) => {
+        const isDropdownButton = e.target.matches("[data-dropdown-button]");
+        if (!isDropdownButton && e.target.closest("[data-dropdown]") != null)
+          return;
+
+        let currentDropdown;
+        if (isDropdownButton) {
+          currentDropdown = e.target.closest("[data-dropdown]");
+          currentDropdown.classList.toggle("active");
+        }
+
+        document
+          .querySelectorAll("[data-dropdown].active")
+          .forEach((dropdown) => {
+            if (dropdown === currentDropdown) return;
+            dropdown.classList.remove("active");
+          });
+      });
+    },
     onFileSelected() {
       this.file = this.$refs.file.files[0];
-      this.image = URL.createObjectURL(this.file);
+      this.attachment = URL.createObjectURL(this.file);
     },
+    // dateView: function () {
+    //   const datesPosts = document.querySelectorAll(".datePost");
+    //   console.log(datesPosts);
+    // },
     getPostList() {
       this.apiPosts
         .get("/")
         .then((response) => {
           if (!response) {
-            return (this.msgError = error.response.data.message);
+            return (this.mesgError = error.response.data.message);
           } else {
             this.posts = response.data;
           }
         })
-        .catch(function (error) {
-          alert((this.mesgError = error.response.data.message));
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
         });
     },
     getComentList() {
@@ -508,17 +566,18 @@ export default {
         .get("/")
         .then((response) => {
           if (!response) {
-            return (this.msgError = error.response.data.message);
+            return (this.mesgError = error.response.data.message);
           } else {
-            window.location.reload();
             this.coments = response.data;
-            console.log(this.coments);
+            window.location.reload();
           }
         })
-        .catch(function (error) {
-          alert((this.mesgError = error.response.data.message));
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
         });
     },
+    //Liker ou disliker une publication
     postLikeCreate: function (postId) {
       this.apiPosts
         .put(
@@ -531,17 +590,17 @@ export default {
         )
         .then((response) => {
           if (!response) {
-            return (this.msgError = error.response.data.message);
+            return (this.mesgError = error.response.data.message);
           } else {
             window.location.reload();
-            this.$router.push("/posts");
-            this.getLikesList();
           }
         })
-        .catch(function (error) {
-          alert((this.mesgError = error.response.data.message));
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
         });
     },
+    //Créer une nouvelle publication
     postCreate: function () {
       const dataPost = new FormData();
       dataPost.append("title", this.title);
@@ -552,34 +611,34 @@ export default {
         .post("http://localhost:3000/api/posts", dataPost)
         .then((response) => {
           if (!response) {
-            return (this.msgError = error.response.data.message);
+            return (this.mesgError = error.response.data.message);
           } else {
             window.location.reload();
-            this.$router.push("/posts");
-            this.getPostList();
           }
         })
-        .catch(function (error) {
-          alert((this.mesgError = error.response.data.message));
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
         });
     },
+    //Lister tous les commentaires d'une publication
     displayAllComents: function () {
       this.apiPosts
         .get("/")
         .then((response) => {
           if (!response) {
-            return (this.msgError = error.response.data.message);
+            return (this.mesgError = error.response.data.message);
           } else {
             this.coments = response.data;
-            console.log(this.coments);
           }
         })
-        .catch(function (error) {
-          alert((this.mesgError = error.response.data.message));
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
         });
     },
     switchToUp: function () {
-      const btnUp = document.querySelector(".btnUP");
+      const btnUp = document.querySelector(".btnUp");
       btnUp.addEventListener("click", () => {
         window.scrollTo({
           top: 0,
@@ -588,24 +647,10 @@ export default {
         });
       });
     },
-    // postDeleted: function (postId) {
-    //   if (
-    //     window.confirm("Voulez-vous vraiment supprimer ce post ?")
-    //     ) {
-    //     this.apiPosts
-    //       .delete("http://localhost:3000/api/posts/" + postId
-    //     ).then((response) => {
-    //       if (!response.data) {
-    //         return (this.mesgError = error.response.data.message)
-    //       } else {
-    //         window.location.reload();
-    //         this.$router.push("/posts");
-    //         this.getPostList();
-    //       }
-    //     }).catch((error) => {
-    //       alert(this.mesgError = error.response.data.message)
-    //     });
-    //   }
+    // formatCreatedAt: function () {
+    //   const now = dayjs();
+    //   console.log(now.format());
+    //   now("createdAt").format("MMMM");
     // },
   },
 };
@@ -617,9 +662,9 @@ Voir les posts récents
 ************************/
 
 .btnUp {
-  height: 1rem;
-  width: 1rem;
-  background: red;
+  height: 3rem;
+  width: 3rem;
+  background: #4e51665a;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -628,15 +673,16 @@ Voir les posts récents
   right: 20px;
   bottom: 20px;
   cursor: pointer;
+  z-index: 1;
 }
 .icon {
   width: 50px;
 }
 .blog-card-wrap,
 h1 {
-  font-weight: 400;
+  font-weight: 600;
   font-size: 35px;
-  margin: 32px 0 32px 0;
+  margin: 20px 0 20px 0;
 }
 @media screen and (max-width: 768px) {
   .blog-card-wrap,
@@ -717,6 +763,7 @@ Formulaire de publication des posts
 }
 .containerLogo {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   margin: 0 1rem 0 1rem;
@@ -727,12 +774,52 @@ Formulaire de publication des posts
     flex-direction: column;
   }
 }
+.publish {
+  display: flex;
+  justify-content: center;
+}
 .logoTransparentPost {
   display: flex;
 }
 .titlePublish h1 {
   display: flex;
   margin: 0.7rem 1rem 0.7rem 1rem;
+}
+.iconPencil {
+  display: flex;
+  align-items: center;
+}
+.separatorPostsUser {
+  width: 6rem;
+  height: 4px;
+  background-color: #ffd7d7;
+  margin: 0 0 0.5rem -5.4rem;
+}
+@media screen and (max-width: 768px) {
+  .separatorPostsUser {
+    width: 4rem;
+    margin: 0 0 0.5rem -4.4rem;
+  }
+}
+@media screen and (max-width: 393px) {
+  .publish {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .separatorPostsUser {
+    margin: 0.5rem 0 0.5rem -0.4rem;
+  }
+}
+@media screen and (max-width: 280px) {
+  .publish {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .separatorPostsUser {
+    margin: 0.5rem 0 0.5rem -0.4rem;
+  }
 }
 .formGroup {
   display: flex;
@@ -842,6 +929,20 @@ img {
 .avatar {
   display: contents;
 }
+/* @media screen and (max-width: 768px) {
+  .justify-content {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: left;
+    flex-wrap: nowrap;
+  }
+  .ml-2 {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: left;
+    flex-wrap: nowrap;
+  }
+} */
 @media screen and (max-width: 372px) {
   .d-flex {
     flex-direction: column-reverse;
@@ -896,25 +997,40 @@ img {
     text-overflow: ellipsis;
     overflow: hidden;
   }
+  .userPost {
+    text-align: left;
+    margin: 0 0 0 0.5rem;
+  }
   .datePost {
     text-overflow: ellipsis;
     overflow: hidden;
+    text-align: left;
   }
 }
-@media screen and (max-width: 392px) {
+@media screen and (max-width: 376px) {
   .userPost {
     text-align: center;
+    margin: 0 0 0 0;
   }
   .datePost {
     margin: 0 0 0 1rem;
     text-align: left;
+    display: contents;
   }
 }
 @media screen and (max-width: 280px) {
+  .userPost {
+    margin: 0 0 0 0;
+  }
   .datePost {
     margin: 1rem 0 0 0;
     text-align: center;
+    display: contents;
   }
+}
+.dropdown.active > .link,
+.link:hover {
+  color: black;
 }
 .dropdown {
   position: relative;
@@ -925,7 +1041,41 @@ img {
   opacity: 0;
   transform: translate(1rem, 10px);
   background-color: #8c8c9f;
+  pointer-events: none;
+  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
 }
+/* .dropdown.active > .link + .dropdown-menu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+} */
+
+.link {
+  display: block;
+  background: none;
+  border: none;
+  text-decoration: none;
+  color: #777;
+  font-family: inherit;
+  font-size: 3rem;
+  cursor: pointer;
+  padding: 0;
+}
+.dropdown.active > .link + .dropdown-menu {
+  opacity: 1;
+  /* transform: translateY(0); */
+  transform: translateX(-5rem);
+  pointer-events: auto;
+}
+.information-grid {
+  /* display: flex; */
+  flex-direction: column;
+}
+.dropdown-links {
+  display: flex;
+  flex-direction: column;
+}
+
 /*******************************
 ***********Card body************
 ********************************/
@@ -938,10 +1088,20 @@ img {
 .external {
   position: relative;
   box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
 }
 .infos {
   position: relative;
   font-size: 1.5rem;
+  color: black;
+  text-decoration: none;
+  text-decoration-style: none;
+}
+.separator {
+  width: 4rem;
+  height: 4px;
+  background-color: #ffd7d7;
+  margin: 1rem 0 0.5rem 1rem;
 }
 .aspect {
   display: inline-block;
@@ -1003,9 +1163,15 @@ img {
 ********************************/
 .card-footer {
   margin: 0 0 0.6rem 0;
-  box-shadow: 0px 0px 0px #ffd7d7, -5px -5px 0px #4e51665a;
+  /* box-shadow: 0px 0px 0px #ffd7d7, -5px -5px 0px #4e51665a; */
+  border-top: 0px solid rgba(0, 0, 0, 0.125);
   padding: 1rem 2rem 1rem 2rem;
   background: #4e5166;
+}
+@media screen and (max-width: 768px) {
+  .card-footer {
+    padding: 1rem;
+  }
 }
 .post-actions {
   /* display: flex; */
@@ -1046,13 +1212,13 @@ img {
     justify-content: space-between;
   }
   .linkPostDpd {
-    margin: 0 0 3rem 0;
+    margin: 0 0 0.5rem 0;
   }
   .linkPost {
-    margin: 0 0 2.5rem 0;
+    margin: 0 0 0.5rem 0;
   }
   .linkItems {
-    margin: 1rem 0;
+    margin: 0 0 0.8rem 0;
   }
   .linkComent {
     margin: 0;
@@ -1062,6 +1228,18 @@ img {
   display: flex;
 }
 
+@media screen and (max-width: 393px) {
+  .linksPost {
+    flex-direction: column;
+  }
+  .likesPost {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  .comentsPost {
+    width: 100%;
+  }
+}
 @media screen and (max-width: 280px) {
   .menuPost {
     flex-direction: column;
@@ -1110,31 +1288,6 @@ img {
   display: flex;
 }
 
-.link {
-  display: block;
-  background: none;
-  border: none;
-  text-decoration: none;
-  color: #777;
-  font-family: inherit;
-  font-size: inherit;
-  cursor: pointer;
-  padding: 0;
-}
-.dropdown.active > .link + .dropdown-menu {
-  opacity: 1;
-  /* transform: translateY(0); */
-  transform: translateX(-5rem);
-  pointer-events: auto;
-}
-.information-grid {
-  /* display: flex; */
-  flex-direction: column;
-}
-.dropdown-links {
-  display: flex;
-  flex-direction: column;
-}
 .comentPost {
   margin: 1rem;
 }

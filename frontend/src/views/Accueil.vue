@@ -1,15 +1,10 @@
 <template>
   <div class="accueil">
     <div class="container">
-      <!-- empêche le rafraîchissement de la page  (@submit.prevent="submit") -->
-      <form
-        id="inscription"
-        name="inscription"
-        @submit.prevent="createAccount"
-        novalidate
-      >
-        <h1 class="nav-link-title" v-if="mode == 'login'">Login</h1>
-        <h1 class="nav-link-title" v-else>Sign Up</h1>
+      <form id="inscription" name="inscription">
+        <!-- novalidate -->
+        <h1 class="nav-link-title" v-if="mode == 'login'">123</h1>
+        <h1 class="nav-link-title" v-else>456</h1>
         <p class="nav-link-subtitle" v-if="mode == 'login'">
           Vous n'avez pas encore de compte ?<br />
           <button type="button" class="btn btn-warning">
@@ -74,7 +69,7 @@
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
             </div>
-            <small>{{ error }}</small>
+            <small>{{ mesgError }}</small>
           </div>
         </div>
 
@@ -82,6 +77,7 @@
           <div class="form-controlSignup">
             <label class="formContact" for="email">E-mail</label>
             <div class="inputData">
+              <!-- id="text" -->
               <input
                 v-model="email"
                 class="form-control_input"
@@ -93,7 +89,7 @@
               />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
-              <small>{{ error }}</small>
+              <small>{{ error_create }}</small>
             </div>
           </div>
         </div>
@@ -114,31 +110,54 @@
               />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
-              <div class="eyePasswd">
-                <!--  -->
-                <div v-if="mode == 'text'">
-                  <img
-                    src="../assets/Icons/BiEye.svg"
-                    id="eye"
-                    @click="changer()"
-                    alt=""
-                  />
-                </div>
-                <!-- style="display: none" -->
-                <div v-else>
-                  <img
-                    src="../assets/Icons/BiEyeSlash.svg"
-                    id="eye"
-                    @click="changer()"
-                    alt=""
-                  />
+
+              <!-- <div class="eyePasswd" v-if="mode == 'hiddenPasswd'">
+                <div>
+                  <button class="btn" id="btn" @click="switchToEyeSlash()">
+                    <img
+                      style="height: 25px; width: 25px"
+                      x="0"
+                      y="0"
+                      height="100%"
+                      width="100%"
+                      src="../assets/Icons/BiEyeSlash.svg"
+                      id="hiddenPasswd"
+                      alt=""
+                    />
+                  </button>
                 </div>
               </div>
+              <div class="eyePasswd" v-else>
+                <div>
+                  <button class="btn" id="btn" @click="switchToEye()">
+                    <img
+                      style="height: 25px; width: 25px"
+                      x="0"
+                      y="0"
+                      height="100%"
+                      width="100%"
+                      src="../assets/Icons/BiEye.svg"
+                      id="eye"
+                      alt=""
+                    />
+                  </button>
+                </div>
+              </div> -->
             </div>
-            <small>{{ message }}</small>
+
+            <small>{{ mesgError }}</small>
           </div>
         </div>
         <div class="form-group" v-if="mode == 'create'">
+          <!-- <div> -->
+          <!-- <p id="messAlert" class="alert alert-info text-danger">
+            <strong>{{ mesgError }}</strong>
+          </p>
+          <p id="mesSuccess" class="alert alert-info text-success">
+            <strong>{{ mesgError }}</strong>
+          </p> -->
+          <!-- </div> -->
+
           <div class="form-controlSignup">
             <label for="confirmPasswd">Confirmer le mot de passe</label>
             <div class="inputData">
@@ -156,21 +175,23 @@
               <i class="fas fa-exclamation-circle"></i>
             </div>
           </div>
-          <p id="message">
-            <small>{{ message }}</small>
-          </p>
         </div>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
           <div
             class="alert alert-info text-danger"
             v-if="mode === 'login' && status == 'error_login'"
           >
             Adresse mail et/ou mot de passe invalide !
-            {{ mesgError }}
+            {{ error_login }}
           </div>
+        </div> -->
+        <!-- <div class="alert alert-info text-danger" v-if="mode === 'create'">
+          {{ mesgError }}
         </div>
-
+        <p class="alert alert-info text-danger" v-if="mode === 'login'">
+          {{ mesgError }}
+        </p> -->
         <p class="alert alert-info text-danger">
           {{ mesgError }}
         </p>
@@ -180,7 +201,8 @@
             class="alert alert-info text-danger"
             v-if="mode == 'create' && status == 'error_create'"
           >
-            {{ mesgError }}
+            Adresse email déjà utilisée !
+            {{ error_create }}
           </div>
         </div>
 
@@ -190,6 +212,7 @@
             @click="login()"
             :disabled="!validatedFields"
             class="btns btn-primary"
+            aria-label="connexion"
             v-if="mode == 'login'"
           >
             <span v-if="status == 'loading'">Connexion en cours....</span>
@@ -199,6 +222,7 @@
             @click="createAccount()"
             :disabled="!validatedFields"
             class="btns btn-primary"
+            aria-label="inscription"
             v-else
           >
             <span v-if="status == 'loading'">Création en cours....</span>
@@ -246,17 +270,26 @@ export default {
   },
   data: function () {
     return {
-      error: null,
+      // status: "",
+      error: "",
+      message: "",
+      messAlert: "",
       mesgError: "",
+      mesSuccess: "",
       error_login: "",
+      error_create: "",
       error_Password: "", //modifier
       error_confirmPasswd: "", //modifier
+      mode: "seenPasswd",
+      // mode: "passwdAlert",
 
       mode: "login",
       username: "",
       email: "",
       password: "",
       confirmPasswd: "", //modifier
+
+      // mode: "password",
     };
   },
   mounted: function () {
@@ -272,7 +305,7 @@ export default {
           this.username != "" &&
           this.email != "" &&
           this.password != "" &&
-          this.confirmPasswd !== "" &&
+          this.confirmPasswd != "" &&
           this.password === this.confirmPasswd
         ) {
           return true;
@@ -291,21 +324,24 @@ export default {
     ...mapState({ user: "userInfos" }),
   },
   methods: {
-    async createAccount() {
-      try {
-        await axios.post("login", {
-          email: this.email,
-          password: this.password,
-        });
-        localStorage.setItem("token", response.data.token);
-        this.$store.dispatch("user", response.data.user);
-        this.$router.push("/");
-      } catch (e) {
-        this.error = `${"error"}`;
-        this.error = "Adresse mail et/ou mot de passe invalide !";
-        this.message = "Adresse mail et mot de passe valide !";
-      }
-    },
+    // async createAccount() {
+    //   try {
+    //     await axios.post("login", {
+    //       email: this.email,
+    //       password: this.password,
+    //     });
+    //     localStorage.setItem("token", response.data.token);
+    //     this.$store.dispatch("user", response.data.user);
+    //     this.$router.push("/");
+    //   } catch (e) {
+    //     this.error = `${"error"}`;
+    //     this.error = "Adresse mail et/ou mot de passe invalide !";
+    //     this.message = "Adresse mail et mot de passe valide !";
+    //   }
+    // },
+    // passwdAlert: function () {
+    //   this.mode = "";
+    // },
     switchToCreateAccount: function () {
       this.mode = "create";
     },
@@ -323,35 +359,60 @@ export default {
           if (!response) {
             return (this.mesgError = error.response.data.message);
           } else {
-            self.$router.push("/posts");
-            document.getElementById("login").reset();
+            self.$router.push("/profile");
+            // document.getElementById("login").reset();
           }
         })
         .catch((error) => {
-          alert((this.msgError = error.response.data.message));
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
+          // alert(this.mesgError + " " + error.response.status);
         });
     },
-    changer: function () {
+    switchToEyeSlash: function () {
+      this.mode = "hiddenPasswd";
+    },
+    switchToEye: function () {
+      this.mode = "seenPasswd";
+    },
+    switchToEyeSlash: function () {
       let e = true;
       if (e) {
         document.getElementById("password").setAttribute("type", "text");
-        document.getElementById("eye").src = "../assets/Icons/BiEye.svg";
+        document.getElementById("seenPasswd").src = "../assets/Icons/BiEye.svg";
         e = true;
       } else {
         document.getElementById("password").setAttribute("type", "password");
-        document.getElementById("eye").src = "../assets/Icons/BiEyeSlash.svg";
+        document.getElementById("hiddenPasswd").src =
+          "../assets/Icons/BiEyeSlash.svg";
         e = true;
       }
     },
-    createAccount: function () {
-      const self = this;
-      let password = document.getElementById("password").value;
-      let confirmPasswd = document.getElementById("confirmPasswd").value;
-      if (password == confirmPasswd) {
-        message.textContent = "Passwords match";
+    switchToEye: function () {
+      let e = true;
+      if (e) {
+        document.getElementById("password").setAttribute("type", "text");
+        document.getElementById("seenPasswd").src = "../assets/Icons/BiEye.svg";
+        e = true;
       } else {
-        return false;
+        document.getElementById("password").setAttribute("type", "password");
+        document.getElementById("hiddenPasswd").src =
+          "../assets/Icons/BiEyeSlash.svg";
+        e = true;
       }
+    },
+
+    createAccount: function () {
+      console.log(this.username, this.email, this.password, this.confirmPasswd);
+      const self = this;
+      // let password = document.getElementById("password").value;
+      // let confirmPasswd = document.getElementById("confirmPasswd").value;
+
+      // if (password === confirmPasswd) {
+      //   mesSuccess.textContent = "Confirmation du mot de passe valide !";
+      // } else if (password != confirmPasswd) {
+      //   messAlert.textContent = "Confirmer votre mot de passe !";
+      // }
       this.$store
         .dispatch("createAccount", {
           username: this.username,
@@ -361,15 +422,27 @@ export default {
         })
         .then((response) => {
           if (!response) {
-            return (this.mesgError = error.response.data.message);
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           } else {
             self.login();
           }
         })
         .catch((error) => {
-          alert((this.mesgError = error.response.data.message));
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
         });
     },
+    // validate: function () {
+    //   let mail = document.getElementById("text").value;
+    //   if (isEmail.text(mail)) {
+    //     alert("vous avez fourni un identifiant de messagerie valide !!!");
+    //     return true;
+    //   } else {
+    //     alert("Désolé !!! Adresse e-mail incorrecte. ");
+    //     return false;
+    //   }
+    // },
   },
 };
 </script>
@@ -408,8 +481,8 @@ export default {
 }
 .btns {
   border: none;
-  margin: 1.5rem 0.5rem 0 0.5rem;
-  padding: 1rem 5rem;
+  margin: 2.5rem 0.5rem 0 0.5rem;
+  padding: 1rem 0 1rem 0;
   border-radius: 1rem;
   box-shadow: 0px 0px 10px #ffd7d7, 0px 0px 0px #ffd7d7;
   cursor: pointer;
