@@ -1,13 +1,13 @@
 <template>
   <div class="accueil">
     <div class="container">
-      <form id="inscription" name="inscription">
-        <!-- novalidate -->
-        <h1 class="nav-link-title" v-if="mode == 'login'">123</h1>
-        <h1 class="nav-link-title" v-else>456</h1>
+      <!-- empêche le rafraîchissement de la page  (@submit.prevent="submit") -->
+      <form id="inscription" name="inscription" @submit.prevent="createAccount">
+        <h1 class="nav-link-title" v-if="mode == 'login'">Login</h1>
+        <h1 class="nav-link-title" v-else>Sign Up</h1>
         <p class="nav-link-subtitle" v-if="mode == 'login'">
           Vous n'avez pas encore de compte ?<br />
-          <button type="button" class="btn btn-warning">
+          <button type="button" class="btn btn-secondary">
             <span class="nav-link-action" @click="switchToCreateAccount()">
               <div class="containerCpteCreate">
                 <div class="cpteCreate">
@@ -30,7 +30,7 @@
         </p>
         <p class="nav-link-subtitle" v-else>
           Vous avez déjà un compte ?<br />
-          <button type="button" class="btn btn-warning">
+          <button type="button" class="btn btn-secondary">
             <span class="nav-link-action" @click="switchToLogin()">
               <div class="containerCpteCreate">
                 <div class="cpteCreate">
@@ -69,7 +69,7 @@
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
             </div>
-            <small>{{ mesgError }}</small>
+            <small>{{ error }}</small>
           </div>
         </div>
 
@@ -77,7 +77,6 @@
           <div class="form-controlSignup">
             <label class="formContact" for="email">E-mail</label>
             <div class="inputData">
-              <!-- id="text" -->
               <input
                 v-model="email"
                 class="form-control_input"
@@ -89,7 +88,7 @@
               />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
-              <small>{{ error_create }}</small>
+              <small>{{ error }}</small>
             </div>
           </div>
         </div>
@@ -100,9 +99,9 @@
             <div class="inputData">
               <input
                 id="password"
-                type="password"
                 name="password"
                 v-model="password"
+                type="password"
                 placeholder="Mot de passe"
                 class="form-control_input"
                 required
@@ -110,54 +109,31 @@
               />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
-
-              <!-- <div class="eyePasswd" v-if="mode == 'hiddenPasswd'">
-                <div>
-                  <button class="btn" id="btn" @click="switchToEyeSlash()">
-                    <img
-                      style="height: 25px; width: 25px"
-                      x="0"
-                      y="0"
-                      height="100%"
-                      width="100%"
-                      src="../assets/Icons/BiEyeSlash.svg"
-                      id="hiddenPasswd"
-                      alt=""
-                    />
-                  </button>
+              <div class="eyePasswd">
+                <!--  -->
+                <div v-if="mode == 'text'">
+                  <img
+                    src="../assets/Icons/BiEye.svg"
+                    id="eye"
+                    @click="changer()"
+                    alt=""
+                  />
+                </div>
+                <!-- style="display: none" -->
+                <div v-else>
+                  <img
+                    src="../assets/Icons/BiEyeSlash.svg"
+                    id="eye"
+                    @click="changer()"
+                    alt=""
+                  />
                 </div>
               </div>
-              <div class="eyePasswd" v-else>
-                <div>
-                  <button class="btn" id="btn" @click="switchToEye()">
-                    <img
-                      style="height: 25px; width: 25px"
-                      x="0"
-                      y="0"
-                      height="100%"
-                      width="100%"
-                      src="../assets/Icons/BiEye.svg"
-                      id="eye"
-                      alt=""
-                    />
-                  </button>
-                </div>
-              </div> -->
             </div>
-
-            <small>{{ mesgError }}</small>
+            <small>{{ message }}</small>
           </div>
         </div>
         <div class="form-group" v-if="mode == 'create'">
-          <!-- <div> -->
-          <!-- <p id="messAlert" class="alert alert-info text-danger">
-            <strong>{{ mesgError }}</strong>
-          </p>
-          <p id="mesSuccess" class="alert alert-info text-success">
-            <strong>{{ mesgError }}</strong>
-          </p> -->
-          <!-- </div> -->
-
           <div class="form-controlSignup">
             <label for="confirmPasswd">Confirmer le mot de passe</label>
             <div class="inputData">
@@ -175,74 +151,75 @@
               <i class="fas fa-exclamation-circle"></i>
             </div>
           </div>
+          <p id="message">
+            <small>{{ msgError }}</small>
+          </p>
         </div>
-
-        <!-- <div class="form-group">
-          <div
-            class="alert alert-info text-danger"
-            v-if="mode === 'login' && status == 'error_login'"
-          >
-            Adresse mail et/ou mot de passe invalide !
-            {{ error_login }}
-          </div>
-        </div> -->
-        <!-- <div class="alert alert-info text-danger" v-if="mode === 'create'">
-          {{ mesgError }}
-        </div>
-        <p class="alert alert-info text-danger" v-if="mode === 'login'">
-          {{ mesgError }}
-        </p> -->
         <p class="alert alert-info text-danger">
           {{ mesgError }}
         </p>
 
         <div class="form-group">
           <div
-            class="alert alert-info text-danger"
-            v-if="mode == 'create' && status == 'error_create'"
+            class="alert alert-danger"
+            v-if="mode === 'login' && status == 'error_login'"
           >
-            Adresse email déjà utilisée !
-            {{ error_create }}
+            Adresse mail et/ou mot de passe invalide !
           </div>
         </div>
 
-        <!-- Mode connexion ou création de compte -->
+        <div class="form-group">
+          <div
+            class="alert alert-danger"
+            v-if="mode == 'create' && status == 'error_create'"
+          >
+            Adresse email déjà utilisée !
+          </div>
+        </div>
+
+        <!-- <div class="form-group">
+          <div class="alert alert-danger" v-if="mode == 'create' && status == 'error_create'">
+            Confirmer votre mot de passe !
+          </div>
+          <div class="alert alert-success" v-else>
+            Votre mot de passe est confirmé !
+          </div>
+        </div> -->
+
+        <!-- <div>
+          <div v-if="error">
+            <error :error="error" />
+          </div>
+          <div v-else>
+            <div v-if="message" class="alert alert-success" role="alert">
+              {{ message }}
+            </div>
+          </div>
+        </div> -->
+
         <div class="form-group">
           <button
-            @click="login()"
-            :disabled="!validatedFields"
             class="btns btn-primary"
             aria-label="connexion"
+            @click="login()"
+            :disabled="!validatedFields"
             v-if="mode == 'login'"
           >
             <span v-if="status == 'loading'">Connexion en cours....</span>
             <span v-else>Connexion</span>
           </button>
+
           <button
-            @click="createAccount()"
-            :disabled="!validatedFields"
             class="btns btn-primary"
             aria-label="inscription"
+            @click="createAccount()"
+            :disabled="!validatedFields"
             v-else
           >
             <span v-if="status == 'loading'">Création en cours....</span>
             <span v-else>Créer mon compte</span>
           </button>
           <br />
-
-          <!-- Accès administrateur -->
-          <p class="credential">
-            <router-link v-if="mode == 'login'" to="admin" text-right
-              >Modérateur du site
-            </router-link>
-          </p>
-
-          <!-- Mot de passe oublié -->
-          <p class="forgotPasswd">
-            <router-link v-if="mode == 'login'" to="Forgot" text-right
-              >Mot de passe oublié ?
-            </router-link>
-          </p>
         </div>
       </form>
       <div>
@@ -263,6 +240,7 @@
 <script>
 import { mapState } from "vuex";
 import Error from "./Error.vue";
+
 export default {
   name: "Accueil",
   components: {
@@ -270,26 +248,19 @@ export default {
   },
   data: function () {
     return {
-      // status: "",
       error: "",
       message: "",
-      messAlert: "",
-      mesgError: "",
-      mesSuccess: "",
+      msgError: "",
       error_login: "",
       error_create: "",
       error_Password: "", //modifier
       error_confirmPasswd: "", //modifier
-      mode: "seenPasswd",
-      // mode: "passwdAlert",
 
       mode: "login",
       username: "",
       email: "",
       password: "",
       confirmPasswd: "", //modifier
-
-      // mode: "password",
     };
   },
   mounted: function () {
@@ -305,7 +276,7 @@ export default {
           this.username != "" &&
           this.email != "" &&
           this.password != "" &&
-          this.confirmPasswd != "" &&
+          this.confirmPasswd !== "" &&
           this.password === this.confirmPasswd
         ) {
           return true;
@@ -321,27 +292,23 @@ export default {
       }
     },
     ...mapState(["status"]),
-    ...mapState({ user: "userInfos" }),
   },
   methods: {
-    // async createAccount() {
-    //   try {
-    //     await axios.post("login", {
-    //       email: this.email,
-    //       password: this.password,
-    //     });
-    //     localStorage.setItem("token", response.data.token);
-    //     this.$store.dispatch("user", response.data.user);
-    //     this.$router.push("/");
-    //   } catch (e) {
-    //     this.error = `${"error"}`;
-    //     this.error = "Adresse mail et/ou mot de passe invalide !";
-    //     this.message = "Adresse mail et mot de passe valide !";
-    //   }
-    // },
-    // passwdAlert: function () {
-    //   this.mode = "";
-    // },
+    async handleSubmit() {
+      try {
+        await axios.post("login", {
+          email: this.email,
+          password: this.password,
+        });
+        localStorage.setItem("token", response.data.token);
+        this.$store.dispatch("user", response.data.user);
+        this.$router.push("/");
+      } catch (e) {
+        this.error = `${"error"}`;
+        this.error = "Adresse mail et/ou mot de passe invalide !";
+        this.message = "Adresse mail et mot de passe valide !";
+      }
+    },
     switchToCreateAccount: function () {
       this.mode = "create";
     },
@@ -357,7 +324,8 @@ export default {
         })
         .then((response) => {
           if (!response) {
-            return (this.mesgError = error.response.data.message);
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           } else {
             self.$router.push("/profile");
             // document.getElementById("login").reset();
@@ -369,50 +337,27 @@ export default {
           // alert(this.mesgError + " " + error.response.status);
         });
     },
-    switchToEyeSlash: function () {
-      this.mode = "hiddenPasswd";
-    },
-    switchToEye: function () {
-      this.mode = "seenPasswd";
-    },
-    switchToEyeSlash: function () {
+    changer: function () {
       let e = true;
       if (e) {
         document.getElementById("password").setAttribute("type", "text");
-        document.getElementById("seenPasswd").src = "../assets/Icons/BiEye.svg";
+        document.getElementById("eye").src = "../assets/Icons/BiEye.svg";
         e = true;
       } else {
         document.getElementById("password").setAttribute("type", "password");
-        document.getElementById("hiddenPasswd").src =
-          "../assets/Icons/BiEyeSlash.svg";
+        document.getElementById("eye").src = "../assets/Icons/BiEyeSlash.svg";
         e = true;
       }
     },
-    switchToEye: function () {
-      let e = true;
-      if (e) {
-        document.getElementById("password").setAttribute("type", "text");
-        document.getElementById("seenPasswd").src = "../assets/Icons/BiEye.svg";
-        e = true;
-      } else {
-        document.getElementById("password").setAttribute("type", "password");
-        document.getElementById("hiddenPasswd").src =
-          "../assets/Icons/BiEyeSlash.svg";
-        e = true;
-      }
-    },
-
     createAccount: function () {
-      console.log(this.username, this.email, this.password, this.confirmPasswd);
       const self = this;
-      // let password = document.getElementById("password").value;
-      // let confirmPasswd = document.getElementById("confirmPasswd").value;
-
-      // if (password === confirmPasswd) {
-      //   mesSuccess.textContent = "Confirmation du mot de passe valide !";
-      // } else if (password != confirmPasswd) {
-      //   messAlert.textContent = "Confirmer votre mot de passe !";
-      // }
+      let password = document.getElementById("password").value;
+      let confirmPasswd = document.getElementById("confirmPasswd").value;
+      if (password == confirmPasswd) {
+        message.textContent = "Passwords match";
+      } else {
+        message.textContent = "Confirmer votre mot de passe !";
+      }
       this.$store
         .dispatch("createAccount", {
           username: this.username,
@@ -420,7 +365,7 @@ export default {
           password: this.password,
           confirmPasswd: this.confirmPasswd,
         })
-        .then((response) => {
+        .then(function (response) {
           if (!response) {
             this.mesgError = error.response.data.message;
             alert(this.mesgError);
@@ -431,18 +376,11 @@ export default {
         .catch((error) => {
           this.mesgError = error.response.data.message;
           alert(this.mesgError);
-        });
+        }),
+        function (error) {
+          console.log(error);
+        };
     },
-    // validate: function () {
-    //   let mail = document.getElementById("text").value;
-    //   if (isEmail.text(mail)) {
-    //     alert("vous avez fourni un identifiant de messagerie valide !!!");
-    //     return true;
-    //   } else {
-    //     alert("Désolé !!! Adresse e-mail incorrecte. ");
-    //     return false;
-    //   }
-    // },
   },
 };
 </script>
@@ -481,7 +419,7 @@ export default {
 }
 .btns {
   border: none;
-  margin: 2.5rem 0.5rem 0 0.5rem;
+  margin: 2.5rem 0 0 0;
   padding: 1rem 0 1rem 0;
   border-radius: 1rem;
   box-shadow: 0px 0px 10px #ffd7d7, 0px 0px 0px #ffd7d7;
@@ -510,9 +448,10 @@ export default {
   flex-direction: row-reverse;
   align-items: center;
   background: #f2f2f2;
+  border-radius: 0.25rem;
 }
 .form-controlSignup {
-  padding: 8px;
+  padding: 10px 0 20px 0;
   border: none;
 }
 .form-controlSignup img {

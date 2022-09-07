@@ -158,6 +158,7 @@
                   </div>
                 </div>
                 <div class="containerBtnComent">
+                  <!-- Supprimer un commentaire -->
                   <div class="btnFooter">
                     <button
                       v-if="
@@ -191,6 +192,7 @@
                       </div>
                     </button>
                   </div>
+                  <!-- Modifier un commentaire  -->
                   <div class="btnFooter">
                     <button
                       v-if="

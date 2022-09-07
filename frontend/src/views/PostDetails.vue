@@ -542,10 +542,6 @@ h1 {
   justify-content: center;
   align-items: center;
 }
-.alert {
-  padding: 0;
-}
-
 .comentForm {
   margin: 1rem 0 1rem 0;
   border-radius: 1rem;

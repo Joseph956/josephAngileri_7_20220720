@@ -16,10 +16,10 @@
             />
           </div>
           <div class="cardTitleUser">
-            <h1>Lister tous les profils utilisateurs</h1>
+            <h1>Lister les profils utilisateurs</h1>
+            <div class="separatorUser"></div>
           </div>
         </div>
-        <div class="separatorUser"></div>
         <br />
 
         <!-- v-if="$store.state.user.userId == user.id" -->
@@ -49,12 +49,8 @@
                     <div class="listInfosUser">
                       <div class="infoUser">
                         <div class="infosHeader">
-                          <div class="infosTitle">
-                            <h3>{{ user.username }}</h3>
-                          </div>
-                          <div class="infosDescription">
-                            <h3>{{ user.email }}</h3>
-                          </div>
+                          <h3 class="infosTitle">{{ user.username }}</h3>
+                          <p class="infosDescription">{{ user.email }}</p>
                         </div>
                       </div>
                     </div>
@@ -165,15 +161,6 @@
     </div>
     <!-- ScrollToTop button -->
     <button type="button" class="btnUp" @click="switchToUp()">
-      <!-- <img
-              style="height: auto; width: 100%"
-              x="0"
-              y="0"
-              height="100%"
-              width="100%"
-              src="../assets/Icons/BiArrowUpCircleFill.svg"
-              alt="icon"
-            /> -->
       <a class="bloc-button btn btn-d scrollToTop" @click="switchToUp('1')">
         <span class="fa fa-chevron-up"></span>
       </a>
@@ -228,10 +215,6 @@ export default {
     }
     this.getUserList();
   },
-  // beforeMount() {
-  //   this.getProfilOne();
-  //   // this.getUserOne();
-  // },
   computed: {
     ...mapState(["status"]),
     ...mapState({ user: "userInfos" }),
@@ -262,24 +245,6 @@ export default {
         });
       });
     },
-    // getProfilOne: function () {
-    //   console.log("tst");
-    //   this.apiUser
-    //     .get(`${this.$route.params.id}/admin`)
-    //     .then((response) => {
-    //       if (!response) {
-    //         this.mesgError = error.response.data.message;
-    //       } else {
-    //         this.user = response.data;
-    //         console.log("--------->CONTENU front-profilUpdate : response.data");
-    //         console.log(response.data);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       alert((this.mesgError = error.response.data.message));
-    //     });
-    // },
-
     userDeleted: function (userId) {
       if (
         window.confirm("Voulez-vous vraiment supprimer ce compte utilisateur ?")
@@ -308,14 +273,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  /* flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  align-content: center; */
 }
-/* .cardUsers {
-  /* padding: 1rem; 
-} */
 .col-md-8 {
   background: #4e5166;
   padding: 2rem;
@@ -331,7 +289,6 @@ h1 {
 
 .logoTransparentUser {
   display: flex;
-  margin: 2rem 0 0 0;
 }
 
 .alert-info {
@@ -344,12 +301,14 @@ h1 {
   display: flex;
   margin: 2rem 0 0 0;
   text-decoration: none;
+  flex-direction: column;
+  align-items: flex-start;
 }
 .separatorUser {
   width: 6rem;
   height: 4px;
   background-color: #ffd7d7;
-  margin: 1rem 0 0.5rem 12rem;
+  margin: 1rem 0 0.5rem 1rem;
 }
 
 .cardUser {
@@ -358,13 +317,12 @@ h1 {
 
 .listInfosUsers {
   display: flex;
-  /* width: 55%; */
   align-items: center;
   margin: auto;
   background: #f2f2f2;
   box-shadow: 0px 0px 10px #cecdcd, -5px -5px 10px #cfcece;
   border-radius: 5rem;
-  padding: 0.5rem;
+  padding: 0 0.5rem;
   background: #5c5c6c85;
   justify-content: space-between;
 }
@@ -376,10 +334,11 @@ h1 {
   display: flex;
   margin: 0 0 0 1rem;
 }
-.infoUser h3 {
+.infoUser {
   font-size: 1rem;
   padding: 5px;
   text-align: center;
+  overflow: hidden;
 }
 .infoUser .infosHeader h3 {
   justify-content: center;
@@ -418,11 +377,10 @@ h1 {
   .containerTitre,
   h1 {
     display: flex;
-    flex-direction: column;
     font-size: 1.2rem;
   }
   .logoTransparentUser {
-    margin: 5.2rem 0 0 0;
+    margin: -0.8rem 0 0 0;
   }
   .cardUser {
     margin: 1rem 0 1rem 0;
@@ -434,25 +392,48 @@ h1 {
     display: flex;
     align-items: center;
     width: 4rem;
-    margin: 1rem auto 0.5rem auto;
   }
   .wrapUsers {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
   }
-  .listInfosUsers {
-    /* flex-direction: column; */
-    /* box-shadow: none; */
-  }
   .listInfosUser {
-    /* flex-direction: column; */
     margin: 0 1rem 0 1rem;
   }
   .positionTrash {
     display: contents;
     justify-content: center;
     margin: auto;
+  }
+}
+@media screen and (max-width: 470px) {
+  .containerTitre,
+  h1 {
+    flex-direction: column;
+  }
+  .separatorUser {
+    margin: 1rem auto 0.5rem auto;
+  }
+}
+@media screen and (max-width: 370px) {
+  .containerTitre,
+  h1 {
+    flex-direction: column;
+  }
+  .logoTransparentUser {
+    margin: 1.2rem 0 0 0;
+  }
+  .separatorUser {
+    margin: 1rem auto 0.5rem auto;
+  }
+  .listInfosUsers {
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 280px) {
+  .logoTransparentUser {
+    margin: 3.2rem 0 0 0;
   }
 }
 </style>

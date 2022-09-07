@@ -17,7 +17,7 @@ exports.signUp = (req, res, next) => {
         },
         attributes: ['email'],
     }).then(user => {
-        if (user != newEmail) {
+        if (user != email) {
             bcrypt.hash(req.body.password, 10)
                 .then(hash => {
                     const user = new User({
@@ -63,7 +63,7 @@ exports.signUp = (req, res, next) => {
             })
         }
     }).catch(error => res.status(409).json({
-        error, message: 'Cette utilisateur existe déjà 444 !!! '
+        error, message: 'Cet utilisateur existe déjà 444 !!! '
     }));
 };
 
