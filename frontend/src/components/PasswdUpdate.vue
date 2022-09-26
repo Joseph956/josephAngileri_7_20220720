@@ -173,7 +173,6 @@ export default {
   data: function () {
     return {
       msgError: "",
-      //Modifier le mot de passe utilisateur.
       apiPasswd: axios.create({
         baseURL:
           "http://localhost:3000/api/auth/" + this.$store.state.user.userId,
@@ -220,7 +219,7 @@ export default {
   methods: {
     getPasswd() {
       this.apiPasswd
-        .get("")
+        .get("/")
         .then((response) => {
           this.profile = response.data;
         })
@@ -272,6 +271,7 @@ export default {
 .container {
   margin: 0 auto 0 auto;
 }
+
 .logoTransparentUpdatePasswd {
   display: flex;
   margin: -0.5rem 0 0 0;
@@ -281,6 +281,11 @@ export default {
   height: 4px;
   background-color: #ffd7d7;
   margin: 0 0 1.5rem 0;
+}
+.inputDataNewPasswd {
+  display: flex;
+  align-items: center;
+  background: #f2f2f2;
 }
 @media screen and (max-width: 768px) {
   .container {
@@ -292,10 +297,5 @@ export default {
   .separatorUpdatePasswd {
     margin: 0 auto 1.5rem auto;
   }
-}
-.inputDataNewPasswd {
-  display: flex;
-  align-items: center;
-  background: #f2f2f2;
 }
 </style>

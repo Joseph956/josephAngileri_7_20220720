@@ -131,8 +131,6 @@
 </template>
 
 <script>
-// import {liens} from "@/service/liens";
-
 export default {
   name: "NavPosts",
   components: {},
@@ -159,7 +157,7 @@ export default {
   },
   mounted: function () {
     this.apiUser
-      .get("")
+      .get("/")
       .then((response) => {
         this.user = response.data;
       })
@@ -169,7 +167,6 @@ export default {
     toggle() {
       let toggle = document.querySelector(".toggle");
       let body = document.querySelector("body");
-
       toggle.addEventListener("click", function () {
         body.classList.toggle("openMenu");
       });
@@ -202,7 +199,6 @@ header {
 nav {
   width: 100%;
   display: flex;
-  /* justify-content: end; */
   align-items: center;
 }
 .navbar {
@@ -211,17 +207,7 @@ nav {
 .navbar-brandLogo {
   justify-content: center;
 }
-@media screen and (max-width: 768px) {
-  .navbar-brandLogo {
-    justify-content: left;
-  }
-}
 
-@media screen and (max-width: 393px) {
-  .navbar-brandLogo {
-    justify-content: left;
-  }
-}
 .toggle {
   display: none;
 }
@@ -246,61 +232,6 @@ nav {
   text-decoration: none;
   margin: 0 2rem 0 2rem;
 }
-/* @media screen and (max-width: 1332px) {
-.menuAccueil {
-  width: 44rem;
-}
-} */
-@media screen and (max-width: 991px) {
-  .toggle {
-    display: block;
-    font-size: 2rem;
-    cursor: pointer;
-    position: relative;
-    z-index: 20;
-  }
-  .imgAccueil {
-    position: relative;
-    justify-content: left;
-    z-index: 20;
-  }
-  .open {
-    display: block;
-  }
-
-  .close {
-    display: none;
-  }
-
-  .openMenu .open {
-    display: none;
-  }
-
-  .openMenu .close {
-    display: block;
-  }
-  .menuAccueil {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 1%;
-    height: 100vh;
-    background: #4e5166;
-    flex-direction: column;
-    padding: 2rem;
-    justify-content: space-around;
-    transform: translateX(-100%);
-    transition: transform 1s;
-  }
-
-  .menuAccueil {
-    font-size: 4rem;
-  }
-  .openMenu .menuAccueil {
-    transform: translateX(0);
-  }
-}
-
 h5 {
   margin-bottom: 0;
 }
@@ -360,11 +291,7 @@ h5 {
   display: flex;
   align-items: center;
 }
-@media screen and (max-width: 393px) {
-  .containerImgProfil {
-    margin: 0 0 0 0;
-  }
-}
+
 .imgNavProfil {
   border-radius: 5rem;
   object-fit: cover;
@@ -419,5 +346,71 @@ body {
   cursor: pointer;
   font-weight: 500;
   transition: 0.3s color ease;
+}
+
+/********************************** 
+*********Medias Queries************
+**********************************/
+@media screen and (max-width: 991px) {
+  .toggle {
+    display: block;
+    font-size: 2rem;
+    cursor: pointer;
+    position: relative;
+    z-index: 20;
+  }
+  .imgAccueil {
+    position: relative;
+    justify-content: left;
+    z-index: 20;
+  }
+  .open {
+    display: block;
+  }
+
+  .close {
+    display: none;
+  }
+
+  .openMenu .open {
+    display: none;
+  }
+
+  .openMenu .close {
+    display: block;
+  }
+  .menuAccueil {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1%;
+    height: 100vh;
+    background: #4e5166;
+    flex-direction: column;
+    padding: 2rem;
+    justify-content: space-around;
+    transform: translateX(-100%);
+    transition: transform 1s;
+  }
+
+  .menuAccueil {
+    font-size: 4rem;
+  }
+  .openMenu .menuAccueil {
+    transform: translateX(0);
+  }
+}
+@media screen and (max-width: 768px) {
+  .navbar-brandLogo {
+    justify-content: left;
+  }
+}
+@media screen and (max-width: 393px) {
+  .navbar-brandLogo {
+    justify-content: left;
+  }
+  .containerImgProfil {
+    margin: 0 0 0 0;
+  }
 }
 </style>

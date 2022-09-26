@@ -1,5 +1,5 @@
 <template>
-  <div class="imgBottom">
+  <div class="imgBottomUpdate">
     <form enctype="multipart/form-data">
       <!-- Image de fond du profil utilisateur  -->
       <div class="formGroup" v-if="user.imgBottom">
@@ -112,12 +112,12 @@ export default {
 </script>
 
 <style>
-.imgBottom {
+.imgBottomUpdate {
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e51665a;
   border-radius: 1rem;
   background: #4e5166;
   margin: 0.5rem 0 1rem 0;
-  /* padding: 1rem; */
+  padding: 1rem;
 }
 .legend,
 label {

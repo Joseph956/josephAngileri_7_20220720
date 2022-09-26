@@ -1,7 +1,8 @@
 <template>
   <div>
     <navPosts />
-    <profile :userId="user.id" />
+    <profile :userId="this.user.id" />
+    <!-- <profile :userId="this.$store.state.user.userId" /> -->
 
     <!-- <div>
       <div>
@@ -34,7 +35,7 @@ export default {
       },
       apiUser: axios.create({
         baseURL:
-          "http://localhost:3000/api/users/" + +this.$store.state.user.userId,
+          "http://localhost:3000/api/users/" + this.$store.state.user.userId, //
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -46,7 +47,7 @@ export default {
   },
   computed: {
     ...mapState(["status"]),
-    ...mapState({ user: "userInfos" }),
+    // ...mapState({ user: "userInfos" }),
   },
   mounted: function () {
     this.apiUser
@@ -55,7 +56,7 @@ export default {
         if (!response.data) {
           return (this.mesgError = error.response.data.message);
         } else {
-          this.users = response.data;
+          this.user = response.data;
         }
       })
       .catch((error) => {
@@ -66,7 +67,7 @@ export default {
   methods: {
     getUserOne() {
       this.apiUser
-        .get(`/profileusers/${this.$route.params.id}`)
+        .get(`/${this.user.id}`)
         .then((response) => {
           if (!response.data) {
             return (this.mesgError = error.response.data.message);

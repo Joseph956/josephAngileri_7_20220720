@@ -211,7 +211,6 @@ export default {
   display: flex;
   margin: -0.5rem 0 0 0;
 }
-
 .cardTitle {
   display: flex;
   margin: 0rem 0 1rem 1rem;
@@ -223,25 +222,6 @@ export default {
   height: 4px;
   background-color: #ffd7d7;
   margin: 0 0 1.5rem 0;
-}
-@media screen and (max-width: 768px) {
-  .logoTransparentUpdateProfile {
-    margin: 1.5rem 0 0 0;
-  }
-  .containTitle {
-    margin: 2rem auto 0 auto;
-  }
-  .separatorUpdateUser {
-    margin: 0 auto 1.5rem auto;
-  }
-}
-@media screen and (max-width: 768px) {
-  .separatorUser {
-    display: flex;
-    align-items: center;
-    width: 4rem;
-    margin: 1rem 0 0.5rem 1rem;
-  }
 }
 .bottomProfil {
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e51665a;
@@ -276,5 +256,30 @@ export default {
 }
 .logoTransparent {
   margin: 3rem 0 0 0;
+}
+@media screen and (max-width: 768px) {
+  .logoTransparentUpdateProfile {
+    margin: -2.8rem 1rem 0 0;
+  }
+  .containTitle {
+    margin: 2rem auto 0 auto;
+  }
+  .separatorUser {
+    display: flex;
+    align-items: center;
+    width: 4rem;
+    margin: 1rem 0 0.5rem 1rem;
+  }
+}
+@media screen and (max-width: 393px) {
+  .containTitle {
+    flex-direction: column;
+  }
+  .logoTransparentUpdateProfile {
+    margin: 1.2rem 0 0 0;
+  }
+  .separatorUpdateUser {
+    margin: 0 auto 1.5rem auto;
+  }
 }
 </style>

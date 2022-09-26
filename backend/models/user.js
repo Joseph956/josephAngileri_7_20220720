@@ -17,8 +17,18 @@ module.exports = (sequelize, Sequelize) => {
         },
         email: {
             type: Sequelize.STRING,
+            allowNull: false,
+            required: true,
             unique: true,
+            validate: {
+                isEmail: true,
+                async emailSchema(email) {
+                    if (await User.findOne({ where: { email } }))
+                        throw new Error("Un compte utilisateur existe avec cette adresse mail !!!")
+                }
+            }
         },
+
         password: {
             type: Sequelize.STRING,
         }

@@ -1,9 +1,18 @@
-L'utilisateur doit : 
+L'utilisateur doit pouvoir : 
 - Voir le derniers posts écrit,
-- Pouvoir commenter,
+- commenter,
 - supprimer un post, un commentaire, un like qui lui appatient,
 - publier des images et du texte,
-- liker /disliker,
+- liker un post une seule fois,
 
-Modérateur doit :
-- 
+Modérateur doit pouvoir supprimer :
+- Un post,
+- Un commentaire,
+- Un compte utilisateur avec tous ses posts et commentaires.
+- ou desactiver un compte utilisateur.
+
+// // Modérateur: Modérer les interactions entre salariés.
+// // Employés: Doivent pouvoir reperer facilement les derniers posts.
+// // Accès à un forum de publication (textes).
+// // Accès à un forum de publication (multimédias).
+// //Organiser des tests de fonctionalités avec les salariés.

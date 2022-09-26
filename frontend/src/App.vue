@@ -35,7 +35,6 @@ export default {
   list-style: none;
   box-sizing: border-box;
 }
-
 html {
   scroll-behavior: smooth;
 }
@@ -44,12 +43,10 @@ body {
   background-position: center;
   background-size: cover;
   margin: auto;
-  /* min-height: 100vh; */
   font-weight: 400;
   font-family: "lato", sans-serif;
   font-size: large;
 }
-
 h1,
 h2,
 h3,
@@ -62,14 +59,11 @@ p,
 #transition,
 footer {
   margin-bottom: 0;
-  /* text-align: center; */
-  /* text-shadow: 1px 1px 4px #f7d1d0; */
   font-weight: 500;
   color: black;
   font-size: large;
   font-family: "lato", sans-serif;
 }
-
 .imgAccueil {
   height: 2vw;
   object-fit: contain;
@@ -79,25 +73,14 @@ footer {
   justify-content: center;
   object-fit: cover;
 }
-
-/* body, */
 html,
-/* #app, */
 #root,
 .auth-wrapper {
   width: 100%;
   height: 100vh;
   margin: auto;
 }
-
-/* @media screen and (max-width: 900px) {
-  .auth-wrapper {
-      width: auto;
-    
-    }
-} */
 #app {
-  /* background-color: #5c5c6c85; */
   height: 100vh;
   margin: auto;
   align-items: center;
@@ -107,28 +90,18 @@ html,
   outline: none;
   align-items: center;
 }
-
-@media screen and (max-width: 768px) {
-  .auth-wrapper {
-    width: auto;
-  }
-}
-
 .container {
   width: 100%;
 }
-
 .navbar-container {
   display: none;
 }
-
 .navbar-brand {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 0;
 }
-
 .navbar-light {
   background-color: #ffffff;
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.6);
@@ -136,25 +109,15 @@ html,
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 99;
 }
-
 .navbar-expand,
 .navbar-collapse {
   justify-content: center;
   font-weight: 400;
 }
-
-@media screen and (max-width: 768px) {
-  .navbar-expand,
-  .navbar-collapse {
-    justify-content: space-between;
-  }
-}
-
 .auth-wrapper {
   display: flex;
   justify-content: center;
 }
-
 .auth-inner {
   width: 1000px;
   margin: auto;
@@ -165,43 +128,20 @@ html,
   transition: all 0.3s;
   outline: none;
 }
-
-@media screen and (max-width: 768px) {
-  .auth-inner {
-    width: auto;
-    padding: 3.5rem 30px 45px 30px;
-  }
-}
-@media screen and (max-width: 280px) {
-  .auth-inner {
-    width: auto;
-    padding: 0;
-  }
-}
-
 .auth-wrapper .form-control:focus {
   border-color: #167bff;
   box-shadow: none;
 }
-
 .auth-wrapper h3 {
   text-align: center;
   margin: 0;
   line-height: 1;
-  padding-bottom: 20px;
+  padding-bottom: 5px;
   font-size: xx-large;
 }
-
-@media screen and (max-width: 768px) {
-  .auth-wrapper h3 {
-    font-size: larger;
-  }
-}
-
 .custom-control-label {
   font-weight: 400;
 }
-
 .forgot-password,
 .forgot-password a {
   text-align: right;
@@ -210,8 +150,30 @@ html,
   color: #7f7d7d;
   margin: 0;
 }
-
 .forgot-password a {
   color: #167bff;
+}
+/************************************
+*********Medias Queries**************
+*************************************/
+@media screen and (max-width: 768px) {
+  .auth-wrapper {
+    width: auto;
+  }
+  .navbar-expand,
+  .navbar-collapse {
+    justify-content: space-between;
+  }
+  .auth-inner {
+    width: auto;
+  }
+  .auth-wrapper h3 {
+    font-size: larger;
+  }
+}
+@media screen and (max-width: 280px) {
+  .auth-inner {
+    width: auto;
+  }
 }
 </style>

@@ -1,10 +1,10 @@
 const db = require("../models");
 const User = db.user;
+const Post = db.posts;
 const Role = db.role;
 const fs = require('fs');
-const { user } = require("../models");
 
-exports.findAllPublished = (req, res, next) => {
+exports.findAllPublished = async (req, res, next) => {
     User.sync({ alter: true }).then(() => {
         return User.findAll({
             user: (req.body.user),
@@ -65,7 +65,7 @@ exports.findAllPublished = (req, res, next) => {
         });
     });
 };
-exports.findOneProfil = (req, res, next) => {
+exports.findOneProfil = async (req, res, next) => {
     const userId = req.params.id;
     User.findOne({
         where: {
@@ -107,7 +107,7 @@ exports.findOneProfil = (req, res, next) => {
         }
     }).catch(error => res.status(500).json({ error }));
 };
-exports.createImgBottom = (req, res, next) => {
+exports.createImgBottom = async (req, res, next) => {
     const id = req.params.id;
     if (req.file) {
         User.findOne({
@@ -128,9 +128,9 @@ exports.createImgBottom = (req, res, next) => {
                     User.update({ ...userObject, id: req.params.id }, {
                         where: { id: id }
                     }).then(() => res.status(200).json({
-                        message: "Votre image de fond a été mis à jour !"
-                    })).catch(() => res.status(400).json({
-                        message: "Votre image de fond n'a pas été modifié !"
+                        message: "Votre image de fond a été créée !"
+                    })).catch((error) => res.status(400).json({
+                        error, message: "Votre image de fond n'a pas été créée !"
                     }));
                 });
             } else {
@@ -145,9 +145,9 @@ exports.createImgBottom = (req, res, next) => {
                 User.update({ ...userObject, id: req.params.id }, {
                     where: { id: id }
                 }).then(() => res.status(200).json({
-                    message: "L'image de fond de votre profil a été modifié !"
+                    message: "L'image de fond de votre profil a été modifiée !"
                 })).catch(() => res.status(400).json({
-                    message: "L'image de fond de votre profil n'a pas été modifié !"
+                    message: "L'image de fond de votre profil n'a pas été modifiée !"
                 }));
             }
         }).catch((e) => res.status(400).json({ Message: 'Aucun profil n\'est trouvé avec cet identifiant' + e }));
@@ -165,33 +165,35 @@ exports.createImgBottom = (req, res, next) => {
         }));
     }
 };
-exports.deleteImgBottom = (req, res, next) => {
+exports.deleteImgBottom = async (req, res, next) => {
     try {
-
         const id = req.params.id;
-        // if (req.file) {
-
-        // }
         User.findOne({
             where: { id: id },
-            attributes: ['imgBottom']
-        }).then((user => {
-            if (user.imgBottom !== null) {
-                const filename = user.imgBottom.split("/images/")[1];
+            model: db.user,
+            attributes: ['id', 'imgBottom', 'attachment', 'username', 'email', 'roleId'],
+        }).then(userObject => {
+            if (userObject.imgBottom != null) {
+                const filename = userObject.imgBottom.split("/images/")[1];
                 fs.unlink(`images/${filename}`, () => {
-                    User.destroy({ where: { id: id } });
-                    res.status(200).send({
-                        message: "L'image de fond a été supprimée avec succès !!!"
-                    });
+                    // console.log("image supprimée");
                 });
+                User.update({
+                    "imgBottom": null
+                }, {
+                    where: { id: id }
+                }).then(() => res.status(200).json({
+                    message: "Votre image de fond a été supprimée !"
+                })).catch(() => res.status(400).json({
+                    message: "Votre image de fond n'a pas été modifiée !"
+                }));
 
             } else {
-                res.status(400).json({ message: "Il n'y a pas d'image à supprimer !!!" });
+                res.status(400).json({
+                    message: "Il n'\y a pas d'\image de fond à supprimer !!!"
+                })
             }
-
-        })).catch(() => res.status(500).json({
-            message: "Erreur serveur"
-        }));
+        }).catch((error) => { })
     } catch (err) {
         res.status(500).send({ err, message: "La suppression de l'\image de fond à échoué !!!" });
     }
@@ -265,7 +267,6 @@ exports.updateProfil = async (req, res, next) => {
         }));
     }
 };
-//Desactiver le profil est plus approprié.
 exports.deleteProfil = async (req, res, next) => {
     try {
         const id = req.params.id;
@@ -274,17 +275,32 @@ exports.deleteProfil = async (req, res, next) => {
         if (role.role == 'admin') {
             res.status(401).send({
                 message: "Le compte administrateur ne peut pas être supprimé !!! "
-            });
-        } else if (user.attachment !== null) {
-            const filename = user.attachment.split("/images/")[1];
-            fs.unlink(`images//${filename}`, () => {
-                User.destroy({ where: { id: id } });
-                res.status(200).send({
-                    message: "L'image de profil a été supprimée avec succès !!!"
-                });
-            });
-
+            })
         } else {
+
+            if (user.attachment !== null) {
+                const filename = user.attachment.split("/images/")[1];
+                fs.unlink(`images//${filename}`, () => {
+                });
+            }
+            if (user.imgBottom !== null) {
+                const filename = user.imgBottom.split("/images/")[1];
+                fs.unlink(`images//${filename}`, () => {
+                });
+            }
+            Post.findAll({
+                where: { userId: id },
+            }).then(posts => {
+                for (i = 0; i < posts.length; i++) {
+                    if (posts[i].attachment !== null) {
+                        const filename = posts[i].attachment.split("/images/")[1];
+                        fs.unlink(`images//${filename}`, () => {
+                        });
+                    }
+                }
+            }).catch((err) => {
+
+            });
             User.destroy({
                 where: { id: id },
             }).then(() => res.status(200).send({
@@ -294,7 +310,8 @@ exports.deleteProfil = async (req, res, next) => {
             }));
         }
     } catch (err) {
-        res.status(500).send({ err, message: "La suppression du profil à échoué !!!" });
+        res.status(500).send({ err: err, message: "La suppression du profil à échoué !!!" });
     }
 };
+
 

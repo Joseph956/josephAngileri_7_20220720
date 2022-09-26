@@ -1,8 +1,7 @@
 <template>
   <div class="accueil">
     <div class="container">
-      <!-- empêche le rafraîchissement de la page  (@submit.prevent="submit") -->
-      <form id="inscription" name="inscription" @submit.prevent="createAccount">
+      <form id="inscription" name="inscription" @submit.prevent="onSubmit">
         <h1 class="nav-link-title" v-if="mode == 'login'">Login</h1>
         <h1 class="nav-link-title" v-else>Sign Up</h1>
         <p class="nav-link-subtitle" v-if="mode == 'login'">
@@ -159,7 +158,7 @@
           {{ mesgError }}
         </p>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
           <div
             class="alert alert-danger"
             v-if="mode === 'login' && status == 'error_login'"
@@ -174,26 +173,6 @@
             v-if="mode == 'create' && status == 'error_create'"
           >
             Adresse email déjà utilisée !
-          </div>
-        </div>
-
-        <!-- <div class="form-group">
-          <div class="alert alert-danger" v-if="mode == 'create' && status == 'error_create'">
-            Confirmer votre mot de passe !
-          </div>
-          <div class="alert alert-success" v-else>
-            Votre mot de passe est confirmé !
-          </div>
-        </div> -->
-
-        <!-- <div>
-          <div v-if="error">
-            <error :error="error" />
-          </div>
-          <div v-else>
-            <div v-if="message" class="alert alert-success" role="alert">
-              {{ message }}
-            </div>
           </div>
         </div> -->
 
@@ -239,12 +218,17 @@
 
 <script>
 import { mapState } from "vuex";
-import Error from "./Error.vue";
+// import rateLimit from "express-rate-limit";
+// import { useVuelidate } from "@vuelidate/core";
+// import { required } from "@vuelidate/validators";
 
 export default {
   name: "Accueil",
+  // setup() {
+  //   return { v$: useVuelidate() };
+  // },
   components: {
-    Error,
+    // rateLimit,
   },
   data: function () {
     return {
@@ -256,13 +240,15 @@ export default {
       error_Password: "", //modifier
       error_confirmPasswd: "", //modifier
 
+      // v$: useValidate(),
       mode: "login",
       username: "",
       email: "",
       password: "",
-      confirmPasswd: "", //modifier
+      confirmPasswd: "",
     };
   },
+
   mounted: function () {
     if (this.$store.state.user.userId != -1) {
       this.$router.push("/");
@@ -294,26 +280,19 @@ export default {
     ...mapState(["status"]),
   },
   methods: {
-    async handleSubmit() {
-      try {
-        await axios.post("login", {
-          email: this.email,
-          password: this.password,
-        });
-        localStorage.setItem("token", response.data.token);
-        this.$store.dispatch("user", response.data.user);
-        this.$router.push("/");
-      } catch (e) {
-        this.error = `${"error"}`;
-        this.error = "Adresse mail et/ou mot de passe invalide !";
-        this.message = "Adresse mail et mot de passe valide !";
-      }
-    },
     switchToCreateAccount: function () {
       this.mode = "create";
     },
     switchToLogin: function () {
       this.mode = "login";
+    },
+    validations() {
+      return {
+        username: { required },
+        email: { required, isEmail },
+        password: { required },
+        confirmPasswd: { required },
+      };
     },
     login: function () {
       const self = this;
@@ -328,13 +307,11 @@ export default {
             alert(this.mesgError);
           } else {
             self.$router.push("/profile");
-            // document.getElementById("login").reset();
           }
         })
         .catch((error) => {
           this.mesgError = error.response.data.message;
           alert(this.mesgError);
-          // alert(this.mesgError + " " + error.response.status);
         });
     },
     changer: function () {
@@ -396,15 +373,6 @@ export default {
   justify-content: center;
   margin: 0 1rem 0 1rem;
 }
-@media screen and (max-width: 768px) {
-  .containerCpteCreate {
-    flex-direction: column;
-    margin: 0 1rem 0 1rem;
-  }
-  .nav-link-subtitle {
-    text-align: center;
-  }
-}
 .cpteCreate {
   display: flex;
   margin: 0 1rem 0 1rem;
@@ -413,15 +381,11 @@ export default {
   display: flex;
   margin: 0 1rem 0 1rem;
 }
-.btn-warning {
-  margin: 10px 0 0 0;
-  border: none;
-}
 .btns {
   border: none;
   margin: 2.5rem 0 0 0;
   padding: 1rem 0 1rem 0;
-  border-radius: 1rem;
+  border-radius: 0.25rem;
   box-shadow: 0px 0px 10px #ffd7d7, 0px 0px 0px #ffd7d7;
   cursor: pointer;
   transition: opacity 0.8s;
@@ -440,7 +404,6 @@ export default {
   margin-bottom: 5px;
 }
 .form-control_input::placeholder {
-  /* color: #a3a2a2; */
   color: #4e5166;
 }
 .inputData {
@@ -482,7 +445,6 @@ export default {
 .form-controlSignup.success input {
   border-color: #2ecc71;
 }
-
 .form-controlSignup.error input {
   border-color: #e74c3c;
 }
@@ -503,14 +465,12 @@ export default {
   visibility: visible;
   position: relative;
 }
-
 .form-controlSignup.error i.fa-exclamation-circle {
   color: #e74c3c;
   visibility: visible;
   position: relative;
 }
 .form-controlSignup input::placeholder {
-  /* color: #a3a2a2; */
   color: #4e516674;
 }
 .form-control input i {
@@ -540,5 +500,14 @@ export default {
   padding: 10px;
   margin-top: 20px;
   width: 100%;
+}
+@media screen and (max-width: 768px) {
+  .containerCpteCreate {
+    flex-direction: column;
+    margin: 0 1rem 0 1rem;
+  }
+  .nav-link-subtitle {
+    text-align: center;
+  }
 }
 </style>

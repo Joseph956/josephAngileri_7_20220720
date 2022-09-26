@@ -6,7 +6,7 @@
         <button
           type="button"
           class="btn btn-like"
-          @click="postDetailReturn(post.id)"
+          @click="postDetailReturn(postId)"
         >
           <img
             class="returnPg"
@@ -34,7 +34,7 @@
         </div>
         <div class="flexTitle">
           <div class="cardTitleComent">
-            <h1>lister les commentaires de la publication</h1>
+            <h1>Commentaires des publications</h1>
             <div class="separatorComent"></div>
           </div>
         </div>
@@ -179,6 +179,7 @@
                 <div class="trashBtn">
                   <div class="btnComent">
                     <img
+                      class="icon"
                       style="height: 1.2rem; width: 1.2rem"
                       x="0"
                       y="0"
@@ -232,7 +233,8 @@ export default {
       .get("/")
       .then((response) => {
         if (!response.data) {
-          return (this.mesgError = error.response.data.message);
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
         } else {
           this.user = response.data;
         }
@@ -246,7 +248,7 @@ export default {
     if (this.$store.state.user.role.role == "admin") {
       this.isAdmin = true;
     }
-    console.log("mess : coment list" + this.isAdmin);
+    // console.log("mess : coment list" + this.isAdmin);
     this.getComentList();
   },
 
@@ -256,7 +258,8 @@ export default {
         .get("/")
         .then((response) => {
           if (!response.data) {
-            return (this.mesgError = error.response.data.message);
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           } else {
             this.coments = response.data;
           }
@@ -282,7 +285,8 @@ export default {
           })
           .then((response) => {
             if (!response.data) {
-              return this.mesgError.response.data.message;
+              this.mesgError = error.response.data.message;
+              alert(this.mesgError);
             } else {
               window.location.reload();
             }
@@ -299,7 +303,8 @@ export default {
           .delete("http://localhost:3000/api/coments/" + comentId)
           .then((response) => {
             if (!response.data) {
-              return (this.mesgError = error.response.data.message);
+              this.mesgError = error.response.data.message;
+              alert(this.mesgError);
             } else {
               window.location.reload();
             }
@@ -355,17 +360,23 @@ export default {
   margin: 1rem;
   border-top: 1px solid grey;
 }
+/**************************************
+**********Media queries****************
+***************************************/
 @media screen and (max-width: 966px) {
   .cardTitleComent h1 {
     font-size: 1.5rem;
   }
 }
 @media screen and (max-width: 768px) {
+  .fleche {
+    justify-content: flex-end;
+  }
   .containTitleComent {
     flex-direction: column;
   }
   .logoTransparentComent {
-    margin: 1rem 0 0 0;
+    margin: 3rem 0 0 0;
   }
   .cardTitleComent {
     margin: 0;
@@ -376,6 +387,10 @@ export default {
   .separatorComent {
     margin: 1rem auto 1rem auto;
   }
+  .btnFooter {
+    display: flex;
+    justify-content: center;
+  }
 }
 @media screen and (max-width: 393px) {
   .fleche {
@@ -384,8 +399,16 @@ export default {
   .returnPg {
     margin: 3rem 3rem 0 3rem;
   }
+  .btnFooter {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 @media screen and (max-width: 280px) {
+  .btnFooter {
+    display: flex;
+    justify-content: center;
+  }
 }
 </style>

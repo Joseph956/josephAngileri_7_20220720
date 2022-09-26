@@ -1,304 +1,270 @@
 <template>
   <div>
-    <navPosts />
-    <!-- Template affichage détails d'un post -->
-    <div class="col-md-8 col-xl-6 middle-wrapper">
-      <div class="containTitle">
-        <div class="logoTransparentDetaledUser">
-          <img
-            style="height: 2.5rem; width: 2.5rem"
-            x="0"
-            y="0"
-            height="100%"
-            width="100%"
-            src="../assets/logo_transparent.png"
-            alt="logo"
-          />
-        </div>
-        <div class="cardTitle">
-          <h1>Details du post</h1>
-          <div class="separatorUser"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12 grid-margin">
-          <div class="card rounded">
-            <!-- Infos créateur du post -->
-            <div class="card-header">
-              <div class="d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center">
-                  <div class="ml-2 justify-content">
-                    <div class="avatar" v-if="post.user.attachment">
-                      <img
-                        style="height: 65px; width: 55px"
-                        x="0"
-                        y="0"
-                        height="100%"
-                        width="100%"
-                        class="imgUser"
-                        alt="Image du profil"
-                        v-bind:src="post.user.attachment"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div class="avatar" v-else>
-                      <img
-                        style="height: 55px; width: 55px"
-                        x="0"
-                        y="0"
-                        height="100%"
-                        width="100%"
-                        class="avatarProfil"
-                        src="../assets/Icons/BiPersonCircle.svg"
-                        alt="avatar"
-                      />
-                    </div>
-                    <div class="userPost">
-                      <div>
-                        <p class="datePost">
-                          {{ post.user.username }} <br />
-                          Posté le : {{ post.createdAt }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+    <div>
+      <navPosts />
 
-                <div class="linkPost">
-                  <div class="dropdown" data-dropdown>
-                    <button class="link" data-dropdown-button type="button">
-                      <img
-                        @click="created()"
-                        data-dropdown-button
-                        src="../assets/Icons/ariaCircle.svg"
-                        alt=""
-                      />infos
-                    </button>
-                    <div class="dropdown-menu information-grid">
-                      <div>
-                        <div class="dropdown-heading">Free Tutorials</div>
-                        <div class="dropdown-links"></div>
-                        <a href="#" class="link">All</a>
-                        <a href="#" class="link">Latest</a>
-                        <a href="#" class="link">Popular</a>
+      <!-- Template affichage détails d'un post -->
+      <div class="col-md-8 col-xl-6 middle-wrapper">
+        <div class="containTitle">
+          <div class="logoTransparentDetaledUser">
+            <img
+              style="height: 2.5rem; width: 2.5rem"
+              x="0"
+              y="0"
+              height="100%"
+              width="100%"
+              src="../assets/logo_transparent.png"
+              alt="logo"
+            />
+          </div>
+          <div class="cardTitle">
+            <h1>Details du post</h1>
+            <div class="separatorUser"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 grid-margin">
+            <div class="card rounded">
+              <!-- Infos créateur du post -->
+              <div class="card-header">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="d-flex align-items-center">
+                    <div class="ml-2 justify-content">
+                      <div
+                        class="avatar"
+                        v-if="post.user !== null && post.user.attachment"
+                      >
+                        <img
+                          style="height: 65px; width: 55px"
+                          x="0"
+                          y="0"
+                          height="100%"
+                          width="100%"
+                          class="imgUser"
+                          alt="Image du profil"
+                          v-bind:src="post.user.attachment"
+                          loading="lazy"
+                        />
                       </div>
-                      <div>
-                        <div class="dropdown-heading">Courses</div>
-                        <div class="dropdown-links"></div>
-                        <a href="#" class="link">JavaScrit</a>
-                        <a href="#" class="link">Css</a>
-                        <a href="#" class="link">React</a>
+                      <div class="avatar" v-else>
+                        <img
+                          style="height: 55px; width: 55px"
+                          x="0"
+                          y="0"
+                          height="100%"
+                          width="100%"
+                          class="avatarProfil"
+                          src="../assets/Icons/BiPersonCircle.svg"
+                          alt="avatar"
+                        />
                       </div>
-                      <div>
-                        <div class="dropdown-heading">Blog</div>
-                        <div class="dropdown-links"></div>
-                        <a href="#" class="link">All</a>
-                        <a href="#" class="link">Latest</a>
-                        <a href="#" class="link">Popular</a>
-                      </div>
-                      <div>
-                        <div class="dropdown-heading">Other</div>
-                        <div class="dropdown-links"></div>
-                        <a href="#" class="link">Twiter</a>
-                        <a href="#" class="link">Newsletter</a>
-                        <a href="#" class="link">Discord</a>
+                      <div class="userPost">
+                        <div>
+                          <p class="datePost">
+                            {{ post.user.username }} <br />
+                            Posté le : {{ post.createdAt }}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <!-- Affichage du post -->
-            <div class="card-body">
-              <p class="mb-3 tx-14">
-                <!-- Animation du titre -->
-                <router-link class="external" v-bind:to="'/Posts/'">
-                  <div class="infos">
-                    <h6 class="aspect">Afficher les publications:</h6>
-                    {{ post.title }}
-                  </div>
-                </router-link>
-                <!-- Fin animation du titre -->
-              </p>
-              <p class="mb-3 tx-14">{{ post.content }}</p>
-              <!-- Image du post -->
-              <div class="form-group">
+              <!-- Affichage du post -->
+              <div class="card-body">
+                <p class="mb-3 tx-14">
+                  <!-- Animation du titre -->
+                  <router-link class="external" v-bind:to="'/Posts/'">
+                    <div class="infos">
+                      <h6 class="aspect">Afficher les publications:</h6>
+                      {{ post.title }}
+                    </div>
+                  </router-link>
+                  <!-- Fin animation du titre -->
+                </p>
+                <div class="separator"></div>
+                <p class="mb-3 tx-14">{{ post.content }}</p>
+                <!-- Image du post -->
                 <div class="form-group">
-                  <div v-if="post.attachment">
-                    <img
-                      class="imgPost"
-                      style="width: 100%"
-                      x="0"
-                      y="0"
-                      height="100%"
-                      width="100%"
-                      v-bind:src="post.attachment"
-                      alt=""
-                    />
+                  <div class="form-group">
+                    <div v-if="post.attachment">
+                      <img
+                        class="imgPost"
+                        style="width: 100%"
+                        x="0"
+                        y="0"
+                        height="100%"
+                        width="100%"
+                        v-bind:src="post.attachment"
+                        alt=""
+                      />
+                    </div>
+                    <div v-else>
+                      <img
+                        class="imgPost"
+                        style="width: 100%"
+                        x="0"
+                        y="0"
+                        height="100%"
+                        width="100%"
+                        src="../assets/Icons/BiCardImg.svg"
+                        alt="avatar"
+                      />
+                    </div>
+                    <div class="alert alert-info text-danger">
+                      {{ mesgError }}
+                    </div>
                   </div>
-                  <div v-else>
-                    <img
-                      class="imgPost"
-                      style="width: 100%"
-                      x="0"
-                      y="0"
-                      height="100%"
-                      width="100%"
-                      src="../assets/Icons/BiCardImg.svg"
-                      alt="avatar"
-                    />
-                  </div>
-                  <div class="alert alert-info text-danger">
-                    {{ mesgError }}
-                  </div>
-                </div>
-                <div class="flexMenu">
-                  <div class="btnDelPost">
-                    <button
-                      v-if="
-                        isAdmin == true ||
-                        $store.state.user.userId == post.userId
-                      "
-                      block
-                      class="btn d-block"
-                      data-dropdown-button
-                      @click="postDeleted(post.id)"
-                    >
-                      <div class="trashBtn">
-                        <div class="iconDelete">
-                          <img
-                            style="height: 1.5rem; width: 1.5rem"
-                            x="0"
-                            y="0"
-                            height="100%"
-                            src="../assets/Icons/BiTrash3Fill.svg"
-                            alt="supprimer la publication"
-                          />
-                        </div>
-                        <div class="btnDelete">
-                          <span v-if="status == 'loading'"
-                            >Suppression en cours....</span
-                          >
-                          <span v-else>Supprimer la publication</span>
-                        </div>
-                      </div>
-                    </button>
-                  </div>
-                  <!-- Modifier un post -->
-                  <div class="btnModifyPost">
-                    <router-link v-bind:to="'/PostsUpdate/' + post.id">
+                  <div class="flexMenu">
+                    <div class="btnDelPost">
                       <button
                         v-if="
                           isAdmin == true ||
                           $store.state.user.userId == post.userId
                         "
                         block
-                        type="button"
                         class="btn d-block"
-                        @click="postModify()"
-                        :postId="post.id"
+                        data-dropdown-button
+                        @click="postDeleted(post.id)"
                       >
-                        <div class="modifyBtn">
-                          <div class="iconModify">
+                        <div class="trashBtn">
+                          <div class="iconDelete">
                             <img
                               style="height: 1.5rem; width: 1.5rem"
                               x="0"
                               y="0"
                               height="100%"
-                              src="../assets/Icons/BiPenFill.svg"
-                              alt="modifier la publication"
+                              src="../assets/Icons/BiTrash3Fill.svg"
+                              alt="supprimer la publication"
                             />
                           </div>
-                          <div class="labelModify">
-                            <!-- <span v-if="status == 'loading'"
-                              >Modification en cours....</span
-                            > -->
-                            <span class="textBtn">Modifier la publication</span>
+                          <div class="btnDelete">
+                            <span v-if="status == 'loading'"
+                              >Suppression en cours....</span
+                            >
+                            <span v-else>Supprimer</span>
                           </div>
                         </div>
                       </button>
+                    </div>
+                    <!-- Modifier un post -->
+                    <router-link
+                      class="btnModifyPost"
+                      v-bind:to="'/PostsUpdate/' + post.id"
+                    >
+                      <div>
+                        <button
+                          v-if="
+                            isAdmin == true ||
+                            $store.state.user.userId == post.userId
+                          "
+                          block
+                          type="button"
+                          class="btn d-block"
+                          :postId="post.id"
+                        >
+                          <div class="trashBtn">
+                            <div class="iconModify">
+                              <img
+                                style="height: 1.5rem; width: 1.5rem"
+                                x="0"
+                                y="0"
+                                height="100%"
+                                src="../assets/Icons/BiPenFill.svg"
+                                alt="modifier la publication"
+                              />
+                            </div>
+                            <div class="labelModify">
+                              <span v-if="status == 'loading'"
+                                >Modification en cours....</span
+                              >
+                              <span class="textBtn">Modifier</span>
+                            </div>
+                          </div>
+                        </button>
+                      </div>
                     </router-link>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- Gestion du post -->
-        <div class="card-footer">
-          <div class="post-actions">
-            <div class="menuPost">
-              <div class="linksPost">
-                <div class="likesPost">
-                  <div class="likes">
-                    <routeur-link
-                      v-bind:to="'/PostLikes/' + postId"
-                      class="d-flex align-items-center text-muted mr-4"
-                    >
-                      <button
-                        type="button"
-                        class="btn btn-like"
-                        @click="postLikeCreate(post.id)"
+          <!-- Gestion du post -->
+          <div class="card-footer">
+            <div class="post-actions">
+              <div class="menuPost">
+                <div class="linksPost">
+                  <div class="likesPost">
+                    <div class="likes">
+                      <routeur-link
+                        v-bind:to="'/PostLikes/' + post.id"
+                        class="d-flex align-items-center text-muted mr-4"
                       >
-                        <span v-if="status == 'loading'">Like ....</span>
-                        <span v-else>
-                          <div class="likeFlex">
-                            <img
-                              class="like"
-                              style="height: 1.5rem; width: 1.5rem"
-                              x="0"
-                              y="0"
-                              height="100%"
-                              width="100%"
-                              src="../assets/Icons/BiHandThumbsUpFill.svg"
-                              alt="liker la publication"
-                            />
-                            <div>
-                              <div class="linkLike">
-                                <p class="d-md-block ml-2">
-                                  <span v-if="post.likes.length < 2">
-                                    - {{ post.likes.length }} - Like<br
-                                  /></span>
-                                  <span v-else>
-                                    - {{ post.likes.length }} - likes<br
-                                  /></span>
-                                </p>
+                        <button
+                          type="button"
+                          class="btn btn-like"
+                          @click="postLikeCreate(post.id)"
+                        >
+                          <span v-if="status == 'loading'">Like ....</span>
+                          <span v-else>
+                            <div class="likeFlex">
+                              <img
+                                class="like"
+                                style="height: 1.5rem; width: 1.5rem"
+                                x="0"
+                                y="0"
+                                height="100%"
+                                width="100%"
+                                src="../assets/Icons/BiHandThumbsUpFill.svg"
+                                alt="liker la publication"
+                              />
+                              <div>
+                                <div class="linkLike">
+                                  <div class="d-md-block ml-2">
+                                    <span v-if="post.likes.length < 2">
+                                      - {{ post.likes.length }} - Like<br
+                                    /></span>
+                                    <span v-else>
+                                      - {{ post.likes.length }} - likes<br
+                                    /></span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </span>
-                      </button>
-                    </routeur-link>
+                          </span>
+                        </button>
+                      </routeur-link>
+                    </div>
                   </div>
-                </div>
-                <div class="comentsPost">
-                  <router-link
-                    class="displayComents"
-                    @click="displayAllComents()"
-                    v-bind:to="`/ComentsList/${post.id}`"
-                  >
-                    <div class="linkItems">
-                      <img
-                        src="../assets/Icons/coment.svg"
-                        alt="commentaires"
-                      />
-                    </div>
-                    <div class="linkComent">
-                      <p class="d-md-block ml-2">
-                        <span v-if="post.coments.length < 2">
-                          - {{ post.coments.length }} - Commentaire <br
-                        /></span>
-                        <span v-else
-                          >- {{ post.coments.length }} - Commentaires <br
-                        /></span>
-                      </p>
-                    </div>
-                  </router-link>
+                  <div class="comentsPost">
+                    <router-link
+                      class="displayComents"
+                      @click="displayAllComents()"
+                      v-bind:to="`/ComentsList/${post.id}`"
+                    >
+                      <div class="linkItems">
+                        <img
+                          src="../assets/Icons/coment.svg"
+                          alt="commentaires"
+                        />
+                      </div>
+                      <div class="linkComent">
+                        <div class="d-md-block ml-2">
+                          <span v-if="post.coments.length < 2">
+                            - {{ post.coments.length }} - Commentaire <br
+                          /></span>
+                          <span v-else
+                            >- {{ post.coments.length }} - Commentaires <br
+                          /></span>
+                        </div>
+                      </div>
+                    </router-link>
+                  </div>
                 </div>
               </div>
             </div>
+            <!-- <comentsCreate :postId="post.id" /> -->
           </div>
-          <comentsCreate :postId="post.id" />
         </div>
       </div>
     </div>
@@ -316,12 +282,10 @@ export default {
     navPosts,
     comentsCreate,
   },
-  props: ["userAdmin", "userCreate"],
   data: function () {
     return {
       mesgError: "",
       isAdmin: false,
-      menusVisible: false,
       role: "",
       post: {
         title: null,
@@ -347,43 +311,13 @@ export default {
     if (this.$store.state.user.role.role == "admin") {
       this.isAdmin = true;
     }
-    console.log("mess post details" + this.isAdmin);
+    // console.log("mess post details" + this.isAdmin);
 
     this.getPostOne();
   },
   computed: {},
-  created: function () {
-    window.addEventListener("resize", this.checkScreen);
-    this.checkScreen();
-  },
-  //test menus déroulants
-  created: function () {
-    document.addEventListener("click", (e) => {
-      const isDropdownButton = e.target.matches("[data-dropdown-button]");
-      if (!isDropdownButton && e.target.closest("[data-dropdown]") != null)
-        return;
 
-      let currentDropdown;
-      if (isDropdownButton) {
-        currentDropdown = e.target.closest("[data-dropdown]");
-        currentDropdown.classList.toggle("active");
-      }
-
-      document
-        .querySelectorAll("[data-dropdown].active")
-        .forEach((dropdown) => {
-          if (dropdown === currentDropdown) return;
-          dropdown.classList.remove("active");
-        });
-    });
-  },
   methods: {
-    toggleMenus() {
-      this.menusVisible = !this.menusVisible;
-    },
-    toggleModale: function () {
-      this.revele = !this.revele;
-    },
     getPostOne() {
       this.apiPosts
         .get("/")
@@ -448,15 +382,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 1rem 0 1rem;
-}
-@media screen and (max-width: 768px) {
-  .containTitle,
-  h1 {
-    display: flex;
-    flex-direction: column;
-    font-size: larger;
-  }
+  margin: 1rem 1rem 0 1rem;
 }
 .logoTransparentDetaledUser {
   display: flex;
@@ -466,14 +392,6 @@ h1 {
   display: flex;
   margin: 2rem 0 1rem 1rem;
   text-decoration: none;
-}
-@media screen and (max-width: 768px) {
-  .cardTitle {
-    margin: 0 0 1rem 0;
-  }
-  .logoTransparentDetaledUser {
-    margin: 1.5rem 0 0 0;
-  }
 }
 .separatorUser {
   width: 6rem;
@@ -489,16 +407,13 @@ h1 {
 .flexMenu {
   display: flex;
   justify-content: space-around;
+  align-items: center;
+}
+.btnModifyPost {
+  text-decoration: none;
 }
 .modifyBtn {
   display: flex;
-  text-decoration: none;
-}
-.labelModify {
-  text-decoration: underline;
-}
-.textBtn {
-  text-decoration-line: underline;
 }
 .card-footer {
   width: 100%;
@@ -517,7 +432,37 @@ h1 {
 .displayComents {
   text-decoration: none;
 }
+.comentsPost {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.comentForm {
+  margin: 1rem 0 1rem 0;
+  border-radius: 1rem;
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
+}
+.grid-margin {
+  padding-left: 0;
+  padding-right: 0;
+}
+/***************************************
+**********Media queries*****************
+***************************************/
 @media screen and (max-width: 768px) {
+  .containTitle,
+  h1 {
+    /* flex-direction: column; */
+    font-size: larger;
+    margin: 4rem 1rem 0 1rem;
+  }
+  .cardTitle {
+    margin: 0 0 1rem 0;
+  }
+  .logoTransparentDetaledUser {
+    margin: -1.5rem 1rem 0 0;
+  }
   .likeFlex {
     display: flex;
     flex-direction: column;
@@ -535,20 +480,16 @@ h1 {
     margin-top: 0;
   }
 }
-
-.comentsPost {
-  width: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.comentForm {
-  margin: 1rem 0 1rem 0;
-  border-radius: 1rem;
-  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
-}
-.grid-margin {
-  padding-left: 0;
-  padding-right: 0;
+@media screen and (max-width: 393px) {
+  .containTitle,
+  h1 {
+    margin: 4rem 1rem 0 1rem;
+  }
+  .flexMenu {
+    justify-content: center;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+  }
 }
 </style>

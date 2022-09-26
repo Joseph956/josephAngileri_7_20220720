@@ -226,61 +226,21 @@
 
                         <div class="userPost">
                           <div>
-                            <div>{{ post.user.username }} <br /></div>
-                            <p class="datePost">
-                              Posté le :
-                              {{ post.createdAt }}
+                            <div class="date">
+                              <div class="datePost">
+                                {{ post.user.username }} <br />
+                                Date :
+                                {{ post.createdAt }}
+                                {{ dayjs(this.post.createdAt) }}
+                              </div>
+
                               <!-- {{ Dayjs(post.createdAt).locale("fr") }} -->
                               <!-- <span>{{
                                 post.createdAt | Dayjs("daysInMonth")
                               }}</span> -->
-                              <!-- {{ dayjs(post.createdAt).format("MMMM") }} -->
-                            </p>
+                              <!-- {{ dayjs().format(post.createdAt, "MMMM") }} -->
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="linkPost">
-                      <div class="dropdown" data-dropdown>
-                        <button
-                          class="link"
-                          data-dropdown-button
-                          @click="dropdown()"
-                          type="button"
-                        >
-                          ...
-
-                          <!-- <img src="../assets/Icons/ariaCircle.svg" alt="" /> -->
-                        </button>
-                        <div class="dropdown-menu information-grid">
-                          <a
-                            class="dropdown-item d-flex align-items-center"
-                            href="#"
-                          >
-                            <img src="../assets/Icons/infollow.svg" alt="" />
-                            <span class="">Unfollow</span></a
-                          >
-                          <a
-                            class="dropdown-item d-flex align-items-center"
-                            href="#"
-                          >
-                            <img src="../assets/Icons/gotopost.svg" alt="" />
-                            <span class="">Go to post</span></a
-                          >
-                          <a
-                            class="dropdown-item d-flex align-items-center"
-                            href="#"
-                          >
-                            <img src="../assets/Icons/share.svg" alt="" />
-                            <span class="">Share</span></a
-                          >
-                          <a
-                            class="dropdown-item d-flex align-items-center"
-                            href="#"
-                          >
-                            <img src="../assets/Icons/copylynk.svg" alt="" />
-                            <span class="">Copy link</span></a
-                          >
                         </div>
                       </div>
                     </div>
@@ -297,6 +257,11 @@
                       <div class="infos">
                         <h6 class="aspect">Afficher les détails du post :</h6>
                         {{ post.title }}
+                      </div>
+                      <div>
+                        <span v-if="status == 'loading'"
+                          >Ouverture du formulaire en cours....</span
+                        >
                       </div>
                     </router-link>
                     <!-- Fin animation du titre -->
@@ -366,14 +331,14 @@
                                     />
                                     <div>
                                       <div class="linkLike">
-                                        <p class="d-md-block ml-2">
+                                        <div class="d-md-block ml-2">
                                           <span v-if="post.likes.length < 2">
                                             - {{ post.likes.length }} - Like<br
                                           /></span>
                                           <span v-else>
                                             - {{ post.likes.length }} - likes<br
                                           /></span>
-                                        </p>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -395,7 +360,7 @@
                               />
                             </div>
                             <div class="linkComent">
-                              <p class="d-md-block ml-2">
+                              <div class="d-md-block ml-2">
                                 <span v-if="post.coments.length < 2">
                                   - {{ post.coments.length }} - Commentaire <br
                                 /></span>
@@ -403,7 +368,7 @@
                                   - {{ post.coments.length }} - Commentaires
                                   <br
                                 /></span>
-                              </p>
+                              </div>
                             </div>
                           </router-link>
                         </div>
@@ -424,11 +389,8 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
-//Barre de navigation
 import navPosts from "@/components/NavPosts.vue";
-//Les views
 import postDetails from "@/views/PostDetails.vue";
-//Les components
 import postsUpdate from "@/components/PostsUpdate.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
 import comentsList from "@/components/ComentsList.vue";
@@ -518,34 +480,43 @@ export default {
     toggleModale: function () {
       this.revele = !this.revele;
     },
-    dropdown: function () {
-      document.addEventListener("click", (e) => {
-        const isDropdownButton = e.target.matches("[data-dropdown-button]");
-        if (!isDropdownButton && e.target.closest("[data-dropdown]") != null)
-          return;
-
-        let currentDropdown;
-        if (isDropdownButton) {
-          currentDropdown = e.target.closest("[data-dropdown]");
-          currentDropdown.classList.toggle("active");
-        }
-
-        document
-          .querySelectorAll("[data-dropdown].active")
-          .forEach((dropdown) => {
-            if (dropdown === currentDropdown) return;
-            dropdown.classList.remove("active");
-          });
-      });
-    },
     onFileSelected() {
       this.file = this.$refs.file.files[0];
       this.attachment = URL.createObjectURL(this.file);
     },
-    // dateView: function () {
-    //   const datesPosts = document.querySelectorAll(".datePost");
-    //   console.log(datesPosts);
-    // },
+    formatDate: function (dateObject) {
+      return "dcode";
+    },
+
+    dayjs() {
+      const nowDate = dayjs(); //new Date("2022-09-21T21:56:28.000Z")
+      //Recupérer la forme ISO
+      // nowDate = dayjs("2022-09-21T21:56:28.000Z");
+      //Utiliser le format
+      // nowDate = dayjs("21/09/2022 21:56PM", "DD-MM-YYYY");
+      //Créer l'objet dayjs en mode UTC
+      // nowDate = dayjs.utc("2022-09-21T21:56:28.000Z");
+
+      console.log(nowDate.format("DD-MM-YYYY"));
+      console.log(JSON.stringify(nowDate));
+      console.log(`toString() => ${nowDate.toString()}`);
+      console.log(`toISOString() => ${nowDate.toISOString()}`);
+      // const nowDateFormatted = formatDate(nowDate);
+      // console.log(nowDateFormatted);
+      // const datePosts = document.querySelectorAll(".datePost");
+      // console.log(datePosts);
+
+      // const now = dayjs(new Date("2022-09-21")).format(
+      //   "[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]"
+      // );
+      // console.log(now.tolocaleDateString("fr-FR"));
+
+      // console.log(dayjs(new Date()));
+
+      // dayjs().locale("fr");
+      // dayjs.extend("LocalizedFormat");
+      // dayjs().format("L LT");
+    },
     getPostList() {
       this.apiPosts
         .get("/")
@@ -577,7 +548,6 @@ export default {
           alert(this.mesgError);
         });
     },
-    //Liker ou disliker une publication
     postLikeCreate: function (postId) {
       this.apiPosts
         .put(
@@ -600,7 +570,6 @@ export default {
           alert(this.mesgError);
         });
     },
-    //Créer une nouvelle publication
     postCreate: function () {
       const dataPost = new FormData();
       dataPost.append("title", this.title);
@@ -621,7 +590,6 @@ export default {
           alert(this.mesgError);
         });
     },
-    //Lister tous les commentaires d'une publication
     displayAllComents: function () {
       this.apiPosts
         .get("/")
@@ -647,20 +615,11 @@ export default {
         });
       });
     },
-    // formatCreatedAt: function () {
-    //   const now = dayjs();
-    //   console.log(now.format());
-    //   now("createdAt").format("MMMM");
-    // },
   },
 };
 </script>
 
 <style>
-/************************ 
-Voir les posts récents 
-************************/
-
 .btnUp {
   height: 3rem;
   width: 3rem;
@@ -677,6 +636,7 @@ Voir les posts récents
 }
 .icon {
   width: 50px;
+  margin: 0 0.5rem;
 }
 .blog-card-wrap,
 h1 {
@@ -684,13 +644,6 @@ h1 {
   font-size: 35px;
   margin: 20px 0 20px 0;
 }
-@media screen and (max-width: 768px) {
-  .blog-card-wrap,
-  h1 {
-    font-size: 25px;
-  }
-}
-
 .updates,
 .container {
   padding: 0px 25px;
@@ -703,27 +656,10 @@ h1 {
   display: block;
   flex-direction: row;
 }
-@media screen and (max-width: 768px) {
-  .container {
-    /* flex-direction: column; */
-    padding-left: 0;
-    padding-right: 0;
-  }
-  .avatarPost {
-    width: 100%;
-  }
-}
-
 .router-button {
   display: flex;
   font-size: 14px;
   text-decoration: none;
-}
-
-@media (min-width: 800px) {
-  .router-button {
-    margin-left: auto;
-  }
 }
 h2 {
   font-weight: 400;
@@ -732,16 +668,6 @@ h2 {
   text-align: center;
   text-transform: uppercase;
 }
-@media (min-width: 800px) {
-  h2,
-  .router-button {
-    font-size: 40px;
-  }
-}
-/***************************
-fin Voir les posts recents 
-***************************/
-
 .containerRecent {
   box-shadow: 0px 0px 10px #ffd7d7, -5px -5px 10px #4e51665a;
   border-radius: 1rem;
@@ -769,11 +695,6 @@ Formulaire de publication des posts
   margin: 0 1rem 0 1rem;
   padding: 1.5rem 0 1rem 0;
 }
-@media screen and (max-width: 768px) {
-  .containerLogo {
-    flex-direction: column;
-  }
-}
 .publish {
   display: flex;
   justify-content: center;
@@ -795,36 +716,13 @@ Formulaire de publication des posts
   background-color: #ffd7d7;
   margin: 0 0 0.5rem -5.4rem;
 }
-@media screen and (max-width: 768px) {
-  .separatorPostsUser {
-    width: 4rem;
-    margin: 0 0 0.5rem -4.4rem;
-  }
-}
-@media screen and (max-width: 393px) {
-  .publish {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .separatorPostsUser {
-    margin: 0.5rem 0 0.5rem -0.4rem;
-  }
-}
-@media screen and (max-width: 280px) {
-  .publish {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .separatorPostsUser {
-    margin: 0.5rem 0 0.5rem -0.4rem;
-  }
-}
 .formGroup {
   display: flex;
   flex-direction: column-reverse;
   width: auto;
+}
+.imgPostForm {
+  margin-top: 2rem;
 }
 .form-group,
 .publish {
@@ -888,26 +786,6 @@ Affichage de la liste des posts
 img {
   margin: auto;
 }
-@media screen and (max-width: 902px) {
-  img {
-    margin: auto;
-  }
-}
-@media screen and (max-width: 768px) {
-  img {
-    margin: auto;
-  }
-}
-@media screen and (max-width: 393px) {
-  img {
-    margin: auto;
-  }
-}
-@media screen and (max-width: 280px) {
-  img {
-    margin: auto;
-  }
-}
 /********************************
 ***********Card header***********
 *********************************/
@@ -929,30 +807,6 @@ img {
 .avatar {
   display: contents;
 }
-/* @media screen and (max-width: 768px) {
-  .justify-content {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    text-align: left;
-    flex-wrap: nowrap;
-  }
-  .ml-2 {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    text-align: left;
-    flex-wrap: nowrap;
-  }
-} */
-@media screen and (max-width: 372px) {
-  .d-flex {
-    flex-direction: column-reverse;
-  }
-  .ml-2 {
-    display: flex;
-    flex-direction: column;
-  }
-}
-
 .imgUser {
   border-radius: 5rem;
   object-fit: cover;
@@ -967,66 +821,22 @@ img {
   align-items: center;
   flex: 1;
   overflow: hidden;
+  margin: 0 1rem 0 1rem;
 }
 .datePost {
+  display: block;
   font-size: 1rem;
   text-overflow: ellipsis;
   overflow: hidden;
 }
-@media screen and (max-width: 768px) {
-  .userPost {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-}
 .nameUser {
   font-weight: inherit;
 }
-
 .textUser {
   margin: 0;
 }
 .datePost {
   margin: 0 0 0 1rem;
-}
-@media screen and (max-width: 768px) {
-  .textUser {
-    margin-bottom: 1rem;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-  .userPost {
-    text-align: left;
-    margin: 0 0 0 0.5rem;
-  }
-  .datePost {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    text-align: left;
-  }
-}
-@media screen and (max-width: 376px) {
-  .userPost {
-    text-align: center;
-    margin: 0 0 0 0;
-  }
-  .datePost {
-    margin: 0 0 0 1rem;
-    text-align: left;
-    display: contents;
-  }
-}
-@media screen and (max-width: 280px) {
-  .userPost {
-    margin: 0 0 0 0;
-  }
-  .datePost {
-    margin: 1rem 0 0 0;
-    text-align: center;
-    display: contents;
-  }
 }
 .dropdown.active > .link,
 .link:hover {
@@ -1044,11 +854,11 @@ img {
   pointer-events: none;
   transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
 }
-/* .dropdown.active > .link + .dropdown-menu {
+.dropdown.active > .link + .dropdown-menu {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
-} */
+}
 
 .link {
   display: block;
@@ -1063,12 +873,10 @@ img {
 }
 .dropdown.active > .link + .dropdown-menu {
   opacity: 1;
-  /* transform: translateY(0); */
   transform: translateX(-5rem);
   pointer-events: auto;
 }
 .information-grid {
-  /* display: flex; */
   flex-direction: column;
 }
 .dropdown-links {
@@ -1138,23 +946,6 @@ img {
   object-fit: cover;
   margin: auto;
 }
-@media screen and (max-width: 902px) {
-  .imgPost {
-    width: 100%;
-    height: 60vw;
-  }
-}
-@media screen and (max-width: 768px) {
-  .imgPost {
-    width: 100%;
-  }
-}
-@media screen and (max-width: 768px) {
-  .imgBottomPost {
-    width: 100%;
-    height: 100vh;
-  }
-}
 .readMore .addText {
   display: none;
 }
@@ -1163,26 +954,14 @@ img {
 ********************************/
 .card-footer {
   margin: 0 0 0.6rem 0;
-  /* box-shadow: 0px 0px 0px #ffd7d7, -5px -5px 0px #4e51665a; */
   border-top: 0px solid rgba(0, 0, 0, 0.125);
   padding: 1rem 2rem 1rem 2rem;
   background: #4e5166;
 }
-@media screen and (max-width: 768px) {
-  .card-footer {
-    padding: 1rem;
-  }
-}
 .post-actions {
-  /* display: flex; */
   flex-wrap: wrap;
   align-content: space-around;
   justify-content: space-around;
-}
-@media screen and (max-width: 768px) {
-  .post-actions {
-    display: block;
-  }
 }
 .form-control_input {
   padding: 2 rem;
@@ -1206,47 +985,6 @@ img {
 }
 .linkComent {
   margin: 0 5rem 0 0;
-}
-@media screen and (max-width: 768px) {
-  .menuPost {
-    justify-content: space-between;
-  }
-  .linkPostDpd {
-    margin: 0 0 0.5rem 0;
-  }
-  .linkPost {
-    margin: 0 0 0.5rem 0;
-  }
-  .linkItems {
-    margin: 0 0 0.8rem 0;
-  }
-  .linkComent {
-    margin: 0;
-  }
-}
-.displayComents {
-  display: flex;
-}
-
-@media screen and (max-width: 393px) {
-  .linksPost {
-    flex-direction: column;
-  }
-  .likesPost {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-  .comentsPost {
-    width: 100%;
-  }
-}
-@media screen and (max-width: 280px) {
-  .menuPost {
-    flex-direction: column;
-  }
-  .linkPost {
-    margin: 1rem auto;
-  }
 }
 .likeButtons {
   display: flex;
@@ -1301,5 +1039,185 @@ img {
   flex-direction: column;
   margin: auto;
   gap: 16px;
+}
+
+/******************************
+********Media Queries**********
+******************************/
+
+@media screen and (max-width: 912px) {
+  .imgPost {
+    width: 100%;
+    height: 70vw;
+  }
+}
+@media screen and (max-width: 902px) {
+  img {
+    margin: auto;
+  }
+}
+@media (min-width: 800px) {
+  .router-button {
+    margin-left: auto;
+  }
+  h2,
+  .router-button {
+    font-size: 40px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .blog-card-wrap,
+  h1 {
+    font-size: 22px;
+  }
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .avatarPost {
+    width: 100%;
+  }
+  .containerLogo {
+    flex-direction: column;
+  }
+  .separatorPostsUser {
+    width: 4rem;
+    margin: 0 0 0.5rem -4.4rem;
+  }
+  img {
+    margin: auto;
+  }
+  .textUser {
+    margin-bottom: 1rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .userPost {
+    text-align: left;
+    margin: 0 0 0 0;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .datePost {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: left;
+  }
+  .imgPost {
+    width: 100%;
+  }
+  .imgBottomPost {
+    width: 100%;
+    height: 100vh;
+  }
+  .card-footer {
+    padding: 1rem;
+  }
+  .post-actions {
+    display: block;
+  }
+  .menuPost {
+    justify-content: space-between;
+  }
+  .linkPostDpd {
+    margin: 0 0 0.5rem 0;
+  }
+  .linkPost {
+    margin: 0 0 0.5rem 0;
+  }
+  .linkItems {
+    margin: 0 0 0.8rem 0;
+  }
+  .linkComent {
+    margin: 0;
+  }
+}
+.displayComents {
+  display: flex;
+}
+@media screen and (max-width: 390px) {
+  .publish {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .separatorPostsUser {
+    margin: 0.5rem 0 0.5rem -0.4rem;
+  }
+  img {
+    margin: auto;
+  }
+  .imgPost {
+    height: 50vw;
+  }
+  .linksPost {
+    flex-direction: column;
+  }
+  .likesPost {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  .comentsPost {
+    width: 100%;
+  }
+  .userPost {
+    text-align: start;
+    margin: 0 0 0 0;
+  }
+  .date {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin: 0 auto 0 auto;
+  }
+  .datePost {
+    display: flex;
+    text-align: center;
+    margin: 0 auto 0 auto;
+  }
+}
+@media screen and (max-width: 372px) {
+  .d-flex {
+    flex-direction: column-reverse;
+  }
+  .ml-2 {
+    display: flex;
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 280px) {
+  .publish {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .separatorPostsUser {
+    margin: 0.5rem 0 0.5rem -0.4rem;
+  }
+  img {
+    margin: auto;
+  }
+  .userPost {
+    margin: 0 0 0 0;
+  }
+  .date {
+    text-align: center;
+    margin: 0 auto 0 auto;
+  }
+  .datePost {
+    display: contents;
+    text-align: center;
+    margin: 1rem 0 0 0;
+  }
+  .imgPost {
+    height: 50vw;
+  }
+  .menuPost {
+    flex-direction: column;
+  }
+  .linkPost {
+    margin: 1rem auto;
+  }
 }
 </style>

@@ -10,13 +10,15 @@ exports.findAllPublished = async (req, res) => {
             {
                 model: db.user,
                 attributes: ['username', 'attachment'],
+                // order: [['createdAt', 'DESC']]
                 order: [['createdAt', 'ASC']]
             },
             {
                 model: db.posts,
                 post: req.params.postId,
                 attributes: ['id', 'content', 'userId'],
-                order: [["createdAt", "DESC"]],
+                // order: [["createdAt", "DESC"]],
+                order: [['createdAt', 'ASC']],
                 include: [
                     {
                         model: db.user,
@@ -26,7 +28,8 @@ exports.findAllPublished = async (req, res) => {
                         model: db.coments,
                         coment: req.params.comentId,
                         attributes: ['id', 'coment', 'userId'],
-                        order: [["createdAt", "DESC"]],
+                        // order: [["createdAt", "DESC"]],
+                        order: [['createdAt', 'ASC']],
                         include: [
                             {
                                 model: db.user,
@@ -38,7 +41,8 @@ exports.findAllPublished = async (req, res) => {
                         model: db.likes,
                         likes: req.body.likeId,
                         attributes: ['likes'],
-                        order: [["created", "DESC"]],
+                        // order: [["createdAt", "DESC"]],
+                        order: [['createdAt', 'ASC']],
                         include: [
                             {
                                 model: db.user,
@@ -49,6 +53,7 @@ exports.findAllPublished = async (req, res) => {
                 ],
             },
         ],
+        // order: [['createdAt', 'DESC']],
         order: [['createdAt', 'ASC']],
         attributes: {
             exclude: ['updateAt']
@@ -78,7 +83,8 @@ exports.findOnePublished = async (req, res, next) => {
                 model: db.posts,
                 post: req.params.postId,
                 attributes: ['id', 'content', 'userId'],
-                order: [["createdAt", "DESC"]],
+                // order: [["createdAt", "DESC"]],
+                order: [['createdAt', 'ASC']],
                 include: [
                     {
                         model: db.user,
@@ -88,7 +94,8 @@ exports.findOnePublished = async (req, res, next) => {
                         model: db.coments,
                         coment: req.params.comentId,
                         attributes: ['id', 'coment', 'userId'],
-                        order: [["createdAt", "DESC"]],
+                        // order: [["createdAt", "DESC"]],
+                        order: [['createdAt', 'ASC']],
                         include: [
                             {
                                 model: db.user,
@@ -100,7 +107,8 @@ exports.findOnePublished = async (req, res, next) => {
                         model: db.likes,
                         likes: req.body.likeId,
                         attributes: ['likes'],
-                        order: [["created", "DESC"]],
+                        // order: [["created", "DESC"]],
+                        order: [['createdAt', 'ASC']],
                         include: [
                             {
                                 model: db.user,
@@ -111,7 +119,8 @@ exports.findOnePublished = async (req, res, next) => {
                 ],
             },
         ],
-        order: [["createdAt", "DESC"]],
+        // order: [["createdAt", "DESC"]],
+        order: [['createdAt', 'ASC']],
     }).then(user => {
         res.status(200).json(user);
     }).catch(error => {
@@ -134,7 +143,8 @@ exports.findCommentsByPostId = async (req, res, next) => {
                 model: db.posts,
                 post: req.params.postId,
                 attributes: ['id', 'content', 'userId'],
-                order: [["createdAt", "DESC"]],
+                // order: [["createdAt", "DESC"]],
+                order: [['createdAt', 'ASC']],
                 include: [
                     {
                         model: db.user,
@@ -144,7 +154,8 @@ exports.findCommentsByPostId = async (req, res, next) => {
                         model: db.coments,
                         coment: req.params.comentId,
                         attributes: ['id', 'coment', 'userId'],
-                        order: [["createdAt", "DESC"]],
+                        // order: [["createdAt", "DESC"]],
+                        order: [['createdAt', 'ASC']],
                         include: [
                             {
                                 model: db.user,

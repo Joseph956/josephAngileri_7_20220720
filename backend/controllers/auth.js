@@ -5,8 +5,6 @@ const { JsonWebTokenError } = require('jsonwebtoken');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
-const { BOOLEAN } = require('sequelize');
-const { validate } = require('uuid');
 dotenv.config();
 
 exports.signUp = (req, res, next) => {
@@ -17,7 +15,7 @@ exports.signUp = (req, res, next) => {
         },
         attributes: ['email'],
     }).then(user => {
-        if (user != email) {
+        if (!user) {
             bcrypt.hash(req.body.password, 10)
                 .then(hash => {
                     const user = new User({
@@ -63,10 +61,9 @@ exports.signUp = (req, res, next) => {
             })
         }
     }).catch(error => res.status(409).json({
-        error, message: 'Cet utilisateur existe déjà 444 !!! '
+        error, message: 'Cet utilisateur existe déjà !!! '
     }));
 };
-
 exports.signIn = (req, res, next) => {
     let email = req.body.email;
     if (email === email) {
@@ -79,7 +76,8 @@ exports.signIn = (req, res, next) => {
                 return res.status(401).json({
                     error, message: "Vous n'êtes pas autorisé à vous connecter sur ce compte utilisateur !!!"
                 });
-            } else {
+            }
+            else {
                 bcrypt.compare(req.body.password, user.password)
                     .then((valid) => {
                         if (!valid) {
@@ -102,25 +100,24 @@ exports.signIn = (req, res, next) => {
                             });
                         })
                     }).catch((error) => {
-                        res.status(400).json({
+                        res.status(401).json({
                             error, message: "Votre mot de passe n'\est pas valide !!! "
                         })
                     });
+
             }
-        }).catch((error) => res.status(500).json({
-            error, message: "Cette email n'\existe pas 333 !!! "
+        }).catch((error) => res.status(400).json({
+            error, message: "Cet email n'\existe pas !!! "
         }));
 
     } else {
-        res.status(400).json({ error, message: "Cet email n'existe pas 222 !!!" })
+        res.status(500).json({ error, message: "Ooops erreur server !!!" })
     }
 };
-
 exports.logout = (req, res, next) => {
     res.Cookies('sessionId', '', { maxAge: 1 })
     res.redirect('/');
 };
-//Création d'un nouveau mot de passe
 exports.newPasswd = (req, res, next) => {
     try {
         //Validation des paramètres de la requête

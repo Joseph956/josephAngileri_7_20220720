@@ -1,3 +1,4 @@
+
 module.exports = (sequelize, Sequelize) => {
     const Post = sequelize.define('post', {
         id: {
@@ -16,5 +17,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
         },
     });
+
     return Post;
 };

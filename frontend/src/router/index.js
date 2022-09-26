@@ -14,10 +14,6 @@ import NotFound from '@/views/NotFound.vue';
 
 import ProfileUsers from '@/views/ProfileUsers.vue';
 
-import Reset from '@/components/Reset.vue';
-import Forgot from '@/components/Forgot.vue';
-
-
 const routes = [
   //Cette route gère la création des comptes utilisateur,
   //et les login sur les comptes créés.
@@ -25,16 +21,6 @@ const routes = [
     path: '/',
     name: 'Accueil',
     component: Accueil,
-  },
-  {
-    path: '/forgot',
-    name: 'Forgot',
-    component: Forgot,
-  },
-  {
-    path: '/reset/:token',
-    name: 'Reset',
-    component: Reset,
   },
   //Routage gestion des posts
   {

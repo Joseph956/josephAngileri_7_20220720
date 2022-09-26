@@ -135,12 +135,12 @@
                     </div>
                   </div>
 
-                  <p
+                  <!-- <p
                     v-if="$store.state.user.userId == user.userId"
                     class="alert alert-info text-danger"
                   >
                     {{ mesgError }}
-                  </p>
+                  </p> -->
                 </div>
               </div>
             </div>
@@ -173,9 +173,11 @@
 import axios from "axios";
 import { mapState } from "vuex";
 import navPosts from "@/components/NavPosts.vue";
+import profileUser from "@/views/ProfileUsers.vue";
+
 export default {
   name: "Users",
-  components: { navPosts },
+  components: { navPosts, profileUser },
   props: ["profile"],
   data: function () {
     return {
@@ -197,7 +199,8 @@ export default {
       .get("/")
       .then((response) => {
         if (!response.data) {
-          return (this.mesgError = error.response.data.message);
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
         } else {
           this.users = response.data;
         }
@@ -207,17 +210,14 @@ export default {
         alert(this.mesgError);
       });
   },
-
   beforeMount() {
     if (this.$store.state.user.role.role == "admin") {
       this.isAdmin = true;
       console.log("mess users" + this.isAdmin);
     }
-    this.getUserList();
   },
   computed: {
     ...mapState(["status"]),
-    ...mapState({ user: "userInfos" }),
   },
   methods: {
     getUserList() {
@@ -225,7 +225,8 @@ export default {
         .get("/")
         .then((response) => {
           if (!response.data) {
-            return (this.mesgError = error.response.data.message);
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           } else {
             this.users = response.data;
           }
@@ -253,7 +254,8 @@ export default {
           .delete("http://localhost:3000/api/users/" + userId)
           .then((response) => {
             if (!response.data) {
-              return (this.mesgError = error.response.data.message);
+              this.mesgError = error.response.data.message;
+              alert(this.mesgError);
             } else {
               window.location.reload();
             }
@@ -276,7 +278,7 @@ export default {
 }
 .col-md-8 {
   background: #4e5166;
-  padding: 2rem;
+  /* padding: 2rem; */
   border-radius: 2rem;
 }
 .containerTitre,
@@ -329,6 +331,7 @@ h1 {
 #imgProfile {
   border-radius: 5rem;
   object-fit: cover;
+  margin: 5px auto 5px auto;
 }
 .listInfosUser {
   display: flex;
@@ -336,7 +339,7 @@ h1 {
 }
 .infoUser {
   font-size: 1rem;
-  padding: 5px;
+  padding: 5px 10px 5px 10px;
   text-align: center;
   overflow: hidden;
 }
@@ -362,7 +365,7 @@ h1 {
 }
 
 .imgAvatarUser {
-  margin: 0 auto 0 auto;
+  margin: 5px auto 5px auto;
 }
 .infoUser .positionTrash {
   display: flex;
@@ -372,8 +375,13 @@ h1 {
 .btnTrashUser {
   font-size: 2rem;
 }
-
+/************************************
+*********Media queries***************
+************************************/
 @media screen and (max-width: 768px) {
+  .col-md-8 {
+    padding: 3rem 0 0 0;
+  }
   .containerTitre,
   h1 {
     display: flex;
@@ -394,12 +402,12 @@ h1 {
     width: 4rem;
   }
   .wrapUsers {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
   }
   .listInfosUser {
-    margin: 0 1rem 0 1rem;
+    display: contents;
+    margin: 0 0 0 1rem;
   }
   .positionTrash {
     display: contents;
@@ -428,7 +436,9 @@ h1 {
     margin: 1rem auto 0.5rem auto;
   }
   .listInfosUsers {
+    display: contents;
     flex-direction: column;
+    margin: 0 0 0 -20px;
   }
 }
 @media screen and (max-width: 280px) {

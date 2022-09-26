@@ -8,14 +8,6 @@ const instance = axios.create({
     "Content-Type": "application/json",
   },
 });
-
-let state = {
-  posts: [],
-  user: {},
-  token: '',
-
-}
-
 let user = localStorage.getItem('user');
 if (!user) {
   user = {
@@ -84,16 +76,6 @@ if (!like) {
     };
   }
 };
-const store = createStore({
-  state: {
-    status: '',
-    // user: {
-    //   userId: -1,
-    //   token: '',
-    // },
-  },
-});
-
 //Create a new store instance
 export default createStore({
   state: {
@@ -138,22 +120,6 @@ export default createStore({
       localStorage.setItem('user', JSON.stringify(user));
       state.user = user;
     },
-    userInfos: function (state, userInfos) {
-      state.userInfos = userInfos;
-    },
-    postInfos: function (state, postInfos) {
-      state.postInfos = postInfos;
-    },
-    comentInfos: function (state, comentInfos) {
-      state.comentInfos = comentInfos;
-    },
-    likeInfos: function (state, likeInfos) {
-      state.likeInfos = likeInfos;
-    },
-    toggleEditPost(state, payload) {
-      state.editPost = payload;
-      console.log(state.editPost);
-    },
     logout: function (state) {
       state.user = {
         userId: -1,
@@ -167,7 +133,6 @@ export default createStore({
     }
   },
   actions: {
-    //Connexion au compte utilisateur
     login: ({ commit }, data) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
@@ -179,82 +144,27 @@ export default createStore({
             console.log(response);
           })
           .catch(error => {
-            commit('setStatus', 'error_login');
+            commit('setStatus', 'mesgError');
             reject(error);
-            console.log(error);
           });
       });
     },
-    //Creation du compte utilisateur
     createAccount: ({ commit }, data) => {
       commit('setStatus', 'loading');
-      console.log(data);
       return new Promise((resolve, reject) => {
         commit;
         instance.post('auth/register', data)
           .then(function (response) {
-            // if (!response) {
-            //   return (this.mesgError = error.response.data.message)
-            // } else {
             commit('setStatus', 'created');
             resolve(response);
             console.log(response);
-            // }
           })
           .catch(function (error) {
-            commit('setStatus', 'error_create');
+            commit('setStatus', 'mesgError');
             reject(error);
-            console.log(error);
-            // this.mesgError = error.response.data.message;
-            // alert(this.mesgError);
           });
       });
     },
-    //Fin Creation de compte
-    //Suppression du compte utlisateur
-    deleteUser({ commit }, user) {
-      //Delete user on server
-      commit('DELETE_USER', user.id);
-    },
-
-    //Modification ou confirmation du mot de passe
-    confirmPassword: ({ commit }, data) => {
-      commit('setStatus', 'loading');
-      return new Promise((resolve, reject) => {
-        instance.put('auth/newpasswd/:id', data)
-          .then(response => {
-            commit('setStatus', '');
-            commit('logUser', response.data);
-            resolve(response);
-            console.log(response);
-          })
-          .catch(error => {
-            commit('setStatus', 'error_confirmPassword');
-            reject(error);
-            console.log(error);
-          });
-      });
-    },
-    createPassword: ({ commit }, data) => {
-      commit('setStatus', 'loading');
-      return new Promise((resolve, reject) => {
-        commit;
-        instance.put('auth/newpasswd/:id', data)
-          .then(response => {
-            commit('setStatus', 'created');
-            resolve(response);
-            console.log(response);
-          })
-          .catch(error => {
-            commit('setStatus', 'error_create');
-            reject(error);
-            console.log(error);
-          });
-      });
-    },
-    //Fin modification du mot de passe
-
-    //Affichage des informations
     getUserInfos: ({ commit, state }, data) => {
       instance.get('/users/' + state.user.userId, data,
         {
@@ -264,60 +174,6 @@ export default createStore({
         }).then(response => {
           commit('userInfos', response.data);
         }).catch(function () { });
-    },
-    getPostInfos: ({ commit, state }) => {
-      commit('setStatus', 'loading');
-      return new Promise((resolve, reject) => {
-        commit;
-        instance.get('/posts', {
-          headers: {
-            "Authorization": "BEARER " + state.user.token
-          }
-        }).then(response => {
-          commit('setStatus', 'postId', 'postInfos');
-          resolve(response.data);
-          console.log(response.data.users);
-        }).catch(function () {
-          reject(error);
-          console.log(error);
-        });
-      });
-    },
-    getComentInfos: ({ commit, state }) => {
-      commit('setStatus', 'loading');
-      return new Promise((resolve, reject) => {
-        commit;
-        instance.get('/coments', {
-          headers: {
-            "Authorization": "BEARER " + state.user.token
-          }
-        }).then(response => {
-          commit('setStatus', 'comentId');
-          resolve(response.data);
-          console.log(response.data);
-        }).catch(function () {
-          reject(error);
-          console.log(error);
-        });
-      });
-    },
-    getLikeInfos: ({ commit, state }) => {
-      commit('setStatus', 'loading');
-      return new Promise((resolve, reject) => {
-        commit;
-        instance.get('/posts/:id/like/:userId', {
-          headers: {
-            "Authorization": "BEARER " + state.user.token
-          }
-        }).then(response => {
-          commit('setStatus', 'likeId');
-          resolve(response.data);
-          console.log(response.data);
-        }).catch(function () {
-          reject(error);
-          console.log(error);
-        });
-      });
     },
   },
   modules: {

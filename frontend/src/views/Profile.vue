@@ -32,10 +32,10 @@
         <button
           class="btn btn-secondary btnImgDelete"
           type="button"
-          @click="imgFondDelete()"
+          @click="imgFondDelete(user.id)"
           :userId="user.id"
         >
-          <span v-if="status == 'loading'">Publication en cours....</span>
+          <span v-if="status == 'loading'">Suppression en cours....</span>
           <span v-else>
             <img
               style="height: 25px; width: 25px"
@@ -46,7 +46,6 @@
               src="../assets/Icons/BiTrash3Fill.svg"
               alt=""
             />
-            <p></p>
           </span>
           <div>Supprimer la photo de couverture</div>
         </button>
@@ -105,32 +104,11 @@
 
         <h1 class="cardTitle">Profil utilisateur</h1>
         <div class="separatorProfilUser"></div>
-        <!-- <h3 class="cardSubtitle">Informations personnelles</h3> -->
         <h3>{{ user.username }}</h3>
         <h3>{{ user.email }}</h3>
       </div>
       <div class="formRowProfile">
         <ul class="btnFooterProfil">
-          <!-- Bouton Modification profil -->
-          <li class="liBtn">
-            <router-link v-bind:to="'/ProfilUpdate/' + user.id">
-              <button type="button" class="btnModify" :userId="user.id">
-                <img
-                  style="height: 1.5rem; width: 1.5rem"
-                  x="0"
-                  y="0"
-                  height="100%"
-                  width="100%"
-                  src="../assets/Icons/BiPenFill.svg"
-                  alt="modifier le profil"
-                />
-                <span v-if="status == 'loading'"
-                  >Ouverture du formulaire de modification en cours....</span
-                >
-                <span v-else></span>
-              </button>
-            </router-link>
-          </li>
           <!-- Bouton Modification mdp -->
           <li class="liBtn">
             <router-link v-bind:to="'/PasswdUpdate/' + user.id">
@@ -272,47 +250,6 @@
                         </div>
                       </div>
                     </div>
-                    <div class="linkPost">
-                      <div class="dropdown" data-dropdown>
-                        <button class="link" data-dropdown-button type="button">
-                          <img
-                            data-dropdown-button
-                            src="../assets/Icons/ariaCircle.svg"
-                            alt=""
-                          />
-                        </button>
-                        <div class="dropdown-menu information-grid">
-                          <a
-                            class="dropdown-item d-flex align-items-center"
-                            href="#"
-                          >
-                            <img src="../assets/Icons/infollow.svg" alt="" />
-                            <span class="">Unfollow</span></a
-                          >
-                          <a
-                            class="dropdown-item d-flex align-items-center"
-                            href="#"
-                          >
-                            <img src="../assets/Icons/gotopost.svg" alt="" />
-                            <span class="">Go to post</span></a
-                          >
-                          <a
-                            class="dropdown-item d-flex align-items-center"
-                            href="#"
-                          >
-                            <img src="../assets/Icons/share.svg" alt="" />
-                            <span class="">Share</span></a
-                          >
-                          <a
-                            class="dropdown-item d-flex align-items-center"
-                            href="#"
-                          >
-                            <img src="../assets/Icons/copylynk.svg" alt="" />
-                            <span class="">Copy link</span></a
-                          >
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
                 <!-- Affichage du post -->
@@ -327,6 +264,7 @@
                     </router-link>
                     <!-- Fin animation du titre -->
                   </p>
+                  <div class="separator"></div>
                   <p class="mb-3 tx-14">{{ post.content }}</p>
                   <!-- Image du post -->
                   <div class="form-group">
@@ -389,14 +327,17 @@
                             <span v-if="status == 'loading'"
                               >Suppression en cours....</span
                             >
-                            <span v-else>Supprimer votre publication</span>
+                            <span v-else>Supprimer</span>
                           </div>
                         </div>
                       </button>
                     </div>
                     <!-- Modifier un post -->
-                    <div class="btnModifyPost">
-                      <router-link v-bind:to="'/PostsUpdate/' + post.id">
+                    <div>
+                      <router-link
+                        class="btnModifyPost"
+                        v-bind:to="'/PostsUpdate/' + post.id"
+                      >
                         <button
                           v-if="
                             isAdmin == true ||
@@ -405,10 +346,9 @@
                           block
                           class="btn d-block"
                           type="button"
-                          @click="postModify()"
                           :postId="post.id"
                         >
-                          <div class="modifyBtn">
+                          <div class="trashBtn">
                             <div class="iconModify">
                               <img
                                 style="height: 1.5rem; width: 1.5rem"
@@ -419,13 +359,13 @@
                                 alt="modifier la publication"
                               />
                             </div>
-                            <div class="labelModify">
+                            <div>
                               <span
                                 class="labelModify"
                                 v-if="status == 'loading'"
                                 >Modification en cours....</span
                               >
-                              <span v-else>Modifier votre publication</span>
+                              <span v-else>Modifier</span>
                             </div>
                           </div>
                         </button>
@@ -466,14 +406,14 @@
                                     />
                                     <div>
                                       <div class="linkLike">
-                                        <p class="d-md-block ml-2">
+                                        <div class="d-md-block ml-2">
                                           <span v-if="post.likes.length < 2">
                                             - {{ post.likes.length }} - Like<br
                                           /></span>
                                           <span v-else>
                                             - {{ post.likes.length }} - likes<br
                                           /></span>
-                                        </p>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -495,7 +435,7 @@
                               />
                             </div>
                             <div class="linkComent">
-                              <p class="d-md-block ml-2">
+                              <div class="d-md-block ml-2">
                                 <span v-if="post.coments.length < 2">
                                   - {{ post.coments.length }} - Commentaire <br
                                 /></span>
@@ -503,7 +443,7 @@
                                   - {{ post.coments.length }} - commentaires
                                   <br
                                 /></span>
-                              </p>
+                              </div>
                             </div>
                           </router-link>
                         </div>
@@ -531,15 +471,6 @@
     </div>
     <!-- ScrollToTop button -->
     <button type="button" class="btnUp" @click="switchToUp()">
-      <!-- <img
-              style="height: auto; width: 100%"
-              x="0"
-              y="0"
-              height="100%"
-              width="100%"
-              src="../assets/Icons/BiArrowUpCircleFill.svg"
-              alt="icon"
-            /> -->
       <a class="bloc-button btn btn-d scrollToTop" @click="switchToUp('1')">
         <span class="fa fa-chevron-up"></span>
       </a>
@@ -619,9 +550,7 @@ export default {
       });
   },
   computed: {
-    ...mapState({
-      user: "userInfos",
-    }),
+    ...mapState(["status"]),
   },
   methods: {
     displayAllComents: function () {
@@ -640,7 +569,6 @@ export default {
         });
     },
     getPostList: function () {
-      // console.log("getPostList");
       this.apiPosts
         .get(`http://localhost:3000/api/posts/postUser/${this.user.id}`)
         .then((response) => {
@@ -756,6 +684,8 @@ export default {
 }
 #imgBottomAvatar {
   position: relative;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
 }
 .imgDelete {
   display: flex;
@@ -769,7 +699,6 @@ export default {
   margin: 1rem;
   border-radius: 0.5rem;
 }
-
 .alert-info {
   background: #5c5c6c85;
   border-color: #5c5c6c85;
@@ -778,7 +707,6 @@ export default {
   width: 90%;
   margin: auto;
 }
-
 .form-grouProfile {
   position: relative;
   border: none;
@@ -786,20 +714,6 @@ export default {
 }
 #imgBottomUser {
   width: 100%;
-}
-@media screen and (max-width: 768px) {
-  .cardSubtitle,
-  h1 {
-    font-size: 15px;
-    margin: 0 0 17px 0;
-  }
-  #imgBottomAvatar {
-    width: auto;
-    height: 10rem;
-  }
-  h1 {
-    font-size: 17px;
-  }
 }
 .labelModify {
   text-decoration: none;
@@ -818,7 +732,6 @@ export default {
   object-fit: cover;
   border-radius: 10rem;
 }
-
 #imgAvatarUser {
   position: absolute;
   left: 50%;
@@ -829,19 +742,17 @@ export default {
   border-radius: 10rem;
 }
 .infosUserProfile {
-  margin: 6rem auto 2rem auto;
+  margin: 5rem auto 2rem auto;
 }
 .containTitleProfil {
   display: flex;
   justify-content: center;
   font-size: larger;
-  /* margin: 0 2rem 0 6rem; */
 }
 .logoTransparentProfile {
   display: flex;
   margin: -1rem 0 0 0;
 }
-
 .cardTitleProfile {
   display: flex;
   margin: 0rem 1rem 1rem 1rem;
@@ -859,6 +770,32 @@ export default {
   height: 4px;
   background-color: #ffd7d7;
 }
+.formRowProfile {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: space-around;
+  margin: 1rem 0 0 0;
+}
+/***************************
+*****Animation du titre*****
+****************************/
+.aspect {
+  font-size: 1.5rem;
+}
+/**************************
+*****Fin anim titre********
+***************************/
+.btnFooterProfil {
+  display: flex;
+  padding-left: 0;
+}
+.liBtn {
+  margin: 0 3rem;
+}
+/**************************************
+*********Media Queries*****************
+**************************************/
 @media screen and (max-width: 912px) {
   .separatorProfilUser {
     margin: 1rem 0 1.5rem 2.5rem;
@@ -879,6 +816,18 @@ export default {
   }
 }
 @media screen and (max-width: 768px) {
+  .cardSubtitle,
+  h1 {
+    font-size: 15px;
+    margin: 0 0 17px 0;
+  }
+  #imgBottomAvatar {
+    width: auto;
+    height: 10rem;
+  }
+  h1 {
+    font-size: 17px;
+  }
   .containTitleProfil {
     flex-direction: column;
     margin: 0 auto 0 auto;
@@ -896,68 +845,6 @@ export default {
   .separatorPostUser {
     margin: 0rem auto 1rem auto;
   }
-}
-@media screen and (max-width: 393px) {
-  .containTitleProfil {
-    flex-direction: column;
-    margin: 0 auto 0 auto;
-  }
-  .logoTransparentProfile {
-    margin: 1rem 0 0 0;
-  }
-  .cardTitleProfile {
-    margin: 0 auto 1.5rem auto;
-    font-size: 20px;
-  }
-  .separatorProfilUser {
-    margin: 1rem 0 1.5rem 0.1rem;
-  }
-  .separatorPostUser {
-    margin: 0rem auto 1rem auto;
-  }
-}
-@media screen and (max-width: 280px) {
-  .containTitleProfil {
-    flex-direction: column;
-    margin: 0 auto 0 auto;
-  }
-  .logoTransparentProfile {
-    margin: 0;
-  }
-  .cardTitleProfile {
-    margin: 0 auto 1.5rem auto;
-  }
-  .separatorProfilUser {
-    margin: 1rem auto 1.5rem auto;
-  }
-  .separatorPostUser {
-    margin: 0rem auto 1rem auto;
-  }
-}
-
-.formRowProfile {
-  display: flex;
-  align-items: center;
-  align-content: center;
-  justify-content: space-around;
-  margin: 1rem 0 0 0;
-}
-/***************************
-*****Animation du titre*****
-****************************/
-.aspect {
-  font-size: 1.5rem;
-}
-/**************************
-*****Fin anim titre********
-***************************/
-.btnFooterProfil {
-  display: flex;
-}
-.liBtn {
-  margin: 0 3rem;
-}
-@media screen and (max-width: 768px) {
   .formRowProfile {
     flex-direction: column;
     align-items: center;
@@ -974,6 +861,43 @@ export default {
   .liBtn,
   li {
     margin: 1rem;
+  }
+  @media screen and (max-width: 393px) {
+    .containTitleProfil {
+      flex-direction: column;
+      margin: 0 auto 0 auto;
+    }
+    .logoTransparentProfile {
+      margin: 1rem 0 0 0;
+    }
+    .cardTitleProfile {
+      margin: 0 auto 1.5rem auto;
+      font-size: 20px;
+    }
+    .separatorProfilUser {
+      margin: 1rem 0 1.5rem 0.1rem;
+    }
+    .separatorPostUser {
+      margin: 0rem auto 1rem auto;
+    }
+  }
+  @media screen and (max-width: 280px) {
+    .containTitleProfil {
+      flex-direction: column;
+      margin: 0 auto 0 auto;
+    }
+    .logoTransparentProfile {
+      margin: 0;
+    }
+    .cardTitleProfile {
+      margin: 0 auto 1.5rem auto;
+    }
+    .separatorProfilUser {
+      margin: 1rem auto 1.5rem auto;
+    }
+    .separatorPostUser {
+      margin: 0rem auto 1rem auto;
+    }
   }
 }
 </style>

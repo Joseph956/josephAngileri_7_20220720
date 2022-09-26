@@ -20,81 +20,83 @@
       </div>
     </div>
     <div class="imgBottom">
-      <form enctype="multipart/form-data">
-        <!-- Titre du post -->
-        <div class="form-group">
-          <label for="title">
-            <h3 class="titlePostUpdate">Modifier le titre</h3>
-          </label>
-          <input
-            ref="firstfield"
-            v-model="posts.title"
-            type="text"
-            id="title"
-            class="form-control"
-            placeholder="Modifier le titre de votre message"
-          />
-        </div>
-        <!-- Contenu du post -->
-        <div class="form-group">
-          <label for="content"><h3>Modifier le contenu</h3></label>
-          <textarea
-            v-model="posts.content"
-            type="text"
-            id="content"
-            class="form-control"
-            placeholder="Modifier le contenu du message"
-            autofocus
-            required
-          >
-          </textarea>
-        </div>
-        <!-- Affichage de l'image du post avant publication-->
-        <div class="formGroup">
-          <div class="imgPostUpdate" v-if="posts.attachment">
-            <img :src="posts.attachment" class="w-50 rounded" />
-          </div>
-          <div v-else>
-            <img
-              style="height: 15rem; width: 25rem"
-              x="0"
-              y="0"
-              height="100%"
-              width="100%"
-              class="avatarPost"
-              src="../assets/Icons/BiCardImg.svg"
-              alt=""
-            />
-          </div>
-        </div>
-        <!-- Choix de l'image du post -->
-        <div class="selectBottom">
-          <div class="formGroup">
-            <label for="file"></label><br />
+      <div class="containPostUpdate">
+        <form enctype="multipart/form-data">
+          <!-- Titre du post -->
+          <div class="form-group">
+            <label for="title">
+              <h3 class="titlePostUpdate">Modifier le titre</h3>
+            </label>
             <input
-              class="formFilePublich"
-              id="file"
-              ref="file"
-              type="file"
-              name="image"
-              accept="image/*"
-              @change="onFileSelected()"
+              ref="firstfield"
+              v-model="posts.title"
+              type="text"
+              id="title"
+              class="form-control"
+              placeholder="Modifier le titre de votre message"
             />
           </div>
-        </div>
-        <!-- Publier un post -->
-        <div class="formGroup">
-          <button
-            type="button"
-            class="btn btn-primary btnPublication"
-            @click="postUpdate()"
-            :disabled="!validatedFields"
-          >
-            <span v-if="status == 'loading'">Publication en cours....</span>
-            <span v-else>Modifier la publication</span>
-          </button>
-        </div>
-      </form>
+          <!-- Contenu du post -->
+          <div class="form-group">
+            <label for="content"><h3>Modifier le contenu</h3></label>
+            <textarea
+              v-model="posts.content"
+              type="text"
+              id="content"
+              class="form-control"
+              placeholder="Modifier le contenu du message"
+              autofocus
+              required
+            >
+            </textarea>
+          </div>
+          <!-- Affichage de l'image du post avant publication-->
+          <div class="formGroup">
+            <div class="imgPostUpdate" v-if="posts.attachment">
+              <img :src="posts.attachment" class="w-50 rounded" />
+            </div>
+            <div v-else>
+              <img
+                style="height: 15rem; width: 25rem"
+                x="0"
+                y="0"
+                height="100%"
+                width="100%"
+                class="avatarPost"
+                src="../assets/Icons/BiCardImg.svg"
+                alt=""
+              />
+            </div>
+          </div>
+          <!-- Choix de l'image du post -->
+          <div class="selectBottom">
+            <div class="formGroup">
+              <label for="file"></label><br />
+              <input
+                class="formFilePublich"
+                id="file"
+                ref="file"
+                type="file"
+                name="image"
+                accept="image/*"
+                @change="onFileSelected()"
+              />
+            </div>
+          </div>
+          <!-- Publier un post -->
+          <div class="formGroup">
+            <button
+              type="button"
+              class="btn btn-primary btnPublication"
+              @click="postUpdate()"
+              :disabled="!validatedFields"
+            >
+              <span v-if="status == 'loading'">Publication en cours....</span>
+              <span v-else>Modifier la publication</span>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
     <p class="alert alert-info text-danger">{{ mesgError }}</p>
   </div>
@@ -196,6 +198,11 @@ export default {
 </script>
 
 <style>
+.containPostUpdate {
+  border-radius: 1rem;
+  box-shadow: 5px 5px 10px #cecdcd, -5px -5px 0 #4e51665b;
+  border: 0.5px solid #ffd6d6;
+}
 .titlePostUpdate {
   margin: 0 0 0 0;
 }

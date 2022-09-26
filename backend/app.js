@@ -29,7 +29,7 @@ const comentsRoutes = require('./routes/coments');
 const app = express();
 
 
-app.use(cors()); //Empêche mes appels API d'aboutir !?!.
+app.use(cors());
 app.disable('x-powered-by');
 app.use(xssclean());
 app.use(helmet());
@@ -94,7 +94,7 @@ app.use((err, req, res, next) => {
 // config database Sequelize
 const db = require("./models");
 const bcrypt = require("bcrypt");
-const { log } = require('console');
+// const { log } = require('console');
 const User = db.user;
 const Post = db.posts;
 const Role = db.role;
@@ -130,12 +130,13 @@ function initial() {
         }).then(users => {
             Post.findOrCreate({
                 where: {
+
                     title: "1er post title",
                     content: "1er post",
                 },
                 defaults: {
+
                     title: "1er post",
-                    content: "Description du contenu",
                     userId: users[0].get('id')
                 }
             }).catch((err) => { console.log(err) });

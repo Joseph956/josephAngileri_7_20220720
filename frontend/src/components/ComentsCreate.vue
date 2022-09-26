@@ -207,6 +207,7 @@
                       <div class="trashBtn">
                         <div class="btnComent">
                           <img
+                            class="icon"
                             style="height: 1.2rem; width: 1.2rem"
                             x="0"
                             y="0"
@@ -304,12 +305,10 @@ export default {
     if (this.$store.state.user.role.role == "admin") {
       this.isAdmin = true;
     }
-    console.log("mess : coment create" + this.isAdmin);
     this.getComentList();
   },
   computed: {
     ...mapState(["status"]),
-    ...mapState({ user: "userInfos" }),
   },
   methods: {
     getProfilOne() {
@@ -317,7 +316,8 @@ export default {
         .get("/users/userId/" + this.userId)
         .then((response) => {
           if (!response.data) {
-            return this.mesgError.response.data.message;
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           } else {
             this.user = response.data;
           }
@@ -334,7 +334,8 @@ export default {
           .get("/postId/" + this.postId)
           .then((response) => {
             if (!response.data) {
-              return this.mesgError.response.data.message;
+              this.mesgError = error.response.data.message;
+              alert(this.mesgError);
             } else {
               this.coments = response.data;
             }
@@ -354,7 +355,8 @@ export default {
         })
         .then((response) => {
           if (!response.data) {
-            return this.mesgError.response.data.message;
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           } else {
             window.location.reload();
           }
@@ -380,7 +382,8 @@ export default {
           })
           .then((response) => {
             if (!response.data) {
-              return this.mesgError.response.data.message;
+              this.mesgError = error.response.data.message;
+              alert(this.mesgError);
             } else {
               window.location.reload();
             }
@@ -397,7 +400,8 @@ export default {
           .delete("http://localhost:3000/api/coments/" + comentId)
           .then((response) => {
             if (!response.data) {
-              return (this.mesgError = error.response.data.message);
+              this.mesgError = error.response.data.message;
+              alert(this.mesgError);
             } else {
               window.location.reload();
             }
@@ -429,15 +433,6 @@ export default {
   grid-template-columns: 1fr 4fr 1fr;
   grid-template-rows: 61px 1fr 1fr;
 }
-@media screen and (max-width: 768px) {
-  .newComentBtn {
-    flex-direction: column;
-  }
-  .avatarComent {
-    display: flex;
-    flex-direction: column;
-  }
-}
 .ComentBtn {
   align-content: center;
 }
@@ -448,20 +443,10 @@ export default {
 .comentPost {
   border-top: none;
 }
-@media screen and (max-width: 768px) {
-  .comentPost {
-    margin: 0;
-  }
-}
 .buttonModify {
   display: flex;
   margin: 0 0 1rem 0;
   border-top: none;
-}
-@media screen and (max-width: 768px) {
-  .buttonModify {
-    flex-direction: column;
-  }
 }
 .comentModify {
   width: 100%;
@@ -471,7 +456,6 @@ export default {
   text-align: justify;
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
 }
-
 .avatarComentUser {
   display: flex;
 }
@@ -491,37 +475,10 @@ export default {
   text-align: left;
   margin: 0.5rem 0 0 0;
 }
-@media screen and (max-width: 768px) {
-  .comentModify {
-    flex-direction: column;
-    border-radius: 1rem;
-  }
-  .userComent {
-    align-content: center;
-  }
-  .textUserComent {
-    margin: 0.5rem 0 0 0;
-  }
-}
 .infosUser {
   display: flex;
   margin-left: 1rem;
 }
-@media screen and (max-width: 372px) {
-  .dateComent {
-    text-align: center;
-    margin-bottom: 0;
-  }
-  .infosUser {
-    flex-direction: column;
-    margin: auto;
-  }
-  .userComent {
-    display: contents;
-    align-content: center;
-  }
-}
-
 .imgUser {
   display: flex;
   align-items: center;
@@ -551,28 +508,11 @@ export default {
   align-items: center;
   margin: 0.7rem 1rem;
 }
-@media screen and (max-width: 768px) {
-  .form-groupComent {
-    display: flex;
-    margin: 10px 0;
-  }
-}
 #coment {
   width: 100%;
   height: 1.6rem;
   background-color: #5c5c6c85;
 }
-@media screen and (max-width: 902px) {
-  #coment {
-    width: 100%;
-  }
-}
-@media screen and (max-width: 768px) {
-  #coment {
-    width: 100%;
-  }
-}
-
 .containerBtnComent {
   display: flex;
   flex-direction: row;
@@ -584,14 +524,7 @@ export default {
 .trashBtn {
   display: flex;
   align-items: center;
-}
-@media screen and (max-width: 768px) {
-  .trashBtn {
-    flex-direction: column;
-  }
-  .modifyBtn {
-    flex-direction: column;
-  }
+  margin: 0.5rem;
 }
 .iconDelete {
   margin: 0 0.5rem 0 0;
@@ -606,14 +539,6 @@ export default {
 }
 .iconModify {
   margin: 0 0.5rem 0 0;
-}
-@media screen and (max-width: 768px) {
-  .iconDelete {
-    margin-bottom: 1rem;
-  }
-  .iconModify {
-    margin-bottom: 1rem;
-  }
 }
 .detailedBtn {
   display: flex;
@@ -633,5 +558,78 @@ export default {
 .btnComent:hover {
   color: rgb(199, 16, 46);
   margin: 0 0.3rem;
+}
+/************************************
+**********Media queries**************
+*************************************/
+@media screen and (max-width: 902px) {
+  #coment {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 768px) {
+  .newComentBtn {
+    flex-direction: column;
+  }
+  .avatarComent {
+    display: flex;
+    flex-direction: column;
+  }
+  .comentPost {
+    margin: 0;
+  }
+  .buttonModify {
+    flex-direction: column;
+  }
+  .comentModify {
+    flex-direction: column;
+    border-radius: 1rem;
+  }
+  .userComent {
+    align-content: center;
+  }
+  .textUserComent {
+    margin: 0.5rem 0 0 0;
+  }
+  #coment {
+    width: 100%;
+  }
+  .trashBtn {
+    flex-direction: column;
+  }
+  .modifyBtn {
+    flex-direction: column;
+  }
+  .iconDelete {
+    margin-bottom: 1rem;
+  }
+  .iconModify {
+    margin-bottom: 1rem;
+  }
+}
+@media screen and (max-width: 372px) {
+  .dateComent {
+    text-align: center;
+    margin-bottom: 0;
+  }
+  .infosUser {
+    flex-direction: column;
+    margin: auto;
+  }
+  .userComent {
+    display: contents;
+    align-content: center;
+  }
+  .containerBtnComent {
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 280px) {
+  .btnFooter {
+    display: flex;
+  }
+  .containerBtnComent {
+    flex-direction: column;
+  }
 }
 </style>

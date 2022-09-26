@@ -26,6 +26,14 @@ export default {
   height: 20vw;
   border-radius: 1.2rem;
 }
+.title404,
+h1 {
+  padding: 4rem 0 0 0;
+  color: #9d0303;
+}
+.logo404 {
+  margin-top: 2rem;
+}
 @media screen and (max-width: 768px) {
   .pg404 {
     height: 55vw;
@@ -40,14 +48,5 @@ export default {
   .pg404 {
     height: 75vw;
   }
-}
-
-.title404,
-h1 {
-  padding: 4rem 0 0 0;
-  color: #9d0303;
-}
-.logo404 {
-  margin-top: 2rem;
 }
 </style>
