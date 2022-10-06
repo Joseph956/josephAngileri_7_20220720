@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="form-control_input">
+    <div class="form-controlInput">
       <div>
         <div class="containerComent">
           <div class="avatarComent">
@@ -147,12 +147,12 @@
                   </div>
 
                   <div class="userComent">
-                    <div>
+                    <div class="date">
                       <p class="dateComent">
                         <!-- <p class="textUserComent"> -->
                         {{ coment.user.username }} <br />
                         <!-- </p> -->
-                        Posté le : {{ coment.createdAt }}
+                        Posté le : {{ dayjs(coment.createdAt) }}
                       </p>
                     </div>
                   </div>
@@ -241,6 +241,8 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { mapState } from "vuex";
 import comentsList from "@/components/ComentsList.vue";
+// import * as dayjs from "dayjs";
+import "dayjs/locale/fr"; // import locale
 
 export default {
   name: "ComentsCreate",
@@ -393,6 +395,11 @@ export default {
             alert(this.mesgError);
           });
       }
+    },
+    dayjs: function () {
+      const Date = dayjs().locale("fr").format("DD-MM-YYYY");
+      dayjs().format("L LT");
+      return Date;
     },
     comentDeleted: function (comentId) {
       if (window.confirm("Voulez-vous vraiment supprimer ce commentaire ?")) {
@@ -608,6 +615,9 @@ export default {
   }
 }
 @media screen and (max-width: 372px) {
+  .containerComent {
+    margin: 0 auto 0 auto;
+  }
   .dateComent {
     text-align: center;
     margin-bottom: 0;
@@ -623,13 +633,22 @@ export default {
   .containerBtnComent {
     flex-direction: column;
   }
+  #coment {
+    height: auto;
+  }
 }
 @media screen and (max-width: 280px) {
+  .containerComent {
+    margin: 0 auto 0 auto;
+  }
   .btnFooter {
     display: flex;
   }
   .containerBtnComent {
     flex-direction: column;
+  }
+  #coment {
+    height: auto;
   }
 }
 </style>

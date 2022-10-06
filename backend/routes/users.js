@@ -7,7 +7,11 @@ const usersCtrl = require("../controllers/users");
 router.get("/", auth.token, usersCtrl.findAllPublished);
 router.get("/:id", auth.token, usersCtrl.findOneProfil);
 // auth.haveRightOnProfile,
-router.post("/:id", auth.token, usersCtrl.publierProfil);
+
+
+router.get("/:id/publishProfil", auth.token, usersCtrl.publierProfil);
+
+//Mettre à jour le profile utilisateur
 router.put("/:id/profile", auth.token, auth.haveRightOnProfile, multer, usersCtrl.updateProfil);
 router.delete("/:id", auth.token, auth.haveRightOnProfile, multer, usersCtrl.deleteProfil);
 // 

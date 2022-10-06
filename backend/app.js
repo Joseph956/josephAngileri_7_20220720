@@ -7,8 +7,6 @@ const path = require('path');
 const { sequelize } = require('./models');
 const dotenv = require('dotenv');
 
-
-
 dotenv.config();
 require('./config/config');
 
@@ -130,13 +128,12 @@ function initial() {
         }).then(users => {
             Post.findOrCreate({
                 where: {
-
-                    title: "1er post title",
-                    content: "1er post",
+                    title: "1er post",
+                    content: "Description du 1er post",
                 },
                 defaults: {
-
                     title: "1er post",
+                    content: "Description du 1er post",
                     userId: users[0].get('id')
                 }
             }).catch((err) => { console.log(err) });

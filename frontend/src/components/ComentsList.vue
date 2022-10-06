@@ -248,7 +248,6 @@ export default {
     if (this.$store.state.user.role.role == "admin") {
       this.isAdmin = true;
     }
-    // console.log("mess : coment list" + this.isAdmin);
     this.getComentList();
   },
 
@@ -316,7 +315,7 @@ export default {
       }
     },
     postDetailReturn: function () {
-      this.$router.push("/");
+      this.$router.push("/posts");
     },
   },
 };

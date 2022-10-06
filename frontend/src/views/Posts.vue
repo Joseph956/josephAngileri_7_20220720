@@ -1,7 +1,7 @@
 <template>
   <div class="postForm">
     <navPosts />
-    <div class="form-grouProfile" v-if="user.imgBottom">
+    <div class="form-grouProfilePost" v-if="user.imgBottom">
       <img
         style="height: auto; width: 100%"
         x="0"
@@ -13,7 +13,7 @@
         alt="Image de fond compte utilisateur"
       />
     </div>
-    <div class="form-grouProfile" v-else>
+    <div class="form-grouProfilePost" v-else>
       <img
         style="height: 25vw; width: 100%"
         x="0"
@@ -188,9 +188,10 @@
               v-show="posts.length > 0"
               v-for="post in posts"
               :key="post.id"
-              class="col-md-12 grid-margin"
+              class="col-md-12 grid-marginPost"
             >
-              <div class="card rounded">
+              <!-- rounded -->
+              <div class="card">
                 <!-- Infos créateur du post -->
                 <div class="card-header">
                   <div
@@ -228,17 +229,9 @@
                           <div>
                             <div class="date">
                               <div class="datePost">
-                                {{ post.user.username }} <br />
-                                Date :
-                                {{ post.createdAt }}
-                                {{ dayjs(this.post.createdAt) }}
+                                Auteur : {{ post.user.username }} <br />
+                                Posté le : {{ dayjs(post.createdAt) }}
                               </div>
-
-                              <!-- {{ Dayjs(post.createdAt).locale("fr") }} -->
-                              <!-- <span>{{
-                                post.createdAt | Dayjs("daysInMonth")
-                              }}</span> -->
-                              <!-- {{ dayjs().format(post.createdAt, "MMMM") }} -->
                             </div>
                           </div>
                         </div>
@@ -299,85 +292,82 @@
                     <p class="alert alert-info text-danger">{{ mesgError }}</p>
                   </div>
                 </div>
-                <div class="card-footer">
-                  <div class="post-actions">
-                    <div class="menuPost">
-                      <div class="linksPost">
-                        <div class="likesPost">
-                          <div class="likes">
-                            <routeur-link
-                              v-bind:to="'/PostLikes/' + postId"
-                              class="d-flex align-items-center text-muted mr-4"
+              </div>
+              <div class="card-footer">
+                <div class="post-actions">
+                  <div class="menuPost">
+                    <div class="linksPost">
+                      <div class="likesPost">
+                        <div class="likes">
+                          <routeur-link
+                            v-bind:to="'/PostLikes/' + postId"
+                            class="d-flex align-items-center text-muted mr-4"
+                          >
+                            <button
+                              type="button"
+                              class="btn btn-like"
+                              @click="postLikeCreate(post.id)"
                             >
-                              <button
-                                type="button"
-                                class="btn btn-like"
-                                @click="postLikeCreate(post.id)"
-                              >
-                                <span v-if="status == 'loading'"
-                                  >Like ....</span
-                                >
-                                <span v-else>
-                                  <div class="likeFlex">
-                                    <img
-                                      class="like"
-                                      style="height: 1.5rem; width: 1.5rem"
-                                      x="0"
-                                      y="0"
-                                      height="100%"
-                                      width="100%"
-                                      src="../assets/Icons/BiHandThumbsUpFill.svg"
-                                      alt="liker la publication"
-                                    />
-                                    <div>
-                                      <div class="linkLike">
-                                        <div class="d-md-block ml-2">
-                                          <span v-if="post.likes.length < 2">
-                                            - {{ post.likes.length }} - Like<br
-                                          /></span>
-                                          <span v-else>
-                                            - {{ post.likes.length }} - likes<br
-                                          /></span>
-                                        </div>
+                              <span v-if="status == 'loading'">Like ....</span>
+                              <span v-else>
+                                <div class="likeFlex">
+                                  <img
+                                    class="like"
+                                    style="height: 1.5rem; width: 1.5rem"
+                                    x="0"
+                                    y="0"
+                                    height="100%"
+                                    width="100%"
+                                    src="../assets/Icons/BiHandThumbsUpFill.svg"
+                                    alt="liker la publication"
+                                  />
+                                  <div>
+                                    <div class="linkLike">
+                                      <div class="d-md-block ml-2">
+                                        <span v-if="post.likes.length < 2">
+                                          - {{ post.likes.length }} - Like<br
+                                        /></span>
+                                        <span v-else>
+                                          - {{ post.likes.length }} - likes<br
+                                        /></span>
                                       </div>
                                     </div>
                                   </div>
-                                </span>
-                              </button>
-                            </routeur-link>
+                                </div>
+                              </span>
+                            </button>
+                          </routeur-link>
+                        </div>
+                      </div>
+                      <div class="comentsPost">
+                        <router-link
+                          class="displayComents"
+                          @click="displayAllComents()"
+                          v-bind:to="`/ComentsList/${post.id}`"
+                        >
+                          <div class="linkItems">
+                            <img
+                              src="../assets/Icons/coment.svg"
+                              alt="commentaires"
+                            />
                           </div>
-                        </div>
-                        <div class="comentsPost">
-                          <router-link
-                            class="displayComents"
-                            @click="displayAllComents()"
-                            v-bind:to="`/ComentsList/${post.id}`"
-                          >
-                            <div class="linkItems">
-                              <img
-                                src="../assets/Icons/coment.svg"
-                                alt="commentaires"
-                              />
+                          <div class="linkComent">
+                            <div class="d-md-block ml-2">
+                              <span v-if="post.coments.length < 2">
+                                - {{ post.coments.length }} - Commentaire <br
+                              /></span>
+                              <span v-else>
+                                - {{ post.coments.length }} - Commentaires <br
+                              /></span>
                             </div>
-                            <div class="linkComent">
-                              <div class="d-md-block ml-2">
-                                <span v-if="post.coments.length < 2">
-                                  - {{ post.coments.length }} - Commentaire <br
-                                /></span>
-                                <span v-else>
-                                  - {{ post.coments.length }} - Commentaires
-                                  <br
-                                /></span>
-                              </div>
-                            </div>
-                          </router-link>
-                        </div>
+                          </div>
+                        </router-link>
                       </div>
                     </div>
                   </div>
-                  <comentsCreate :postId="post.id" />
                 </div>
               </div>
+              <comentsCreate :postId="post.id" />
             </div>
           </div>
         </div>
@@ -394,7 +384,8 @@ import postDetails from "@/views/PostDetails.vue";
 import postsUpdate from "@/components/PostsUpdate.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
 import comentsList from "@/components/ComentsList.vue";
-import dayjs from "dayjs";
+import * as dayjs from "dayjs";
+import "dayjs/locale/fr"; // import locale
 
 export default {
   name: "Posts",
@@ -484,38 +475,11 @@ export default {
       this.file = this.$refs.file.files[0];
       this.attachment = URL.createObjectURL(this.file);
     },
-    formatDate: function (dateObject) {
-      return "dcode";
-    },
-
-    dayjs() {
-      const nowDate = dayjs(); //new Date("2022-09-21T21:56:28.000Z")
-      //Recupérer la forme ISO
-      // nowDate = dayjs("2022-09-21T21:56:28.000Z");
-      //Utiliser le format
-      // nowDate = dayjs("21/09/2022 21:56PM", "DD-MM-YYYY");
-      //Créer l'objet dayjs en mode UTC
-      // nowDate = dayjs.utc("2022-09-21T21:56:28.000Z");
-
-      console.log(nowDate.format("DD-MM-YYYY"));
-      console.log(JSON.stringify(nowDate));
-      console.log(`toString() => ${nowDate.toString()}`);
-      console.log(`toISOString() => ${nowDate.toISOString()}`);
-      // const nowDateFormatted = formatDate(nowDate);
-      // console.log(nowDateFormatted);
-      // const datePosts = document.querySelectorAll(".datePost");
-      // console.log(datePosts);
-
-      // const now = dayjs(new Date("2022-09-21")).format(
-      //   "[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]"
-      // );
-      // console.log(now.tolocaleDateString("fr-FR"));
-
-      // console.log(dayjs(new Date()));
-
-      // dayjs().locale("fr");
-      // dayjs.extend("LocalizedFormat");
-      // dayjs().format("L LT");
+    dayjs: function () {
+      const Date = dayjs().format("DD-MM-YYYY");
+      // dayjs.extend(duration);
+      // dayjs().format("L LT");.locale("fr")
+      return Date;
     },
     getPostList() {
       this.apiPosts
@@ -620,10 +584,13 @@ export default {
 </script>
 
 <style>
+.imgBottomAvatarGpm {
+  margin: 0 0.8rem 1.2rem 0.8rem;
+}
 .btnUp {
   height: 3rem;
   width: 3rem;
-  background: #4e51665a;
+  background: #393c525a;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -679,7 +646,7 @@ Formulaire de publication des posts
 .publierForm {
   background-color: 4e5166;
   box-shadow: 0px 0px 10px #ffd7d7, -5px -5px 10px #4e51665a;
-  margin-bottom: 2.2rem;
+  margin: 0 0.8rem 1.2rem 0.8rem;
   border-radius: 1rem;
   outline: none;
 }
@@ -783,6 +750,9 @@ Affichage de la liste des posts
   margin-right: -2px;
   margin-left: -2px;
 }
+.grid-marginPost {
+  margin-top: 2.5rem;
+}
 img {
   margin: auto;
 }
@@ -790,7 +760,7 @@ img {
 ***********Card header***********
 *********************************/
 .card-header {
-  box-shadow: 0px 0px 2px #ffd7d7, -5px -5px 5px #4e51665a;
+  /* box-shadow: 0px 0px 2px #ffd7d7, -5px -5px 5px #4e51665a; */
   border-radius: calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0;
 }
 .justify-content-between {
@@ -963,7 +933,8 @@ img {
   align-content: space-around;
   justify-content: space-around;
 }
-.form-control_input {
+.form-controlInput {
+  margin: 0 1rem 2rem 1rem;
   padding: 2 rem;
   border: none;
   border-radius: 1rem;
@@ -974,7 +945,7 @@ img {
   min-width: 100px;
   color: #4e516600;
 }
-.form-control_input::placeholder {
+.form-controlInput::placeholder {
   color: #4e51665a;
 }
 .linkPost {
@@ -1218,6 +1189,9 @@ img {
   }
   .linkPost {
     margin: 1rem auto;
+  }
+  .form-controlInput {
+    margin: 0 auto 2rem auto;
   }
 }
 </style>

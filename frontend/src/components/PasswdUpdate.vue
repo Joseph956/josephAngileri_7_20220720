@@ -130,6 +130,7 @@
 
           <div class="form-group">
             <button
+              v-if="isAdmin == true || $store.state.user.userId == user.userId"
               class="btn btn-primary"
               @click="createPassword()"
               :disabled="!validatedFields"
@@ -173,6 +174,7 @@ export default {
   data: function () {
     return {
       msgError: "",
+      isAdmin: false,
       apiPasswd: axios.create({
         baseURL:
           "http://localhost:3000/api/auth/" + this.$store.state.user.userId,
@@ -192,6 +194,14 @@ export default {
       error_newPasswd: "",
       error_newPasswdConfirm: "",
     };
+  },
+  beforeMount() {
+    if (this.$store.state.user.role.role == "admin") {
+      this.isAdmin = true;
+    }
+    if (this.$store.state.user.role.role == "user") {
+      this.isAdmin = true;
+    }
   },
   computed: {
     validatedFields: function () {

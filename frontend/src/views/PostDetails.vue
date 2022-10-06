@@ -24,7 +24,8 @@
         </div>
         <div class="row">
           <div class="col-md-12 grid-margin">
-            <div class="card rounded">
+            <div class="card">
+              <!-- rounded -->
               <!-- Infos créateur du post -->
               <div class="card-header">
                 <div class="d-flex align-items-center justify-content-between">
@@ -61,8 +62,9 @@
                       <div class="userPost">
                         <div>
                           <p class="datePost">
-                            {{ post.user.username }} <br />
-                            Posté le : {{ post.createdAt }}
+                            {{ post.user !== null && post.user.username }}
+                            <br />
+                            Posté le : {{ dayjs(post.createdAt) }}
                           </p>
                         </div>
                       </div>
@@ -221,11 +223,22 @@
                               <div>
                                 <div class="linkLike">
                                   <div class="d-md-block ml-2">
-                                    <span v-if="post.likes.length < 2">
-                                      - {{ post.likes.length }} - Like<br
+                                    <span
+                                      v-if="
+                                        post.user !== null &&
+                                        post.likes.length < 2
+                                      "
+                                    >
+                                      -
+                                      {{ post.likes.length }}
+                                      - Like<br
                                     /></span>
                                     <span v-else>
-                                      - {{ post.likes.length }} - likes<br
+                                      -
+                                      {{
+                                        post.user !== null && post.likes.length
+                                      }}
+                                      - likes<br
                                     /></span>
                                   </div>
                                 </div>
@@ -250,11 +263,14 @@
                       </div>
                       <div class="linkComent">
                         <div class="d-md-block ml-2">
-                          <span v-if="post.coments.length < 2">
+                          <span
+                            v-if="post.user !== null && post.coments.length < 2"
+                          >
                             - {{ post.coments.length }} - Commentaire <br
                           /></span>
                           <span v-else
-                            >- {{ post.coments.length }} - Commentaires <br
+                            >- {{ post.user !== null && post.coments.length }} -
+                            Commentaires <br
                           /></span>
                         </div>
                       </div>
@@ -263,7 +279,7 @@
                 </div>
               </div>
             </div>
-            <!-- <comentsCreate :postId="post.id" /> -->
+            <comentsCreate :postId="post.id" />
           </div>
         </div>
       </div>
@@ -275,10 +291,12 @@
 import axios from "axios";
 import navPosts from "@/components/NavPosts.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
+import * as dayjs from "dayjs";
 
 export default {
   name: "PostDetails",
   components: {
+    dayjs,
     navPosts,
     comentsCreate,
   },
@@ -307,12 +325,26 @@ export default {
       posts: [],
     };
   },
+  mounted: function () {
+    this.apiPosts
+      .get("/")
+      .then((response) => {
+        if (!response.data) {
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
+        } else {
+          this.users = response.data;
+        }
+      })
+      .catch((error) => {
+        this.mesgError = error.response.data.message;
+        alert(this.mesgError);
+      });
+  },
   beforeMount() {
     if (this.$store.state.user.role.role == "admin") {
       this.isAdmin = true;
     }
-    // console.log("mess post details" + this.isAdmin);
-
     this.getPostOne();
   },
   computed: {},
@@ -354,6 +386,25 @@ export default {
           this.mesgError = error.response.data.message;
           alert(this.mesgError);
         });
+    },
+    displayAllComents: function () {
+      this.apiPosts
+        .get("/")
+        .then((response) => {
+          if (!response) {
+            return (this.mesgError = error.response.data.message);
+          } else {
+            this.coments = response.data;
+          }
+        })
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
+        });
+    },
+    dayjs: function () {
+      const Date = dayjs().locale("fr").format("DD-MM-YYYY");
+      return Date;
     },
     postDeleted: function (postId) {
       if (window.confirm("Voulez-vous vraiment supprimer ce post ?")) {
@@ -453,7 +504,6 @@ h1 {
 @media screen and (max-width: 768px) {
   .containTitle,
   h1 {
-    /* flex-direction: column; */
     font-size: larger;
     margin: 4rem 1rem 0 1rem;
   }
@@ -490,6 +540,11 @@ h1 {
     flex-direction: column;
     align-content: center;
     align-items: center;
+  }
+}
+@media screen and (max-width: 393px) {
+  .separatorUser {
+    margin: 0 auto 0.5rem auto;
   }
 }
 </style>

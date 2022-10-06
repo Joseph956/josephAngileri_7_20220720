@@ -6,9 +6,6 @@ import store from './store';
 import dayjs from 'dayjs';
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 window.axios = require('axios');
-console.log(dayjs());
-
-// vue.prototype.dayjs = dayjs;
 
 const app = createApp(App).use(router)
 

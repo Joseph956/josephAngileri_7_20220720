@@ -54,14 +54,22 @@
                         </div>
                       </div>
                     </div>
+                    <!-- v-if="mode == 'isAdmin'" -->
                     <div class="positionTrash">
+                      <!-- d-block -->
+                      <!-- v-if="
+                          isAdmin == true ||
+                          $store.state.user.userId == user.userId
+                        " -->
                       <button
+                        block
                         class="btn"
                         data-dropdown-button
                         @click="userDeleted(user.id)"
                       >
+                        <!--:disabled="!validatedFields"  -->
                         <div class="trashBtn">
-                          <div class="btnComent">
+                          <div v-if="mode == 'adminCpte'" class="btnComent">
                             <img
                               style="height: 1.2rem; width: 1.2rem"
                               x="0"
@@ -106,7 +114,13 @@
                         </div>
                       </div>
                     </div>
-                    <div class="positionTrash">
+                    <!--  -->
+                    <div v-if="mode == 'adminCpte'" class="positionTrash">
+                      <!--block  d-block-->
+                      <!-- v-if="
+                          isAdmin == true ||
+                          $store.state.user.userId == user.userId
+                        " -->
                       <button
                         class="btn"
                         data-dropdown-button
@@ -173,15 +187,16 @@
 import axios from "axios";
 import { mapState } from "vuex";
 import navPosts from "@/components/NavPosts.vue";
-import profileUser from "@/views/ProfileUsers.vue";
+import profileUsers from "@/views/ProfileUsers.vue";
 
 export default {
   name: "Users",
-  components: { navPosts, profileUser },
+  components: { navPosts, profileUsers },
   props: ["profile"],
   data: function () {
     return {
       mesgError: "",
+      mode: "adminCpte",
       isAdmin: false,
       apiUser: axios.create({
         baseURL: "http://localhost:3000/api/users/",
@@ -217,21 +232,51 @@ export default {
     }
   },
   computed: {
+    validatedFields: function () {
+      if (this.mode == "adminCpte") {
+        if (
+          this.isAdmin == "true" &&
+          this.$store.state.user.userId == "user.userId"
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
     ...mapState(["status"]),
   },
   methods: {
-    getUserList() {
-      this.apiUser
+    userDeleted: function () {
+      this.mode = "adminCpte";
+    },
+    // getUserList() {
+    //   this.apiUser
+    //     .get("/")
+    //     .then((response) => {
+    //       if (!response.data) {
+    //         this.mesgError = error.response.data.message;
+    //         alert(this.mesgError);
+    //       } else {
+    //         this.users = response.data;
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       this.mesgError = error.response.data.message;
+    //       alert(this.mesgError);
+    //     });
+    // },
+    getPostList() {
+      this.apiPosts
         .get("/")
         .then((response) => {
           if (!response.data) {
-            this.mesgError = error.response.data.message;
-            alert(this.mesgError);
+            return (this.mesgError = error.response.data.message);
           } else {
-            this.users = response.data;
+            this.post = response.data;
           }
         })
-        .catch((error) => {
+        .catch(function (error) {
           this.mesgError = error.response.data.message;
           alert(this.mesgError);
         });
@@ -286,11 +331,12 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 1rem 0 1rem;
+  margin: 0.5rem 1rem 0 1rem;
 }
 
 .logoTransparentUser {
   display: flex;
+  margin-top: 0.6rem;
 }
 
 .alert-info {
@@ -339,7 +385,7 @@ h1 {
 }
 .infoUser {
   font-size: 1rem;
-  padding: 5px 10px 5px 10px;
+  padding: 5px 0 5px 10px;
   text-align: center;
   overflow: hidden;
 }

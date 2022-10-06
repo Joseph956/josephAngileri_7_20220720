@@ -1,5 +1,6 @@
 <template>
   <div>
+    <navPosts />
     <div class="pg404">
       <h1 class="title404">
         Page 404 <br />Ooups. Cette page n'existe pas !!!!
@@ -12,8 +13,10 @@
 </template>
 
 <script>
+import navPosts from "@/components/NavPosts.vue";
 export default {
   name: "NotFound",
+  components: { navPosts },
 };
 </script>
 

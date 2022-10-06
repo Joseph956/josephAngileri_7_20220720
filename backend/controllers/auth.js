@@ -76,8 +76,7 @@ exports.signIn = (req, res, next) => {
                 return res.status(401).json({
                     error, message: "Vous n'êtes pas autorisé à vous connecter sur ce compte utilisateur !!!"
                 });
-            }
-            else {
+            } else {
                 bcrypt.compare(req.body.password, user.password)
                     .then((valid) => {
                         if (!valid) {

@@ -67,6 +67,8 @@ exports.findAllPublished = async (req, res, next) => {
 };
 exports.findOneProfil = async (req, res, next) => {
     const userId = req.params.id;
+    console.log("--------->Contenu findOneProfil : userId");
+    console.log(userId);
     User.findOne({
         where: {
             id: userId,
@@ -116,7 +118,6 @@ exports.createImgBottom = async (req, res, next) => {
             if (userObject.imgBottom != null) {
                 const filename = userObject.imgBottom.split("/images/")[1];
                 fs.unlink(`images/${filename}`, () => {
-                    console.log(req.file);
                     const userObject = req.file ?
                         {
                             ...req.body,
@@ -171,13 +172,11 @@ exports.deleteImgBottom = async (req, res, next) => {
         User.findOne({
             where: { id: id },
             model: db.user,
-            attributes: ['id', 'imgBottom', 'attachment', 'username', 'email', 'roleId'],
+            attributes: ['imgBottom', 'attachment', 'username', 'email', 'roleId'],
         }).then(userObject => {
             if (userObject.imgBottom != null) {
                 const filename = userObject.imgBottom.split("/images/")[1];
-                fs.unlink(`images/${filename}`, () => {
-                    // console.log("image supprimée");
-                });
+                fs.unlink(`images/${filename}`, () => { });
                 User.update({
                     "imgBottom": null
                 }, {
@@ -190,7 +189,7 @@ exports.deleteImgBottom = async (req, res, next) => {
 
             } else {
                 res.status(400).json({
-                    message: "Il n'\y a pas d'\image de fond à supprimer !!!"
+                    message: "Il n'\y a pas d'\image de couverture à supprimer !!!"
                 })
             }
         }).catch((error) => { })
@@ -199,14 +198,44 @@ exports.deleteImgBottom = async (req, res, next) => {
     }
 };
 exports.publierProfil = async (req, res, next) => {
+    const userId = req.params.id;
+    console.log("-------->Contenu publierProfil : userId");
+    console.log(userId);
     User.findOne({
-        user: (req.body.user),
-        // attachment: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+        where: {
+            id: userId,
+        },
+        model: db.user,
         attributes: ['id', 'imgBottom', 'attachment', 'username', 'email', 'roleId'],
+        include: [{
+            model: db.posts,
+            attributes: ['id', 'title', 'content', 'attachment']
+        },
+        {
+            model: db.coments,
+            coment: req.params.comentId,
+            attributes: ['id', 'coment', 'userId'],
+            order: [["createdAt", "DESC"]],
+            include: [
+                {
+                    model: db.user,
+                    attributes: ['username', 'attachment', 'imgBottom']
+                }
+            ],
+        },
+        {
+            model: db.likes,
+            likes: req.body.likeId,
+            attributes: ['likes'],
+            order: [["created", "DESC"]]
+        },
+        ],
         order: [["createdAt", "DESC"]],
     }).then((user) => {
         if (!user) {
-            return res.status(403).json({
+            console.log("-------> Contenu : user");
+            console.log(user);
+            return res.status(401).json({
                 message: "Le profil utilisateur n'a pas été trouvé !",
             });
         } else {

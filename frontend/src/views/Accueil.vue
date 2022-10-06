@@ -62,13 +62,13 @@
                 name="username"
                 placeholder="Nom prénom"
                 required
-                minlength="3"
+                minlength="5"
                 autocomplete="off"
               />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
             </div>
-            <small>{{ error }}</small>
+            <small>{{ message }}</small>
           </div>
         </div>
 
@@ -189,6 +189,7 @@
           </button>
 
           <button
+            id="ValidInscription"
             class="btns btn-primary"
             aria-label="inscription"
             @click="createAccount()"
@@ -218,6 +219,7 @@
 
 <script>
 import { mapState } from "vuex";
+// import validInputs from "@/services/ValidInputs";
 // import rateLimit from "express-rate-limit";
 // import { useVuelidate } from "@vuelidate/core";
 // import { required } from "@vuelidate/validators";
@@ -229,6 +231,7 @@ export default {
   // },
   components: {
     // rateLimit,
+    // validInputs,
   },
   data: function () {
     return {
@@ -357,6 +360,11 @@ export default {
         function (error) {
           console.log(error);
         };
+      return {
+        username,
+        password,
+        confirmPasswd,
+      };
     },
   },
 };

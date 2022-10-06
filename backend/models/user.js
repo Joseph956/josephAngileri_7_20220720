@@ -20,13 +20,6 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             required: true,
             unique: true,
-            validate: {
-                isEmail: true,
-                async emailSchema(email) {
-                    if (await User.findOne({ where: { email } }))
-                        throw new Error("Un compte utilisateur existe avec cette adresse mail !!!")
-                }
-            }
         },
 
         password: {
@@ -37,6 +30,20 @@ module.exports = (sequelize, Sequelize) => {
         {
             sequelize,
             modelName: 'user',
-        });
+        },
+        {
+            tableName: 'users',
+            hooks: {
+                beforeCreate: (record, options) => {
+                    record.dataValues.createdAt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/g, 'DD/MM/YYYY');
+                    record.dataValues.updatedAt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/g, 'DD/MM/YYYY');
+                },
+                beforeUpdate: (record, options) => {
+                    record.dataValues.updatedAt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/g, 'DD/MM/YYYY');
+                }
+            }
+
+        }
+    );
     return User;
 };

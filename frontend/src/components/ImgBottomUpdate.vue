@@ -38,7 +38,12 @@
             accept="image/*"
             @change="onFileSelected()"
           />
-          <button class="btnFile" type="button" @click="imgFondUpdate()">
+          <button
+            v-if="isAdmin == true || $store.state.user.userId == user.userId"
+            class="btnFile"
+            type="button"
+            @click="imgFondUpdate()"
+          >
             <span v-if="status == 'loading'">Publication en cours....</span>
             <span v-else>
               <img
@@ -65,6 +70,7 @@ export default {
   data: function () {
     return {
       mesgError: "",
+      isAdmin: false,
       apiUser: axios.create({
         baseURL: "http://localhost:3000/api/users/" + this.$route.params.id,
         headers: {
@@ -77,6 +83,14 @@ export default {
         imgBottom: null,
       },
     };
+  },
+  beforeMount() {
+    if (this.$store.state.user.role.role == "admin") {
+      this.isAdmin = true;
+    }
+    if (this.$store.state.user.role.role == "user") {
+      this.isAdmin = true;
+    }
   },
   methods: {
     onFileSelected() {
