@@ -226,13 +226,11 @@
                         </div>
 
                         <div class="userPost">
-                          <div>
-                            <div class="date">
-                              <div class="datePost">
-                                Auteur : {{ post.user.username }} <br />
-                                Posté le : {{ dayjs(post.createdAt) }}
-                              </div>
-                            </div>
+                          <div class="datePost">
+                            <p class="date">
+                              Auteur : {{ post.user.username }} <br />
+                              Posté le : {{ dayjs(post.createdAt) }}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -280,7 +278,7 @@
                     </div>
                     <div v-else>
                       <img
-                        class="imgPost"
+                        class="imgPostAvatar"
                         style="width: 100%"
                         x="0"
                         y="0"
@@ -385,12 +383,14 @@ import postsUpdate from "@/components/PostsUpdate.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
 import comentsList from "@/components/ComentsList.vue";
 import * as dayjs from "dayjs";
-import "dayjs/locale/fr"; // import locale
+import "dayjs/locale/fr";
+import fr from "dayjs/locale/fr";
 
 export default {
   name: "Posts",
   components: {
     dayjs,
+    fr,
     navPosts,
     postsUpdate,
     postDetails,
@@ -475,10 +475,10 @@ export default {
       this.file = this.$refs.file.files[0];
       this.attachment = URL.createObjectURL(this.file);
     },
-    dayjs: function () {
-      const Date = dayjs().format("DD-MM-YYYY");
-      // dayjs.extend(duration);
-      // dayjs().format("L LT");.locale("fr")
+    dayjs: function (createdAt) {
+      const Date = dayjs(createdAt)
+        .locale("fr")
+        .format("DD-MMMM-YYYY à HH:mm ");
       return Date;
     },
     getPostList() {
@@ -798,15 +798,13 @@ img {
   font-size: 1rem;
   text-overflow: ellipsis;
   overflow: hidden;
+  margin: 0 0 0 1rem;
 }
 .nameUser {
   font-weight: inherit;
 }
 .textUser {
   margin: 0;
-}
-.datePost {
-  margin: 0 0 0 1rem;
 }
 .dropdown.active > .link,
 .link:hover {
@@ -912,9 +910,12 @@ img {
 }
 .imgPost {
   width: 100%;
-  height: 70vh;
+  height: 40vh;
   object-fit: cover;
   margin: auto;
+}
+.imgPostAvatar {
+  height: 40vh;
 }
 .readMore .addText {
   display: none;
@@ -1019,7 +1020,7 @@ img {
 @media screen and (max-width: 912px) {
   .imgPost {
     width: 100%;
-    height: 70vw;
+    height: 65vw;
   }
 }
 @media screen and (max-width: 902px) {
@@ -1140,7 +1141,7 @@ img {
     display: flex;
     flex-direction: column;
     text-align: left;
-    margin: 0 auto 0 auto;
+    margin: 0 auto 0 1rem;
   }
   .datePost {
     display: flex;

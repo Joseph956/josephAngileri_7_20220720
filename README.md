@@ -1,4 +1,4 @@
-# P07_reseau_social
+# P07_reseau_social_d'entreprise
 # josephAngileri_7_20220720
 
 # Cloner le projet

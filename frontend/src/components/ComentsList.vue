@@ -2,12 +2,9 @@
   <div>
     <navPosts />
     <div class="fleche">
-      <a href="/posts">
-        <button
-          type="button"
-          class="btn btn-like"
-          @click="postDetailReturn(postId)"
-        >
+      <a href="#">
+        <button type="button" class="btn btn-like" @click="postDetailReturn()">
+          <!-- postId -->
           <img
             class="returnPg"
             style="height: 45px; width: 35px"
@@ -126,10 +123,13 @@
             </div>
 
             <div class="userComent">
-              <p class="textUserComent">
-                {{ coment.user.username }}
-              </p>
-              <div class="dateComent">Posté le : {{ coment.createdAt }}</div>
+              <div class="dateComent">
+                <p class="textUserComent">
+                  Auteur : {{ coment.user.username }} <br />
+                  Posté le :
+                  {{ dayjs(coment.createdAt) }}
+                </p>
+              </div>
             </div>
           </div>
           <!-- Boutons supprimer/modifier -->
@@ -207,15 +207,21 @@
 
 <script>
 import navPosts from "@/components/NavPosts.vue";
+import * as dayjs from "dayjs";
+import "dayjs/locale/fr";
+import fr from "dayjs/locale/fr";
+
 export default {
   name: "ComentsList",
   components: {
     navPosts,
+    fr,
   },
   data: function () {
     return {
       mesgError: "",
       isAdmin: false,
+
       apiComents: axios.create({
         baseURL:
           "http://localhost:3000/api/coments/postId/" + this.$route.params.id,
@@ -313,6 +319,12 @@ export default {
             alert(this.mesgError);
           });
       }
+    },
+    dayjs: function (createdAt) {
+      const Date = dayjs(createdAt)
+        .locale("fr")
+        .format("DD-MMMM-YYYY à HH:mm ");
+      return Date;
     },
     postDetailReturn: function () {
       this.$router.push("/posts");

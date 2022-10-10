@@ -147,12 +147,11 @@
                   </div>
 
                   <div class="userComent">
-                    <div class="date">
-                      <p class="dateComent">
-                        <!-- <p class="textUserComent"> -->
-                        {{ coment.user.username }} <br />
-                        <!-- </p> -->
-                        Posté le : {{ dayjs(coment.createdAt) }}
+                    <div class="dateComent">
+                      <p class="textUserComent">
+                        Auteur : {{ coment.user.username }} <br />
+                        Posté le :
+                        {{ dayjs(coment.createdAt) }}
                       </p>
                     </div>
                   </div>
@@ -238,17 +237,18 @@
 
 <script>
 import axios from "axios";
-import dayjs from "dayjs";
 import { mapState } from "vuex";
 import comentsList from "@/components/ComentsList.vue";
-// import * as dayjs from "dayjs";
-import "dayjs/locale/fr"; // import locale
+import * as dayjs from "dayjs";
+import "dayjs/locale/fr";
+import fr from "dayjs/locale/fr";
 
 export default {
   name: "ComentsCreate",
   components: {
     comentsList,
     dayjs,
+    fr,
   },
   props: {
     postId: String,
@@ -396,9 +396,10 @@ export default {
           });
       }
     },
-    dayjs: function () {
-      const Date = dayjs().locale("fr").format("DD-MM-YYYY");
-      dayjs().format("L LT");
+    dayjs: function (createdAt) {
+      const Date = dayjs(createdAt)
+        .locale("fr")
+        .format("DD-MMMM-YYYY à HH:mm ");
       return Date;
     },
     comentDeleted: function (comentId) {
@@ -480,7 +481,7 @@ export default {
 }
 .dateComent {
   text-align: left;
-  margin: 0.5rem 0 0 0;
+  margin: 0.2rem 0 0 0;
 }
 .infosUser {
   display: flex;
@@ -596,7 +597,7 @@ export default {
     align-content: center;
   }
   .textUserComent {
-    margin: 0.5rem 0 0 0;
+    margin: 0;
   }
   #coment {
     width: 100%;
@@ -629,6 +630,9 @@ export default {
   .userComent {
     display: contents;
     align-content: center;
+  }
+  .textUserComent {
+    margin: 0;
   }
   .containerBtnComent {
     flex-direction: column;

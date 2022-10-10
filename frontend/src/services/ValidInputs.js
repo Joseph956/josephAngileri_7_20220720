@@ -1,27 +1,27 @@
 // const username = document.querySelector("#username");
 
-const userValue = username.value.trim();
-if (userValue === "") {
-    let message = "Ce champ ne peut pas être vide !!!";
-    setError(username, message);
-} else if (!userValue.match(/^[A-Za-z]/)) {
-    let message = "Le nom doit commencer par une lettre !!!";
-    setError(userValue, message);
-}
+// const userValue = username.value.trim();
+// if (userValue === "") {
+//     let message = "Ce champ ne peut pas être vide !!!";
+//     setError(username, message);
+// } else if (!userValue.match(/^[A-Za-z]/)) {
+//     let message = "Le nom doit commencer par une lettre !!!";
+//     setError(userValue, message);
+// }
 
-function setError(elem, message) {
-    const formCtrlSignup = elem.parentElement;
-    const small = formCtrlSignup.querySelector("small");
-    small.innertText = message;
-    formCtrlSignup.className = "form-controlSignup";
-}
+// function setError(elem, message) {
+//     const formCtrlSignup = elem.parentElement;
+//     const small = formCtrlSignup.querySelector("small");
+//     small.innertText = message;
+//     formCtrlSignup.className = "form-controlSignup";
+// }
 
 //Recupération de l'élément à controler dans le formulaire
 const inscription = document.querySelector("#inscription");
 const username = document.querySelector("#username");
 
 //Evenement à controler
-inscription.addEventListener('onSubmit', (e) => {
+inscription.addEventListener('submit', (e) => {
     e.preventDefault();
 
     //fonction qui va faire les verification
@@ -40,7 +40,7 @@ function setError(elem, message) {
     const formCtrlSignup = elem.parentElement;
     const small = formCtrlSignup.querySelector('small');
     small.innertText = message
-    formCtrlSignup.className = "form-controlSignup";
+    formCtrlSignup.className = "form-control";
 }
 
 //     const profil = new user(

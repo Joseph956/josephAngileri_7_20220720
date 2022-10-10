@@ -58,7 +58,6 @@ module.exports.haveRightOnPost = (req, res, next) => {
             }
         });
     } catch (error) {
-        console.log(error);
         res.status(401).json({ error: error | 'Requête non autorisé !' });
     }
 };
@@ -143,8 +142,8 @@ module.exports.passwd = (req, res, next) => {
         next();
     } else {
         return res.status(400).json({
-            message: "Mot de passe faible, au moins 8 caractères dont un chiffre, une lettre majuscule, et minuscule" +
-                passwdSchema.validate(req.body.password, { list: true })
+            message: "Mot de passe faible, au moins 8 caractères dont deux chiffres, une lettre majuscule et minuscule."
+            // + passwdSchema.validate(req.body.password, { list: true })
         })
     }
 };
@@ -157,8 +156,8 @@ module.exports.confirmPasswd = (req, res, next) => {
         next();
     } else {
         return res.status(400).json({
-            message: "Mot de passe faible, au moins 8 caractères dont un chiffre, une lettre majuscule, et minuscule" +
-                confirmPasswdSchema.validate(req.body.newPasswd, { list: true })
+            message: "Mot de passe faible, au moins 8 caractères dont un chiffre, une lettre majuscule, et minuscule"
+            // + confirmPasswdSchema.validate(req.body.newPasswd, { list: true })
         })
     }
 };

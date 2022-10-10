@@ -62,6 +62,7 @@
                       <div class="userPost">
                         <div>
                           <p class="datePost">
+                            Auteur :
                             {{ post.user !== null && post.user.username }}
                             <br />
                             Posté le : {{ dayjs(post.createdAt) }}
@@ -103,7 +104,7 @@
                     </div>
                     <div v-else>
                       <img
-                        class="imgPost"
+                        class="imgPostAvatar"
                         style="width: 100%"
                         x="0"
                         y="0"
@@ -292,11 +293,14 @@ import axios from "axios";
 import navPosts from "@/components/NavPosts.vue";
 import comentsCreate from "@/components/ComentsCreate.vue";
 import * as dayjs from "dayjs";
+import "dayjs/locale/fr";
+import fr from "dayjs/locale/fr";
 
 export default {
   name: "PostDetails",
   components: {
     dayjs,
+    fr,
     navPosts,
     comentsCreate,
   },
@@ -402,8 +406,10 @@ export default {
           alert(this.mesgError);
         });
     },
-    dayjs: function () {
-      const Date = dayjs().locale("fr").format("DD-MM-YYYY");
+    dayjs: function (createdAt) {
+      const Date = dayjs(createdAt)
+        .locale("fr")
+        .format("DD-MMMM-YYYY à HH:mm ");
       return Date;
     },
     postDeleted: function (postId) {
@@ -441,7 +447,7 @@ h1 {
 }
 .cardTitle {
   display: flex;
-  margin: 2rem 0 1rem 1rem;
+  margin: 2rem 0 0.8rem 1rem;
   text-decoration: none;
 }
 .separatorUser {

@@ -6,7 +6,7 @@
       <div></div>
       <div class="form-grouProfile" v-if="user.imgBottom">
         <img
-          style="height: auto; width: 100%"
+          style="width: 100%"
           x="0"
           y="0"
           height="100%"
@@ -101,11 +101,16 @@
             </router-link>
           </li>
         </div>
-
-        <h1 class="cardTitle">Votre profil {{ user.username }}</h1>
-        <div class="separatorProfilUser"></div>
-        <h3>{{ user.username }}</h3>
-        <h3>{{ user.email }}</h3>
+        <div class="gridBox">
+          <h1 class="cardTitleProfil">Votre profil {{ user.username }}</h1>
+          <div class="separatorProfilUser"></div>
+          <div class="cardHeader">
+            <h3>Pseudo : {{ user.username }}</h3>
+          </div>
+          <div>
+            <h3>Email : {{ user.email }}</h3>
+          </div>
+        </div>
       </div>
       <div class="formRowProfile">
         <ul class="btnFooterProfil">
@@ -177,27 +182,32 @@
 
       <!-- Affichage des messages derreurs -->
       <div class="alert alert-info text-danger">{{ mesgError }}</div>
-
-      <!-- Lister les publication de l'utilisateur -->
-      <div class="col-md-8 col-xl-6 middle-wrapper">
-        <div class="containTitleProfil">
-          <div class="logoTransparentProfile">
-            <img
-              style="height: 2.5rem; width: 2.5rem"
-              x="0"
-              y="0"
-              height="100%"
-              width="100%"
-              src="../assets/logo_transparent.png"
-              alt="logo"
-            />
-          </div>
-          <div class="cardTitleProfile">
-            <h1 class="titlePostUser">
-              Details de vos publications {{ user.username }}
-            </h1>
-            <div class="separatorPostUser"></div>
-          </div>
+      <div class="dateCreateProfil">
+        <h5>
+          Date de création de votre profil {{ user.username }} :
+          {{ dayjs(user.createdAt) }}
+        </h5>
+      </div>
+    </div>
+    <!-- Lister les publication de l'utilisateur -->
+    <div class="col-md-8 col-xl-6 middle-wrapper">
+      <div class="containTitleProfil">
+        <div class="logoTransparentProfile">
+          <img
+            style="height: 2.5rem; width: 2.5rem"
+            x="0"
+            y="0"
+            height="100%"
+            width="100%"
+            src="../assets/logo_transparent.png"
+            alt="logo"
+          />
+        </div>
+        <div class="cardTitleProfile">
+          <h1 class="titlePostUser">
+            Details de vos publications {{ user.username }}
+          </h1>
+          <div class="separatorPostUser"></div>
         </div>
       </div>
     </div>
@@ -245,10 +255,8 @@
                     <div class="userPost">
                       <div>
                         <p class="datePost">
-                          {{ post.user.username }} <br />
-                          Posté le :
-
-                          {{ dayjs(post.createdAt) }}
+                          Auteur : {{ post.user.username }} <br />
+                          Posté le : {{ dayjs(post.createdAt) }}
                         </p>
                       </div>
                     </div>
@@ -275,7 +283,7 @@
                 <div class="form-group">
                   <div v-if="post.attachment">
                     <img
-                      class="imgPost"
+                      class="imgProfil"
                       style="width: 100%"
                       x="0"
                       y="0"
@@ -287,8 +295,8 @@
                   </div>
                   <div v-else>
                     <img
-                      class="imgPost"
-                      style="width: 100%"
+                      class="imgProfil"
+                      style="width: auto"
                       x="0"
                       y="0"
                       height="100%"
@@ -482,11 +490,14 @@ import navPosts from "@/components/NavPosts.vue";
 import ProfilUpdate from "@/components/ProfilUpdate.vue";
 import PasswdUpdate from "@/components/PasswdUpdate.vue";
 import * as dayjs from "dayjs";
+import "dayjs/locale/fr";
+import fr from "dayjs/locale/fr";
 
 export default {
   name: "Profile",
   components: {
     dayjs,
+    fr,
     navPosts,
     ProfilUpdate,
     PasswdUpdate,
@@ -500,6 +511,7 @@ export default {
         attachment: this.attachment,
         usermame: this.username,
         email: this.email,
+        createdAt: this.createdAt,
       },
       posts: {
         title: this.title,
@@ -532,8 +544,12 @@ export default {
     };
   },
   mounted: function () {
+    // let idToFined =
+    //   this.$route.params.id != undefined
+    //     ? this.$route.params.id
+    //     : this.$store.state.user.userId;
     this.apiUser
-      .get("/")
+      .get("/") //+ idToFined
       .then((response) => {
         if (!response) {
           this.mesgError = error.response.data.message;
@@ -550,7 +566,6 @@ export default {
   beforeMount() {
     if (this.$store.state.user.role.role == "admin") {
       this.isAdmin = true;
-      console.log("mess users" + this.isAdmin);
     }
   },
   computed: {
@@ -650,8 +665,10 @@ export default {
           });
       }
     },
-    dayjs: function () {
-      const Date = dayjs().locale("fr").format("DD-MM-YYYY");
+    dayjs: function (createdAt) {
+      const Date = dayjs(createdAt)
+        .locale("fr")
+        .format("DD-MMMM-YYYY à HH:mm ");
       return Date;
     },
     switchToUp: function () {
@@ -730,7 +747,12 @@ export default {
   margin: 0 0.8rem 1.2rem 0.8rem;
 }
 #imgBottomUser {
-  width: 100%;
+  height: 20vw;
+  object-fit: cover;
+}
+.imgProfil {
+  height: 20vw;
+  object-fit: cover;
 }
 .labelModify {
   text-decoration: none;
@@ -761,6 +783,10 @@ export default {
 .infosUserProfile {
   margin: 5rem auto 2rem auto;
 }
+.gridBox {
+  display: grid;
+  justify-items: flex-start;
+}
 .containTitleProfil {
   display: flex;
   justify-content: center;
@@ -772,7 +798,7 @@ export default {
 }
 .cardTitleProfile {
   display: flex;
-  margin: 0rem 1rem 1rem 1rem;
+  margin: 0 1.5rem 1rem 1rem;
   text-decoration: none;
   flex-direction: column;
 }
@@ -780,7 +806,10 @@ export default {
   width: 5rem;
   height: 4px;
   background-color: #ffd7d7;
-  margin: 1rem 0 1.5rem 1.3rem;
+  margin: 0 auto 1.5rem 0;
+}
+.cardText {
+  font-size: 22px;
 }
 .separatorPostUser {
   width: 6rem;
@@ -810,23 +839,26 @@ export default {
 .liBtn {
   margin: 0 3rem;
 }
+.dateCreateProfil {
+  margin: 0 auto 1rem auto;
+}
 /**************************************
 *********Media Queries*****************
 **************************************/
 @media screen and (max-width: 912px) {
   .separatorProfilUser {
-    margin: 1rem 0 1.5rem 2.5rem;
+    margin: 0 auto 1.5rem 0;
   }
 }
 @media screen and (max-width: 900px) {
   .cardTitleProfile {
-    margin: 0 1rem 0 1rem;
+    margin: 0 1rem 0 0;
   }
   .titlePostUser {
     font-size: 25px;
   }
   .separatorProfilUser {
-    margin: 1rem 0 1.5rem 2.5rem;
+    margin: 0 auto 1.5rem 0;
   }
   .separatorPostUser {
     margin: 0rem 1rem 1rem 0.2rem;
@@ -841,10 +873,6 @@ export default {
     font-size: 15px;
     margin: 0 0 17px 0;
   }
-  #imgBottomAvatar {
-    width: auto;
-    height: 10rem;
-  }
   .btnImgDelete {
     margin: 0.5rem;
   }
@@ -858,15 +886,19 @@ export default {
   .logoTransparentProfile {
     margin: 1rem 0 0 0;
   }
+  .cardTitle {
+    margin: 0 auto 0.8rem 0;
+    font-size: 18px;
+  }
   .cardTitleProfile {
-    margin: 0 0 1rem 0;
+    margin: 0 auto 1rem 0;
     font-size: 20px;
   }
   .titlePostUser {
     font-size: 22px;
   }
   .separatorProfilUser {
-    margin: 1rem auto 1.5rem auto;
+    margin: 0 auto 1.5rem 0;
   }
   .separatorPostUser {
     margin: 0rem auto 1rem auto;
@@ -907,19 +939,29 @@ export default {
       font-size: 20px;
     }
     .separatorProfilUser {
-      margin: 1rem auto 1.5rem auto;
+      margin: 0 auto 1.5rem 0;
     }
     .separatorPostUser {
       margin: 0rem auto 1rem auto;
     }
+    .dateCreateProfil,
+    h5 {
+      font-size: 14px;
+    }
   }
   @media screen and (max-width: 280px) {
+    .auth-wrapper h3 {
+      font-size: 16px;
+    }
     .containTitleProfil {
       flex-direction: column;
       margin: 0 auto 0 auto;
     }
     .logoTransparentProfile {
       margin: 0;
+    }
+    .cardTitle {
+      font-size: 16px;
     }
     .cardTitleProfile {
       margin: 0 auto 1.5rem auto;
@@ -932,6 +974,10 @@ export default {
     }
     .separatorPostUser {
       margin: 0rem auto 1rem auto;
+    }
+    .dateCreateProfil,
+    h5 {
+      font-size: 14px;
     }
   }
 }

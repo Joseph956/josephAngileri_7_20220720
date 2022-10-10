@@ -8,12 +8,12 @@ exports.findAllPublished = async (req, res, next) => {
     User.sync({ alter: true }).then(() => {
         return User.findAll({
             user: (req.body.user),
-            attributes: ['id', 'imgBottom', 'attachment', 'username', 'email', 'roleId'],
+            attributes: ['id', 'imgBottom', 'attachment', 'username', 'email', 'createdAt', 'roleId'],
             include: [
                 {
                     model: db.posts,
                     post: req.params.postId,
-                    attributes: ['id', 'content', 'userId'],
+                    attributes: ['id', 'title', 'content', 'attachment', 'userId'],
                     order: [["createdAt", "DESC"]],
                     include: [
                         {
@@ -67,14 +67,12 @@ exports.findAllPublished = async (req, res, next) => {
 };
 exports.findOneProfil = async (req, res, next) => {
     const userId = req.params.id;
-    console.log("--------->Contenu findOneProfil : userId");
-    console.log(userId);
     User.findOne({
         where: {
             id: userId,
         },
         model: db.user,
-        attributes: ['id', 'imgBottom', 'attachment', 'username', 'email', 'roleId'],
+        attributes: ['id', 'imgBottom', 'attachment', 'username', 'email', 'createdAt', 'roleId'],
         include: [{
             model: db.posts,
             attributes: ['id', 'title', 'content', 'attachment']
@@ -199,8 +197,6 @@ exports.deleteImgBottom = async (req, res, next) => {
 };
 exports.publierProfil = async (req, res, next) => {
     const userId = req.params.id;
-    console.log("-------->Contenu publierProfil : userId");
-    console.log(userId);
     User.findOne({
         where: {
             id: userId,

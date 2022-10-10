@@ -1,7 +1,8 @@
 <template>
   <div class="accueil">
     <div class="container">
-      <form id="inscription" name="inscription" @submit.prevent="onSubmit">
+      <!-- <form id="inscription" name="inscription" @submit.prevent="onSubmit"> -->
+      <form id="inscription" name="inscription" @submit.prevent="submit">
         <h1 class="nav-link-title" v-if="mode == 'login'">Login</h1>
         <h1 class="nav-link-title" v-else>Sign Up</h1>
         <p class="nav-link-subtitle" v-if="mode == 'login'">
@@ -50,31 +51,45 @@
             </span>
           </button>
         </p>
+        <!-- <div class="form-group" v-if="mode == 'create'">
+          <div class="form-controlSignup">
+          <label for="username">Pseudo</label>
+          <div class="inputData">
+            <input
+              id="username"
+              type="text"
+              placeholder="Pseudo"
+              v-model="username"
+              class="form-control_input"
+              name="username"
+              minlength="5"
+              required
+              autocomplete="off"
+              />
+            <i class="fas fa-check-circle"></i>
+            <i class="fas fa-exclamation-circle"></i>
+          </div>
+          <small>{{ message }}</small>
+          </div>
+        </div> -->
         <div class="form-group" v-if="mode == 'create'">
           <div class="form-controlSignup">
-            <label class="formContact" for="username">Nom prénom</label>
+            <label class="formContact" for="username">Pseudo</label>
             <div class="inputData">
               <input
-                id="username"
-                type="text"
                 v-model="username"
                 class="form-control_input"
-                name="username"
-                placeholder="Nom prénom"
+                type="text"
+                placeholder="Username"
                 required
                 minlength="5"
-                autocomplete="off"
               />
-              <i class="fas fa-check-circle"></i>
-              <i class="fas fa-exclamation-circle"></i>
             </div>
-            <small>{{ message }}</small>
           </div>
         </div>
-
         <div class="form-group">
           <div class="form-controlSignup">
-            <label class="formContact" for="email">E-mail</label>
+            <label for="email">E-mail</label>
             <div class="inputData">
               <input
                 v-model="email"
@@ -190,6 +205,7 @@
 
           <button
             id="ValidInscription"
+            type="submit"
             class="btns btn-primary"
             aria-label="inscription"
             @click="createAccount()"
@@ -331,10 +347,20 @@ export default {
     },
     createAccount: function () {
       const self = this;
+      const validUsername = (value) => {
+        return /^([A-Za-z]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value);
+      };
+      let username = document.getElementById("#username").value;
+      if (validUsername == username) {
+        message.textContent = "ok";
+      } else {
+        message.textContent =
+          "Ce champ est obligatoire (Chiffres et symboles ne sont pas autorisés. Ne pas dépasser 20 caractères, minimum 3 caractères";
+      }
       let password = document.getElementById("password").value;
       let confirmPasswd = document.getElementById("confirmPasswd").value;
       if (password == confirmPasswd) {
-        message.textContent = "Passwords match";
+        message.textContent = "Votre mot de passe est confirmer !";
       } else {
         message.textContent = "Confirmer votre mot de passe !";
       }
@@ -371,6 +397,11 @@ export default {
 </script>
 
 <style >
+.nav-link-title {
+  margin-top: 3rem;
+  text-align: left;
+  text-align: justify;
+}
 .nav-link-subtitle {
   text-align: left;
   text-align: justify;

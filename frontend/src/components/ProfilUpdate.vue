@@ -229,7 +229,7 @@ export default {
 }
 .cardTitle {
   display: flex;
-  margin: 0rem 0 1rem 1rem;
+  margin: 0 0 0.8rem 1rem;
   text-decoration: none;
   flex-direction: column;
 }

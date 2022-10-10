@@ -30,7 +30,6 @@ exports.signUp = (req, res, next) => {
                     }).then(role => {
                         if (role != null) {
                             user.roleId = role.id;
-                            console.log(user);
                             User.create({
                                 username: req.body.username,
                                 email: req.body.email,

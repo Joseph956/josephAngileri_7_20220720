@@ -49,8 +49,12 @@
                     <div class="listInfosUser">
                       <div class="infoUser">
                         <div class="infosHeader">
-                          <h3 class="infosTitle">{{ user.username }}</h3>
-                          <p class="infosDescription">{{ user.email }}</p>
+                          <h3 class="infosTitle">
+                            Pseudo : {{ user.username }}
+                          </h3>
+                          <p class="infosDescription">
+                            Email : {{ user.email }}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -109,8 +113,12 @@
                     <div class="listInfosUser">
                       <div class="infoUser">
                         <div class="infosHeader">
-                          <h3 class="infosTitle">{{ user.username }}</h3>
-                          <p class="infosDescription">{{ user.email }}</p>
+                          <h3 class="infosTitle">
+                            Pseudo : {{ user.username }}
+                          </h3>
+                          <p class="infosDescription">
+                            Email : {{ user.email }}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -228,7 +236,6 @@ export default {
   beforeMount() {
     if (this.$store.state.user.role.role == "admin") {
       this.isAdmin = true;
-      console.log("mess users" + this.isAdmin);
     }
   },
   computed: {
@@ -247,40 +254,10 @@ export default {
     ...mapState(["status"]),
   },
   methods: {
-    userDeleted: function () {
-      this.mode = "adminCpte";
-    },
-    // getUserList() {
-    //   this.apiUser
-    //     .get("/")
-    //     .then((response) => {
-    //       if (!response.data) {
-    //         this.mesgError = error.response.data.message;
-    //         alert(this.mesgError);
-    //       } else {
-    //         this.users = response.data;
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.mesgError = error.response.data.message;
-    //       alert(this.mesgError);
-    //     });
+    // userDeleted: function () {
+    //   this.mode = "adminCpte";
     // },
-    getPostList() {
-      this.apiPosts
-        .get("/")
-        .then((response) => {
-          if (!response.data) {
-            return (this.mesgError = error.response.data.message);
-          } else {
-            this.post = response.data;
-          }
-        })
-        .catch(function (error) {
-          this.mesgError = error.response.data.message;
-          alert(this.mesgError);
-        });
-    },
+
     switchToUp: function () {
       const btnUp = document.querySelector(".btnUp");
       btnUp.addEventListener("click", () => {

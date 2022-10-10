@@ -4,7 +4,7 @@
       <!-- Image de fond du profil utilisateur  -->
       <div class="formGroup" v-if="user.imgBottom">
         <img
-          style="height: auto; width: 100%"
+          style="height: 25vw; width: 90%"
           x="0"
           y="0"
           height="100%"

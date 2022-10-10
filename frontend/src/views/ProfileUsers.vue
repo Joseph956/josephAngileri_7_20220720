@@ -26,7 +26,7 @@
       <div></div>
       <div class="form-grouProfile" v-if="user.imgBottom">
         <img
-          style="height: auto; width: 100%"
+          style="height: 20vw; width: 100%"
           x="0"
           y="0"
           height="100%"
@@ -129,11 +129,16 @@
             </router-link>
           </li>
         </div>
-
-        <h1 class="cardTitle">Le profil de {{ user.username }}</h1>
-        <div class="separatorProfilUser"></div>
-        <h3>{{ user.username }}</h3>
-        <h3>{{ user.email }}</h3>
+        <div class="gridBox">
+          <h1 class="cardTitleProfil">Le profil de {{ user.username }}</h1>
+          <div class="separatorProfilUser"></div>
+          <div class="cardHeader">
+            <h3>Pseudo : {{ user.username }}</h3>
+          </div>
+          <div>
+            <h3>Email : {{ user.email }}</h3>
+          </div>
+        </div>
       </div>
       <div class="formRowProfile">
         <ul class="btnFooterProfil">
@@ -213,290 +218,52 @@
 
       <!-- Affichage des messages derreurs -->
       <div class="alert alert-info text-danger">{{ mesgError }}</div>
-
-      <!-- Lister les publication de l'utilisateur -->
-      <div class="col-md-8 col-xl-6 middle-wrapper">
-        <div class="containTitleProfil">
-          <div class="logoTransparentProfile">
-            <img
-              style="height: 2.5rem; width: 2.5rem"
-              x="0"
-              y="0"
-              height="100%"
-              width="100%"
-              src="../assets/logo_transparent.png"
-              alt="logo"
-            />
-          </div>
-          <div class="cardTitleProfile">
-            <h1 class="titlePostUser">
-              Les publications de {{ user.username }}
-            </h1>
-            <div class="separatorPostUser"></div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div
-            v-show="posts.length > 0"
-            v-for="post in posts"
-            :key="post.id"
-            class="col-md-12 grid-margin"
-          >
-            <div class="col-md-12 grid-margin">
-              <div class="card rounded">
-                <!-- Infos créateur du post -->
-                <div class="card-header">
-                  <div
-                    class="d-flex align-items-center justify-content-between"
-                  >
-                    <div class="d-flex align-items-center">
-                      <div class="ml-2 justify-content">
-                        <div class="avatar" v-if="user.attachment">
-                          <img
-                            style="height: 65px; width: 55px"
-                            x="0"
-                            y="0"
-                            height="100%"
-                            width="100%"
-                            class="imgUser"
-                            alt="Image du profil"
-                            v-bind:src="user.attachment"
-                            loading="lazy"
-                          />
-                        </div>
-                        <div class="avatar" v-else>
-                          <img
-                            style="height: 55px; width: 55px"
-                            x="0"
-                            y="0"
-                            height="100%"
-                            width="100%"
-                            class="avatarProfil"
-                            src="../assets/Icons/BiPersonCircle.svg"
-                            alt="avatar"
-                          />
-                        </div>
-
-                        <div class="userPost">
-                          <div>
-                            <p class="datePost">
-                              {{ post.user.username }} <br />
-                              Posté le : {{ post.createdAt }}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- Affichage du post -->
-                <div class="card-body">
-                  <!-- Animation du titre -->
-                  <p class="mb-3 tx-14">
-                    <router-link class="external" v-bind:to="'/Posts/'">
-                      <div class="infos">
-                        <p class="aspect">Afficher les publications:</p>
-                        {{ post.title }}
-                      </div>
-                    </router-link>
-                    <!-- Fin animation du titre -->
-                  </p>
-                  <div class="separator"></div>
-                  <p class="mb-3 tx-14">{{ user.posts }}</p>
-                  <!-- Image du post -->
-                  <div class="form-group">
-                    <div class="form-group">
-                      <div v-if="post.attachment">
-                        <img
-                          class="imgPost"
-                          style="width: 100%"
-                          x="0"
-                          y="0"
-                          height="100%"
-                          width="100%"
-                          v-bind:src="post.attachment"
-                          alt=""
-                        />
-                      </div>
-                      <div v-else>
-                        <img
-                          class="imgPost"
-                          style="width: 100%"
-                          x="0"
-                          y="0"
-                          height="100%"
-                          width="100%"
-                          src="../assets/Icons/BiCardImg.svg"
-                          alt="avatar"
-                        />
-                      </div>
-                      <div class="alert alert-info text-danger">
-                        {{ mesgError }}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="flexMenu">
-                    <!-- Supprimer un post -->
-                    <div class="btnDelPost">
-                      <button
-                        v-if="
-                          isAdmin == true ||
-                          $store.state.user.userId == post.userId
-                        "
-                        block
-                        class="btn d-block"
-                        type="button"
-                        data-dropdown-button
-                        @click="postDeleted(post.id)"
-                      >
-                        <div class="trashBtn">
-                          <div class="iconDelete">
-                            <img
-                              style="height: 1.5rem; width: 1.5rem"
-                              x="0"
-                              y="0"
-                              height="100%"
-                              src="../assets/Icons/BiTrash3Fill.svg"
-                              alt="supprimer la publication"
-                            />
-                          </div>
-                          <div class="btnDelete">
-                            <span v-if="status == 'loading'"
-                              >Suppression en cours....</span
-                            >
-                            <span v-else>Supprimer</span>
-                          </div>
-                        </div>
-                      </button>
-                    </div>
-                    <!-- Modifier un post -->
-                    <div>
-                      <router-link
-                        class="btnModifyPost"
-                        v-bind:to="'/PostsUpdate/' + post.id"
-                      >
-                        <button
-                          v-if="
-                            isAdmin == true ||
-                            $store.state.user.userId == post.userId
-                          "
-                          block
-                          class="btn d-block"
-                          type="button"
-                          :postId="post.id"
-                        >
-                          <div class="trashBtn">
-                            <div class="iconModify">
-                              <img
-                                style="height: 1.5rem; width: 1.5rem"
-                                x="0"
-                                y="0"
-                                height="100%"
-                                src="../assets/Icons/BiPenFill.svg"
-                                alt="modifier la publication"
-                              />
-                            </div>
-                            <div>
-                              <span
-                                class="labelModify"
-                                v-if="status == 'loading'"
-                                >Modification en cours....</span
-                              >
-                              <span v-else>Modifier</span>
-                            </div>
-                          </div>
-                        </button>
-                      </router-link>
-                    </div>
-                  </div>
-                </div>
-                <!-- Gestion du post  d-flex-->
-                <div class="card-footer">
-                  <div class="post-actions">
-                    <div class="menuPost">
-                      <div class="linksPost">
-                        <div class="likesPost">
-                          <div class="likes">
-                            <routeur-link
-                              v-bind:to="'/PostLikes/' + postId"
-                              class="d-flex align-items-center text-muted mr-4"
-                            >
-                              <button
-                                type="button"
-                                class="btn btn-like"
-                                @click="postLikeCreate(post.id)"
-                              >
-                                <span v-if="status == 'loading'"
-                                  >Like ....</span
-                                >
-                                <span v-else>
-                                  <div class="likeFlex">
-                                    <img
-                                      class="like"
-                                      style="height: 1.5rem; width: 1.5rem"
-                                      x="0"
-                                      y="0"
-                                      height="100%"
-                                      width="100%"
-                                      src="../assets/Icons/BiHandThumbsUpFill.svg"
-                                      alt="liker la publication"
-                                    />
-                                    <div>
-                                      <div class="linkLike">
-                                        <div class="d-md-block ml-2">
-                                          <span v-if="post.likes.length < 2">
-                                            - {{ post.likes.length }} - Like<br
-                                          /></span>
-                                          <span v-else>
-                                            - {{ post.likes.length }} - likes<br
-                                          /></span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </span>
-                              </button>
-                            </routeur-link>
-                          </div>
-                        </div>
-                        <div class="comentsPost">
-                          <router-link
-                            class="displayComents"
-                            @click="displayAllComents()"
-                            v-bind:to="`/ComentsList/${post.id}`"
-                          >
-                            <div class="linkItems">
-                              <img
-                                src="../assets/Icons/coment.svg"
-                                alt="commentaires"
-                              />
-                            </div>
-                            <div class="linkComent">
-                              <div class="d-md-block ml-2">
-                                <span v-if="post.coments.length < 2">
-                                  - {{ post.coments.length }} - Commentaire <br
-                                /></span>
-                                <span v-else>
-                                  - {{ post.coments.length }} - commentaires
-                                  <br
-                                /></span>
-                              </div>
-                            </div>
-                          </router-link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <comentsCreate :postId="post.id" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="dateCreateProfil">
+        <h5>
+          Date de création du profil de {{ user.username }} :
+          {{ dayjs(user.createdAt) }}
+        </h5>
       </div>
     </div>
     <div>
+      <v-container>
+        <!-- Lister les publication de l'utilisateur -->
+        <div class="col-md-8 col-xl-6 middle-wrapper">
+          <div class="containTitleProfil">
+            <div class="logoTransparentProfile">
+              <img
+                style="height: 2.5rem; width: 2.5rem"
+                x="0"
+                y="0"
+                height="100%"
+                width="100%"
+                src="../assets/logo_transparent.png"
+                alt="logo"
+              />
+            </div>
+            <div class="cardTitleProfile">
+              <h1 class="titlePostUser">
+                Les publications de {{ user.username }} <br />
+              </h1>
+              <div class="separatorPostUser"></div>
+            </div>
+          </div>
+        </div>
+        <div class="flex-table">
+          <div>Publications</div>
+        </div>
+
+        <div class="flex-table">
+          <div>{{ user.posts || abbreviate }}</div>
+        </div>
+        <div class="flex-table">
+          <div>Commentaires</div>
+        </div>
+
+        <div class="flex-table">
+          <div>{{ user.coments }}</div>
+        </div>
+      </v-container>
       <!-- ScrollToTop button -->
       <button type="button" class="btnUp" @click="switchToUp()">
         <a class="bloc-button btn btn-d scrollToTop" @click="switchToUp('1')">
@@ -523,10 +290,13 @@
 import axios from "axios";
 import { mapState } from "vuex";
 import navPosts from "@/components/NavPosts.vue";
+import * as dayjs from "dayjs";
+import "dayjs/locale/fr";
+import fr from "dayjs/locale/fr";
 
 export default {
   name: "ProfileUsers",
-  components: { navPosts },
+  components: { navPosts, dayjs, fr },
   data: function () {
     return {
       mesgError: "",
@@ -536,6 +306,7 @@ export default {
         attachment: this.attachment,
         usermame: this.username,
         email: this.email,
+        createdAt: this.createdAt,
       },
       posts: {
         title: this.title,
@@ -547,7 +318,7 @@ export default {
       },
       apiUser: axios.create({
         baseURL:
-          "http://localhost:3000/api/users/" + this.$store.state.user.userId, //+ this.$store.state.user.userId,
+          "http://localhost:3000/api/users/" + this.$store.state.user.userId,
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -583,7 +354,6 @@ export default {
   beforeMount() {
     if (this.$store.state.user.role.role == "admin") {
       this.isAdmin = true;
-      console.log("mess users" + this.isAdmin);
     }
   },
   computed: {
@@ -591,35 +361,11 @@ export default {
   },
 
   methods: {
-    displayAllComents: function () {
-      this.apiPosts
-        .get("/")
-        .then((response) => {
-          if (!response.data) {
-            return (this.mesgError = error.response.data.message);
-          } else {
-            this.coments = response.data;
-          }
-        })
-        .catch((error) => {
-          this.mesgError = error.response.data.message;
-          alert(this.mesgError);
-        });
-    },
-    getPostList: function () {
-      this.apiPosts
-        .get(`http://localhost:3000/api/posts/postUser/${this.user.id}`)
-        .then((response) => {
-          if (!response) {
-            this.mesgError = error.response.data.message;
-          } else {
-            this.posts = response.data;
-          }
-        })
-        .catch((error) => {
-          this.mesgError = error.response.data.message;
-          alert(this.mesgError);
-        });
+    dayjs: function (createdAt) {
+      const Date = dayjs(createdAt)
+        .locale("fr")
+        .format("DD-MMMM-YYYY à HH:mm ");
+      return Date;
     },
     userDeleted: function (userId) {
       if (
@@ -703,9 +449,24 @@ h1 {
 
 .logoTransparentUser {
   display: flex;
-  margin-top: 1.2rem;
+  margin: 1.2rem 0 0 0;
 }
-
+.gridBox {
+  display: grid;
+  justify-items: flex-start;
+}
+.cardTitleProfil {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 1rem 0.8rem 0;
+}
+.cardTitleProfile {
+  display: flex;
+  margin: 0 1.5rem 1rem 0;
+  text-decoration: none;
+  flex-direction: column;
+}
 .alert-info {
   background: #5c5c6c85;
   border-color: #5c5c6c85;
@@ -791,9 +552,25 @@ h1 {
 .separatorPostUser {
   margin: 1rem 1rem auto;
 }
+.flex-table {
+  display: grid;
+  /* grid-template-columns: repeat(1fr, 1fr, 33%); */
+  grid-template-columns: repeat(auto-fill, 33%);
+  grid-auto-rows: auto;
+  padding: 10px;
+  border-bottom: 1px black solid;
+}
+.actions {
+  padding-right: 10px;
+}
 /************************************
 *********Media queries***************
 ************************************/
+@media screen and (max-width: 912px) {
+  .separatorProfilUser {
+    margin: 0 auto 1.5rem 0;
+  }
+}
 @media screen and (max-width: 900px) {
   .separatorPostUser {
     margin: 1rem 1rem auto;
@@ -815,7 +592,7 @@ h1 {
     margin: 1rem 0 1rem 0;
   }
   .cardTitleUser {
-    margin: 0 0 0 0;
+    margin: 0;
   }
   .separatorUser {
     display: flex;
@@ -836,7 +613,10 @@ h1 {
     margin: auto;
   }
   .separatorProfilUser {
-    margin: 1rem auto 1.5rem auto;
+    width: 5rem;
+    height: 4px;
+    background-color: #ffd7d7;
+    margin: 0 auto 1.5rem 0;
   }
   .separatorPostUser {
     margin: 1rem auto 1rem auto;

@@ -92,7 +92,6 @@ app.use((err, req, res, next) => {
 // config database Sequelize
 const db = require("./models");
 const bcrypt = require("bcrypt");
-// const { log } = require('console');
 const User = db.user;
 const Post = db.posts;
 const Role = db.role;
