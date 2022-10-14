@@ -79,7 +79,7 @@
                   <!-- Animation du titre -->
                   <router-link class="external" v-bind:to="'/Posts/'">
                     <div class="infos">
-                      <h6 class="aspect">Afficher les publications:</h6>
+                      <h6 class="aspect">Forums des publications :</h6>
                       {{ post.title }}
                     </div>
                   </router-link>

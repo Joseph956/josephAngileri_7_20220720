@@ -21,14 +21,21 @@
           </div>
         </div>
         <br />
-
-        <!-- v-if="$store.state.user.userId == user.id" -->
         <p class="alert alert-info text-danger">
-          {{ mesgError }}
+          {{ msgError }}
         </p>
+
         <div class="row">
           <div class="wrapUsers">
             <div v-show="users.length > 0" v-for="user in users" :key="user.id">
+              <div
+                v-bind:id="'mesgError-' + user.id"
+                class="alert alert-info text-danger"
+              >
+                <div v-if="$store.state.user.userId == user.id">
+                  {{ mesgError }}
+                </div>
+              </div>
               <div class="cardUsers rounded">
                 <div class="cardUser">
                   <div class="listInfosUsers" v-if="user.attachment">
@@ -94,6 +101,7 @@
                       </button>
                     </div>
                   </div>
+
                   <div class="listInfosUsers" v-else>
                     <div>
                       <router-link v-bind:to="`/ProfileUsers/${user.id}`">
@@ -156,17 +164,11 @@
                       </button>
                     </div>
                   </div>
-
-                  <!-- <p
-                    v-if="$store.state.user.userId == user.userId"
-                    class="alert alert-info text-danger"
-                  >
-                    {{ mesgError }}
-                  </p> -->
                 </div>
               </div>
             </div>
           </div>
+
           <div class="logoTransparent">
             <img
               style="height: 2.5rem; width: 2.5rem"
@@ -204,6 +206,7 @@ export default {
   data: function () {
     return {
       mesgError: "",
+      msgError: "",
       mode: "adminCpte",
       isAdmin: false,
       apiUser: axios.create({
@@ -222,15 +225,15 @@ export default {
       .get("/")
       .then((response) => {
         if (!response.data) {
-          this.mesgError = error.response.data.message;
-          alert(this.mesgError);
+          this.msgError = error.response.data.message;
+          // alert(this.mesgError);
         } else {
           this.users = response.data;
         }
       })
       .catch((error) => {
-        this.mesgError = error.response.data.message;
-        alert(this.mesgError);
+        this.msgError = error.response.data.message;
+        // alert(this.mesgError);
       });
   },
   beforeMount() {
@@ -277,14 +280,12 @@ export default {
           .then((response) => {
             if (!response.data) {
               this.mesgError = error.response.data.message;
-              alert(this.mesgError);
             } else {
               window.location.reload();
             }
           })
           .catch((error) => {
             this.mesgError = error.response.data.message;
-            alert(this.mesgError);
           });
       }
     },

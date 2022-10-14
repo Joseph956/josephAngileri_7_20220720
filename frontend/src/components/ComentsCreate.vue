@@ -358,14 +358,12 @@ export default {
         .then((response) => {
           if (!response.data) {
             this.mesgError = error.response.data.message;
-            alert(this.mesgError);
           } else {
             window.location.reload();
           }
         })
         .catch((error) => {
           this.mesgError = error.response.data.message;
-          alert(this.mesgError);
         });
     },
     comentModify: function (comentId) {
@@ -385,14 +383,14 @@ export default {
           .then((response) => {
             if (!response.data) {
               this.mesgError = error.response.data.message;
-              alert(this.mesgError);
+              // alert(this.mesgError);
             } else {
               window.location.reload();
             }
           })
           .catch((error) => {
             this.mesgError = error.response.data.message;
-            alert(this.mesgError);
+            // alert(this.mesgError);
           });
       }
     },

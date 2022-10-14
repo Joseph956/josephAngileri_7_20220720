@@ -200,6 +200,18 @@
             </div>
           </div>
         </div>
+        <div>
+          <!-- ScrollToTop button -->
+          <button type="button" class="btnUp" @click="switchToUp()">
+            <a
+              class="bloc-button btn btn-d scrollToTop"
+              @click="switchToUp('1')"
+            >
+              <span class="fa fa-chevron-up"></span>
+            </a>
+          </button>
+          <!-- ScrollToTop button end -->
+        </div>
       </div>
     </div>
   </div>
@@ -232,6 +244,16 @@ export default {
         },
       }),
       coments: [],
+      apiPosts: axios.create({
+        baseURL: "http://localhost:3000/api/posts/",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "BEARER " + this.$store.state.user.token,
+        },
+      }),
+
+      posts: [],
     };
   },
   mounted: function () {
@@ -240,14 +262,13 @@ export default {
       .then((response) => {
         if (!response.data) {
           this.mesgError = error.response.data.message;
-          alert(this.mesgError);
         } else {
           this.user = response.data;
+          this.getComentList();
         }
       })
       .catch((error) => {
         this.mesgError = error.response.data.message;
-        alert(this.mesgError);
       });
   },
   beforeMount() {
@@ -264,14 +285,12 @@ export default {
         .then((response) => {
           if (!response.data) {
             this.mesgError = error.response.data.message;
-            alert(this.mesgError);
           } else {
             this.coments = response.data;
           }
         })
         .catch((error) => {
           this.mesgError = error.response.data.message;
-          alert(this.mesgError);
         });
     },
     comentModify: function (comentId) {
@@ -291,14 +310,12 @@ export default {
           .then((response) => {
             if (!response.data) {
               this.mesgError = error.response.data.message;
-              alert(this.mesgError);
             } else {
               window.location.reload();
             }
           })
           .catch((error) => {
             this.mesgError = error.response.data.message;
-            alert(this.mesgError);
           });
       }
     },
@@ -326,8 +343,18 @@ export default {
         .format("DD-MMMM-YYYY à HH:mm ");
       return Date;
     },
+    switchToUp: function () {
+      const btnUp = document.querySelector(".btnUp");
+      btnUp.addEventListener("click", () => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "smooth",
+        });
+      });
+    },
     postDetailReturn: function () {
-      this.$router.push("/posts");
+      this.$router.push("/postdetails/" + this.$route.params.id);
     },
   },
 };
@@ -370,6 +397,20 @@ export default {
 .comentPost {
   margin: 1rem;
   border-top: 1px solid grey;
+}
+.btnUp {
+  height: 3rem;
+  width: 3rem;
+  background: #393c525a;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  cursor: pointer;
+  z-index: 1;
 }
 /**************************************
 **********Media queries****************

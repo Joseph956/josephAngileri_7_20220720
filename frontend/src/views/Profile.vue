@@ -181,7 +181,7 @@
       </div>
 
       <!-- Affichage des messages derreurs -->
-      <div class="alert alert-info text-danger">{{ mesgError }}</div>
+      <div class="alert alert-info text-danger">{{ mesgErrorProfil }}</div>
       <div class="dateCreateProfil">
         <h5>
           Date de création de votre profil {{ user.username }} :
@@ -270,7 +270,7 @@
               <p class="mb-3 tx-14">
                 <router-link class="external" v-bind:to="'/Posts/'">
                   <div class="infos">
-                    <p class="aspect">Afficher les publications:</p>
+                    <p class="aspect">Forum des publications :</p>
                     {{ post.title }}
                   </div>
                 </router-link>
@@ -505,6 +505,8 @@ export default {
   data: function () {
     return {
       mesgError: "",
+      mesgErrorPost: "",
+      mesgErrorProfil: "",
       isAdmin: false,
       user: {
         imgBottom: this.imgBottom,
@@ -572,6 +574,28 @@ export default {
     ...mapState(["status"]),
   },
   methods: {
+    postLikeCreate: function (postId) {
+      this.apiPosts
+        .put(
+          `http://localhost:3000/api/posts/${postId}/like/${this.$store.state.user.userId}`,
+          {
+            postId: postId,
+            userId: this.userId,
+            likes: this.likeId,
+          }
+        )
+        .then((response) => {
+          if (!response) {
+            return (this.mesgError = error.response.data.message);
+          } else {
+            window.location.reload();
+          }
+        })
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
+        });
+    },
     displayAllComents: function () {
       this.apiPosts
         .get("/")
@@ -635,14 +659,13 @@ export default {
           )
           .then((response) => {
             if (!response) {
-              this.mesgError = error.response.data.message;
+              this.mesgErrorProfil = error.response.data.message;
             } else {
               window.location.reload();
             }
           })
           .catch((error) => {
-            this.mesgError = error.response.data.message;
-            alert(this.mesgError);
+            this.mesgErrorProfil = error.response.data.message;
           });
       }
     },
@@ -652,16 +675,14 @@ export default {
           .delete("http://localhost:3000/api/posts/" + postId)
           .then((response) => {
             if (!response.data) {
-              return (this.mesgError = error.response.data.message);
+              return (this.mesgErrorPost = error.response.data.message);
             } else {
               window.location.reload();
-              this.$router.push("/posts");
-              this.getPostList();
             }
           })
           .catch((error) => {
-            this.mesgError = error.response.data.message;
-            alert(this.mesgError);
+            this.mesgErrorPost = error.response.data.message;
+            alert(this.mesgErrorPost);
           });
       }
     },
@@ -828,6 +849,7 @@ export default {
 ****************************/
 .aspect {
   font-size: 1.5rem;
+  height: 35px;
 }
 /**************************
 *****Fin anim titre********

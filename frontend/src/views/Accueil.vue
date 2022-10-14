@@ -1,7 +1,6 @@
 <template>
   <div class="accueil">
     <div class="container">
-      <!-- <form id="inscription" name="inscription" @submit.prevent="onSubmit"> -->
       <form id="inscription" name="inscription" @submit.prevent="submit">
         <h1 class="nav-link-title" v-if="mode == 'login'">Login</h1>
         <h1 class="nav-link-title" v-else>Sign Up</h1>
@@ -51,40 +50,26 @@
             </span>
           </button>
         </p>
-        <!-- <div class="form-group" v-if="mode == 'create'">
-          <div class="form-controlSignup">
-          <label for="username">Pseudo</label>
-          <div class="inputData">
-            <input
-              id="username"
-              type="text"
-              placeholder="Pseudo"
-              v-model="username"
-              class="form-control_input"
-              name="username"
-              minlength="5"
-              required
-              autocomplete="off"
-              />
-            <i class="fas fa-check-circle"></i>
-            <i class="fas fa-exclamation-circle"></i>
-          </div>
-          <small>{{ message }}</small>
-          </div>
-        </div> -->
         <div class="form-group" v-if="mode == 'create'">
           <div class="form-controlSignup">
-            <label class="formContact" for="username">Pseudo</label>
+            <label for="username">Pseudo</label>
             <div class="inputData">
               <input
+                id="username"
+                type="text"
+                placeholder="Pseudo"
                 v-model="username"
                 class="form-control_input"
-                type="text"
-                placeholder="Username"
+                name="username"
+                minlength="3"
                 required
-                minlength="5"
+                autocomplete="off"
               />
+              <!-- minlength="5" -->
+              <i class="fas fa-check-circle"></i>
+              <i class="fas fa-exclamation-circle"></i>
             </div>
+            <small>{{ message }}</small>
           </div>
         </div>
         <div class="form-group">
@@ -165,31 +150,10 @@
               <i class="fas fa-exclamation-circle"></i>
             </div>
           </div>
-          <p id="message">
-            <small>{{ msgError }}</small>
-          </p>
         </div>
         <p class="alert alert-info text-danger">
-          {{ mesgError }}
+          {{ mesgError }} {{ message }}
         </p>
-
-        <!-- <div class="form-group">
-          <div
-            class="alert alert-danger"
-            v-if="mode === 'login' && status == 'error_login'"
-          >
-            Adresse mail et/ou mot de passe invalide !
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div
-            class="alert alert-danger"
-            v-if="mode == 'create' && status == 'error_create'"
-          >
-            Adresse email déjà utilisée !
-          </div>
-        </div> -->
 
         <div class="form-group">
           <button
@@ -235,31 +199,20 @@
 
 <script>
 import { mapState } from "vuex";
-// import validInputs from "@/services/ValidInputs";
-// import rateLimit from "express-rate-limit";
-// import { useVuelidate } from "@vuelidate/core";
-// import { required } from "@vuelidate/validators";
 
 export default {
   name: "Accueil",
-  // setup() {
-  //   return { v$: useVuelidate() };
-  // },
-  components: {
-    // rateLimit,
-    // validInputs,
-  },
+  components: {},
   data: function () {
     return {
       error: "",
       message: "",
-      msgError: "",
+      mesgError: "",
       error_login: "",
       error_create: "",
       error_Password: "", //modifier
       error_confirmPasswd: "", //modifier
 
-      // v$: useValidate(),
       mode: "login",
       username: "",
       email: "",
@@ -269,31 +222,23 @@ export default {
   },
 
   mounted: function () {
-    if (this.$store.state.user.userId != -1) {
+    if (this.$store.state.user.userId !== -1) {
       this.$router.push("/");
-      return;
     }
   },
   computed: {
     validatedFields: function () {
-      if (this.mode == "create") {
-        if (
-          this.username != "" &&
-          this.email != "" &&
-          this.password != "" &&
+      if (this.mode === "create") {
+        return (
+          this.username !== "" &&
+          this.email !== "" &&
+          this.password !== "" &&
           this.confirmPasswd !== "" &&
-          this.password === this.confirmPasswd
-        ) {
-          return true;
-        } else {
-          return false;
-        }
+          this.password === this.confirmPasswd &&
+          this.validUsername(this.username)
+        );
       } else {
-        if (this.email != "" && this.password != "") {
-          return true;
-        } else {
-          return false;
-        }
+        return this.email !== "" && this.password !== "";
       }
     },
     ...mapState(["status"]),
@@ -305,14 +250,6 @@ export default {
     switchToLogin: function () {
       this.mode = "login";
     },
-    validations() {
-      return {
-        username: { required },
-        email: { required, isEmail },
-        password: { required },
-        confirmPasswd: { required },
-      };
-    },
     login: function () {
       const self = this;
       this.$store
@@ -323,14 +260,12 @@ export default {
         .then((response) => {
           if (!response) {
             this.mesgError = error.response.data.message;
-            alert(this.mesgError);
           } else {
             self.$router.push("/profile");
           }
         })
         .catch((error) => {
           this.mesgError = error.response.data.message;
-          alert(this.mesgError);
         });
     },
     changer: function () {
@@ -345,24 +280,16 @@ export default {
         e = true;
       }
     },
+    validUsername: function (value) {
+      return /^([A-Za-z]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value);
+    },
+
     createAccount: function () {
       const self = this;
-      const validUsername = (value) => {
-        return /^([A-Za-z]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value);
-      };
-      let username = document.getElementById("#username").value;
-      if (validUsername == username) {
-        message.textContent = "ok";
-      } else {
+      let username = document.getElementById("username").value;
+      if (this.validUsername(username)) {
         message.textContent =
           "Ce champ est obligatoire (Chiffres et symboles ne sont pas autorisés. Ne pas dépasser 20 caractères, minimum 3 caractères";
-      }
-      let password = document.getElementById("password").value;
-      let confirmPasswd = document.getElementById("confirmPasswd").value;
-      if (password == confirmPasswd) {
-        message.textContent = "Votre mot de passe est confirmer !";
-      } else {
-        message.textContent = "Confirmer votre mot de passe !";
       }
       this.$store
         .dispatch("createAccount", {
@@ -372,20 +299,12 @@ export default {
           confirmPasswd: this.confirmPasswd,
         })
         .then(function (response) {
-          if (!response) {
-            this.mesgError = error.response.data.message;
-            alert(this.mesgError);
-          } else {
-            self.login();
-          }
+          self.login();
         })
         .catch((error) => {
           this.mesgError = error.response.data.message;
-          alert(this.mesgError);
-        }),
-        function (error) {
-          console.log(error);
-        };
+        });
+
       return {
         username,
         password,

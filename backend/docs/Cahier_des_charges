@@ -5,7 +5,7 @@ L'utilisateur doit pouvoir :
 - publier des images et du texte,
 - liker un post une seule fois,
 
-Modérateur doit pouvoir supprimer :
+Modérateur doit pouvoir supprimer ou modifier:
 - Un post,
 - Un commentaire,
 - Un compte utilisateur avec tous ses posts et commentaires.

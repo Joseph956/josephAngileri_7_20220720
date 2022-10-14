@@ -118,7 +118,6 @@ exports.logout = (req, res, next) => {
 };
 exports.newPasswd = (req, res, next) => {
     try {
-        //Validation des paramètres de la requête
         const userId = req.params.id;
         const password = req.body.password;
         const newPasswd = req.body.newPasswd;

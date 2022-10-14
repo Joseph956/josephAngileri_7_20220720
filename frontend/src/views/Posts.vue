@@ -111,7 +111,7 @@
                   type="text"
                   id="content"
                   cols="30"
-                  rows="10"
+                  rows="5"
                   class="form-control"
                   placeholder="Contenu de votre message"
                 >
@@ -246,7 +246,7 @@
                       v-bind:to="'/PostDetails/' + post.id"
                     >
                       <div class="infos">
-                        <h6 class="aspect">Afficher les détails du post :</h6>
+                        <h6 class="aspect">Détails du post :</h6>
                         {{ post.title }}
                       </div>
                       <div>
@@ -323,10 +323,14 @@
                                     <div class="linkLike">
                                       <div class="d-md-block ml-2">
                                         <span v-if="post.likes.length < 2">
-                                          - {{ post.likes.length }} - Like<br
+                                          -
+                                          {{ post.likes.length }}
+                                          - Like<br
                                         /></span>
                                         <span v-else>
-                                          - {{ post.likes.length }} - likes<br
+                                          -
+                                          {{ post.likes.length }}
+                                          - likes<br
                                         /></span>
                                       </div>
                                     </div>
@@ -351,7 +355,7 @@
                           </div>
                           <div class="linkComent">
                             <div class="d-md-block ml-2">
-                              <span v-if="post.coments.length < 2">
+                              <span v-if="like == 1 && post.coments.length < 2">
                                 - {{ post.coments.length }} - Commentaire <br
                               /></span>
                               <span v-else>
@@ -400,6 +404,8 @@ export default {
   data: function () {
     return {
       mesgError: "",
+      like: false,
+      likes: this.like,
       user: {
         imgBottom: this.imgBottom,
         attachment: this.attachment,
@@ -512,28 +518,43 @@ export default {
           alert(this.mesgError);
         });
     },
-    postLikeCreate: function (postId) {
-      this.apiPosts
-        .put(
-          `http://localhost:3000/api/posts/${postId}/like/${this.$store.state.user.userId}`,
-          {
-            postId: postId,
-            userId: this.userId,
-            likes: this.likeId,
-          }
-        )
-        .then((response) => {
-          if (!response) {
-            return (this.mesgError = error.response.data.message);
-          } else {
-            window.location.reload();
-          }
-        })
-        .catch((error) => {
-          this.mesgError = error.response.data.message;
-          alert(this.mesgError);
-        });
+    async postLikeCreate(postId) {
+      const res = await this.apiPosts.put(
+        `http://localhost:3000/api/posts/${postId}/like/${this.$store.state.user.userId}`,
+        {
+          postId: postId,
+          userId: this.userId,
+          likes: this.likeId,
+        }
+      );
+      if (res.like !== this.like) {
+        this.like += res.like ? 1 : -1;
+        // console.log(post.likes);
+      }
+      this.like = res.like;
     },
+    // postLikeCreate: function (postId) {
+    //   const res = this.apiPosts
+    //     .put(
+    //       `http://localhost:3000/api/posts/${postId}/like/${this.$store.state.user.userId}`,
+    //       {
+    //         postId: postId,
+    //         userId: this.userId,
+    //         likes: this.likeId,
+    //       }
+    //     )
+    //     .then((response) => {
+    //       if (!response) {
+    //         return (this.mesgError = error.response.data.message);
+    //       } else {
+    //         window.location.reload();
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       this.mesgError = error.response.data.message;
+    //       alert(this.mesgError);
+    //     });
+    // },
     postCreate: function () {
       const dataPost = new FormData();
       dataPost.append("title", this.title);
@@ -882,9 +903,10 @@ img {
 .aspect {
   display: inline-block;
   width: auto;
-  height: 20px;
+  border-radius: 0.5rem;
+  height: 32px;
   font-size: 1.5rem;
-  background: #5c5c6c85;
+  background: #67677885;
   color: #000;
   text-align: left;
   display: none;

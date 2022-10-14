@@ -46,7 +46,7 @@ module.exports.haveRightOnPost = (req, res, next) => {
                                 return next();
                             } else {
                                 return res.status(403).send({
-                                    message: "Sécurité : Vous n'avez pas les droits nécessaires pour supprimer ou modifier ce post !",
+                                    message: `Sécurité : Vous n'êtes pas autorisé à modifier ou supprimer cette publication  -${user.username}-!`,
                                 });
                             }
                         })
@@ -79,7 +79,7 @@ module.exports.haveRightOnComent = (req, res, next) => {
                             return next();
                         } else {
                             return res.status(403).send({
-                                message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ou supprimer ce commentaire !",
+                                message: `Sécurité : Vous n'êtes pas autorisé à modifier ou supprimer ce comentaire  -${user.username}-!`,
                             });
                         }
                     })
@@ -110,7 +110,7 @@ module.exports.haveRightOnProfile = (req, res, next) => {
                 } else {
                     return res.status(403).send(
                         {
-                            message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ou supprimer ce compte utilisateur !",
+                            message: `Sécurité : Vous n'êtes pas autorisé à modifier ou supprimer ce  compte  utilisateur  - ${user.username} - !`,
                         });
                 }
             } else {
@@ -143,7 +143,6 @@ module.exports.passwd = (req, res, next) => {
     } else {
         return res.status(400).json({
             message: "Mot de passe faible, au moins 8 caractères dont deux chiffres, une lettre majuscule et minuscule."
-            // + passwdSchema.validate(req.body.password, { list: true })
         })
     }
 };
@@ -157,7 +156,6 @@ module.exports.confirmPasswd = (req, res, next) => {
     } else {
         return res.status(400).json({
             message: "Mot de passe faible, au moins 8 caractères dont un chiffre, une lettre majuscule, et minuscule"
-            // + confirmPasswdSchema.validate(req.body.newPasswd, { list: true })
         })
     }
 };
