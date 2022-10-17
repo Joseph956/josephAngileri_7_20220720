@@ -322,7 +322,9 @@
                                   <div>
                                     <div class="linkLike">
                                       <div class="d-md-block ml-2">
-                                        <span v-if="post.likes.length < 2">
+                                        <span
+                                          v-if="(liked = post.likes.length < 2)"
+                                        >
                                           -
                                           {{ post.likes.length }}
                                           - Like<br
@@ -406,6 +408,7 @@ export default {
       mesgError: "",
       like: false,
       likes: this.like,
+      liked: [],
       user: {
         imgBottom: this.imgBottom,
         attachment: this.attachment,
@@ -446,6 +449,9 @@ export default {
       coments: [],
     };
   },
+  mounted: function () {
+    this.getLikeCookie;
+  },
   beforeMount() {
     this.getPostList();
   },
@@ -464,6 +470,10 @@ export default {
           return false;
         }
       }
+    },
+    getLikeCookie() {
+      let cookieValue = JSON.parse($cookies.get("like"));
+      cookieValue == null ? (this.liked = []) : (this.liked = cookieValue);
     },
     ...mapState(["status"]),
   },
@@ -525,13 +535,18 @@ export default {
           postId: postId,
           userId: this.userId,
           likes: this.likeId,
-        }
+        },
+        document.addEventListener("input", () => {
+          setTimeout(() => {
+            $cookies.set("like", JSON.stringify(this.liked));
+          }, 300);
+        })
       );
-      if (res.like !== this.like) {
-        this.like += res.like ? 1 : -1;
-        // console.log(post.likes);
-      }
-      this.like = res.like;
+
+      // if (res.likes !== this.like) {
+      //   this.like += res.like ? 1 : -1;
+      // }
+      // this.like = res.likes;
     },
     // postLikeCreate: function (postId) {
     //   const res = this.apiPosts
@@ -932,7 +947,7 @@ img {
 }
 .imgPost {
   width: 100%;
-  height: 40vh;
+  height: 45vh;
   object-fit: cover;
   margin: auto;
 }

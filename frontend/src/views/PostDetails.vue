@@ -25,7 +25,6 @@
         <div class="row">
           <div class="col-md-12 grid-margin">
             <div class="card">
-              <!-- rounded -->
               <!-- Infos créateur du post -->
               <div class="card-header">
                 <div class="d-flex align-items-center justify-content-between">
@@ -280,7 +279,6 @@
                 </div>
               </div>
             </div>
-            <comentsCreate :postId="post.id" />
           </div>
         </div>
       </div>
@@ -335,14 +333,12 @@ export default {
       .then((response) => {
         if (!response.data) {
           this.mesgError = error.response.data.message;
-          alert(this.mesgError);
         } else {
           this.users = response.data;
         }
       })
       .catch((error) => {
         this.mesgError = error.response.data.message;
-        alert(this.mesgError);
       });
   },
   beforeMount() {
@@ -366,7 +362,6 @@ export default {
         })
         .catch(function (error) {
           this.mesgError = error.response.data.message;
-          alert(this.mesgError);
         });
     },
     postLikeCreate: function (postId) {

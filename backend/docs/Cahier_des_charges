@@ -1,18 +1,42 @@
-L'utilisateur doit pouvoir : 
-- Voir le derniers posts écrit,
-- commenter,
-- supprimer un post, un commentaire, un like qui lui appatient,
-- publier des images et du texte,
-- liker un post une seule fois,
+Cahier des charges
 
-Modérateur doit pouvoir supprimer ou modifier:
-- Un post,
-- Un commentaire,
-- Un compte utilisateur avec tous ses posts et commentaires.
-- ou desactiver un compte utilisateur.
+Application intranet de Groupomania
 
-// // Modérateur: Modérer les interactions entre salariés.
-// // Employés: Doivent pouvoir reperer facilement les derniers posts.
-// // Accès à un forum de publication (textes).
-// // Accès à un forum de publication (multimédias).
-// //Organiser des tests de fonctionalités avec les salariés.
+Spécifications fonctionnelles
+
+1/ Page de connexion
+Une page de connexion permettant à l’utilisateur de se connecter, ou bien
+de créer un compte s’il n’en possède pas. Ici il faut demander le minimum
+d’informations, la connexion doit se faire à partir de deux éléments : le mail
+de l’employé, et un mot de passe. Rien de plus à prévoir pour le moment.
+
+Détails de la fonctionnalité de connexion
+● Un utilisateur doit avoir la possibilité de se déconnecter.
+● La session de l’utilisateur persiste pendant qu’il est connecté.
+● Les données de connexion doivent être sécurisées.
+
+2/ Page d’accueil
+La page d’accueil doit lister les posts créés par les différents utilisateurs.
+On voudra que les posts soient listés de façon antéchronologique (du plus
+récent au plus ancien).
+
+3/ Création d’un post
+● Un utilisateur doit pouvoir créer un post.
+● Un post doit pouvoir contenir du texte et une image.
+● Un utilisateur doit aussi pouvoir modifier et supprimer ses posts.
+
+4/ Système de like
+Un utilisateur doit pouvoir liker un post, une seule fois pour chaque post.
+
+5/ Rôle administrateur
+Dans le but de pouvoir faire de la modération si nécessaire, il faudra créer
+un utilisateur “administrateur”.
+Celui-ci aura les droits de modification / suppression sur tous les posts du réseau social. Il faudra donc nous communiquer les identifiants de cet administrateur.
+
+6/ Identité graphique
+- a/ Police d’écriture : tous les textes du site doivent utiliser la police Lato.
+- b/ Couleurs : vous êtes libre sur les couleurs, mais voici notre palette actuelle
+dont vous pouvez vous inspirer.
+● Primaire : #FD2D01
+● Secondaire : #FFD7D7
+● Tertiaire : #4E5166

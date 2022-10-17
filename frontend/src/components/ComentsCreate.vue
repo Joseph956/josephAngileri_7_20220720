@@ -297,11 +297,17 @@ export default {
   },
   mounted: function () {
     this.apiUser
-      .get("")
+      .get("/")
       .then((response) => {
-        this.user = response.data;
+        if (!response.data) {
+          this.mesgError = error.response.data.message;
+        } else {
+          this.user = response.data;
+        }
       })
-      .catch(function () {});
+      .catch(function (error) {
+        this.mesgError = error.response.data.message;
+      });
   },
   beforeMount() {
     if (this.$store.state.user.role.role == "admin") {
@@ -383,14 +389,12 @@ export default {
           .then((response) => {
             if (!response.data) {
               this.mesgError = error.response.data.message;
-              // alert(this.mesgError);
             } else {
               window.location.reload();
             }
           })
           .catch((error) => {
             this.mesgError = error.response.data.message;
-            // alert(this.mesgError);
           });
       }
     },
@@ -407,14 +411,12 @@ export default {
           .then((response) => {
             if (!response.data) {
               this.mesgError = error.response.data.message;
-              alert(this.mesgError);
             } else {
               window.location.reload();
             }
           })
           .catch((error) => {
             this.mesgError = error.response.data.message;
-            alert(this.mesgError);
           });
       }
     },

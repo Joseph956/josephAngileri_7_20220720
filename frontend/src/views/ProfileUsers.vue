@@ -26,7 +26,7 @@
       <div></div>
       <div class="form-grouProfile" v-if="user.imgBottom">
         <img
-          style="height: 20vw; width: 100%"
+          style="width: 100%"
           x="0"
           y="0"
           height="100%"
@@ -38,7 +38,7 @@
       </div>
       <div class="form-grouProfile" v-else>
         <img
-          style="height: 20vw; width: 100%"
+          style="width: 100%"
           x="0"
           y="0"
           height="100%"
@@ -218,12 +218,6 @@
 
       <!-- Affichage des messages derreurs -->
       <div class="alert alert-info text-danger">{{ mesgError }}</div>
-      <!-- <div class="dateCreateProfil">
-        <h5>
-          Date de création du profil de {{ user.username }} :
-          {{ dayjs(user.createdAt) }}
-        </h5>
-      </div> -->
     </div>
     <v-container>
       <!-- Lister les publication de l'utilisateur -->
@@ -321,7 +315,7 @@
                 <div class="form-group">
                   <div v-if="post.attachment">
                     <img
-                      class="imgProfil"
+                      class="imgPost"
                       style="width: 100%"
                       x="0"
                       y="0"
@@ -333,7 +327,7 @@
                   </div>
                   <div v-else>
                     <img
-                      class="imgProfil"
+                      class="imgPostAvatar"
                       style="width: auto"
                       x="0"
                       y="0"
@@ -594,7 +588,6 @@ export default {
       })
       .catch((error) => {
         this.mesgError = error.response.data.message;
-        alert(this.mesgError);
       });
   },
   beforeMount() {
@@ -641,6 +634,20 @@ export default {
         })
         .catch((error) => {
           this.mesgError = error.response.data.message;
+        });
+    },
+    displayAllComents: function () {
+      this.apiPosts
+        .get("/")
+        .then((response) => {
+          if (!response) {
+            return (this.mesgError = error.response.data.message);
+          } else {
+            this.coments = response.data;
+          }
+        })
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
           alert(this.mesgError);
         });
     },
@@ -660,13 +667,11 @@ export default {
             if (!response) {
               this.mesgError = error.response.data.message;
             } else {
-              this.$store.commit("logout");
-              this.$router.push("/");
+              window.location.reload();
             }
           })
           .catch((error) => {
             this.mesgError = error.response.data.message;
-            alert(this.mesgError);
           });
       }
     },
@@ -719,7 +724,6 @@ export default {
 }
 .col-md-8 {
   background: #4e5166;
-  /* padding: 2rem; */
   border-radius: 2rem;
 }
 .containerTitre,
@@ -733,6 +737,12 @@ h1 {
 .logoTransparentUser {
   display: flex;
   margin: 1.2rem 0 0 0;
+}
+#imgBottomUser {
+  height: 18vw;
+}
+#imgBottomAvatar {
+  height: 10vw;
 }
 .gridBox {
   display: grid;
@@ -916,6 +926,9 @@ h1 {
   .separatorUser {
     margin: 1rem auto 0.5rem auto;
   }
+  #imgBottomUser {
+    height: 45vw;
+  }
 }
 @media screen and (max-width: 370px) {
   .containerTitre,
@@ -927,6 +940,9 @@ h1 {
   }
   .separatorUser {
     margin: 1rem auto 0.5rem auto;
+  }
+  #imgBottomUser {
+    height: 45vw;
   }
   .listInfosUsers {
     display: contents;
@@ -940,6 +956,9 @@ h1 {
   }
   .separatorProfilUser {
     margin: 1rem auto 1.5rem auto;
+  }
+  #imgBottomUser {
+    height: 45vw;
   }
 }
 </style>

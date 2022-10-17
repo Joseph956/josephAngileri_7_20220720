@@ -14,7 +14,7 @@
           alt="Image de fond compte utilisateur"
         />
       </div>
-      <div class="formGroup" v-else>
+      <div v-else>
         <img
           style="height: auto; width: 30%"
           x="0"
@@ -59,8 +59,8 @@
           </button>
         </div>
       </div>
-      <div class="alert text-danger">{{ mesgError }}</div>
     </form>
+    <div class="alert alert-info text-danger">{{ mesgError }}</div>
   </div>
 </template>
 

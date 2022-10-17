@@ -184,7 +184,7 @@ export default {
             if (!response.data) {
               return (this.mesgError = error.response.data.message);
             } else {
-              this.$router.push("/posts/");
+              this.$router.push("/postdetails/" + this.$route.params.id);
             }
           })
           .catch((error) => {

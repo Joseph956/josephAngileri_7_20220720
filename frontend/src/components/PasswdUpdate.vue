@@ -173,7 +173,7 @@ export default {
   },
   data: function () {
     return {
-      msgError: "",
+      mesgError: "",
       isAdmin: false,
       apiPasswd: axios.create({
         baseURL:
@@ -266,10 +266,10 @@ export default {
               }
             })
             .catch((error) => {
-              alert((this.mesgError = error.response.data.message));
+              this.mesgError = error.response.data.message;
             });
         } else {
-          message("Le mot de passe actuel est incorrect ! ");
+          message("Le mot de passe actuel est incorrect (front) ! ");
         }
       }
     },

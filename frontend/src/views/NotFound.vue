@@ -37,9 +37,17 @@ h1 {
 .logo404 {
   margin-top: 2rem;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 912px) {
   .pg404 {
-    height: 55vw;
+    height: 20vw;
+  }
+}
+@media screen and (max-width: 768px) {
+  .auth-wrapper {
+    display: none;
+  }
+  .pg404 {
+    height: 35vw;
   }
 }
 @media screen and (max-width: 393px) {

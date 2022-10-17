@@ -17,33 +17,15 @@ module.exports = (sequelize, Sequelize) => {
         },
         email: {
             type: Sequelize.STRING,
-            allowNull: false,
-            required: true,
-            unique: true,
+            validator: {
+                isEmail: true
+            }
         },
 
         password: {
             type: Sequelize.STRING,
-        }
+        },
 
-    },
-        // {
-        //     sequelize,
-        //     modelName: 'user',
-        // },
-        // {
-        //     tableName: 'users',
-        //     hooks: {
-        //         beforeCreate: (record, options) => {
-        //             record.dataValues.createdAt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/g, 'DD/MM/YYYY');
-        //             record.dataValues.updatedAt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/g, 'DD/MM/YYYY');
-        //         },
-        //         beforeUpdate: (record, options) => {
-        //             record.dataValues.updatedAt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/g, 'DD/MM/YYYY');
-        //         }
-        //     }
-
-        // }
-    );
+    })
     return User;
 };

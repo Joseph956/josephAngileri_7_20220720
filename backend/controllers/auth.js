@@ -128,45 +128,43 @@ exports.newPasswd = (req, res, next) => {
             }
         }).then((user) => {
             if (!user) {
-                return res.status(401).json({ error: "Ce profil utilisateur n'\existe pas !!!" });
+                return res.status(401).json({ message: "Ce profil utilisateur n'\existe pas !!!" });
             }
-            const passwdIsValid = bcrypt.compare(
-                password === user.password
-            )
             bcrypt.compare(req.body.password, user.password)
                 .then((valid) => {
                     if (!valid) {
-                        return res.status(403).json({ error: 'Le mot de passe actuel est incorrect !' });
+                        return res.status(403).json({ message: 'Le mot de passe actuel est incorrect !' })
+
+                    } else if (newPasswdConfirm == newPasswd) {
+
+                        User.update({ password: bcrypt.hashSync(newPasswd, 10) }, {
+                            where: { id: userId },
+                        }).then((num) => {
+                            if (num == 1) {
+                                res.send({
+                                    message: "Le mot de passe a été modifié avec succès.",
+                                });
+                            } else {
+                                res.send({
+                                    message: `Impossible de mettre à jour le mot de passe avec id=${id}.L'utilisateur n'a pas été trouvé !`,
+                                });
+                            }
+                        }).catch((error) => {
+                            res.status(500).send({
+                                error, message: `Erreur lors de la mise à jour du mot de passe avec id=${id}. Erreur serveur `
+                            });
+                        });
+                    } else {
+                        res.status(428).json({
+                            error, message: "Le mot de passe enregistré, et le mot de passe saisi ne corresponde pas !!!"
+                        });
                     }
                 });
-            if (!passwdIsValid) {
-                return res.status(401).json({ message: 'Requête non authentifiée !' });
-            } else {
-                if (newPasswdConfirm === newPasswd) {
-                    User.update({ password: bcrypt.hashSync(newPasswd, 10) }, {
-                        where: { id: userId },
-                    }).then((num) => {
-                        if (num == 1) {
-                            res.send({
-                                message: "Le mot de passe a été modifié avec succès.",
-                            });
-                        } else {
-                            res.send({
-                                message: `Impossible de mettre à jour le mot de passe avec id=${id}.L'utilisateur n'a pas été trouvé !`,
-                            });
-                        }
-                    }).catch(() => {
-                        res.status(500).send({
-                            message: `Erreur lors de la mise à jour du mot de passe avec id=${id}. Erreur serveur `
-                        });
-                    });
-                } else {
-                    res.status(500).send({
-                        message: " Le mot de passe saisi et la confirmation ne sont pas identiques !!!"
-                    });
-                }
-            }
-        }).catch(() => { res.status(428).json({ message: "Le mot de passe enregistré, et le mot de passe saisi ne corresponde pas !!!" }) })
+        }).catch((error) => {
+            res.status(500).send({
+                error, message: `Erreur lors de la mise à jour du mot de passe avec id=${id}. Erreur serveur `
+            })
+        })
 
     } catch (error) {
         res.status(401).json({ error: error | 'Requête non authentifiée !' });

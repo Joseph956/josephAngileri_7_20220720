@@ -106,7 +106,7 @@ export default createStore({
       coment: '',
     },
     like: like,
-    apiLikes: {
+    apiPosts: {
       likeId: '',
       like: '',
     },
@@ -165,6 +165,22 @@ export default createStore({
           });
       });
     },
+    // likePost: ({commit}, data) => {
+    //   commit('setStatus', 'like');
+    //   return new Promise((resolve, reject) => {
+    //     commit;
+    //     instance.post('auth/register', data)
+    //       .then(function (response) {
+    //         commit('setStatus', 'created');
+    //         resolve(response);
+    //         console.log(response);
+    //       })
+    //       .catch(function (error) {
+    //         commit('setStatus', 'mesgError');
+    //         reject(error);
+    //       });
+    //   });
+    // },
     getUserInfos: ({ commit, state }, data) => {
       instance.get('/users/' + state.user.userId, data,
         {

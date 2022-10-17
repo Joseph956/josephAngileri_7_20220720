@@ -18,7 +18,7 @@
       </div>
       <div class="form-grouProfile" v-else>
         <img
-          style="height: 20vw; width: 100%"
+          style="height: 10vw; width: 100%"
           x="0"
           y="0"
           height="100%"
@@ -768,7 +768,7 @@ export default {
   margin: 0 0.8rem 1.2rem 0.8rem;
 }
 #imgBottomUser {
-  height: 20vw;
+  height: 18vw;
   object-fit: cover;
 }
 .imgProfil {
@@ -913,8 +913,11 @@ export default {
     font-size: 18px;
   }
   .cardTitleProfile {
-    margin: 0 auto 1rem 0;
+    margin: 0 auto 1rem auto;
     font-size: 20px;
+  }
+  #imgBottomUser {
+    height: 45vw;
   }
   .titlePostUser {
     font-size: 22px;
@@ -942,65 +945,80 @@ export default {
   li {
     margin: 1rem;
   }
-  @media screen and (max-width: 393px) {
-    .containTitleProfil {
-      flex-direction: column;
-      margin: 0 auto 0 auto;
-    }
-    .logoTransparentProfile {
-      margin: 1rem 0 0 0;
-    }
-    .cardTitleProfile {
-      margin: 0 auto 1.5rem auto;
-      font-size: 20px;
-    }
-    .btnImgDelete {
-      margin: 0.3rem;
-    }
-    .titlePostUser {
-      font-size: 20px;
-    }
-    .separatorProfilUser {
-      margin: 0 auto 1.5rem 0;
-    }
-    .separatorPostUser {
-      margin: 0rem auto 1rem auto;
-    }
-    .dateCreateProfil,
-    h5 {
-      font-size: 14px;
-    }
+  .imgProfil {
+    height: 45vw;
   }
-  @media screen and (max-width: 280px) {
-    .auth-wrapper h3 {
-      font-size: 16px;
-    }
-    .containTitleProfil {
-      flex-direction: column;
-      margin: 0 auto 0 auto;
-    }
-    .logoTransparentProfile {
-      margin: 0;
-    }
-    .cardTitle {
-      font-size: 16px;
-    }
-    .cardTitleProfile {
-      margin: 0 auto 1.5rem auto;
-    }
-    .btnImgDelete {
-      margin: 0.1rem;
-    }
-    .separatorProfilUser {
-      margin: 1rem auto 1.5rem auto;
-    }
-    .separatorPostUser {
-      margin: 0rem auto 1rem auto;
-    }
-    .dateCreateProfil,
-    h5 {
-      font-size: 14px;
-    }
+}
+@media screen and (max-width: 393px) {
+  .containTitleProfil {
+    flex-direction: column;
+    margin: 0 auto 0 auto;
+  }
+  .logoTransparentProfile {
+    margin: 1rem 0 0 0;
+  }
+  #imgBottomUser {
+    height: 45vw;
+  }
+  .cardTitleProfile {
+    margin: 0 auto 1.5rem auto;
+    font-size: 20px;
+  }
+  .btnImgDelete {
+    margin: 0.3rem;
+  }
+  .titlePostUser {
+    font-size: 20px;
+  }
+  .separatorProfilUser {
+    margin: 0 auto 1.5rem 0;
+  }
+  .separatorPostUser {
+    margin: 0rem auto 1rem auto;
+  }
+  .dateCreateProfil,
+  h5 {
+    font-size: 14px;
+  }
+  .imgProfil {
+    height: 45vw;
+  }
+}
+@media screen and (max-width: 280px) {
+  .auth-wrapper h3 {
+    font-size: 16px;
+  }
+  .containTitleProfil {
+    flex-direction: column;
+    margin: 0 auto 0 auto;
+  }
+  .logoTransparentProfile {
+    margin: 0;
+  }
+  #imgBottomUser {
+    height: 45vw;
+  }
+  .cardTitle {
+    font-size: 16px;
+  }
+  .cardTitleProfile {
+    margin: 0 auto 1.5rem auto;
+  }
+  .btnImgDelete {
+    margin: 0.1rem;
+  }
+  .separatorProfilUser {
+    margin: 1rem auto 1.5rem auto;
+  }
+  .separatorPostUser {
+    margin: 0rem auto 1rem auto;
+  }
+  .dateCreateProfil,
+  h5 {
+    font-size: 14px;
+  }
+  .imgProfil {
+    height: 45vw;
   }
 }
 </style>

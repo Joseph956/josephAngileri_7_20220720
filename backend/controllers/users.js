@@ -126,11 +126,24 @@ exports.createImgBottom = async (req, res, next) => {
                     console.log(userObject);
                     User.update({ ...userObject, id: req.params.id }, {
                         where: { id: id }
-                    }).then(() => res.status(200).json({
-                        message: "Votre image de fond a été créée !"
-                    })).catch((error) => res.status(400).json({
-                        error, message: "Votre image de fond n'a pas été créée !"
+                    }).then(imgBottom => {
+                        if (!imgBottom) {
+                            return res.status(400).json({
+                                message: "Une erreur s'est produite lors de la création de votre image de fond.",
+                            });
+                        } else {
+                            res.status(201).json({
+                                message: "Votre image de fond a été créée.",
+                            });
+                        }
+                    }).catch(error => res.status(500).json({
+                        error
                     }));
+                    // }).then((userObject) => res.status(200).json({
+                    //     message: "Votre image de fond a été créée !"
+                    // })).catch((error) => res.status(400).json({
+                    //     error, message: "Votre image de fond n'a pas été créée !"
+                    // }));
                 });
             } else {
                 const userObject = req.file ?
@@ -174,23 +187,28 @@ exports.deleteImgBottom = async (req, res, next) => {
         }).then(userObject => {
             if (userObject.imgBottom != null) {
                 const filename = userObject.imgBottom.split("/images/")[1];
-                fs.unlink(`images/${filename}`, () => { });
-                User.update({
-                    "imgBottom": null
-                }, {
-                    where: { id: id }
-                }).then(() => res.status(200).json({
-                    message: "Votre image de fond a été supprimée !"
-                })).catch(() => res.status(400).json({
-                    message: "Votre image de fond n'a pas été modifiée !"
-                }));
+                fs.unlink(`images/${filename}`, () => {
 
+                    User.update({
+                        "imgBottom": null
+                    }, {
+                        where: { id: id }
+                    }).then(() => res.status(200).json({
+                        message: "Votre image de fond a été supprimée !"
+                    })).catch(() => res.status(400).json({
+                        message: "Votre image de fond n'a pas été modifiée !"
+                    }));
+                });
             } else {
                 res.status(400).json({
                     message: "Il n'\y a pas d'\image de couverture à supprimer !!!"
                 })
             }
-        }).catch((error) => { })
+        }).catch((error) => {
+            res.status(400).json({
+                error
+            });
+        })
     } catch (err) {
         res.status(500).send({ err, message: "La suppression de l'\image de fond à échoué !!!" });
     }

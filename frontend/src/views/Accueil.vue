@@ -61,15 +61,15 @@
                 v-model="username"
                 class="form-control_input"
                 name="username"
-                minlength="3"
                 required
                 autocomplete="off"
               />
-              <!-- minlength="5" -->
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
             </div>
-            <small>{{ message }}</small>
+            <p id="message">
+              <small>{{ msgError }}</small>
+            </p>
           </div>
         </div>
         <div class="form-group">
@@ -112,17 +112,17 @@
                 <!--  -->
                 <div v-if="mode == 'text'">
                   <img
-                    src="../assets/Icons/BiEye.svg"
-                    id="eye"
+                    src="../assets/Icons/BiEyeSlash.svg"
+                    id="eyeSlash"
                     @click="changer()"
                     alt=""
                   />
                 </div>
-                <!-- style="display: none" -->
                 <div v-else>
+                  <!-- style="display: none" -->
                   <img
-                    src="../assets/Icons/BiEyeSlash.svg"
-                    id="eye"
+                    src="../assets/Icons/BiEye.svg"
+                    id="eyeSlash"
                     @click="changer()"
                     alt=""
                   />
@@ -149,6 +149,9 @@
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
             </div>
+            <p id="message">
+              <small>{{ msgError }}</small>
+            </p>
           </div>
         </div>
         <p class="alert alert-info text-danger">
@@ -205,6 +208,7 @@ export default {
   components: {},
   data: function () {
     return {
+      e: false,
       error: "",
       message: "",
       mesgError: "",
@@ -268,29 +272,45 @@ export default {
           this.mesgError = error.response.data.message;
         });
     },
+
     changer: function () {
       let e = true;
       if (e) {
         document.getElementById("password").setAttribute("type", "text");
-        document.getElementById("eye").src = "../assets/Icons/BiEye.svg";
+        document.getElementById("eyeSlash").src =
+          "../assets/Icons/BiEyeSlash.svg";
         e = true;
       } else {
         document.getElementById("password").setAttribute("type", "password");
-        document.getElementById("eye").src = "../assets/Icons/BiEyeSlash.svg";
+        document.getElementById("eye").src = "../assets/Icons/BiEye.svg";
         e = true;
       }
     },
-    validUsername: function (value) {
-      return /^([A-Za-z]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value);
+    validUsername: function (response) {
+      if (!response) {
+        this.mesgError = error.response.data.message;
+        // message.textContent =
+        //   "Ce champ est obligatoire (Chiffres et symboles ne sont pas autorisés. Ne pas dépasser 20 caractères, minimum 3 caractères";
+      } else {
+        return /^([A-Za-z]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(response);
+      }
     },
 
     createAccount: function () {
       const self = this;
       let username = document.getElementById("username").value;
-      if (this.validUsername(username)) {
-        message.textContent =
-          "Ce champ est obligatoire (Chiffres et symboles ne sont pas autorisés. Ne pas dépasser 20 caractères, minimum 3 caractères";
-      }
+      // if (this.validUsername(username)) {
+      //   message.textContent =
+      //     "Ce champ est obligatoire (Chiffres et symboles ne sont pas autorisés. Ne pas dépasser 20 caractères, minimum 3 caractères";
+      // }
+      // let password = document.getElementById("password").value;
+      // let confirmPasswd = document.getElementById("confirmPasswd").value;
+      // if (password == confirmPasswd) {
+      //   message.textContent = "Passwords match";
+      // } else {
+      //   message.textContent = "Confirmer votre mot de passe !";
+      // }
+
       this.$store
         .dispatch("createAccount", {
           username: this.username,
@@ -299,7 +319,11 @@ export default {
           confirmPasswd: this.confirmPasswd,
         })
         .then(function (response) {
-          self.login();
+          if (!response) {
+            this.mesgError = error.response.data.message;
+          } else {
+            self.login();
+          }
         })
         .catch((error) => {
           this.mesgError = error.response.data.message;

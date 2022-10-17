@@ -82,15 +82,16 @@ exports.findOnePublished = async (req, res, next) => {
         },
         ],
     }).then(post => {
-        console.log(post);
-        res.status(200).json(post);
-    }).catch(error => {
-        res.status(400).json({
-            message:
-                error.message ||
-                "Une erreur s'est produite lors de la récupération des publications.",
-        });
-    });
+        if (!post) {
+            return res.status(401).json({
+                message: "Cette publication n'\existe pas !!!.",
+            });
+        } else {
+            res.status(200).json(post);
+        }
+    }).catch(error => res.status(500).json({
+        error
+    }));
 };
 exports.findpostByUser = async (req, res, next) => {
     Post.findAll({
@@ -131,14 +132,17 @@ exports.findpostByUser = async (req, res, next) => {
         attributes: {
             exclude: ['updateAt']
         }
-    }).then(posts => {
-        console.log(posts);
-        res.status(200).json(posts);
-    }).catch(() => {
-        res.status(400).json({
-            message: "Une erreur s'est produite lors de la récupération des publications de l'utilisateur !",
-        });
-    });
+    }).then(post => {
+        if (!post) {
+            return res.status(401).json({
+                message: "Une erreur s'est produite lors de la récupération des publications.",
+            });
+        } else {
+            res.status(200).json(post);
+        }
+    }).catch(error => res.status(500).json({
+        error
+    }));
 };
 exports.createPost = async (req, res, next) => {
     const post = new Post({
