@@ -108,8 +108,7 @@
               />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
-              <div class="eyePasswd">
-                <!--  -->
+              <!-- <div class="eyePasswd">
                 <div v-if="mode == 'text'">
                   <img
                     src="../assets/Icons/BiEyeSlash.svg"
@@ -119,7 +118,6 @@
                   />
                 </div>
                 <div v-else>
-                  <!-- style="display: none" -->
                   <img
                     src="../assets/Icons/BiEye.svg"
                     id="eyeSlash"
@@ -127,7 +125,7 @@
                     alt=""
                   />
                 </div>
-              </div>
+              </div> -->
             </div>
             <small>{{ message }}</small>
           </div>
@@ -272,44 +270,22 @@ export default {
           this.mesgError = error.response.data.message;
         });
     },
-
-    changer: function () {
-      let e = true;
-      if (e) {
-        document.getElementById("password").setAttribute("type", "text");
-        document.getElementById("eyeSlash").src =
-          "../assets/Icons/BiEyeSlash.svg";
-        e = true;
-      } else {
-        document.getElementById("password").setAttribute("type", "password");
-        document.getElementById("eye").src = "../assets/Icons/BiEye.svg";
-        e = true;
-      }
-    },
     validUsername: function (response) {
       if (!response) {
         this.mesgError = error.response.data.message;
-        // message.textContent =
-        //   "Ce champ est obligatoire (Chiffres et symboles ne sont pas autorisés. Ne pas dépasser 20 caractères, minimum 3 caractères";
+        message.textContent =
+          "Ce champ est obligatoire (Chiffres et symboles ne sont pas autorisés. Ne pas dépasser 20 caractères, minimum 3 caractères";
       } else {
         return /^([A-Za-z]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(response);
       }
     },
-
     createAccount: function () {
       const self = this;
       let username = document.getElementById("username").value;
-      // if (this.validUsername(username)) {
-      //   message.textContent =
-      //     "Ce champ est obligatoire (Chiffres et symboles ne sont pas autorisés. Ne pas dépasser 20 caractères, minimum 3 caractères";
-      // }
-      // let password = document.getElementById("password").value;
-      // let confirmPasswd = document.getElementById("confirmPasswd").value;
-      // if (password == confirmPasswd) {
-      //   message.textContent = "Passwords match";
-      // } else {
-      //   message.textContent = "Confirmer votre mot de passe !";
-      // }
+      if (this.validUsername(username)) {
+        message.textContent =
+          "Ce champ est obligatoire (Chiffres et symboles ne sont pas autorisés. Ne pas dépasser 20 caractères, minimum 3 caractères";
+      }
 
       this.$store
         .dispatch("createAccount", {

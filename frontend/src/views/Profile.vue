@@ -205,7 +205,7 @@
         </div>
         <div class="cardTitleProfile">
           <h1 class="titlePostUser">
-            Details de vos publications {{ user.username }}
+            Liste de vos publications {{ user.username }}
           </h1>
           <div class="separatorPostUser"></div>
         </div>
@@ -268,9 +268,12 @@
             <div class="card-body">
               <!-- Animation du titre -->
               <p class="mb-3 tx-14">
-                <router-link class="external" v-bind:to="'/Posts/'">
+                <router-link
+                  class="external"
+                  v-bind:to="'/PostDetails/' + post.id"
+                >
                   <div class="infos">
-                    <p class="aspect">Forum des publications :</p>
+                    <p class="aspect">Détails de la publication :</p>
                     {{ post.title }}
                   </div>
                 </router-link>
@@ -384,82 +387,6 @@
             </div>
           </div>
         </div>
-        <!-- Gestion du post  d-flex-->
-        <div class="card-footer">
-          <div class="post-actions">
-            <div class="menuPost">
-              <div class="linksPost">
-                <div class="likesPost">
-                  <div class="likes">
-                    <routeur-link
-                      v-bind:to="'/PostLikes/' + postId"
-                      class="d-flex align-items-center text-muted mr-4"
-                    >
-                      <button
-                        type="button"
-                        class="btn btn-like"
-                        @click="postLikeCreate(post.id)"
-                      >
-                        <span v-if="status == 'loading'">Like ....</span>
-                        <span v-else>
-                          <div class="likeFlex">
-                            <img
-                              class="like"
-                              style="height: 1.5rem; width: 1.5rem"
-                              x="0"
-                              y="0"
-                              height="100%"
-                              width="100%"
-                              src="../assets/Icons/BiHandThumbsUpFill.svg"
-                              alt="liker la publication"
-                            />
-                            <div>
-                              <div class="linkLike">
-                                <div class="d-md-block ml-2">
-                                  <span v-if="post.likes.length < 2">
-                                    - {{ post.likes.length }} - Like<br
-                                  /></span>
-                                  <span v-else>
-                                    - {{ post.likes.length }} - likes<br
-                                  /></span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </span>
-                      </button>
-                    </routeur-link>
-                  </div>
-                </div>
-                <div class="comentsPost">
-                  <router-link
-                    class="displayComents"
-                    @click="displayAllComents()"
-                    v-bind:to="`/ComentsList/${post.id}`"
-                  >
-                    <div class="linkItems">
-                      <img
-                        src="../assets/Icons/coment.svg"
-                        alt="commentaires"
-                      />
-                    </div>
-                    <div class="linkComent">
-                      <div class="d-md-block ml-2">
-                        <span v-if="post.coments.length < 2">
-                          - {{ post.coments.length }} - Commentaire <br
-                        /></span>
-                        <span v-else>
-                          - {{ post.coments.length }} - commentaires <br
-                        /></span>
-                      </div>
-                    </div>
-                  </router-link>
-                </div>
-              </div>
-            </div>
-          </div>
-          <comentsCreate :postId="post.id" />
-        </div>
       </div>
     </div>
     <div class="logoTransparent">
@@ -546,12 +473,8 @@ export default {
     };
   },
   mounted: function () {
-    // let idToFined =
-    //   this.$route.params.id != undefined
-    //     ? this.$route.params.id
-    //     : this.$store.state.user.userId;
     this.apiUser
-      .get("/") //+ idToFined
+      .get("/")
       .then((response) => {
         if (!response) {
           this.mesgError = error.response.data.message;
@@ -574,43 +497,6 @@ export default {
     ...mapState(["status"]),
   },
   methods: {
-    postLikeCreate: function (postId) {
-      this.apiPosts
-        .put(
-          `http://localhost:3000/api/posts/${postId}/like/${this.$store.state.user.userId}`,
-          {
-            postId: postId,
-            userId: this.userId,
-            likes: this.likeId,
-          }
-        )
-        .then((response) => {
-          if (!response) {
-            return (this.mesgError = error.response.data.message);
-          } else {
-            window.location.reload();
-          }
-        })
-        .catch((error) => {
-          this.mesgError = error.response.data.message;
-          alert(this.mesgError);
-        });
-    },
-    displayAllComents: function () {
-      this.apiPosts
-        .get("/")
-        .then((response) => {
-          if (!response.data) {
-            return (this.mesgError = error.response.data.message);
-          } else {
-            this.coments = response.data;
-          }
-        })
-        .catch((error) => {
-          this.mesgError = error.response.data.message;
-          alert(this.mesgError);
-        });
-    },
     getPostList: function () {
       this.apiPosts
         .get(`http://localhost:3000/api/posts/postUser/${this.user.id}`)
@@ -628,7 +514,9 @@ export default {
     },
     userDeleted: function (userId) {
       if (
-        window.confirm("Voulez-vous vraiment supprimer ce compte utilisateur ?")
+        window.confirm(
+          "Attention cette action est irreverssible, toutes vos données, publications, commentaires, et likes vont être supprimées !!!"
+        )
       ) {
         this.apiUser
           .delete("http://localhost:3000/api/users/" + userId)
@@ -772,7 +660,7 @@ export default {
   object-fit: cover;
 }
 .imgProfil {
-  height: 20vw;
+  height: 18vw;
   object-fit: cover;
 }
 .labelModify {

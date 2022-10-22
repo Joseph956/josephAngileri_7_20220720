@@ -256,21 +256,21 @@ export default {
       posts: [],
     };
   },
-  mounted: function () {
-    this.apiComents
-      .get("/")
-      .then((response) => {
-        if (!response.data) {
-          this.mesgError = error.response.data.message;
-        } else {
-          this.user = response.data;
-          this.getComentList();
-        }
-      })
-      .catch((error) => {
-        this.mesgError = error.response.data.message;
-      });
-  },
+  // mounted: function () {
+  //   this.apiComents
+  //     .get("/")
+  //     .then((response) => {
+  //       if (!response.data) {
+  //         this.mesgError = error.response.data.message;
+  //       } else {
+  //         this.user = response.data;
+  //         // this.getComentList();
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       this.mesgError = error.response.data.message;
+  //     });
+  // },
   beforeMount() {
     if (this.$store.state.user.role.role == "admin") {
       this.isAdmin = true;

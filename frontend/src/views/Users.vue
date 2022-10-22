@@ -65,22 +65,44 @@
                         </div>
                       </div>
                     </div>
-                    <!-- v-if="mode == 'isAdmin'" -->
-                    <div class="positionTrash">
-                      <!-- d-block -->
-                      <!-- v-if="
+                    <div>
+                      <div
+                        v-if="
                           isAdmin == true ||
                           $store.state.user.userId == user.userId
-                        " -->
-                      <button
-                        block
-                        class="btn"
-                        data-dropdown-button
-                        @click="userDeleted(user.id)"
+                        "
+                        class="positionTrash"
                       >
-                        <!--:disabled="!validatedFields"  -->
+                        <button
+                          block
+                          class="btn"
+                          data-dropdown-button
+                          @click="userDeleted(user.id)"
+                        >
+                          <div class="trashBtn">
+                            <div class="btnComent">
+                              <img
+                                style="height: 1.2rem; width: 1.2rem"
+                                x="0"
+                                y="0"
+                                height="100%"
+                                width="100%"
+                                src="../assets/Icons/BiTrash3Fill.svg"
+                                alt="supprimer le profil"
+                              />
+                            </div>
+                            <div class="btnComent">
+                              <span v-if="status == 'loading'"
+                                >Suppression en cours....</span
+                              >
+                              <span v-else></span>
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                      <div v-else>
                         <div class="trashBtn">
-                          <div v-if="mode == 'adminCpte'" class="btnComent">
+                          <div class="btnComent">
                             <img
                               style="height: 1.2rem; width: 1.2rem"
                               x="0"
@@ -91,14 +113,8 @@
                               alt="supprimer le profil"
                             />
                           </div>
-                          <div class="btnComent">
-                            <span v-if="status == 'loading'"
-                              >Suppression en cours....</span
-                            >
-                            <span v-else></span>
-                          </div>
                         </div>
-                      </button>
+                      </div>
                     </div>
                   </div>
 
@@ -118,6 +134,7 @@
                         />
                       </router-link>
                     </div>
+
                     <div class="listInfosUser">
                       <div class="infoUser">
                         <div class="infosHeader">
@@ -130,18 +147,41 @@
                         </div>
                       </div>
                     </div>
-                    <!--  -->
-                    <div v-if="mode == 'adminCpte'" class="positionTrash">
-                      <!--block  d-block-->
-                      <!-- v-if="
+                    <div>
+                      <div
+                        v-if="
                           isAdmin == true ||
                           $store.state.user.userId == user.userId
-                        " -->
-                      <button
-                        class="btn"
-                        data-dropdown-button
-                        @click="userDeleted(user.id)"
+                        "
+                        class="positionTrash"
                       >
+                        <button
+                          class="btn"
+                          data-dropdown-button
+                          @click="userDeleted(user.id)"
+                        >
+                          <div class="trashBtn">
+                            <div class="btnComent">
+                              <img
+                                style="height: 1.2rem; width: 1.2rem"
+                                x="0"
+                                y="0"
+                                height="100%"
+                                width="100%"
+                                src="../assets/Icons/BiTrash3Fill.svg"
+                                alt="supprimer le profil"
+                              />
+                            </div>
+                            <div class="btnComent">
+                              <span v-if="status == 'loading'"
+                                >Suppression en cours....</span
+                              >
+                              <span v-else></span>
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                      <div v-else>
                         <div class="trashBtn">
                           <div class="btnComent">
                             <img
@@ -154,14 +194,8 @@
                               alt="supprimer le profil"
                             />
                           </div>
-                          <div class="btnComent">
-                            <span v-if="status == 'loading'"
-                              >Suppression en cours....</span
-                            >
-                            <span v-else></span>
-                          </div>
                         </div>
-                      </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -183,13 +217,11 @@
         </div>
       </div>
     </div>
-    <!-- ScrollToTop button -->
     <button type="button" class="btnUp" @click="switchToUp()">
       <a class="bloc-button btn btn-d scrollToTop" @click="switchToUp('1')">
         <span class="fa fa-chevron-up"></span>
       </a>
     </button>
-    <!-- ScrollToTop button end-->
   </div>
 </template>
 
@@ -207,7 +239,6 @@ export default {
     return {
       mesgError: "",
       msgError: "",
-      mode: "adminCpte",
       isAdmin: false,
       apiUser: axios.create({
         baseURL: "http://localhost:3000/api/users/",
@@ -226,14 +257,12 @@ export default {
       .then((response) => {
         if (!response.data) {
           this.msgError = error.response.data.message;
-          // alert(this.mesgError);
         } else {
           this.users = response.data;
         }
       })
       .catch((error) => {
         this.msgError = error.response.data.message;
-        // alert(this.mesgError);
       });
   },
   beforeMount() {
@@ -242,25 +271,9 @@ export default {
     }
   },
   computed: {
-    validatedFields: function () {
-      if (this.mode == "adminCpte") {
-        if (
-          this.isAdmin == "true" &&
-          this.$store.state.user.userId == "user.userId"
-        ) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    },
     ...mapState(["status"]),
   },
   methods: {
-    // userDeleted: function () {
-    //   this.mode = "adminCpte";
-    // },
-
     switchToUp: function () {
       const btnUp = document.querySelector(".btnUp");
       btnUp.addEventListener("click", () => {
@@ -301,7 +314,6 @@ export default {
 }
 .col-md-8 {
   background: #4e5166;
-  /* padding: 2rem; */
   border-radius: 2rem;
 }
 .containerTitre,

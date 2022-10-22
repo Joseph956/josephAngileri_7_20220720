@@ -130,7 +130,7 @@ exports.newPasswd = (req, res, next) => {
             if (!user) {
                 return res.status(401).json({ message: "Ce profil utilisateur n'\existe pas !!!" });
             }
-            bcrypt.compare(req.body.password, user.password)
+            bcrypt.compare(password, user.password)
                 .then((valid) => {
                     if (!valid) {
                         return res.status(403).json({ message: 'Le mot de passe actuel est incorrect !' })

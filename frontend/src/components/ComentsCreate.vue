@@ -14,7 +14,7 @@
                   width="100%"
                   id="imgProfile"
                   v-bind:src="user.attachment"
-                  alt=""
+                  alt="photo de profil"
                 />
               </div>
             </div>
@@ -37,6 +37,8 @@
                 <label for="coment"></label>
                 <textarea
                   v-model="coment"
+                  rows="2"
+                  cols="30"
                   type="text"
                   id="coment"
                   class="form-control"
@@ -130,7 +132,7 @@
                       width="100%"
                       class="imgComent"
                       :src="coment.user.attachment"
-                      alt=""
+                      alt="photo de profil"
                     />
                   </div>
                   <div class="avatarComentUser" v-else>
@@ -256,8 +258,13 @@ export default {
   },
   data: function () {
     return {
+      error: "",
+      message: "",
       mesgError: "",
+      length: null,
       isAdmin: false,
+      listComent: [],
+      displayComents: true,
       user: {
         username: this.username,
         email: this.email,
@@ -273,10 +280,6 @@ export default {
         },
       }),
       coments: [],
-      error: "",
-      message: "",
-      length: null,
-      displayComents: true,
       apiUser: axios.create({
         baseURL:
           "http://localhost:3000/api/users/" + this.$store.state.user.userId,
@@ -319,22 +322,6 @@ export default {
     ...mapState(["status"]),
   },
   methods: {
-    getProfilOne() {
-      this.apiUser
-        .get("/users/userId/" + this.userId)
-        .then((response) => {
-          if (!response.data) {
-            this.mesgError = error.response.data.message;
-            alert(this.mesgError);
-          } else {
-            this.user = response.data;
-          }
-        })
-        .catch((error) => {
-          this.mesgError = error.response.data.message;
-          alert(this.mesgError);
-        });
-    },
     getComentList() {
       if (this.coments > 1) {
       } else {
@@ -355,17 +342,29 @@ export default {
       }
     },
     comentCreate: function () {
-      this.apiComents
+      const res = this.apiComents
         .post("http://localhost:3000/api/coments", {
           userId: this.$store.state.user.userId,
           postId: this.postId,
           coment: this.coment,
         })
+
         .then((response) => {
           if (!response.data) {
             this.mesgError = error.response.data.message;
           } else {
-            window.location.reload();
+            // const coment = res.data;
+            // for (let i = 0; i < post.coments.length; i++) {
+            //   if (this.coments[i].id === coment.id) {
+            //     this.coments[i].coment = coment.coment;
+            //   }
+            // }
+            this.getComentList();
+            this.coment.push(coment);
+            // this.coments = `${this.coment}\n`;
+
+            // this.$router.push("/comentslist/" + post.id);
+            // window.location.reload();
           }
         })
         .catch((error) => {
@@ -381,22 +380,23 @@ export default {
     },
     sentModify: function (comentId) {
       let comentModify = document.getElementById("inputComent-" + comentId);
-      if (window.confirm("Voulez-vous vraiment modifier ce commentaire ?")) {
-        this.apiComents
-          .put("http://localhost:3000/api/coments/" + comentId, {
-            coment: comentModify.value,
-          })
-          .then((response) => {
-            if (!response.data) {
-              this.mesgError = error.response.data.message;
-            } else {
-              window.location.reload();
-            }
-          })
-          .catch((error) => {
+      // if (window.confirm("Voulez-vous vraiment modifier ce commentaire ?")) {
+      this.apiComents
+        .put("http://localhost:3000/api/coments/" + comentId, {
+          coment: comentModify.value,
+        })
+        .then((response) => {
+          if (!response.data) {
             this.mesgError = error.response.data.message;
-          });
-      }
+          } else {
+            this.getComentList();
+            this.coments = `${this.coment}\n`;
+          }
+        })
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+        });
+      // }
     },
     dayjs: function (createdAt) {
       const Date = dayjs(createdAt)
@@ -518,8 +518,11 @@ export default {
 }
 #coment {
   width: 100%;
-  height: 1.6rem;
+  height: 2rem;
   background-color: #5c5c6c85;
+}
+textarea.form-control {
+  min-height: calc(1.6em + 0.75rem + 2px);
 }
 .containerBtnComent {
   display: flex;

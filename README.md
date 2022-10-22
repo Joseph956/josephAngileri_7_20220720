@@ -5,10 +5,10 @@
 gh repo clone Joseph956/josephAngileri_7_20220720
 # MySql
 - Projet réalisé avec MySql Workbench 8.0 CE
-- installation globale
-- Inserer vos informations de connexions et d'identifications MySql locales dans les variables d'environnement (.env.exemple) dans le backend.
+- installation globale,
+- Créer un nouveau shema de BDD dans Workbench,
+- Inserer vos informations de connexions et d'identifications MySql locales variables d'environnement (.env.exemple) dans le backend.
 # Backend
-Ajouter le dossier 'images'
 cd backend
 npm install
 Lancer le serveur : `nodemon server`

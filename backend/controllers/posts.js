@@ -245,16 +245,28 @@ exports.likePost = async (req, res, next) => {
             })
         if (likeFound) {
             await likeFound.destroy()
-            res.status(200).json({ like: false })
         } else {
-            Like.create({
-                userId: userId,
-                postId: postId,
-                likes: 1
-            }).then(() => res.status(201).json({
-                message: 'Like créé avec succés!'
-            })).catch(error => res.status(400).json({ error, message: "Le like n'a pas été créé !!!" }));
+            await Like.create({ userId: userId, postId: postId, likes: 1 });
         }
+        const postUpdated = await Post.findOne({
+            where: { id: postId },
+            include: [
+                {
+                    model: db.likes,
+                    likes: req.body.likeId,
+                    attributes: ['likes'],
+                    order: [["created", "DESC"]],
+                    include: [
+                        {
+                            model: db.user,
+                            attributes: ['username', 'attachment']
+                        }
+                    ],
+                }
+            ]
+        });
+        res.status(200).json(postUpdated)
+
     } catch (error) {
         res.status(500).json({ error })
     }

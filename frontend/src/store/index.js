@@ -165,32 +165,16 @@ export default createStore({
           });
       });
     },
-    // likePost: ({commit}, data) => {
-    //   commit('setStatus', 'like');
-    //   return new Promise((resolve, reject) => {
-    //     commit;
-    //     instance.post('auth/register', data)
-    //       .then(function (response) {
-    //         commit('setStatus', 'created');
-    //         resolve(response);
-    //         console.log(response);
-    //       })
-    //       .catch(function (error) {
-    //         commit('setStatus', 'mesgError');
-    //         reject(error);
-    //       });
-    //   });
+    // getUserInfos: ({ commit, state }, data) => {
+    //   instance.get('/users/' + state.user.userId, data,
+    //     {
+    //       headers: {
+    //         "Authorization": "BEARER " + state.user.token
+    //       }
+    //     }).then(response => {
+    //       commit('userInfos', response.data);
+    //     }).catch(function () { });
     // },
-    getUserInfos: ({ commit, state }, data) => {
-      instance.get('/users/' + state.user.userId, data,
-        {
-          headers: {
-            "Authorization": "BEARER " + state.user.token
-          }
-        }).then(response => {
-          commit('userInfos', response.data);
-        }).catch(function () { });
-    },
   },
   modules: {
   }

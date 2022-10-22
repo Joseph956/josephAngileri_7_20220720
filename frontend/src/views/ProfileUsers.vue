@@ -300,9 +300,12 @@
             <div class="card-body">
               <!-- Animation du titre -->
               <p class="mb-3 tx-14">
-                <router-link class="external" v-bind:to="'/Posts/'">
+                <router-link
+                  class="external"
+                  v-bind:to="'/PostDetails/' + post.id"
+                >
                   <div class="infos">
-                    <p class="aspect">Forum des publications :</p>
+                    <p class="aspect">Détails de la publication :</p>
                     {{ post.title }}
                   </div>
                 </router-link>
@@ -466,7 +469,6 @@
                 <div class="comentsPost">
                   <router-link
                     class="displayComents"
-                    @click="displayAllComents()"
                     v-bind:to="`/ComentsList/${post.id}`"
                   >
                     <div class="linkItems">
@@ -495,13 +497,11 @@
       </div>
     </div>
     <div>
-      <!-- ScrollToTop button -->
       <button type="button" class="btnUp" @click="switchToUp()">
         <a class="bloc-button btn btn-d scrollToTop" @click="switchToUp('1')">
           <span class="fa fa-chevron-up"></span>
         </a>
       </button>
-      <!-- ScrollToTop button end-->
     </div>
     <div class="logoTransparent">
       <img
@@ -600,27 +600,21 @@ export default {
   },
 
   methods: {
-    postLikeCreate: function (postId) {
-      this.apiPosts
-        .put(
-          `http://localhost:3000/api/posts/${postId}/like/${this.$store.state.user.userId}`,
-          {
-            postId: postId,
-            userId: this.userId,
-            likes: this.likeId,
-          }
-        )
-        .then((response) => {
-          if (!response) {
-            return (this.mesgError = error.response.data.message);
-          } else {
-            window.location.reload();
-          }
-        })
-        .catch((error) => {
-          this.mesgError = error.response.data.message;
-          alert(this.mesgError);
-        });
+    async postLikeCreate(postId) {
+      const res = await this.apiPosts.put(
+        `http://localhost:3000/api/posts/${postId}/like/${this.$store.state.user.userId}`,
+        {
+          postId: postId,
+          userId: this.userId,
+          likes: this.likeId,
+        }
+      );
+      const postUpdated = res.data;
+      for (let i = 0; i < this.posts.length; i++) {
+        if (this.posts[i].id === postUpdated.id) {
+          this.posts[i].likes = postUpdated.likes;
+        }
+      }
     },
     getPostList: function () {
       this.apiPosts
@@ -634,21 +628,6 @@ export default {
         })
         .catch((error) => {
           this.mesgError = error.response.data.message;
-        });
-    },
-    displayAllComents: function () {
-      this.apiPosts
-        .get("/")
-        .then((response) => {
-          if (!response) {
-            return (this.mesgError = error.response.data.message);
-          } else {
-            this.coments = response.data;
-          }
-        })
-        .catch((error) => {
-          this.mesgError = error.response.data.message;
-          alert(this.mesgError);
         });
     },
     dayjs: function (createdAt) {

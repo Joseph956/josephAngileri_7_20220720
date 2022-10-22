@@ -161,9 +161,6 @@ export default {
       this.getProfilOne();
     }
   },
-  // beforeMount() {
-  //   this.getProfilOne();
-  // },
   computed: {
     ...mapState({
       user: "userInfos",

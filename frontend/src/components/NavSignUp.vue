@@ -34,27 +34,10 @@ export default {
       windownWidth: null,
     };
   },
-  created() {
-    window.addEventListener("resize", this.checkScreen);
-    this.checkScreen();
-  },
   methods: {
-    checkScreen() {
-      this.windounWidth = window.innerWidth;
-      if (this.windownWidth == 750) {
-        this.mobile = true;
-        return;
-      }
-      this.mobile = false;
-      this.mobileNav = false;
-      return;
-    },
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
-    },
-    toggleMobileNav() {
-      this.mobileNav = !this.mobileNav;
     },
   },
 };

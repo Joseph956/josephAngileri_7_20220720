@@ -2,7 +2,6 @@
   <div>
     <div>
       <navPosts />
-
       <!-- Template affichage détails d'un post -->
       <div class="col-md-8 col-xl-6 middle-wrapper">
         <div class="containTitle">
@@ -383,7 +382,6 @@ export default {
         })
         .catch((error) => {
           this.mesgError = error.response.data.message;
-          alert(this.mesgError);
         });
     },
     displayAllComents: function () {

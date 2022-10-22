@@ -15,7 +15,7 @@
     </div>
     <div class="form-grouProfilePost" v-else>
       <img
-        style="height: 25vw; width: 100%"
+        style="height: 30vh; width: 100%"
         x="0"
         y="0"
         height="100%"
@@ -170,7 +170,6 @@
           </div>
         </div>
         <div>
-          <!-- ScrollToTop button -->
           <button type="button" class="btnUp" @click="switchToUp()">
             <a
               class="bloc-button btn btn-d scrollToTop"
@@ -179,7 +178,6 @@
               <span class="fa fa-chevron-up"></span>
             </a>
           </button>
-          <!-- ScrollToTop button end-->
         </div>
         <!-- Afficher la liste des posts-->
         <div class="col-md-8 col-xl-6 middle-wrapper">
@@ -190,7 +188,6 @@
               :key="post.id"
               class="col-md-12 grid-marginPost"
             >
-              <!-- rounded -->
               <div class="card">
                 <!-- Infos créateur du post -->
                 <div class="card-header">
@@ -298,7 +295,7 @@
                       <div class="likesPost">
                         <div class="likes">
                           <routeur-link
-                            v-bind:to="'/PostLikes/' + postId"
+                            v-bind:to="'/PostLikes/' + post.id"
                             class="d-flex align-items-center text-muted mr-4"
                           >
                             <button
@@ -322,9 +319,7 @@
                                   <div>
                                     <div class="linkLike">
                                       <div class="d-md-block ml-2">
-                                        <span
-                                          v-if="(liked = post.likes.length < 2)"
-                                        >
+                                        <span v-if="post.likes.length < 2">
                                           -
                                           {{ post.likes.length }}
                                           - Like<br
@@ -346,7 +341,6 @@
                       <div class="comentsPost">
                         <router-link
                           class="displayComents"
-                          @click="displayAllComents()"
                           v-bind:to="`/ComentsList/${post.id}`"
                         >
                           <div class="linkItems">
@@ -357,7 +351,7 @@
                           </div>
                           <div class="linkComent">
                             <div class="d-md-block ml-2">
-                              <span v-if="like == 1 && post.coments.length < 2">
+                              <span v-if="post.coments.length < 2">
                                 - {{ post.coments.length }} - Commentaire <br
                               /></span>
                               <span v-else>
@@ -406,9 +400,7 @@ export default {
   data: function () {
     return {
       mesgError: "",
-      like: false,
-      likes: this.like,
-      liked: [],
+
       user: {
         imgBottom: this.imgBottom,
         attachment: this.attachment,
@@ -449,9 +441,7 @@ export default {
       coments: [],
     };
   },
-  mounted: function () {
-    this.getLikeCookie;
-  },
+
   beforeMount() {
     this.getPostList();
   },
@@ -470,10 +460,6 @@ export default {
           return false;
         }
       }
-    },
-    getLikeCookie() {
-      let cookieValue = JSON.parse($cookies.get("like"));
-      cookieValue == null ? (this.liked = []) : (this.liked = cookieValue);
     },
     ...mapState(["status"]),
   },
@@ -512,22 +498,6 @@ export default {
           alert(this.mesgError);
         });
     },
-    getComentList() {
-      this.apiComents
-        .get("/")
-        .then((response) => {
-          if (!response) {
-            return (this.mesgError = error.response.data.message);
-          } else {
-            this.coments = response.data;
-            window.location.reload();
-          }
-        })
-        .catch((error) => {
-          this.mesgError = error.response.data.message;
-          alert(this.mesgError);
-        });
-    },
     async postLikeCreate(postId) {
       const res = await this.apiPosts.put(
         `http://localhost:3000/api/posts/${postId}/like/${this.$store.state.user.userId}`,
@@ -535,41 +505,15 @@ export default {
           postId: postId,
           userId: this.userId,
           likes: this.likeId,
-        },
-        document.addEventListener("input", () => {
-          setTimeout(() => {
-            $cookies.set("like", JSON.stringify(this.liked));
-          }, 300);
-        })
+        }
       );
-
-      // if (res.likes !== this.like) {
-      //   this.like += res.like ? 1 : -1;
-      // }
-      // this.like = res.likes;
+      const postUpdated = res.data;
+      for (let i = 0; i < this.posts.length; i++) {
+        if (this.posts[i].id === postUpdated.id) {
+          this.posts[i].likes = postUpdated.likes;
+        }
+      }
     },
-    // postLikeCreate: function (postId) {
-    //   const res = this.apiPosts
-    //     .put(
-    //       `http://localhost:3000/api/posts/${postId}/like/${this.$store.state.user.userId}`,
-    //       {
-    //         postId: postId,
-    //         userId: this.userId,
-    //         likes: this.likeId,
-    //       }
-    //     )
-    //     .then((response) => {
-    //       if (!response) {
-    //         return (this.mesgError = error.response.data.message);
-    //       } else {
-    //         window.location.reload();
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       this.mesgError = error.response.data.message;
-    //       alert(this.mesgError);
-    //     });
-    // },
     postCreate: function () {
       const dataPost = new FormData();
       dataPost.append("title", this.title);
@@ -583,21 +527,6 @@ export default {
             return (this.mesgError = error.response.data.message);
           } else {
             window.location.reload();
-          }
-        })
-        .catch((error) => {
-          this.mesgError = error.response.data.message;
-          alert(this.mesgError);
-        });
-    },
-    displayAllComents: function () {
-      this.apiPosts
-        .get("/")
-        .then((response) => {
-          if (!response) {
-            return (this.mesgError = error.response.data.message);
-          } else {
-            this.coments = response.data;
           }
         })
         .catch((error) => {
@@ -620,9 +549,6 @@ export default {
 </script>
 
 <style>
-.imgBottomAvatarGpm {
-  margin: 0 0.8rem 1.2rem 0.8rem;
-}
 .btnUp {
   height: 3rem;
   width: 3rem;
@@ -946,8 +872,10 @@ img {
   text-align: justify;
 }
 .imgPost {
-  width: 100%;
-  height: 45vh;
+  width: 40%;
+  height: 18vw;
+  /* width: 100%;
+  height: 35vw; */
   object-fit: cover;
   margin: auto;
 }
@@ -1016,16 +944,6 @@ img {
 }
 .likes:hover {
   color: rgb(89, 165, 13);
-}
-.unLikeFlex {
-  display: flex;
-}
-.unLike {
-  margin: auto 0.2em;
-  color: blue;
-}
-.unLike:hover {
-  color: rgb(199, 16, 46);
 }
 .d-none {
   margin-bottom: 0;
