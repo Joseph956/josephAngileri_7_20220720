@@ -286,7 +286,9 @@ export default {
     },
     userDeleted: function (userId) {
       if (
-        window.confirm("Voulez-vous vraiment supprimer ce compte utilisateur ?")
+        window.confirm(
+          "Attention cette action est irreverssible, toutes les données, de cet utlisateur ainsi que ses publications, ses commentaires, et ses likes vont être supprimées !!!"
+        )
       ) {
         this.apiUser
           .delete("http://localhost:3000/api/users/" + userId)

@@ -67,7 +67,7 @@
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
             </div>
-            <p id="message">
+            <p id="message" class="alert alert-info text-danger">
               <small>{{ msgError }}</small>
             </p>
           </div>
@@ -87,7 +87,6 @@
               />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
-              <small>{{ error }}</small>
             </div>
           </div>
         </div>
@@ -108,26 +107,7 @@
               />
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
-              <!-- <div class="eyePasswd">
-                <div v-if="mode == 'text'">
-                  <img
-                    src="../assets/Icons/BiEyeSlash.svg"
-                    id="eyeSlash"
-                    @click="changer()"
-                    alt=""
-                  />
-                </div>
-                <div v-else>
-                  <img
-                    src="../assets/Icons/BiEye.svg"
-                    id="eyeSlash"
-                    @click="changer()"
-                    alt=""
-                  />
-                </div>
-              </div> -->
             </div>
-            <small>{{ message }}</small>
           </div>
         </div>
         <div class="form-group" v-if="mode == 'create'">
@@ -147,13 +127,10 @@
               <i class="fas fa-check-circle"></i>
               <i class="fas fa-exclamation-circle"></i>
             </div>
-            <p id="message">
-              <small>{{ msgError }}</small>
-            </p>
           </div>
         </div>
         <p class="alert alert-info text-danger">
-          {{ mesgError }} {{ message }}
+          {{ mesgError }}
         </p>
 
         <div class="form-group">
@@ -206,15 +183,8 @@ export default {
   components: {},
   data: function () {
     return {
-      e: false,
-      error: "",
-      message: "",
       mesgError: "",
-      error_login: "",
-      error_create: "",
-      error_Password: "", //modifier
-      error_confirmPasswd: "", //modifier
-
+      msgError: "",
       mode: "login",
       username: "",
       email: "",
@@ -271,20 +241,14 @@ export default {
         });
     },
     validUsername: function (response) {
-      if (!response) {
-        this.mesgError = error.response.data.message;
-        message.textContent =
-          "Ce champ est obligatoire (Chiffres et symboles ne sont pas autorisés. Ne pas dépasser 20 caractères, minimum 3 caractères";
-      } else {
-        return /^([A-Za-z]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(response);
-      }
+      return /^([A-Za-z]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(response);
     },
     createAccount: function () {
       const self = this;
       let username = document.getElementById("username").value;
       if (this.validUsername(username)) {
         message.textContent =
-          "Ce champ est obligatoire (Chiffres et symboles ne sont pas autorisés. Ne pas dépasser 20 caractères, minimum 3 caractères";
+          "Le pseudonyme est compris entre 3 et 20 caractères maximum, Chiffres et symboles ne sont pas autorisés.  ";
       }
 
       this.$store
@@ -304,12 +268,6 @@ export default {
         .catch((error) => {
           this.mesgError = error.response.data.message;
         });
-
-      return {
-        username,
-        password,
-        confirmPasswd,
-      };
     },
   },
 };

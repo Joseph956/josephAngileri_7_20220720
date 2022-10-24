@@ -21,7 +21,6 @@
       </div>
       <div class="container">
         <form @submit.prevent="handleSubmit">
-          <!-- Saisir l'ancien mot de passe -->
           <div class="form-group">
             <div class="form-controlSignup">
               <label for="password">Mot de passe actuel</label>

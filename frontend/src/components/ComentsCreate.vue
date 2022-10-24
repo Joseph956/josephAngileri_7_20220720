@@ -80,7 +80,7 @@
             >
               <div class="comentPost">
                 <div>
-                  <!-- Modification des commentaires -->
+                  <!-- Envoyer la modification du commentaire -->
                   <div class="buttonModify">
                     <textarea
                       v-bind:id="'inputComent-' + coment.id"
@@ -193,7 +193,7 @@
                       </div>
                     </button>
                   </div>
-                  <!-- Modifier un commentaire  -->
+                  <!-- afficher la zone de modification d'un commentaire  -->
                   <div class="btnFooter">
                     <button
                       v-if="
@@ -261,9 +261,10 @@ export default {
       error: "",
       message: "",
       mesgError: "",
+      coment: this.coment,
       length: null,
       isAdmin: false,
-      listComent: [],
+      // listComent: [],
       displayComents: true,
       user: {
         username: this.username,
@@ -319,7 +320,7 @@ export default {
     this.getComentList();
   },
   computed: {
-    ...mapState(["status"]),
+    ...mapState(["status", "userInfos"]),
   },
   methods: {
     getComentList() {
@@ -341,6 +342,7 @@ export default {
           });
       }
     },
+
     comentCreate: function () {
       const res = this.apiComents
         .post("http://localhost:3000/api/coments", {
@@ -353,18 +355,7 @@ export default {
           if (!response.data) {
             this.mesgError = error.response.data.message;
           } else {
-            // const coment = res.data;
-            // for (let i = 0; i < post.coments.length; i++) {
-            //   if (this.coments[i].id === coment.id) {
-            //     this.coments[i].coment = coment.coment;
-            //   }
-            // }
-            this.getComentList();
-            this.coment.push(coment);
-            // this.coments = `${this.coment}\n`;
-
-            // this.$router.push("/comentslist/" + post.id);
-            // window.location.reload();
+            window.location.reload();
           }
         })
         .catch((error) => {
@@ -379,24 +370,24 @@ export default {
       inputComent.style.display = "block";
     },
     sentModify: function (comentId) {
+      console.log("sendModify test");
       let comentModify = document.getElementById("inputComent-" + comentId);
-      // if (window.confirm("Voulez-vous vraiment modifier ce commentaire ?")) {
-      this.apiComents
-        .put("http://localhost:3000/api/coments/" + comentId, {
-          coment: comentModify.value,
-        })
-        .then((response) => {
-          if (!response.data) {
+      if (window.confirm("Voulez-vous vraiment modifier ce commentaire ?")) {
+        this.apiComents
+          .put("http://localhost:3000/api/coments/" + comentId, {
+            coment: comentModify.value,
+          })
+          .then((response) => {
+            if (!response.data) {
+              this.mesgError = error.response.data.message;
+            } else {
+              window.location.reload();
+            }
+          })
+          .catch((error) => {
             this.mesgError = error.response.data.message;
-          } else {
-            this.getComentList();
-            this.coments = `${this.coment}\n`;
-          }
-        })
-        .catch((error) => {
-          this.mesgError = error.response.data.message;
-        });
-      // }
+          });
+      }
     },
     dayjs: function (createdAt) {
       const Date = dayjs(createdAt)

@@ -4,7 +4,6 @@
     <div class="fleche">
       <a href="#">
         <button type="button" class="btn btn-like" @click="postDetailReturn()">
-          <!-- postId -->
           <img
             class="returnPg"
             style="height: 45px; width: 35px"
@@ -201,7 +200,6 @@
           </div>
         </div>
         <div>
-          <!-- ScrollToTop button -->
           <button type="button" class="btnUp" @click="switchToUp()">
             <a
               class="bloc-button btn btn-d scrollToTop"
@@ -210,7 +208,6 @@
               <span class="fa fa-chevron-up"></span>
             </a>
           </button>
-          <!-- ScrollToTop button end -->
         </div>
       </div>
     </div>
@@ -256,21 +253,6 @@ export default {
       posts: [],
     };
   },
-  // mounted: function () {
-  //   this.apiComents
-  //     .get("/")
-  //     .then((response) => {
-  //       if (!response.data) {
-  //         this.mesgError = error.response.data.message;
-  //       } else {
-  //         this.user = response.data;
-  //         // this.getComentList();
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       this.mesgError = error.response.data.message;
-  //     });
-  // },
   beforeMount() {
     if (this.$store.state.user.role.role == "admin") {
       this.isAdmin = true;

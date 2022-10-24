@@ -165,16 +165,21 @@ export default createStore({
           });
       });
     },
-    // getUserInfos: ({ commit, state }, data) => {
-    //   instance.get('/users/' + state.user.userId, data,
-    //     {
-    //       headers: {
-    //         "Authorization": "BEARER " + state.user.token
-    //       }
-    //     }).then(response => {
-    //       commit('userInfos', response.data);
-    //     }).catch(function () { });
-    // },
+    getUserInfos: ({ commit, state }, data) => {
+      instance.get('/users/' + state.user.userId, data,
+        {
+          headers: {
+            "Authorization": "BEARER " + state.user.token
+          }
+        }).then(response => {
+          commit('userInfos', response.data);
+          resolve(response);
+          console.log(response);
+        }).catch(function (error) {
+          commit('userInfos', 'mesgError');
+          reject(error);
+        });
+    },
   },
   modules: {
   }
