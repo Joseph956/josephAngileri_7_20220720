@@ -1,20 +1,20 @@
 {
   "development": {
-    "username": "joseph",
+    "username": "root",
     "password": "user",
     "database": "dbtest_groupomania",
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
-    "username": "joseph",
+    "username": "root",
     "password": "user",
     "database": "database_test",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
-    "username": "joseph",
+    "username": "root",
     "password": "user",
     "database": "database_production",
     "host": "127.0.0.1",
