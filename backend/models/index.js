@@ -22,7 +22,6 @@ db.user = require("../models/user")(sequelize, Sequelize);
 db.posts = require("../models/post")(sequelize, Sequelize);
 db.coments = require("../models/coment")(sequelize, Sequelize);
 db.likes = require("../models/like")(sequelize, Sequelize);
-db.unlikes = require("../models/unlike")(sequelize, Sequelize);
 db.role = require("../models/role")(sequelize, Sequelize);
 
 //define relationships
@@ -56,19 +55,6 @@ db.user.hasMany(db.likes, {// Un utilisateur peut être l'auteur de plusieurs li
   },
   onDelete: 'CASCADE'
 });
-db.user.hasMany(db.unlikes, {// Un utilisateur peut être l'auteur de plusieurs unlikes.
-  // C'est une relation (un à +) clé étrangère définie dans le modèle cible.
-  foreignKey: {
-    name: 'userId',
-    through: db.unlikes,
-    allowNull: false
-  },
-  onDelete: 'CASCADE'
-});
-/******************************************
- * *********Fin relation users*************
- *****************************************/
-
 /*****************************************
 **************relation posts**************
 *****************************************/
@@ -113,43 +99,9 @@ db.posts.hasMany(db.likes, {//Un post peut avoir plusieurs likes.
   },
   onDelete: 'CASCADE'
 });
-
-db.posts.hasMany(db.unlikes, {//Un post peut avoir plusieurs unlikes.
-  foreignKey: {
-    //Relation un à plusieurs clé étrangère définie dans le modèle cible (db.unlikes).
-    name: 'postId',
-    through: db.unlikes,
-    allowNull: false
-  },
-  onDelete: 'CASCADE'
-});
-/******************************************
- * *********Fin relation posts************
- *****************************************/
-
 /*****************************************
 *****Relation commentaires ***************
 ******************************************/
-// db.coments.hasOne(db.posts, { //un coment appartient à un seul post.
-//   foreignKey: {
-//     name: 'postId',
-//     as: 'post',
-//     allowNull: false
-//   },
-//   otherKey: 'comentId',
-//   through: db.coments,
-//   onDelete: 'CASCADE'
-// });
-// db.coments.hasOne(db.user, { //Un coment appartient à un seul utilisateur.
-//   foreignKey: {
-//     name: 'userId',
-//     as: 'user',
-//     allowNull: false
-//   },
-//   otherKey: 'postId',
-//   through: db.posts,
-//   onDelete: 'CASCADE'
-// });
 db.coments.belongsTo(db.posts, { //Un coment appartient à un seul post.
   foreignKey: {
     // Relation(un à un) clé étrangère définie dans le modèle source(db.coments).
@@ -161,17 +113,6 @@ db.coments.belongsTo(db.posts, { //Un coment appartient à un seul post.
   through: db.coments,
   onDelete: 'CASCADE'
 });
-// db.coments.belongsToMany(db.posts, { //Plusieurs coments peuvent appartenir à plusieurs posts et inversement.
-//   foreignKey: {
-//    //Relation (+ à +), utilise une table de jonction qui contient les clés étrangères 
-//     name: 'comenId',
-//     as: 'coment',
-//     allowNull: false
-//   },
-//   otherKey: 'postId',
-//   through: db.coments,
-//   onDelete: 'CASCADE'
-// });
 db.coments.belongsTo(db.user, { //Un coment appartient à un seul utilisateur.
   foreignKey: {
     // Relation(un à un) clé étrangère définie dans le modèle source(db.coments).
@@ -183,22 +124,6 @@ db.coments.belongsTo(db.user, { //Un coment appartient à un seul utilisateur.
   through: db.coments,
   onDelete: 'CASCADE'
 });
-// db.coments.hasMany(db.user, { // Un utilisateur peut être l'auteur de plusieurs coments.
-//   foreignKey: {
-//     //hasMany relation un à plusieurs (La clé étrangère est définie dans le modèle cible).
-//     name: 'userId',
-//     as: 'user',
-//     allowNull: false
-//   },
-//   otherKey: 'comentId',
-//   through: db.coments,
-//   onDelete: 'CASCADE'
-// });
-
-/******************************************
- ********Fin relation commentaires*********
- *****************************************/
-
 /*****************************************
 **************relation likes**************
 *****************************************/
@@ -212,26 +137,6 @@ db.likes.belongsTo(db.user, {//plusieurs likes peuvent appartenir à un seul utl
   onDelete: 'CASCADE'
 });
 
-db.unlikes.belongsTo(db.user, {//plusieurs unlikes peuvent appartenir à un seul utlisateur.
-  foreignKey: {
-    name: 'userId',
-    as: 'user',
-    allowNull: false
-  },
-  through: db.unlikes,
-  onDelete: 'CASCADE'
-});
-
-// db.likes.belongsToMany(db.user, {
-//   foreignKey: {
-//     name: 'userId',
-//     as: 'user',
-//     allowNull: false
-//   },
-//   through: db.likes,
-//   onDelete: 'CASCADE'
-// }); //plusieurs likes peuvent appartenir à un seul utlisateur.
-
 db.likes.belongsTo(db.posts, {//Plusieurs likes peuvent appartenir à un seul post.
   foreignKey: {
     name: 'postId',
@@ -239,16 +144,6 @@ db.likes.belongsTo(db.posts, {//Plusieurs likes peuvent appartenir à un seul po
     allowNull: false
   },
   through: db.likes,
-  onDelete: 'CASCADE'
-});
-
-db.unlikes.belongsTo(db.posts, {//Plusieurs unlikes peuvent appartenir à un seul post.
-  foreignKey: {
-    name: 'postId',
-    as: 'post',
-    allowNull: false
-  },
-  through: db.unlikes,
   onDelete: 'CASCADE'
 });
 /******************************************
@@ -259,6 +154,11 @@ db.unlikes.belongsTo(db.posts, {//Plusieurs unlikes peuvent appartenir à un seu
 db.role.hasMany(db.user, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 db.user.belongsTo(db.role, { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 
+// On veux maintenant créer une relation entre ces 2 tables.L’utilisateur à un et un seul rôle.Pour cela il suffit d’ajouter la ligne suivante:
+
+// User.belongsTo(Role);//l'utilisateur à un rôle.
+// Cela va créer un champ « role_id » dans la table « user » (roleId si on laisse la configuration « underscored » à false par default).
+// Pour générer ces tables on peux utiliser la ligne suivante(tables générées seulement si elles n’existent pas)
 
 //define relationships
 

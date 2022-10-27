@@ -1,11 +1,19 @@
 <template>
   <header>
     <nav class="navbar navbar-expand navbar-light fixed-top">
-      <div class="container">       
-          <router-link class="navbar-brand" :to="{ name: 'Accueil' }">
-            <img class="imgAccueil" style="height: 2rem; width: 12rem" x="0" y="0" height="100%" width="100%"
-              src="../assets/icon-left-font.svg" alt="" />
-          </router-link>
+      <div class="container">
+        <router-link class="navbar-brand" :to="{ name: 'Accueil' }">
+          <img
+            class="imgAccueil"
+            style="height: 2rem; width: 12rem"
+            x="0"
+            y="0"
+            height="100%"
+            width="100%"
+            src="../assets/icon-left-font.svg"
+            alt=""
+          />
+        </router-link>
       </div>
     </nav>
   </header>
@@ -17,7 +25,7 @@ import menuIcon from "../assets/Icons/bars-regular.svg";
 export default {
   name: "NavSignUp",
   components: {
-    menuIcon,   
+    menuIcon,
   },
   data() {
     return {
@@ -26,38 +34,16 @@ export default {
       windownWidth: null,
     };
   },
-  created() {
-    window.addEventListener("resize", this.checkScreen);
-    this.checkScreen();
-  },
   methods: {
-    checkScreen() {
-      this.windounWidth = window.innerWidth;
-      if (this.windownWidth == 750) {
-        this.mobile = true;
-        return;
-      }
-      this.mobile = false;
-      this.mobileNav = false;
-      return;
-    },
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
-    },
-    toggleMobileNav() {
-      this.mobileNav = !this.mobileNav;
     },
   },
 };
 </script>
 
 <style>
-
-
-
-
-
 header {
   background-color: #fff;
   padding: 0 25px;
@@ -65,10 +51,11 @@ header {
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 99;
 }
-.navbar>.container {
+.navbar,
+.container {
+  display: flow-root;
   justify-content: center;
 }
-
 img,
 .imgAccueil {
   display: flex;
@@ -96,7 +83,6 @@ img,
   height: 25px;
   width: auto;
 }
-
 .mobile-nav {
   padding: 20px;
   width: 70%;
@@ -109,20 +95,16 @@ img,
   top: 0;
   left: 0;
 }
-
 .mobile-nav-enter-active,
 .mobile-nav-leave-active {
   transition: all 1s ease;
 }
-
 .mobile-nav-enter {
   transform: translateX(-250px);
 }
-
 .mobile-nav-enter-to {
   transform: translateX(0);
 }
-
 .mobile-nav-leave-to {
   transform: translateX(-250px);
 }

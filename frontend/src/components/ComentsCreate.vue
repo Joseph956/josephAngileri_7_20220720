@@ -1,38 +1,65 @@
 <template>
   <div>
-
-
-    <p class="alert alert-info text-danger">{{ mesgError }}</p>
-    <div class="form-control_input">
+    <div class="form-controlInput">
       <div>
         <div class="containerComent">
           <div class="avatarComent">
             <div class="avatar" v-if="user.attachment">
               <div class="imgUserComent">
-                <img style="height: 50px; width: 40px" x="0" y="0" height="100%" width="100%" id="imgProfile"
-                  v-bind:src="user.attachment" alt="" />
+                <img
+                  style="height: 50px; width: 40px"
+                  x="0"
+                  y="0"
+                  height="100%"
+                  width="100%"
+                  id="imgProfile"
+                  v-bind:src="user.attachment"
+                  alt="photo de profil"
+                />
               </div>
             </div>
             <div class="avatar" v-else>
               <div class="imgUserComent">
-                <img style="height: 40px; width: 40px" x="0" y="0" height="100%" width="100%" id="imgAvatar"
-                  src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
+                <img
+                  style="height: 40px; width: 40px"
+                  x="0"
+                  y="0"
+                  height="100%"
+                  width="100%"
+                  id="imgAvatar"
+                  src="../assets/Icons/BiPersonCircle.svg"
+                  alt="avatar"
+                />
               </div>
             </div>
             <form>
               <div class="form-groupComent">
                 <label for="coment"></label>
-                <textarea v-model="coment" type="text" id="coment" class="form-control" placeholder="Votre commentaire" autofocus >
+                <textarea
+                  v-model="coment"
+                  rows="2"
+                  cols="30"
+                  type="text"
+                  id="coment"
+                  class="form-control"
+                  placeholder="Votre commentaire"
+                  autofocus
+                >
                 </textarea>
               </div>
             </form>
             <button type="button" class="btn" @click="comentCreate()">
               <div class="newComentBtn">
                 <div class="ComentBtn">
-                  <img src="../assets/Icons/envoyer.svg" alt="Envoyer votre commentaire">
+                  <img
+                    src="../assets/Icons/envoyer.svg"
+                    alt="Envoyer votre commentaire"
+                  />
                 </div>
                 <div class="ComentBtn">
-                  <span v-if="status == 'loading'">Publication en cours....</span>
+                  <span v-if="status == 'loading'"
+                    >Publication en cours....</span
+                  >
                   <span v-else></span>
                 </div>
               </div>
@@ -41,26 +68,48 @@
         </div>
         <div class="col-md-8 col-xl-6 middle-wrapper">
           <div class="row">
+            <div class="alert alert-info text-danger">
+              {{ mesgError }}
+            </div>
             <!-- Gestion des commentaires du post-->
-            <div class="col-md-12 grid-margin" v-for="coment in coments.slice(0,1)" v-bind:key="coment.id"
-              :coment="coment">
+            <div
+              class="col-md-12 grid-margin"
+              v-for="coment in coments.slice(0, 1)"
+              v-bind:key="coment.id"
+              :coment="coment"
+            >
               <div class="comentPost">
                 <div>
-                  <!-- Modification des commentaires -->
-                  <div class="alert alert-info text-danger">{{ mesgError }} </div>
+                  <!-- Envoyer la modification du commentaire -->
                   <div class="buttonModify">
-                    <textarea v-bind:id="'inputComent-' + coment.id" v-model="coment.coment"
-                      aria-label="Modifier le commentaire" style="display: none" class="form-control" button>
-                  </textarea>
-                    <button type="button" v-bind:id="'inputComentBtn-' + coment.id" style="display: none" class="btn"
-                      @click="sentModify(coment.id)">
+                    <textarea
+                      v-bind:id="'inputComent-' + coment.id"
+                      v-model="coment.coment"
+                      aria-label="Modifier le commentaire"
+                      style="display: none"
+                      class="form-control"
+                      button
+                    >
+                    </textarea>
+                    <button
+                      class="btn"
+                      type="button"
+                      v-bind:id="'inputComentBtn-' + coment.id"
+                      style="display: none"
+                      @click="sentModify(coment.id)"
+                    >
                       <div class="newComentBtn">
                         <div class="ComentBtn">
-                          <img src="../assets/Icons/envoyer.svg" alt="Envoyer votre commentaire modifier">
+                          <img
+                            src="../assets/Icons/envoyer.svg"
+                            alt="Envoyer votre commentaire modifier"
+                          />
                         </div>
                       </div>
                       <div class="ComentBtn">
-                        <span v-if="status == 'loading'">Publication en cours....</span>
+                        <span v-if="status == 'loading'"
+                          >Publication en cours....</span
+                        >
                         <span v-else></span>
                       </div>
                     </button>
@@ -75,46 +124,109 @@
                 <!-- Informations de l'auteur du commentaire -->
                 <div class="infosUser">
                   <div class="avatarComentUser" v-if="coment.user.attachment">
-                    <img style="height: 45px; width: 35px" x="0" y="0" height="100%" width="100%" class="imgComent"
-                      :src="coment.user.attachment" alt="" />
+                    <img
+                      style="height: 45px; width: 35px"
+                      x="0"
+                      y="0"
+                      height="100%"
+                      width="100%"
+                      class="imgComent"
+                      :src="coment.user.attachment"
+                      alt="photo de profil"
+                    />
                   </div>
                   <div class="avatarComentUser" v-else>
-                    <img style="height: 35px; width: 35px" x="0" y="0" height="100%" width="100%" class="avatarProfil"
-                      src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
+                    <img
+                      style="height: 35px; width: 35px"
+                      x="0"
+                      y="0"
+                      height="100%"
+                      width="100%"
+                      class="avatarProfil"
+                      src="../assets/Icons/BiPersonCircle.svg"
+                      alt="avatar"
+                    />
                   </div>
 
                   <div class="userComent">
-                    <p class="textUserComent">
-                      {{ coment.user.username }}
-                    </p>
                     <div class="dateComent">
-                      Posté le : {{ coment.createdAt }}
+                      <p class="textUserComent">
+                        Auteur : {{ coment.user.username }} <br />
+                        Posté le :
+                        {{ dayjs(coment.createdAt) }}
+                      </p>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="containerBtnComent">
-                <div class="btnFooter">
-                  <button type="button" class="btn" @click="comentDeleted(coment.id)">
-                    <div class="trashBtn">
-                      <div class="btnComent">
-                        <img class="icon" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%" width="100%"
-                          src="../assets/Icons/BiTrash3Fill.svg" alt="Supprimer votre commentaire">
+                <div class="containerBtnComent">
+                  <!-- Supprimer un commentaire -->
+                  <div class="btnFooter">
+                    <button
+                      v-if="
+                        isAdmin == true ||
+                        $store.state.user.userId == coment.userId
+                      "
+                      block
+                      class="btn d-block"
+                      type="button"
+                      @click="comentDeleted(coment.id)"
+                    >
+                      <div class="trashBtn">
+                        <div class="btnComent">
+                          <img
+                            class="icon"
+                            style="height: 1.2rem; width: 1.2rem"
+                            x="0"
+                            y="0"
+                            height="100%"
+                            width="100%"
+                            src="../assets/Icons/BiTrash3Fill.svg"
+                            alt="Supprimer votre commentaire"
+                          />
+                        </div>
+                        <div class="btnComent">
+                          <span v-if="status == 'loading'"
+                            >Suppression en cours....</span
+                          >
+                          <span v-else>Supprimer</span>
+                        </div>
                       </div>
-                      <div class="btnComent">
-                        <span v-if="status == 'loading'">Suppression en cours....</span>
-                        <span v-else></span>
+                    </button>
+                  </div>
+                  <!-- afficher la zone de modification d'un commentaire  -->
+                  <div class="btnFooter">
+                    <button
+                      v-if="
+                        isAdmin == true ||
+                        $store.state.user.userId == coment.userId
+                      "
+                      block
+                      class="btn d-block"
+                      type="button"
+                      @click="comentModify(coment.id)"
+                    >
+                      <div class="trashBtn">
+                        <div class="btnComent">
+                          <img
+                            class="icon"
+                            style="height: 1.2rem; width: 1.2rem"
+                            x="0"
+                            y="0"
+                            height="100%"
+                            width="100%"
+                            src="../assets/Icons/BiPenFill.svg"
+                            alt="Modifier votre commentaire"
+                          />
+                        </div>
+                        <div class="btnComent">
+                          <span v-if="status == 'loading'"
+                            >Modification en cours en cours....</span
+                          >
+                          <span v-else>Modifier</span>
+                        </div>
                       </div>
-                    </div>
-                  </button>
-                </div>
-                <div class="btnFooter">
-                  <button v-if="role == admin" type="button" class="btn" @click="comentModify(coment.id)">
-                    <img style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%" width="100%"
-                      src="../assets/Icons/BiPenFill.svg" alt="Modifier votre commentaire">
-                    <span v-if="status == 'loading'">Modification en cours en cours....</span>
-                    <span v-else></span>
-                  </button>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -127,15 +239,18 @@
 
 <script>
 import axios from "axios";
-import dayjs from "dayjs";
 import { mapState } from "vuex";
 import comentsList from "@/components/ComentsList.vue";
+import * as dayjs from "dayjs";
+import "dayjs/locale/fr";
+import fr from "dayjs/locale/fr";
 
 export default {
   name: "ComentsCreate",
-  components: { 
+  components: {
     comentsList,
     dayjs,
+    fr,
   },
   props: {
     postId: String,
@@ -143,7 +258,14 @@ export default {
   },
   data: function () {
     return {
+      error: "",
+      message: "",
       mesgError: "",
+      coment: this.coment,
+      length: null,
+      isAdmin: false,
+      // listComent: [],
+      displayComents: true,
       user: {
         username: this.username,
         email: this.email,
@@ -151,7 +273,7 @@ export default {
         role: this.role,
       },
       apiComents: axios.create({
-        baseURL: "http://localhost:3000/api/",
+        baseURL: "http://localhost:3000/api/coments",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -159,11 +281,6 @@ export default {
         },
       }),
       coments: [],
-      error: "",
-      message:"",
-      mesgError: "",
-      length: null,
-      displayComents: true,
       apiUser: axios.create({
         baseURL:
           "http://localhost:3000/api/users/" + this.$store.state.user.userId,
@@ -184,65 +301,66 @@ export default {
   },
   mounted: function () {
     this.apiUser
-      .get("")
+      .get("/")
       .then((response) => {
-        this.user = response.data;
+        if (!response.data) {
+          this.mesgError = error.response.data.message;
+        } else {
+          this.user = response.data;
+        }
       })
-      .catch(function () {});
-  },
-  mounted: function () {
-    this.apiComents
-      .get("")
-      .then((response) => {
-        this.user = response.data;
-      })
-      .catch(function () {});
+      .catch(function (error) {
+        this.mesgError = error.response.data.message;
+      });
   },
   beforeMount() {
+    if (this.$store.state.user.role.role == "admin") {
+      this.isAdmin = true;
+    }
     this.getComentList();
   },
   computed: {
-    ...mapState(["status"]),
-    ...mapState({ user: "userInfos" }),
+    ...mapState(["status", "userInfos"]),
   },
   methods: {
-    getProfilOne() {
-      this.apiUser
-        .get("/users/userId/" + this.userId)
-        .then((response) => {
-          this.user = response.data;
-        })
-        .catch(function () {});
-    },
     getComentList() {
       if (this.coments > 1) {
-
-      }else{
+      } else {
         this.apiComents
-          .get("/coments/postId/" + this.postId)
+          .get("/postId/" + this.postId)
           .then((response) => {
-            this.coments = response.data;
-            console.log(this.coments);
+            if (!response.data) {
+              this.mesgError = error.response.data.message;
+              alert(this.mesgError);
+            } else {
+              this.coments = response.data;
+            }
           })
-          .catch(function (message) {
-            console.log(message);
+          .catch((error) => {
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           });
       }
     },
+
     comentCreate: function () {
-        this.apiComents
-          .post("http://localhost:3000/api/coments", {
-            userId: this.$store.state.user.userId,
-            postId: this.postId,
-            coment: this.coment,
-          })
-          .then(() => {
-              window.location.reload();
-              this.$router.push("/posts");
-              this.getComentOne();
-          }).catch((error) => {
-            alert(this.mesgError = error.response.data.message)
-          });
+      const res = this.apiComents
+        .post("http://localhost:3000/api/coments", {
+          userId: this.$store.state.user.userId,
+          postId: this.postId,
+          coment: this.coment,
+        })
+
+        .then((response) => {
+          if (!response.data) {
+            this.mesgError = error.response.data.message;
+          } else {
+            window.location.reload();
+          }
+        })
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+        });
     },
     comentModify: function (comentId) {
       let comentUser = document.getElementById("inputComent-" + comentId);
@@ -252,24 +370,30 @@ export default {
       inputComent.style.display = "block";
     },
     sentModify: function (comentId) {
+      console.log("sendModify test");
       let comentModify = document.getElementById("inputComent-" + comentId);
       if (window.confirm("Voulez-vous vraiment modifier ce commentaire ?")) {
-      this.apiComents
-        .put("http://localhost:3000/api/coments/" + comentId, {
-          coment: comentModify.value,
-        })
-        .then((response) => {
-          if (!response.data) {
-            return (this.msgError.response.data.message)
-          }else{
-            window.location.reload();
-            this.$router.push("/posts");
-            this.getComentList();
-          }
-        }).catch((error) => {
-          alert(this.msgError = error.response.data.message)
-        });
+        this.apiComents
+          .put("http://localhost:3000/api/coments/" + comentId, {
+            coment: comentModify.value,
+          })
+          .then((response) => {
+            if (!response.data) {
+              this.mesgError = error.response.data.message;
+            } else {
+              window.location.reload();
+            }
+          })
+          .catch((error) => {
+            this.mesgError = error.response.data.message;
+          });
       }
+    },
+    dayjs: function (createdAt) {
+      const Date = dayjs(createdAt)
+        .locale("fr")
+        .format("DD-MMMM-YYYY à HH:mm ");
+      return Date;
     },
     comentDeleted: function (comentId) {
       if (window.confirm("Voulez-vous vraiment supprimer ce commentaire ?")) {
@@ -277,14 +401,13 @@ export default {
           .delete("http://localhost:3000/api/coments/" + comentId)
           .then((response) => {
             if (!response.data) {
-              return (this.mesgError = error.response.data.message)
+              this.mesgError = error.response.data.message;
             } else {
-            window.location.reload();
-            this.$router.push("/posts");
-            this.getComentList();
+              window.location.reload();
             }
-          }).catch((error) => {
-            alert(this.msgError = error.response.data.message)
+          })
+          .catch((error) => {
+            this.mesgError = error.response.data.message;
           });
       }
     },
@@ -293,19 +416,6 @@ export default {
 </script>
 
 <style>
-
-
-
-
-
-
-
-
-
-
-
-
-
 .containerComent {
   margin: 0 1rem 0 1rem;
   padding: 2rem 0 0 0;
@@ -315,22 +425,12 @@ export default {
   border-color: #5c5c6c85;
   border-radius: 1rem;
   padding: 0;
-  /* width: 90%; */
   margin: 1rem auto;
 }
 .avatarComent {
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
   grid-template-rows: 61px 1fr 1fr;
-}
-@media screen and (max-width: 768px) {
-  .newComentBtn {
-    flex-direction: column;
-  }
-    .avatarComent {
-      display: flex;
-      flex-direction: column;
-    }
 }
 .ComentBtn {
   align-content: center;
@@ -342,20 +442,10 @@ export default {
 .comentPost {
   border-top: none;
 }
-@media screen and (max-width: 768px) {
-  .comentPost {
-    margin: 0;
-  }
-}
 .buttonModify {
   display: flex;
   margin: 0 0 1rem 0;
   border-top: none;
-}
-@media screen and (max-width: 768px) {
-.buttonModify {
-    flex-direction: column;
-  }
 }
 .comentModify {
   width: 100%;
@@ -365,7 +455,7 @@ export default {
   text-align: justify;
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #cfcece;
 }
-.infosUser {
+.avatarComentUser {
   display: flex;
 }
 .userComent {
@@ -380,26 +470,14 @@ export default {
   margin: 0;
   color: black;
 }
-@media screen and (max-width: 768px) {
-  .comentModify {
-    flex-direction: column;
-    border-radius: 1rem;
-  }
-  .infosUser {
-    flex-direction: column;
-  }
-  .userComent {
-    align-content: center;
-    align-items: center;
-  }
-  .textUserComent {
-    margin: 0.5rem 0 0.5rem 0;
-  }
-  .userComent {
-    margin: 0;
-  }
+.dateComent {
+  text-align: left;
+  margin: 0.2rem 0 0 0;
 }
-
+.infosUser {
+  display: flex;
+  margin-left: 1rem;
+}
 .imgUser {
   display: flex;
   align-items: center;
@@ -429,28 +507,14 @@ export default {
   align-items: center;
   margin: 0.7rem 1rem;
 }
-@media screen and (max-width: 768px) {
-  .form-groupComent {
-      display: flex;
-      margin: 10px 0;
-    }
-}
 #coment {
   width: 100%;
-  height: 1.6rem;
+  height: 2rem;
   background-color: #5c5c6c85;
 }
-@media screen and (max-width: 902px) {
-  #coment {
-      width: 100%;
-    }
+textarea.form-control {
+  min-height: calc(1.6em + 0.75rem + 2px);
 }
-@media screen and (max-width: 768px) {
-  #coment {
-      width: 100%;
-    }
-}
-
 .containerBtnComent {
   display: flex;
   flex-direction: row;
@@ -462,12 +526,14 @@ export default {
 .trashBtn {
   display: flex;
   align-items: center;
+  margin: 0.5rem;
 }
 .iconDelete {
   margin: 0 0.5rem 0 0;
 }
 .btn .btn-primary {
   outline: none;
+  border: none;
 }
 .modifyBtn {
   display: flex;
@@ -488,10 +554,99 @@ export default {
   color: rgb(199, 16, 46);
 }
 .btnComent {
-  margin: 0 0.3rem;
+  display: contents;
+  margin: 0.5rem 0.3rem;
 }
 .btnComent:hover {
   color: rgb(199, 16, 46);
   margin: 0 0.3rem;
+}
+/************************************
+**********Media queries**************
+*************************************/
+@media screen and (max-width: 902px) {
+  #coment {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 768px) {
+  .newComentBtn {
+    flex-direction: column;
+  }
+  .avatarComent {
+    display: flex;
+    flex-direction: column;
+  }
+  .comentPost {
+    margin: 0;
+  }
+  .buttonModify {
+    flex-direction: column;
+  }
+  .comentModify {
+    flex-direction: column;
+    border-radius: 1rem;
+  }
+  .userComent {
+    align-content: center;
+  }
+  .textUserComent {
+    margin: 0;
+  }
+  #coment {
+    width: 100%;
+  }
+  .trashBtn {
+    flex-direction: column;
+  }
+  .modifyBtn {
+    flex-direction: column;
+  }
+  .iconDelete {
+    margin-bottom: 1rem;
+  }
+  .iconModify {
+    margin-bottom: 1rem;
+  }
+}
+@media screen and (max-width: 372px) {
+  .containerComent {
+    margin: 0 auto 0 auto;
+  }
+  .dateComent {
+    text-align: center;
+    margin-bottom: 0;
+  }
+  .infosUser {
+    flex-direction: column;
+    margin: auto;
+  }
+  .userComent {
+    display: contents;
+    align-content: center;
+  }
+  .textUserComent {
+    margin: 0;
+  }
+  .containerBtnComent {
+    flex-direction: column;
+  }
+  #coment {
+    height: auto;
+  }
+}
+@media screen and (max-width: 280px) {
+  .containerComent {
+    margin: 0 auto 0 auto;
+  }
+  .btnFooter {
+    display: flex;
+  }
+  .containerBtnComent {
+    flex-direction: column;
+  }
+  #coment {
+    height: auto;
+  }
 }
 </style>

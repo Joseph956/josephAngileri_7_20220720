@@ -1,50 +1,121 @@
 <template>
   <div>
     <navPosts />
-    <h1>Modifier votre profil utilisateur</h1>
-    <form enctype="multipart/form-data">
-      <ImgBottomUpdate :userId="user.id" />
-      <!-- Image de fond du profil utilisateur -->
-      <!-- <div class="bottomProfil"> -->
-      <div class="form-group">
-        <label for="username">Modifier votre Nom et Prenom</label>
-        <input ref="firstfield" v-model="user.username" type="text" id="username" class="form-controlProfil"
-          placeholder="Modifier votre nom et prénom" />
+    <div class="containTitle">
+      <div class="logoTransparentUpdateProfile">
+        <img
+          style="height: 2.5rem; width: 2.5rem"
+          x="0"
+          y="0"
+          height="100%"
+          width="100%"
+          src="../assets/logo_transparent.png"
+          alt="logo"
+        />
       </div>
-      <div class="form-group">
-        <label for="email">Modifier votre email</label>
-        <input ref="firstfield" v-model="user.email" type="text" id="email" class="form-controlProfil"
-          placeholder="Modifier votre email" />
+      <div class="cardTitle">
+        <h1>Modifier votre profil</h1>
+        <div class="separatorUpdateUser"></div>
       </div>
-      <div class="formGroup" v-if="user.attachment">
-        <img style="height: 10rem; width: 10rem" x="0" y="0" height="100%" width="100%" id="imgNavProfil"
-          v-bind:src="user.attachment" alt="Photo de profil utilisateur" />
-        <label for="file">Photo de profil</label>
-      </div>
-      <div class="formGroup" v-else>
-        <img style="height: 10rem; width: 10rem" x="0" y="0" height="100%" width="100%" id="imgNavAvatar"
-          src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
-        <label for="file">Photo profil</label>
-      </div>
+    </div>
+    <div class="imgBottom">
+      <form enctype="multipart/form-data">
+        <ImgBottomUpdate :userId="user.id" />
 
-      <div class="selectBottom">
-        <div class="formGroup">
-          <input class="formFilePublich" id="fileProfil" ref="fileProfil" type="file" name="fileProfil" accept="image/*"
-            @change="onFileSelected()" />
-          <button class="btnFile" type="button" @click="profilUpdate()">
-            <span v-if="status == 'loading'">Publication en cours....</span>
-            <span v-else>
-              <img style="height: 40px; width: 40px" x="0" y="0" height="100%" width="100%"
-                src="../assets/Icons/BiCameraFill.svg" alt="">
-            </span>
-          </button>
+        <div class="form-group">
+          <label for="username" class="legend">Modifier vos informations</label>
+          <input
+            ref="firstfield"
+            v-model="user.username"
+            type="text"
+            id="username"
+            class="form-controlProfil"
+            placeholder="Modifier votre nom et prénom"
+          />
         </div>
-      </div>
-      <div class="alert alert-info text-danger">{{ mesgError }}</div>
-    </form>
+        <div class="form-group">
+          <label for="email"></label>
+          <input
+            ref="firstfield"
+            v-model="user.email"
+            type="text"
+            id="email"
+            class="form-controlProfil"
+            placeholder="Modifier votre email"
+          />
+        </div>
+        <div class="formGroup" v-if="user.attachment">
+          <img
+            style="height: 5rem; width: 5rem"
+            x="0"
+            y="0"
+            height="100%"
+            width="100%"
+            id="imgNavProfil"
+            v-bind:src="user.attachment"
+            alt="Photo de profil utilisateur"
+          />
+          <label for="file">Changer la photo de profil</label>
+        </div>
+        <div class="formGroup" v-else>
+          <img
+            style="height: 5rem; width: 5rem"
+            x="0"
+            y="0"
+            height="100%"
+            width="100%"
+            id="imgNavAvatar"
+            src="../assets/Icons/BiPersonCircle.svg"
+            alt="avatar"
+          />
+          <label for="file">Changer la photo de profil</label>
+        </div>
+
+        <div class="selectBottom">
+          <div class="formGroup">
+            <input
+              class="formFilePublich"
+              id="fileProfil"
+              ref="fileProfil"
+              type="file"
+              name="fileProfil"
+              accept="image/*"
+              @change="onFileSelected()"
+            />
+            <button
+              v-if="isAdmin == true || $store.state.user.userId == user.userId"
+              class="btnFile"
+              type="button"
+              @click="profilUpdate()"
+            >
+              <span v-if="status == 'loading'">Publication en cours....</span>
+              <span v-else>
+                <img
+                  style="height: 40px; width: 40px"
+                  x="0"
+                  y="0"
+                  height="100%"
+                  width="100%"
+                  src="../assets/Icons/BiCameraFill.svg"
+                  alt="Modifier le profil"
+                />
+              </span>
+            </button>
+          </div>
+        </div>
+        <div class="alert alert-info text-danger">{{ mesgError }}</div>
+      </form>
+    </div>
     <div class="logoTransparent">
-      <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
-        src="../assets/logo_transparent.png" alt="" />
+      <img
+        style="height: 2.5rem; width: 2.5rem"
+        x="0"
+        y="0"
+        height="100%"
+        width="100%"
+        src="../assets/logo_transparent.png"
+        alt="logo groupomania"
+      />
     </div>
   </div>
 </template>
@@ -58,11 +129,12 @@ export default {
   name: "ProfilUpdate",
   components: {
     ImgBottomUpdate,
-    navPosts
-},
+    navPosts,
+  },
   data: function () {
     return {
       mesgError: "",
+      isAdmin: false,
       apiUser: axios.create({
         baseURL: "http://localhost:3000/api/users/" + this.$route.params.id,
         headers: {
@@ -80,7 +152,14 @@ export default {
     };
   },
   beforeMount() {
-    this.getProfilOne();
+    if (this.$store.state.user.role.role == "admin") {
+      this.isAdmin = true;
+      this.getProfilOne();
+    }
+    if (this.$store.state.user.role.role == "user") {
+      this.isAdmin = true;
+      this.getProfilOne();
+    }
   },
   computed: {
     ...mapState({
@@ -94,45 +173,46 @@ export default {
       this.user.attachment = URL.createObjectURL(this.fileProfil);
     },
     getProfilOne: function () {
-      console.log("tst");
       this.apiUser
         .get("/")
         .then((response) => {
           if (!response) {
-            this.mesgError = error.response.data.message
+            this.mesgError = error.response.data.message;
           } else {
-          this.user = response.data;
-          console.log('--------->CONTENU front-profilUpdate : response.data');
-          console.log(response.data);
+            this.user = response.data;
           }
-        }).catch((error) => {
-          alert(this.mesgError = error.response.data.message)
+        })
+        .catch((error) => {
+          this.mesgError = error.response.data.message;
+          alert(this.mesgError);
         });
     },
     profilUpdate: function () {
       if (
-        window.confirm("Voulez-vous vraiment modifier les informations de votre profil ?")
-      ) {
-      const dataProfil = new FormData();
-      dataProfil.append("username", this.user.username);
-      dataProfil.append("email", this.user.email);
-      dataProfil.append("image", this.fileProfil);
-      this.apiUser
-        .put(
-          `http://localhost:3000/api/users/${this.$route.params.id}/profile`,
-          dataProfil
+        window.confirm(
+          "Voulez-vous vraiment modifier les informations de votre profil ?"
         )
-        .then((response) => {
-          if (!response) {
-            this.mesgError = error.response.data.message
-          }else{
-            window.location.reload();
-            this.$router.push("/profile");
-            this.getProfilOne();
-          }
-        }).catch((error) => {
-          alert(this.mesgError = error.response.data.message)
-        });
+      ) {
+        const dataProfil = new FormData();
+        dataProfil.append("username", this.user.username);
+        dataProfil.append("email", this.user.email);
+        dataProfil.append("image", this.fileProfil);
+        this.apiUser
+          .put(
+            `http://localhost:3000/api/users/${this.$route.params.id}/profile`,
+            dataProfil
+          )
+          .then((response) => {
+            if (!response) {
+              this.mesgError = error.response.data.message;
+            } else {
+              window.location.reload();
+            }
+          })
+          .catch((error) => {
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
+          });
       }
     },
   },
@@ -140,7 +220,22 @@ export default {
 </script>
 
 <style>
-
+.logoTransparentUpdateProfile {
+  display: flex;
+  margin: -0.5rem 0 0 0;
+}
+.cardTitle {
+  display: flex;
+  margin: 0 0 0.8rem 1rem;
+  text-decoration: none;
+  flex-direction: column;
+}
+.separatorUpdateUser {
+  width: 6rem;
+  height: 4px;
+  background-color: #ffd7d7;
+  margin: 0 0 1.5rem 0;
+}
 .bottomProfil {
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e51665a;
   border-radius: 1rem;
@@ -170,9 +265,34 @@ export default {
 }
 .formFilePublich {
   background: #4e5166;
-  width: 100%;
+  /* width: 100%; */
 }
 .logoTransparent {
   margin: 3rem 0 0 0;
+}
+@media screen and (max-width: 768px) {
+  .logoTransparentUpdateProfile {
+    margin: -2.8rem 1rem 0 0;
+  }
+  .containTitle {
+    margin: 2rem auto 0 auto;
+  }
+  .separatorUser {
+    display: flex;
+    align-items: center;
+    width: 4rem;
+    margin: 1rem 0 0.5rem 1rem;
+  }
+}
+@media screen and (max-width: 393px) {
+  .containTitle {
+    flex-direction: column;
+  }
+  .logoTransparentUpdateProfile {
+    margin: 1.2rem 0 0 0;
+  }
+  .separatorUpdateUser {
+    margin: 0 auto 1.5rem auto;
+  }
 }
 </style>

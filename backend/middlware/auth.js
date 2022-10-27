@@ -12,7 +12,7 @@ module.exports.token = (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
         const userId = decodedToken.userId;
-        User.findByPk(userId).then((user) => {
+        User.findOne({ where: { id: userId } }).then((user) => {
             if (user) {
                 req.token = token;
                 req.user = userId;
@@ -46,7 +46,7 @@ module.exports.haveRightOnPost = (req, res, next) => {
                                 return next();
                             } else {
                                 return res.status(403).send({
-                                    message: "Sécurité : Vous n'avez pas les droits nécessaires pour supprimer ou modifier ce post !",
+                                    message: `Sécurité : Vous n'êtes pas autorisé à modifier ou supprimer cette publication  -${user.username}-!`,
                                 });
                             }
                         })
@@ -58,7 +58,6 @@ module.exports.haveRightOnPost = (req, res, next) => {
             }
         });
     } catch (error) {
-        console.log(error);
         res.status(401).json({ error: error | 'Requête non autorisé !' });
     }
 };
@@ -80,7 +79,7 @@ module.exports.haveRightOnComent = (req, res, next) => {
                             return next();
                         } else {
                             return res.status(403).send({
-                                message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ou supprimer ce commentaire !",
+                                message: `Sécurité : Vous n'êtes pas autorisé à modifier ou supprimer ce comentaire  -${user.username}-!`,
                             });
                         }
                     })
@@ -111,7 +110,7 @@ module.exports.haveRightOnProfile = (req, res, next) => {
                 } else {
                     return res.status(403).send(
                         {
-                            message: "Sécurité : Vous n'avez pas les droits necessaires pour modifier ou supprimer ce compte utilisateur !",
+                            message: `Sécurité : Vous n'êtes pas autorisé à modifier ou supprimer ce  compte  utilisateur  - ${user.username} - !`,
                         });
                 }
             } else {
@@ -121,7 +120,6 @@ module.exports.haveRightOnProfile = (req, res, next) => {
             }
         });
     } catch (error) {
-        console.log(error);
         res.status(401).json({ message: 'Requête non autorisé !' });
     }
 };
@@ -130,49 +128,34 @@ module.exports.email = (req, res, next) => {
         next();
     } else {
         return res.status(400).json({
-            error: "Veuillez saisir un email valide !"
+            message: "Veuillez saisir un email valide !!!"
         });
     }
 };
 const passwdSchema = new passwrdValidator();
-
 passwdSchema
-    .is().min(8)                                    // Minimum length 8
-    .is().max(100)                                  // Maximum length 100
-    .has().uppercase(1)                              // Must have uppercase letters (majuscule)
-    .has().lowercase(1)                              // Must have lowercase letters (minuscule)
-    .has().digits(2)                                // Must have at least 2 digits (chiffres)
-    .has().not().spaces()                           // Should not have spaces
-    .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
-
+    .is().min(8).is().max(100).has().uppercase(1).has().lowercase(1)
+    .has().digits(2).has().not().spaces()
+    .is().not().oneOf(['Passw0rd', 'Password123']);
 module.exports.passwd = (req, res, next) => {
     if (passwdSchema.validate(req.body.password)) {
         next();
     } else {
         return res.status(400).json({
-            message: "Le mot de passe que vous avez saisi n’est pas conforme, il doit contenir au moins 8 caractères dont au moins un chiffre, une lettre majuscule, et une lettre minuscule" +
-                passwdSchema.validate(req.body.password, { list: true })
+            message: "Mot de passe faible, au moins 8 caractères dont deux chiffres, une lettre majuscule et minuscule."
         })
     }
 };
-// const confirmPasswdSchema = new passwrdValidator();
-
-// confirmPasswdSchema
-//     .is().min(8)                                    // Minimum length 8
-//     .is().max(100)                                  // Maximum length 100
-//     .has().uppercase(1)                              // Must have uppercase letters (majuscule)
-//     .has().lowercase(1)                              // Must have lowercase letters (minuscule)
-//     .has().digits(2)                                // Must have at least 2 digits (chiffres)
-//     .has().not().spaces()                           // Should not have spaces
-//     .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
-
-// module.exports.confirmPasswd = (req, res, next) => {
-//     if (confirmPasswdSchema.validate(req.body.newPasswd)) {
-//         next();
-//     } else {
-//         return res.status(400).json({
-//             message: "Le mot de passe que vous avez saisi n’est pas conforme, il doit contenir au moins 8 caractères dont au moins un chiffre, une lettre majuscule, et une lettre minuscule" +
-//                 confirmPasswdSchema.validate(req.body.newPasswd, { list: true })
-//         })
-//     }
-// };
+const confirmPasswdSchema = new passwrdValidator();
+confirmPasswdSchema
+    .is().min(8).is().max(100).has().uppercase(1).has().lowercase(1)
+    .has().digits(2).has().not().spaces().is().not().oneOf(['Passw0rd', 'Password123']);
+module.exports.confirmPasswd = (req, res, next) => {
+    if (confirmPasswdSchema.validate(req.body.newPasswd)) {
+        next();
+    } else {
+        return res.status(400).json({
+            message: "Mot de passe faible, au moins 8 caractères dont un chiffre, une lettre majuscule, et minuscule"
+        })
+    }
+};

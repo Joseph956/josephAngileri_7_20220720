@@ -1,6 +1,26 @@
 <template>
   <div>
     <navPosts />
+    <div class="col-md-8 col-xl-6 middle-wrapper">
+      <div class="containerTitre">
+        <div class="logoTransparentUser">
+          <img
+            style="height: 2.5rem; width: 2.5rem"
+            x="0"
+            y="0"
+            height="100%"
+            width="100%"
+            src="../assets/logo_transparent.png"
+            alt="logo"
+          />
+        </div>
+        <div class="cardTitleUser">
+          <h1>La page de {{ user.username }}</h1>
+          <div class="separatorUser"></div>
+        </div>
+      </div>
+    </div>
+    <br />
     <div class="card">
       <!-- Image de fond -->
       <div></div>
@@ -18,7 +38,7 @@
       </div>
       <div class="form-grouProfile" v-else>
         <img
-          style="height: 10vw; width: 100%"
+          style="width: 100%"
           x="0"
           y="0"
           height="100%"
@@ -30,6 +50,7 @@
       </div>
       <div class="imgDelete">
         <button
+          v-if="isAdmin == true || $store.state.user.userId == user.userId"
           class="btn btn-secondary btnImgDelete"
           type="button"
           @click="imgFondDelete(user.id)"
@@ -83,7 +104,14 @@
           <!-- Modif profil  -->
           <li class="liBtn">
             <router-link v-bind:to="'/ProfilUpdate/' + user.id">
-              <button type="button" class="btnModify" :userId="user.id">
+              <button
+                v-if="
+                  isAdmin == true || $store.state.user.userId == user.userId
+                "
+                type="button"
+                class="btnModify"
+                :userId="user.id"
+              >
                 <img
                   style="height: 1.5rem; width: 1.5rem"
                   x="0"
@@ -102,7 +130,7 @@
           </li>
         </div>
         <div class="gridBox">
-          <h1 class="cardTitleProfil">Votre profil {{ user.username }}</h1>
+          <h1 class="cardTitleProfil">Le profil de {{ user.username }}</h1>
           <div class="separatorProfilUser"></div>
           <div class="cardHeader">
             <h3>Pseudo : {{ user.username }}</h3>
@@ -117,7 +145,14 @@
           <!-- Bouton Modification mdp -->
           <li class="liBtn">
             <router-link v-bind:to="'/PasswdUpdate/' + user.id">
-              <button type="button" class="btnModify" :userId="user.id">
+              <button
+                v-if="
+                  isAdmin == true || $store.state.user.userId == user.userId
+                "
+                type="button"
+                class="btnModify"
+                :userId="user.id"
+              >
                 <img
                   style="height: 1.5rem; width: 1.5rem"
                   x="0"
@@ -137,6 +172,7 @@
           <!-- Bouton Suppression profil-->
           <li class="liBtn">
             <button
+              v-if="isAdmin == true || $store.state.user.userId == user.userId"
               class="btnTrash"
               data-dropdown-button
               @click="userDeleted(user.id)"
@@ -181,36 +217,32 @@
       </div>
 
       <!-- Affichage des messages derreurs -->
-      <div class="alert alert-info text-danger">{{ mesgErrorProfil }}</div>
-      <div class="dateCreateProfil">
-        <h5>
-          Date de création de votre profil {{ user.username }} :
-          {{ dayjs(user.createdAt) }}
-        </h5>
-      </div>
+      <div class="alert alert-info text-danger">{{ mesgError }}</div>
     </div>
-    <!-- Lister les publication de l'utilisateur -->
-    <div class="col-md-8 col-xl-6 middle-wrapper">
-      <div class="containTitleProfil">
-        <div class="logoTransparentProfile">
-          <img
-            style="height: 2.5rem; width: 2.5rem"
-            x="0"
-            y="0"
-            height="100%"
-            width="100%"
-            src="../assets/logo_transparent.png"
-            alt="logo"
-          />
-        </div>
-        <div class="cardTitleProfile">
-          <h1 class="titlePostUser">
-            Liste de vos publications {{ user.username }}
-          </h1>
-          <div class="separatorPostUser"></div>
+    <v-container>
+      <!-- Lister les publication de l'utilisateur -->
+      <div class="col-md-8 col-xl-6 middle-wrapper">
+        <div class="containTitleProfil">
+          <div class="logoTransparentProfile">
+            <img
+              style="height: 2.5rem; width: 2.5rem"
+              x="0"
+              y="0"
+              height="100%"
+              width="100%"
+              src="../assets/logo_transparent.png"
+              alt="logo"
+            />
+          </div>
+          <div class="cardTitleProfile">
+            <h1 class="titlePostUser">
+              Les publications de {{ user.username }} <br />
+            </h1>
+            <div class="separatorPostUser"></div>
+          </div>
         </div>
       </div>
-    </div>
+    </v-container>
     <div class="row">
       <div
         v-show="posts.length > 0"
@@ -286,7 +318,7 @@
                 <div class="form-group">
                   <div v-if="post.attachment">
                     <img
-                      class="imgProfil"
+                      class="imgPost"
                       style="width: 100%"
                       x="0"
                       y="0"
@@ -298,7 +330,7 @@
                   </div>
                   <div v-else>
                     <img
-                      class="imgProfil"
+                      class="imgPostAvatar"
                       style="width: auto"
                       x="0"
                       y="0"
@@ -387,7 +419,89 @@
             </div>
           </div>
         </div>
+        <!-- Gestion du post  d-flex-->
+        <div class="card-footer">
+          <div class="post-actions">
+            <div class="menuPost">
+              <div class="linksPost">
+                <div class="likesPost">
+                  <div class="likes">
+                    <routeur-link
+                      v-bind:to="'/PostLikes/' + postId"
+                      class="d-flex align-items-center text-muted mr-4"
+                    >
+                      <button
+                        type="button"
+                        class="btn btn-like"
+                        @click="postLikeCreate(post.id)"
+                      >
+                        <span v-if="status == 'loading'">Like ....</span>
+                        <span v-else>
+                          <div class="likeFlex">
+                            <img
+                              class="like"
+                              style="height: 1.5rem; width: 1.5rem"
+                              x="0"
+                              y="0"
+                              height="100%"
+                              width="100%"
+                              src="../assets/Icons/BiHandThumbsUpFill.svg"
+                              alt="liker la publication"
+                            />
+                            <div>
+                              <div class="linkLike">
+                                <div class="d-md-block ml-2">
+                                  <span v-if="post.likes.length < 2">
+                                    - {{ post.likes.length }} - Like<br
+                                  /></span>
+                                  <span v-else>
+                                    - {{ post.likes.length }} - likes<br
+                                  /></span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </span>
+                      </button>
+                    </routeur-link>
+                  </div>
+                </div>
+                <div class="comentsPost">
+                  <router-link
+                    class="displayComents"
+                    v-bind:to="`/ComentsList/${post.id}`"
+                  >
+                    <div class="linkItems">
+                      <img
+                        src="../assets/Icons/coment.svg"
+                        alt="commentaires"
+                      />
+                    </div>
+                    <div class="linkComent">
+                      <div class="d-md-block ml-2">
+                        <span v-if="post.coments.length < 2">
+                          - {{ post.coments.length }} - Commentaire <br
+                        /></span>
+                        <span v-else>
+                          - {{ post.coments.length }} - commentaires <br
+                        /></span>
+                      </div>
+                    </div>
+                  </router-link>
+                </div>
+              </div>
+            </div>
+          </div>
+          <comentsCreate :postId="post.id" />
+        </div>
       </div>
+    </div>
+    <div>
+      <button type="button" class="btnUp" @click="switchToUp()">
+        <a class="bloc-button btn btn-d scrollToTop" @click="switchToUp('1')">
+          <span class="fa fa-chevron-up"></span>
+        </a>
+      </button>
     </div>
     <div class="logoTransparent">
       <img
@@ -400,13 +514,6 @@
         alt=""
       />
     </div>
-    <!-- ScrollToTop button -->
-    <button type="button" class="btnUp" @click="switchToUp()">
-      <a class="bloc-button btn btn-d scrollToTop" @click="switchToUp('1')">
-        <span class="fa fa-chevron-up"></span>
-      </a>
-    </button>
-    <!-- ScrollToTop button end-->
   </div>
 </template>
 
@@ -414,26 +521,16 @@
 import axios from "axios";
 import { mapState } from "vuex";
 import navPosts from "@/components/NavPosts.vue";
-import ProfilUpdate from "@/components/ProfilUpdate.vue";
-import PasswdUpdate from "@/components/PasswdUpdate.vue";
 import * as dayjs from "dayjs";
 import "dayjs/locale/fr";
 import fr from "dayjs/locale/fr";
 
 export default {
-  name: "Profile",
-  components: {
-    dayjs,
-    fr,
-    navPosts,
-    ProfilUpdate,
-    PasswdUpdate,
-  },
+  name: "ProfileUsers",
+  components: { navPosts, dayjs, fr },
   data: function () {
     return {
       mesgError: "",
-      mesgErrorPost: "",
-      mesgErrorProfil: "",
       isAdmin: false,
       user: {
         imgBottom: this.imgBottom,
@@ -467,17 +564,23 @@ export default {
           Authorization: "BEARER " + this.$store.state.user.token,
         },
       }),
+      user: [],
       posts: [],
       coments: [],
-      like: [],
+      likes: [],
     };
+  },
+  computed: {
+    ...mapState(["status"]),
   },
   mounted: function () {
     this.apiUser
-      .get("/")
+      .get(
+        `http://localhost:3000/api/users/${this.$route.params.userId}/publishProfil`
+      )
       .then((response) => {
-        if (!response) {
-          this.mesgError = error.response.data.message;
+        if (!response.data) {
+          return (this.mesgError = error.response.data.message);
         } else {
           this.user = response.data;
           this.getPostList();
@@ -485,7 +588,6 @@ export default {
       })
       .catch((error) => {
         this.mesgError = error.response.data.message;
-        alert(this.mesgError);
       });
   },
   beforeMount() {
@@ -496,7 +598,24 @@ export default {
   computed: {
     ...mapState(["status"]),
   },
+
   methods: {
+    async postLikeCreate(postId) {
+      const res = await this.apiPosts.put(
+        `http://localhost:3000/api/posts/${postId}/like/${this.$store.state.user.userId}`,
+        {
+          postId: postId,
+          userId: this.userId,
+          likes: this.likeId,
+        }
+      );
+      const postUpdated = res.data;
+      for (let i = 0; i < this.posts.length; i++) {
+        if (this.posts[i].id === postUpdated.id) {
+          this.posts[i].likes = postUpdated.likes;
+        }
+      }
+    },
     getPostList: function () {
       this.apiPosts
         .get(`http://localhost:3000/api/posts/postUser/${this.user.id}`)
@@ -509,14 +628,17 @@ export default {
         })
         .catch((error) => {
           this.mesgError = error.response.data.message;
-          alert(this.mesgError);
         });
+    },
+    dayjs: function (createdAt) {
+      const Date = dayjs(createdAt)
+        .locale("fr")
+        .format("DD-MMMM-YYYY à HH:mm ");
+      return Date;
     },
     userDeleted: function (userId) {
       if (
-        window.confirm(
-          "Attention cette action est irreverssible, toutes vos données, publications, commentaires, et likes vont être supprimées !!!"
-        )
+        window.confirm("Voulez-vous vraiment supprimer ce compte utilisateur ?")
       ) {
         this.apiUser
           .delete("http://localhost:3000/api/users/" + userId)
@@ -524,13 +646,11 @@ export default {
             if (!response) {
               this.mesgError = error.response.data.message;
             } else {
-              this.$store.commit("logout");
-              this.$router.push("/");
+              window.location.reload();
             }
           })
           .catch((error) => {
             this.mesgError = error.response.data.message;
-            alert(this.mesgError);
           });
       }
     },
@@ -547,38 +667,16 @@ export default {
           )
           .then((response) => {
             if (!response) {
-              this.mesgErrorProfil = error.response.data.message;
+              this.mesgError = error.response.data.message;
             } else {
               window.location.reload();
             }
           })
           .catch((error) => {
-            this.mesgErrorProfil = error.response.data.message;
+            this.mesgError = error.response.data.message;
+            alert(this.mesgError);
           });
       }
-    },
-    postDeleted: function (postId) {
-      if (window.confirm("Voulez-vous vraiment supprimer ce post ?")) {
-        this.apiPosts
-          .delete("http://localhost:3000/api/posts/" + postId)
-          .then((response) => {
-            if (!response.data) {
-              return (this.mesgErrorPost = error.response.data.message);
-            } else {
-              window.location.reload();
-            }
-          })
-          .catch((error) => {
-            this.mesgErrorPost = error.response.data.message;
-            alert(this.mesgErrorPost);
-          });
-      }
-    },
-    dayjs: function (createdAt) {
-      const Date = dayjs(createdAt)
-        .locale("fr")
-        .format("DD-MMMM-YYYY à HH:mm ");
-      return Date;
     },
     switchToUp: function () {
       const btnUp = document.querySelector(".btnUp");
@@ -590,325 +688,256 @@ export default {
         });
       });
     },
-    logout: function () {
-      this.$store.commit("logout");
-      this.$router.push("/");
-    },
   },
 };
 </script>
 
-<style>
-.card {
-  box-shadow: 0px 0px 10px #cecdcd, 5px 5px 2px #4e51665a;
-  border-radius: 1rem;
-  background: #4e5166;
-  margin-bottom: 1rem;
-}
-.rounded {
-  border-radius: none;
-}
-.cardSubtitle {
-  font-size: 15px;
-  margin-bottom: 32px;
-}
-#imgBottomUser {
-  position: relative;
-  border-top-right-radius: 1rem;
-  border-top-left-radius: 1rem;
-}
-#imgBottomAvatarGpm {
-  position: relative;
-  border-bottom-left-radius: 1rem;
-  border-bottom-right-radius: 1rem;
-}
-#imgBottomAvatar {
-  position: relative;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
-}
-.imgDelete {
+<style scoped>
+.wrapUsers {
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
+  justify-content: center;
 }
-.btnImgDelete {
-  position: absolute;
+.flexTab {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 33%);
+}
+.col-md-8 {
+  background: #4e5166;
+  border-radius: 2rem;
+}
+.containerTitre,
+h1 {
   display: flex;
   align-items: center;
-  margin: 1rem;
-  border-radius: 0.5rem;
+  justify-content: center;
+  margin: 1rem 1rem 0 1rem;
+}
+
+.logoTransparentUser {
+  display: flex;
+  margin: 1.2rem 0 0 0;
+}
+#imgBottomUser {
+  height: 18vw;
+}
+#imgBottomAvatar {
+  height: 10vw;
+}
+.gridBox {
+  display: grid;
+  justify-items: flex-start;
+}
+.cardTitleProfil {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 1rem 0.8rem 0;
+}
+.cardTitleProfile {
+  display: flex;
+  margin: 0 1.5rem 1rem 0;
+  text-decoration: none;
+  flex-direction: column;
 }
 .alert-info {
   background: #5c5c6c85;
   border-color: #5c5c6c85;
   border-radius: 1rem;
   padding: 0;
-  width: 90%;
-  margin: auto;
 }
-.form-grouProfile {
-  position: relative;
-  border: none;
-  outline: none;
-}
-.form-grouProfilePost {
-  margin: 0 0.8rem 1.2rem 0.8rem;
-}
-#imgBottomUser {
-  height: 18vw;
-  object-fit: cover;
-}
-.imgProfil {
-  height: 18vw;
-  object-fit: cover;
-}
-.labelModify {
-  text-decoration: none;
-}
-.btnModify,
-.btnComent,
-.btnTrash {
-  background: 0;
-}
-#imgProfileUser {
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 50%);
-  bottom: 0;
-  margin: auto;
-  object-fit: cover;
-  border-radius: 10rem;
-}
-#imgAvatarUser {
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 50%);
-  bottom: 0;
-  margin: auto;
-  object-fit: cover;
-  border-radius: 10rem;
-}
-.infosUserProfile {
-  margin: 5rem auto 2rem auto;
-}
-.gridBox {
-  display: grid;
-  justify-items: flex-start;
-}
-.containTitleProfil {
+.cardTitleUser {
   display: flex;
-  justify-content: center;
-  font-size: larger;
-}
-.logoTransparentProfile {
-  display: flex;
-  margin: -1rem 0 0 0;
-}
-.cardTitleProfile {
-  display: flex;
-  margin: 0 1.5rem 1rem 1rem;
+  margin: 2rem 0 0 0;
   text-decoration: none;
   flex-direction: column;
+  align-items: flex-start;
 }
-.separatorProfilUser {
-  width: 5rem;
-  height: 4px;
-  background-color: #ffd7d7;
-  margin: 0 auto 1.5rem 0;
-}
-.cardText {
-  font-size: 22px;
-}
-.separatorPostUser {
+.separatorUser {
   width: 6rem;
   height: 4px;
   background-color: #ffd7d7;
+  margin: 1rem 0 0.5rem 1rem;
 }
-.formRowProfile {
+
+.cardUser {
+  margin: 1rem;
+}
+
+.listInfosUsers {
   display: flex;
   align-items: center;
-  align-content: center;
-  justify-content: space-around;
-  margin: 1rem 0 0 0;
+  margin: auto;
+  background: #f2f2f2;
+  box-shadow: 0px 0px 10px #cecdcd, -5px -5px 10px #cfcece;
+  border-radius: 5rem;
+  padding: 0 0.5rem;
+  background: #5c5c6c85;
+  justify-content: space-between;
 }
-/***************************
-*****Animation du titre*****
-****************************/
-.aspect {
-  font-size: 1.5rem;
-  height: 35px;
+#imgProfile {
+  border-radius: 5rem;
+  object-fit: cover;
+  margin: 5px auto 5px auto;
 }
-/**************************
-*****Fin anim titre********
-***************************/
-.btnFooterProfil {
+.listInfosUser {
   display: flex;
-  padding-left: 0;
+  margin: 0 0 0 1rem;
 }
-.liBtn {
-  margin: 0 3rem;
+.infoUser {
+  font-size: 1rem;
+  padding: 5px 10px 5px 10px;
+  text-align: center;
+  overflow: hidden;
 }
-.dateCreateProfil {
-  margin: 0 auto 1rem auto;
+.infoUser .infosHeader h3 {
+  justify-content: center;
 }
-/**************************************
-*********Media Queries*****************
-**************************************/
+.infoUser .infosHeader {
+  text-align: center;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.infoUser .infosTitle {
+  font-weight: inherit;
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.infoUser .infosDescription {
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.imgAvatarUser {
+  margin: 5px auto 5px auto;
+}
+.infoUser .positionTrash {
+  display: flex;
+  align-items: end;
+  margin: 0 0 0 1rem;
+}
+.btnTrashUser {
+  font-size: 2rem;
+}
+.separatorPostUser {
+  margin: 1rem 1rem auto;
+}
+.flex-table {
+  display: grid;
+  /* grid-template-columns: repeat(1fr, 1fr, 33%); */
+  grid-template-columns: repeat(auto-fill, 33%);
+  grid-auto-rows: auto;
+  padding: 10px;
+  border-bottom: 1px black solid;
+}
+.actions {
+  padding-right: 10px;
+}
+/************************************
+*********Media queries***************
+************************************/
 @media screen and (max-width: 912px) {
   .separatorProfilUser {
     margin: 0 auto 1.5rem 0;
   }
 }
 @media screen and (max-width: 900px) {
-  .cardTitleProfile {
-    margin: 0 1rem 0 0;
-  }
-  .titlePostUser {
-    font-size: 25px;
-  }
-  .separatorProfilUser {
-    margin: 0 auto 1.5rem 0;
-  }
   .separatorPostUser {
-    margin: 0rem 1rem 1rem 0.2rem;
+    margin: 1rem 1rem auto;
   }
 }
 @media screen and (max-width: 768px) {
-  .textImgBottom {
-    display: none;
+  .col-md-8 {
+    padding: 3rem 0 0 0;
   }
-  .cardSubtitle,
+  .containerTitre,
   h1 {
-    font-size: 15px;
-    margin: 0 0 17px 0;
+    display: flex;
+    font-size: 1.2rem;
   }
-  .btnImgDelete {
-    margin: 0.5rem;
-  }
-  h1 {
-    font-size: 17px;
-  }
-  .containTitleProfil {
-    flex-direction: column;
-    margin: 0 auto 0 auto;
-  }
-  .logoTransparentProfile {
-    margin: 1rem 0 0 0;
-  }
-  .cardTitle {
-    margin: 0 auto 0.8rem 0;
-    font-size: 18px;
+  .logoTransparentUser {
+    margin: -0.8rem 0 0 0;
   }
   .cardTitleProfile {
     margin: 0 auto 1rem auto;
-    font-size: 20px;
   }
-  #imgBottomUser {
-    height: 45vw;
+  .cardUser {
+    margin: 1rem 0 1rem 0;
   }
-  .titlePostUser {
-    font-size: 22px;
+  .cardTitleUser {
+    margin: 0;
+  }
+  .separatorUser {
+    display: flex;
+    align-items: center;
+    width: 4rem;
+  }
+  .wrapUsers {
+    display: flex;
+    flex-direction: column;
+  }
+  .listInfosUser {
+    display: contents;
+    margin: 0 0 0 1rem;
+  }
+  .positionTrash {
+    display: contents;
+    justify-content: center;
+    margin: auto;
   }
   .separatorProfilUser {
+    width: 5rem;
+    height: 4px;
+    background-color: #ffd7d7;
     margin: 0 auto 1.5rem 0;
   }
   .separatorPostUser {
-    margin: 0rem auto 1rem auto;
+    margin: 1rem auto 1rem auto;
   }
-  .formRowProfile {
+}
+@media screen and (max-width: 470px) {
+  .containerTitre,
+  h1 {
     flex-direction: column;
-    align-items: center;
-    align-content: center;
-    justify-content: space-between;
   }
-  .btnFooterProfil,
-  li {
-    display: flex;
-    flex-direction: column;
-    margin: 1rem;
-    padding-left: 0;
+  .separatorUser {
+    margin: 1rem auto 0.5rem auto;
   }
-  .liBtn,
-  li {
-    margin: 1rem;
-  }
-  .imgProfil {
+  #imgBottomUser {
     height: 45vw;
   }
 }
-@media screen and (max-width: 393px) {
-  .containTitleProfil {
+@media screen and (max-width: 370px) {
+  .containerTitre,
+  h1 {
     flex-direction: column;
-    margin: 0 auto 0 auto;
   }
-  .logoTransparentProfile {
-    margin: 1rem 0 0 0;
+  .logoTransparentUser {
+    margin: 1.2rem 0 0 0;
+  }
+  .separatorUser {
+    margin: 1rem auto 0.5rem auto;
   }
   #imgBottomUser {
     height: 45vw;
   }
-  .cardTitleProfile {
-    margin: 0 auto 1.5rem auto;
-    font-size: 20px;
-  }
-  .btnImgDelete {
-    margin: 0.3rem;
-  }
-  .titlePostUser {
-    font-size: 20px;
-  }
-  .separatorProfilUser {
-    margin: 0 auto 1.5rem 0;
-  }
-  .separatorPostUser {
-    margin: 0rem auto 1rem auto;
-  }
-  .dateCreateProfil,
-  h5 {
-    font-size: 14px;
-  }
-  .imgProfil {
-    height: 45vw;
+  .listInfosUsers {
+    display: contents;
+    flex-direction: column;
+    margin: 0 0 0 -20px;
   }
 }
 @media screen and (max-width: 280px) {
-  .auth-wrapper h3 {
-    font-size: 16px;
-  }
-  .containTitleProfil {
-    flex-direction: column;
-    margin: 0 auto 0 auto;
-  }
-  .logoTransparentProfile {
-    margin: 0;
-  }
-  #imgBottomUser {
-    height: 45vw;
-  }
-  .cardTitle {
-    font-size: 16px;
-  }
-  .cardTitleProfile {
-    margin: 0 auto 1.5rem auto;
-  }
-  .btnImgDelete {
-    margin: 0.1rem;
+  .logoTransparentUser {
+    margin: 3.2rem 0 0 0;
   }
   .separatorProfilUser {
     margin: 1rem auto 1.5rem auto;
   }
-  .separatorPostUser {
-    margin: 0rem auto 1rem auto;
-  }
-  .dateCreateProfil,
-  h5 {
-    font-size: 14px;
-  }
-  .imgProfil {
+  #imgBottomUser {
     height: 45vw;
   }
 }
 </style>
-
-

@@ -2,24 +2,53 @@
   <div>
     <navPosts />
     <div class="modifPasswd">
+      <div class="containTitle">
+        <div class="logoTransparentUpdatePasswd">
+          <img
+            style="height: 2.5rem; width: 2.5rem"
+            x="0"
+            y="0"
+            height="100%"
+            width="100%"
+            src="../assets/logo_transparent.png"
+            alt="logo"
+          />
+        </div>
+        <div class="cardTitle">
+          <h1>Modifier votre mot de passe</h1>
+          <div class="separatorUpdatePasswd"></div>
+        </div>
+      </div>
       <div class="container">
-        <h1>Modifier votre mot de passe</h1>
         <form @submit.prevent="handleSubmit">
-          <!-- Saisir l'ancien mot de passe -->
           <div class="form-group">
             <div class="form-controlSignup">
               <label for="password">Mot de passe actuel</label>
               <div class="inputDataNewPasswd">
                 <div class="iconNewPasswd">
-                  <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
-                    src="../assets/Icons/BiLockFill.svg" alt="saisir mot de passe actuel">
+                  <img
+                    style="height: 2.5rem; width: 2.5rem"
+                    x="0"
+                    y="0"
+                    height="100%"
+                    width="100%"
+                    src="../assets/Icons/BiLockFill.svg"
+                    alt="saisir mot de passe actuel"
+                  />
                 </div>
-                <input id="password" name="password" v-model="password" type="password" class="form-control_input"
-                  placeholder="Saisir mot de passe actuel" required />
+                <input
+                  id="password"
+                  name="password"
+                  v-model="password"
+                  type="password"
+                  class="form-control_input"
+                  placeholder="Saisir mot de passe actuel"
+                  required
+                />
                 <i class="fas fa-check-circle"></i>
                 <i class="fas fa-exclamation-circle"></i>
               </div>
-              <small>{{message}}</small>
+              <small>{{ message }}</small>
             </div>
           </div>
           <!-- Saisir le nouveau mot de passe -->
@@ -28,15 +57,31 @@
               <label for="password">Nouveau mot de passe</label>
               <div class="inputDataNewPasswd">
                 <div>
-                  <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
-                    src="../assets/Icons/BiLockFill.svg" alt="Saisir le nouveau mot de passe">
+                  <img
+                    style="height: 2.5rem; width: 2.5rem"
+                    x="0"
+                    y="0"
+                    height="100%"
+                    width="100%"
+                    src="../assets/Icons/BiLockFill.svg"
+                    alt="Saisir le nouveau mot de passe"
+                  />
                 </div>
-                <input id="newPasswd" name="newPasswd" v-model="newPasswd" type="password" class="form-control_input"
-                  placeholder="Saisir le nouveau mot de passe" minlength="8" autofocus required />
+                <input
+                  id="newPasswd"
+                  name="newPasswd"
+                  v-model="newPasswd"
+                  type="password"
+                  class="form-control_input"
+                  placeholder="Saisir le nouveau mot de passe"
+                  minlength="8"
+                  autofocus
+                  required
+                />
                 <i class="fas fa-check-circle"></i>
                 <i class="fas fa-exclamation-circle"></i>
               </div>
-              <small>{{message}}</small>
+              <small>{{ message }}</small>
             </div>
           </div>
           <!-- Confirmer le nouveau mot de passe -->
@@ -45,12 +90,26 @@
               <label for="confirmPasswd">Confirmer le mot de passe</label>
               <div class="inputDataNewPasswd">
                 <div>
-                  <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
-                    src="../assets/Icons/BiLockFill.svg" alt="Confirmer le nouveau mot de passe">
+                  <img
+                    style="height: 2.5rem; width: 2.5rem"
+                    x="0"
+                    y="0"
+                    height="100%"
+                    width="100%"
+                    src="../assets/Icons/BiLockFill.svg"
+                    alt="Confirmer le nouveau mot de passe"
+                  />
                 </div>
-                <input id="newPasswdConfirm" name="newPasswdConfirm" v-model="newPasswdConfirm"
-                  class="form-control_input" type="Password" placeholder="Confirmer votre nouveau mot de passe"
-                  autofocus required />
+                <input
+                  id="newPasswdConfirm"
+                  name="newPasswdConfirm"
+                  v-model="newPasswdConfirm"
+                  class="form-control_input"
+                  type="Password"
+                  placeholder="Confirmer votre nouveau mot de passe"
+                  autofocus
+                  required
+                />
                 <i class="fas fa-check-circle"></i>
                 <i class="fas fa-exclamation-circle"></i>
               </div>
@@ -69,15 +128,27 @@
           </div>
 
           <div class="form-group">
-            <button class="btn btn-primary" @click="createPassword()" :disabled="!validatedFields">
+            <button
+              v-if="isAdmin == true || $store.state.user.userId == user.userId"
+              class="btn btn-primary"
+              @click="createPassword()"
+              :disabled="!validatedFields"
+            >
               <span v-if="status == 'loading'">Création en cours....</span>
               <span v-else>Créer un nouveau mot de passe</span>
             </button>
           </div>
         </form>
         <div class="logoTransparent">
-          <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
-            src="../assets/logo_transparent.png" alt="Logo groupomania" />
+          <img
+            style="height: 2.5rem; width: 2.5rem"
+            x="0"
+            y="0"
+            height="100%"
+            width="100%"
+            src="../assets/logo_transparent.png"
+            alt="Logo groupomania"
+          />
         </div>
       </div>
     </div>
@@ -88,7 +159,7 @@
 import axios from "axios";
 import { mapState } from "vuex";
 import navPosts from "@/components/NavPosts.vue";
-// import validatPasswd from "@/service/ValidatPasswd";
+
 export default {
   name: "PasswdUpdate",
   newPwd: {
@@ -98,14 +169,14 @@ export default {
   },
   components: {
     navPosts,
-    // validatPasswd,
   },
   data: function () {
     return {
-      msgError: "",
-      //Modifier le mot de passe utilisateur.
+      mesgError: "",
+      isAdmin: false,
       apiPasswd: axios.create({
-        baseURL: "http://localhost:3000/api/auth/" + this.$store.state.user.userId,
+        baseURL:
+          "http://localhost:3000/api/auth/" + this.$store.state.user.userId,
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -122,6 +193,14 @@ export default {
       error_newPasswd: "",
       error_newPasswdConfirm: "",
     };
+  },
+  beforeMount() {
+    if (this.$store.state.user.role.role == "admin") {
+      this.isAdmin = true;
+    }
+    if (this.$store.state.user.role.role == "user") {
+      this.isAdmin = true;
+    }
   },
   computed: {
     validatedFields: function () {
@@ -149,7 +228,7 @@ export default {
   methods: {
     getPasswd() {
       this.apiPasswd
-        .get("")
+        .get("/")
         .then((response) => {
           this.profile = response.data;
         })
@@ -172,21 +251,24 @@ export default {
         ) {
           this.apiPasswd
             .put(
-              "http://localhost:3000/api/auth/newpasswd/" + this.$store.state.user.userId,
+              "http://localhost:3000/api/auth/newpasswd/" +
+                this.$store.state.user.userId,
               newPwd
-            ).then((response) => {
+            )
+            .then((response) => {
               if (!response) {
-                return (this.mesgError = error.response.data.message)
+                return (this.mesgError = error.response.data.message);
               } else {
-              this.getPasswd();
-              this.$store.commit("logout");
-              this.$router.push("/");
+                this.getPasswd();
+                this.$store.commit("logout");
+                this.$router.push("/");
               }
-            }).catch((error) => {
-              alert(this.mesgError = error.response.data.message)
+            })
+            .catch((error) => {
+              this.mesgError = error.response.data.message;
             });
         } else {
-          message ("Le mot de passe actuel est incorrect ! ");
+          message("Le mot de passe actuel est incorrect (front) ! ");
         }
       }
     },
@@ -195,9 +277,34 @@ export default {
 </script>
 
 <style >
+.container {
+  margin: 0 auto 0 auto;
+}
+
+.logoTransparentUpdatePasswd {
+  display: flex;
+  margin: -0.5rem 0 0 0;
+}
+.separatorUpdatePasswd {
+  width: 6rem;
+  height: 4px;
+  background-color: #ffd7d7;
+  margin: 0 0 1.5rem 0;
+}
 .inputDataNewPasswd {
   display: flex;
   align-items: center;
   background: #f2f2f2;
+}
+@media screen and (max-width: 768px) {
+  .container {
+    margin: 0 auto 0 auto;
+  }
+  .logoTransparentUpdatePasswd {
+    margin: 1.5rem 0 0 0;
+  }
+  .separatorUpdatePasswd {
+    margin: 0 auto 1.5rem auto;
+  }
 }
 </style>
