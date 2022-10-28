@@ -826,7 +826,6 @@ h1 {
 }
 .flex-table {
   display: grid;
-  /* grid-template-columns: repeat(1fr, 1fr, 33%); */
   grid-template-columns: repeat(auto-fill, 33%);
   grid-auto-rows: auto;
   padding: 10px;
@@ -896,6 +895,9 @@ h1 {
   .separatorPostUser {
     margin: 1rem auto 1rem auto;
   }
+  .imgPostAvatar {
+    height: 45vw;
+  }
 }
 @media screen and (max-width: 470px) {
   .containerTitre,
@@ -906,6 +908,9 @@ h1 {
     margin: 1rem auto 0.5rem auto;
   }
   #imgBottomUser {
+    height: 45vw;
+  }
+  .imgPostAvatar {
     height: 45vw;
   }
 }
@@ -927,6 +932,9 @@ h1 {
     display: contents;
     flex-direction: column;
     margin: 0 0 0 -20px;
+  }
+  .imgPostAvatar {
+    height: 45vw;
   }
 }
 @media screen and (max-width: 280px) {

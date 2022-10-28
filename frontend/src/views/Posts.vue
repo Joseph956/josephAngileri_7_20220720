@@ -874,8 +874,6 @@ img {
 .imgPost {
   width: 40%;
   height: 18vw;
-  /* width: 100%;
-  height: 35vw; */
   object-fit: cover;
   margin: auto;
 }
