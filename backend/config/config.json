@@ -2,21 +2,21 @@
   "development": {
     "username": "joseph",
     "password": "user",
-    "database": "dbtest_groupomania",
+    "database": "dbtest_groupomania_20240114",
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
     "username": "joseph",
     "password": "user",
-    "database": "database_test",
+    "database": "database_test_20240114",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "joseph",
     "password": "user",
-    "database": "database_production",
+    "database": "database_production_20240114",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }

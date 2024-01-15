@@ -25,9 +25,9 @@
         alt="avatar"
       />
     </div>
-    <div></div>
+    <!-- <div></div> -->
     <div class="form-control-input">
-      <div class="post-card-wrap"></div>
+      <!-- <div class="post-card-wrap"></div> -->
       <div>
         <div class="publierForm">
           <!-- Formulaire de création d'un post-->
@@ -526,8 +526,16 @@ export default {
           if (!response) {
             return (this.mesgError = error.response.data.message);
           } else {
-            window.location.reload();
+            this.$router.push("/posts");
+            this.getPostList();
+            this.switchToNewPost();
           }
+        })
+        .then(() => {
+          this.$emit("posts/", dataPost);
+          this.title = "";
+          this.content = "";
+          this.attachment = "";
         })
         .catch((error) => {
           this.mesgError = error.response.data.message;
