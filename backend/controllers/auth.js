@@ -89,6 +89,7 @@ exports.signIn = (req, res, next) => {
                         }).then(role => {
                             res.status(200).json({
                                 userId: user.id,
+                                username: user.username,
                                 role: role,
                                 token: jwt.sign({
                                     userId: user.id,

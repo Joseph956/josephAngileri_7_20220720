@@ -1,6 +1,5 @@
 const db = require("../models");
 const Coment = db.coments;
-// const fs = require('fs');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -165,76 +164,33 @@ exports.findCommentsByPostId = async (req, res, next) => {
         });
     });
 };
-// exports.createComent = async (req, res, next) => {
-//     // try {
-//     const postId = req.params.id;
-//     // const userId = req.user;
-//     const coment = new Coment({
-//         ...req.body,
-
-//     })
-//     console.log("Contenu createComent : req.body");
-//     console.log(req.body);
-
-//     // await Coment.create({ userId: userId, postId: postId, coment: coment });
-//     coment.save({
-//         ...req.body,
-//     })
-
-//     const postUpdated = await Post.findOne({
-
-//         where: { id: postId },
-//         include: [
-//             {
-//                 model: db.coments,
-//                 coment: req.params.comentId,
-//                 attributes: ['id', 'coment', 'userId'],
-//                 order: [["createdAt", "DESC"]],
-//                 include: [
-//                     {
-//                         model: db.user,
-//                         attributes: ['username', 'attachment']
-//                     },
-//                 ]
-//             },
-//         ]
-//     }).then(() => {
-//         console.log(coment);
-//         res.status(201).json({ message: 'Objet enregistré !' })
-
-//     }).catch(() => {
-//         res.status(400).json({
-//             message: "Vous ne pouvez pas créer un commentaire vide !!!"
-//         });
-//     });
-//     res.status(200).json(postUpdated)
-
-
-
-
-
-//     // } catch (error) {
-//     //     res.status(500).json({ error })
-//     // }
-
-// };
-exports.createComent = async (req, res, next) => {
-    const coment = new Coment({
-        ...req.body,
-    })
-    coment.save().then(() => {
-
+exports.createComent = async (req, res, next) => {    
+    if (!req.body) {
+        return res.status(400).json({ message: "Request body is missing" });
+    }
+    try {
+        const coment = new Coment({
+            ...req.body,
+        });
+            await coment.save({
+                include: [
+                    {
+                        model: db.user,
+                        attributes: ['username', 'attachment']
+                    },
+                ]
+            });            
         res.status(201).json({
             message: 'Objet enregistré !'
-        })
+            });
+        next( req, res );
 
-
-        console.log(coment);
-    }).catch(() => {
-        res.status(400).json({
-            message: "Vous ne pouvez pas créer un commentaire vide !!!"
-        });
-    });
+    } catch (error) {
+        if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeDatabaseError') {
+            return res.status(400).json({ message: error.message });
+        }
+        res.status(500).json({ message: "An error occurred while saving the comment" });
+    }
 };
 exports.updateComent = async (req, res, next) => {
     const comentId = req.params.id;

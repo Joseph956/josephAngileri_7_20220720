@@ -6,7 +6,7 @@
         <button type="button" class="btn btn-like" @click="postDetailReturn()">
           <img
             class="returnPg"
-            style="height: 45px; width: 35px"
+            style="height: 45px; width: 45px"
             x="0"
             y="0"
             height="100%"

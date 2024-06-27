@@ -1,6 +1,6 @@
 <template>
   <header>
-    <nav class="navbar navbar-expand navbar-light fixed-top">
+    <!-- <nav class="navbar navbar-expand navbar-light fixed-top">
       <div class="container">
         <router-link class="navbar-brand" :to="{ name: 'Accueil' }">
           <img
@@ -15,7 +15,7 @@
           />
         </router-link>
       </div>
-    </nav>
+    </nav> -->
   </header>
 </template>
 
@@ -62,6 +62,7 @@ img,
   align-items: center;
   width: auto;
   height: auto;
+  margin: auto;
 }
 .link {
   font-weight: 500;

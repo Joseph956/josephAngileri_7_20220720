@@ -82,7 +82,7 @@
                 <div class="menuProfile" v-if="user.attachment">
                   <div class="containerImgUser">
                     <img
-                      style="height: 50px; width: 45px"
+                      style="height: 50px; width: 50px"
                       x="0"
                       y="0"
                       height="100%"
@@ -202,7 +202,7 @@ nav {
   align-items: center;
 }
 .navbar {
-  background: #4e5166;
+  background: #7f8293;
 }
 .navbar-brandLogo {
   justify-content: center;
@@ -296,6 +296,7 @@ h5 {
   border-radius: 5rem;
   object-fit: cover;
   margin: 0;
+  box-shadow: 0px 0px 20px #cecdcd, 20px 20px 40px #4e51665b;
 }
 .menuProfile {
   display: flex;
@@ -385,7 +386,7 @@ body {
     left: 0;
     width: 1%;
     height: 100vh;
-    background: #4e5166;
+    /* background: #4e5166; */
     flex-direction: column;
     padding: 2rem;
     justify-content: space-around;

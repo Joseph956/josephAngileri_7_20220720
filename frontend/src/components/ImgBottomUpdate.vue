@@ -129,7 +129,7 @@ export default {
 .imgBottomUpdate {
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e51665a;
   border-radius: 1rem;
-  background: #4e5166;
+  background: #5c5c6c85;
   margin: 0.5rem 0 1rem 0;
   padding: 1rem;
 }
@@ -147,6 +147,9 @@ label {
   justify-content: space-evenly;
   flex-direction: row-reverse;
 }
+ .btnFile {
+   background: #627565;
+ }
 @media screen and (max-width: 768px) {
   .auth-wrapper {
     display: block;

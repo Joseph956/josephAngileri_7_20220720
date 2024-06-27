@@ -6,60 +6,31 @@
           <div class="avatarComent">
             <div class="avatar" v-if="user.attachment">
               <div class="imgUserComent">
-                <img
-                  style="height: 50px; width: 40px"
-                  x="0"
-                  y="0"
-                  height="100%"
-                  width="100%"
-                  id="imgProfile"
-                  v-bind:src="user.attachment"
-                  alt="photo de profil"
-                />
+                <img style="height: 50px; width: 50px" x="0" y="0" height="100%" width="100%" id="imgProfile"
+                  v-bind:src="user.attachment" alt="photo de profil" />
               </div>
             </div>
             <div class="avatar" v-else>
               <div class="imgUserComent">
-                <img
-                  style="height: 40px; width: 40px"
-                  x="0"
-                  y="0"
-                  height="100%"
-                  width="100%"
-                  id="imgAvatar"
-                  src="../assets/Icons/BiPersonCircle.svg"
-                  alt="avatar"
-                />
+                <img style="height: 40px; width: 40px" x="0" y="0" height="100%" width="100%" id="imgAvatar"
+                  src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
               </div>
             </div>
             <form>
               <div class="form-groupComent">
                 <label for="coment"></label>
-                <textarea
-                  v-model="coment"
-                  rows="2"
-                  cols="30"
-                  type="text"
-                  id="coment"
-                  class="form-control"
-                  placeholder="Votre commentaire"
-                  autofocus
-                >
+                <textarea v-model="coment" rows="2" cols="30" type="text" id="coment" class="form-control"
+                  placeholder="Votre commentaire" autofocus>
                 </textarea>
               </div>
             </form>
             <button type="button" class="btn" @click="comentCreate()">
               <div class="newComentBtn">
                 <div class="ComentBtn">
-                  <img
-                    src="../assets/Icons/envoyer.svg"
-                    alt="Envoyer votre commentaire"
-                  />
+                  <img src="../assets/Icons/envoyer.svg" alt="Envoyer votre commentaire" />
                 </div>
                 <div class="ComentBtn">
-                  <span v-if="status == 'loading'"
-                    >Publication en cours....</span
-                  >
+                  <span v-if="status == 'loading'">Publication en cours....</span>
                   <span v-else></span>
                 </div>
               </div>
@@ -72,44 +43,24 @@
               {{ mesgError }}
             </div>
             <!-- Gestion des commentaires du post-->
-            <div
-              class="col-md-12 grid-margin"
-              v-for="coment in coments.slice(0, 1)"
-              v-bind:key="coment.id"
-              :coment="coment"
-            >
+            <div class="col-md-12 grid-margin" v-for="coment in coments.slice(0, 1)" v-bind:key="coment.id"
+              :coment="coment">
               <div class="comentPost">
                 <div>
                   <!-- Envoyer la modification du commentaire -->
                   <div class="buttonModify">
-                    <textarea
-                      v-bind:id="'inputComent-' + coment.id"
-                      v-model="coment.coment"
-                      aria-label="Modifier le commentaire"
-                      style="display: none"
-                      class="form-control"
-                      button
-                    >
+                    <textarea v-bind:id="'inputComent-' + coment.id" v-model="coment.coment"
+                      aria-label="Modifier le commentaire" style="display: none" class="form-control" button>
                     </textarea>
-                    <button
-                      class="btn"
-                      type="button"
-                      v-bind:id="'inputComentBtn-' + coment.id"
-                      style="display: none"
-                      @click="sentModify(coment.id)"
-                    >
+                    <button class="btn" type="button" v-bind:id="'inputComentBtn-' + coment.id" style="display: none"
+                      @click="sentModify(coment.id)">
                       <div class="newComentBtn">
                         <div class="ComentBtn">
-                          <img
-                            src="../assets/Icons/envoyer.svg"
-                            alt="Envoyer votre commentaire modifier"
-                          />
+                          <img src="../assets/Icons/envoyer.svg" alt="Envoyer votre commentaire modifier" />
                         </div>
                       </div>
                       <div class="ComentBtn">
-                        <span v-if="status == 'loading'"
-                          >Publication en cours....</span
-                        >
+                        <span v-if="status == 'loading'">Publication en cours....</span>
                         <span v-else></span>
                       </div>
                     </button>
@@ -124,28 +75,12 @@
                 <!-- Informations de l'auteur du commentaire -->
                 <div class="infosUser">
                   <div class="avatarComentUser" v-if="coment.user.attachment">
-                    <img
-                      style="height: 45px; width: 35px"
-                      x="0"
-                      y="0"
-                      height="100%"
-                      width="100%"
-                      class="imgComent"
-                      :src="coment.user.attachment"
-                      alt="photo de profil"
-                    />
+                    <img style="height: 45px; width: 35px" x="0" y="0" height="100%" width="100%" class="imgComent"
+                      :src="coment.user.attachment" alt="photo de profil" />
                   </div>
                   <div class="avatarComentUser" v-else>
-                    <img
-                      style="height: 35px; width: 35px"
-                      x="0"
-                      y="0"
-                      height="100%"
-                      width="100%"
-                      class="avatarProfil"
-                      src="../assets/Icons/BiPersonCircle.svg"
-                      alt="avatar"
-                    />
+                    <img style="height: 35px; width: 35px" x="0" y="0" height="100%" width="100%" class="avatarProfil"
+                      src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
                   </div>
 
                   <div class="userComent">
@@ -161,33 +96,17 @@
                 <div class="containerBtnComent">
                   <!-- Supprimer un commentaire -->
                   <div class="btnFooter">
-                    <button
-                      v-if="
+                    <button v-if="
                         isAdmin == true ||
                         $store.state.user.userId == coment.userId
-                      "
-                      block
-                      class="btn d-block"
-                      type="button"
-                      @click="comentDeleted(coment.id)"
-                    >
+                      " block class="btn d-block" type="button" @click="comentDeleted(coment.id)">
                       <div class="trashBtn">
                         <div class="btnComent">
-                          <img
-                            class="icon"
-                            style="height: 1.2rem; width: 1.2rem"
-                            x="0"
-                            y="0"
-                            height="100%"
-                            width="100%"
-                            src="../assets/Icons/BiTrash3Fill.svg"
-                            alt="Supprimer votre commentaire"
-                          />
+                          <img class="icon" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%" width="100%"
+                            src="../assets/Icons/BiTrash3Fill.svg" alt="Supprimer votre commentaire" />
                         </div>
                         <div class="btnComent">
-                          <span v-if="status == 'loading'"
-                            >Suppression en cours....</span
-                          >
+                          <span v-if="status == 'loading'">Suppression en cours....</span>
                           <span v-else>Supprimer</span>
                         </div>
                       </div>
@@ -195,33 +114,17 @@
                   </div>
                   <!-- afficher la zone de modification d'un commentaire  -->
                   <div class="btnFooter">
-                    <button
-                      v-if="
+                    <button v-if="
                         isAdmin == true ||
                         $store.state.user.userId == coment.userId
-                      "
-                      block
-                      class="btn d-block"
-                      type="button"
-                      @click="comentModify(coment.id)"
-                    >
+                      " block class="btn d-block" type="button" @click="comentModify(coment.id)">
                       <div class="trashBtn">
                         <div class="btnComent">
-                          <img
-                            class="icon"
-                            style="height: 1.2rem; width: 1.2rem"
-                            x="0"
-                            y="0"
-                            height="100%"
-                            width="100%"
-                            src="../assets/Icons/BiPenFill.svg"
-                            alt="Modifier votre commentaire"
-                          />
+                          <img class="icon" style="height: 1.2rem; width: 1.2rem" x="0" y="0" height="100%" width="100%"
+                            src="../assets/Icons/BiPenFill.svg" alt="Modifier votre commentaire" />
                         </div>
                         <div class="btnComent">
-                          <span v-if="status == 'loading'"
-                            >Modification en cours en cours....</span
-                          >
+                          <span v-if="status == 'loading'">Modification en cours en cours....</span>
                           <span v-else>Modifier</span>
                         </div>
                       </div>
@@ -265,7 +168,7 @@ export default {
       length: null,
       isAdmin: false,
       // listComent: [],
-      displayComents: true,
+      displayComents: false,
       user: {
         username: this.username,
         email: this.email,
@@ -329,7 +232,7 @@ export default {
         this.apiComents
           .get("/postId/" + this.postId)
           .then((response) => {
-            if (!response.data) {
+            if (!response.data ) {
               this.mesgError = error.response.data.message;
               alert(this.mesgError);
             } else {
@@ -344,23 +247,35 @@ export default {
     },
 
     comentCreate: function () {
-      const res = this.apiComents
-        .post("http://localhost:3000/api/coments", {
+      const comentInput = document.getElementById("coment");
+      const comenText = comentInput.value;
+      if (comenText === "") {
+        this.mesgError = "Veuillez écrire votre commentaire avant de le publier.";        
+      }else {        
+        const data = {
           userId: this.$store.state.user.userId,
           postId: this.postId,
           coment: this.coment,
-        })
-
-        .then((response) => {
-          if (!response.data) {
-            this.mesgError = error.response.data.message;
-          } else {
-            window.location.reload();
-          }
-        })
-        .catch((error) => {
-          this.mesgError = error.response.data.message;
-        });
+        };
+        this.apiComents
+          .post("/"+this.postId, data)
+          .then((response) => {
+            if (response.data == null) {
+              this.mesgError = error.response.data.message;
+            } else {
+              this.coment = "";
+              this.mesgError = "";
+              this.getComentList();
+            }
+          })
+          .catch((error) => {
+            if (error.response && error.response.data) {
+              this.mesgError = error.response.data.message;
+            } else {
+              this.mesgError = "An error occurred.";
+            }
+          });
+      }      
     },
     comentModify: function (comentId) {
       let comentUser = document.getElementById("inputComent-" + comentId);
@@ -417,12 +332,11 @@ export default {
 
 <style>
 .containerComent {
-  margin: 0 1rem 0 1rem;
   padding: 2rem 0 0 0;
 }
 .alert-info {
-  background: #5c5c6c85;
-  border-color: #5c5c6c85;
+  background: #4e516600;
+  border-color: #4e516600;
   border-radius: 1rem;
   padding: 0;
   margin: 1rem auto;
@@ -431,6 +345,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
   grid-template-rows: 61px 1fr 1fr;
+  align-items: center;  
 }
 .ComentBtn {
   align-content: center;
@@ -485,7 +400,8 @@ export default {
 }
 .imgUserComent {
   display: flex;
-  align-items: stretch;
+  align-items: center;
+  align-content: center;
   margin: 0 1rem 0 1rem;
 }
 #imgProfile {

@@ -61,7 +61,7 @@ footer {
   margin-bottom: 0;
   font-weight: 500;
   color: black;
-  font-size: large;
+  /* font-size: large; */
   font-family: "lato", sans-serif;
 }
 .imgAccueil {
@@ -119,9 +119,9 @@ html,
   justify-content: center;
 }
 .auth-inner {
-  width: 1000px;
+  width: 700px;
   margin: auto;
-  background: #4e5166;
+  background: #7c7e8d;
   box-shadow: 0px 14px 80px rgba(26, 8, 11, 0.7);
   padding: 2.5rem 55px 45px 55px;
   border-radius: 15px;
@@ -137,7 +137,7 @@ html,
   margin: 0;
   line-height: 1;
   padding-bottom: 5px;
-  font-size: xx-large;
+  font-size: large;
 }
 .custom-control-label {
   font-weight: 400;

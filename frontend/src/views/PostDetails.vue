@@ -75,7 +75,7 @@
               <div class="card-body">
                 <p class="mb-3 tx-14">
                   <!-- Animation du titre -->
-                  <router-link class="external" v-bind:to="'/Posts/'">
+                  <router-link class="external" v-bind:to="'/posts'">
                     <div class="infos">
                       <h6 class="aspect">Forums des publications :</h6>
                       {{ post.title }}
@@ -475,7 +475,7 @@ h1 {
   margin-bottom: 1rem;
 }
 .likesPost {
-  width: 50%;
+  width: 40%;
   display: flex;
   justify-content: center;
 }
@@ -483,7 +483,7 @@ h1 {
   text-decoration: none;
 }
 .comentsPost {
-  width: 50%;
+  width: 70%;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -240,8 +240,8 @@ export default {
       mesgError: "",
       msgError: "",
       isAdmin: false,
-      apiUser: axios.create({
-        baseURL: "http://localhost:3000/api/users/",
+      instance: axios.create({
+        baseURL: "http://localhost:3000/api/",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -251,9 +251,14 @@ export default {
       users: [],
     };
   },
+  beforeMount() {
+    if (this.$store.state.user.role.role == "admin") {
+      this.isAdmin = true;
+    }
+  },
   mounted: function () {
-    this.apiUser
-      .get("/")
+    this.instance
+      .get("users/")
       .then((response) => {
         if (!response.data) {
           this.msgError = error.response.data.message;
@@ -265,11 +270,7 @@ export default {
         this.msgError = error.response.data.message;
       });
   },
-  beforeMount() {
-    if (this.$store.state.user.role.role == "admin") {
-      this.isAdmin = true;
-    }
-  },
+  
   computed: {
     ...mapState(["status"]),
   },
@@ -290,8 +291,8 @@ export default {
           "Attention cette action est irreverssible, toutes les données, de cet utlisateur ainsi que ses publications, ses commentaires, et ses likes vont être supprimées !!!"
         )
       ) {
-        this.apiUser
-          .delete("http://localhost:3000/api/users/" + userId)
+        this.instance
+          .delete("users/" + userId)
           .then((response) => {
             if (!response.data) {
               this.mesgError = error.response.data.message;
@@ -311,13 +312,13 @@ export default {
 <style scoped>
 .wrapUsers {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   grid-template-rows: 1fr 1fr;
 }
-.col-md-8 {
+/* .col-md-8 {
   background: #4e5166;
   border-radius: 2rem;
-}
+} */
 .containerTitre,
 h1 {
   display: flex;
@@ -363,7 +364,7 @@ h1 {
   box-shadow: 0px 0px 10px #cecdcd, -5px -5px 10px #cfcece;
   border-radius: 5rem;
   padding: 0 0.5rem;
-  background: #5c5c6c85;
+  background: #75758585;
   justify-content: space-between;
 }
 #imgProfile {

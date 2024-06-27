@@ -3,15 +3,8 @@
     <navPosts />
     <div class="containTitle">
       <div class="logoTransparentUpdateProfile">
-        <img
-          style="height: 2.5rem; width: 2.5rem"
-          x="0"
-          y="0"
-          height="100%"
-          width="100%"
-          src="../assets/logo_transparent.png"
-          alt="logo"
-        />
+        <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
+          src="../assets/logo_transparent.png" alt="logo" />
       </div>
       <div class="cardTitle">
         <h1>Modifier votre profil</h1>
@@ -24,81 +17,35 @@
 
         <div class="form-group">
           <label for="username" class="legend">Modifier vos informations</label>
-          <input
-            ref="firstfield"
-            v-model="user.username"
-            type="text"
-            id="username"
-            class="form-controlProfil"
-            placeholder="Modifier votre nom et prénom"
-          />
+          <input ref="firstfield" v-model="user.username" type="text" id="username" class="form-controlProfil"
+            placeholder="Modifier votre nom et prénom" />
         </div>
         <div class="form-group">
           <label for="email"></label>
-          <input
-            ref="firstfield"
-            v-model="user.email"
-            type="text"
-            id="email"
-            class="form-controlProfil"
-            placeholder="Modifier votre email"
-          />
+          <input ref="firstfield" v-model="user.email" type="text" id="email" class="form-controlProfil"
+            placeholder="Modifier votre email" />
         </div>
         <div class="formGroup" v-if="user.attachment">
-          <img
-            style="height: 5rem; width: 5rem"
-            x="0"
-            y="0"
-            height="100%"
-            width="100%"
-            id="imgNavProfil"
-            v-bind:src="user.attachment"
-            alt="Photo de profil utilisateur"
-          />
+          <img style="height: 5rem; width: 5rem" x="0" y="0" height="100%" width="100%" id="imgNavProfil"
+            v-bind:src="user.attachment" alt="Photo de profil utilisateur" />
           <label for="file">Changer la photo de profil</label>
         </div>
         <div class="formGroup" v-else>
-          <img
-            style="height: 5rem; width: 5rem"
-            x="0"
-            y="0"
-            height="100%"
-            width="100%"
-            id="imgNavAvatar"
-            src="../assets/Icons/BiPersonCircle.svg"
-            alt="avatar"
-          />
+          <img style="height: 5rem; width: 5rem" x="0" y="0" height="100%" width="100%" id="imgNavAvatar"
+            src="../assets/Icons/BiPersonCircle.svg" alt="avatar" />
           <label for="file">Changer la photo de profil</label>
         </div>
 
         <div class="selectBottom">
           <div class="formGroup">
-            <input
-              class="formFilePublich"
-              id="fileProfil"
-              ref="fileProfil"
-              type="file"
-              name="fileProfil"
-              accept="image/*"
-              @change="onFileSelected()"
-            />
-            <button
-              v-if="isAdmin == true || $store.state.user.userId == user.userId"
-              class="btnFile"
-              type="button"
-              @click="profilUpdate()"
-            >
+            <input class="formFilePublich" id="fileProfil" ref="fileProfil" type="file" name="fileProfil"
+              accept="image/*" @change="onFileSelected()" />
+            <button v-if="isAdmin == true || $store.state.user.userId == user.userId" class="btnFile" type="button"
+              @click="profilUpdate()">
               <span v-if="status == 'loading'">Publication en cours....</span>
               <span v-else>
-                <img
-                  style="height: 40px; width: 40px"
-                  x="0"
-                  y="0"
-                  height="100%"
-                  width="100%"
-                  src="../assets/Icons/BiCameraFill.svg"
-                  alt="Modifier le profil"
-                />
+                <img style="height: 40px; width: 40px" x="0" y="0" height="100%" width="100%"
+                  src="../assets/Icons/BiCameraFill.svg" alt="Modifier le profil" />
               </span>
             </button>
           </div>
@@ -107,15 +54,8 @@
       </form>
     </div>
     <div class="logoTransparent">
-      <img
-        style="height: 2.5rem; width: 2.5rem"
-        x="0"
-        y="0"
-        height="100%"
-        width="100%"
-        src="../assets/logo_transparent.png"
-        alt="logo groupomania"
-      />
+      <img style="height: 2.5rem; width: 2.5rem" x="0" y="0" height="100%" width="100%"
+        src="../assets/logo_transparent.png" alt="logo groupomania" />
     </div>
   </div>
 </template>
@@ -224,18 +164,21 @@ export default {
   display: flex;
   margin: -0.5rem 0 0 0;
 }
+
 .cardTitle {
   display: flex;
   margin: 0 0 0.8rem 1rem;
   text-decoration: none;
   flex-direction: column;
 }
+
 .separatorUpdateUser {
   width: 6rem;
   height: 4px;
   background-color: #ffd7d7;
   margin: 0 0 1.5rem 0;
 }
+
 .bottomProfil {
   box-shadow: 5px 5px 10px #cecdcd, -5px -5px 10px #4e51665a;
   border-radius: 1rem;
@@ -243,14 +186,17 @@ export default {
   margin: 0.5rem;
   padding: 1rem;
 }
+
 #imgNavProfil {
   border-radius: 200px;
   object-fit: cover;
 }
+
 #imgNavAvatar {
   border-radius: 200px;
   object-fit: cover;
 }
+
 .form-controlProfil {
   display: flex;
   flex-direction: column;
@@ -260,23 +206,32 @@ export default {
   border: 0.5px solid #ffd6d6;
   /* border-radius: 1rem; */
 }
+
 .btnFile {
   background: #4e5166;
 }
+
 .formFilePublich {
   background: #4e5166;
   /* width: 100%; */
 }
+
 .logoTransparent {
-  margin: 3rem 0 0 0;
+  margin: 0 0 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 @media screen and (max-width: 768px) {
   .logoTransparentUpdateProfile {
     margin: -2.8rem 1rem 0 0;
   }
+
   .containTitle {
     margin: 2rem auto 0 auto;
   }
+
   .separatorUser {
     display: flex;
     align-items: center;
@@ -284,13 +239,16 @@ export default {
     margin: 1rem 0 0.5rem 1rem;
   }
 }
+
 @media screen and (max-width: 393px) {
   .containTitle {
     flex-direction: column;
   }
+
   .logoTransparentUpdateProfile {
     margin: 1.2rem 0 0 0;
   }
+
   .separatorUpdateUser {
     margin: 0 auto 1.5rem auto;
   }
